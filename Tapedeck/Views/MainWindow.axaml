@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:res="using:Tapedeck.Resources"
+        xmlns:vm="using:Tapedeck.ViewModels"
+        xmlns:controls="using:Tapedeck.Controls"
+        xmlns:converters="using:Tapedeck.Converters"
+        x:Class="Tapedeck.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Tapedeck"
+        Width="1280" Height="800"
+        MinWidth="960" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowDecorations="BorderOnly">
+
+    <!-- Shell: custom title bar, navigation rail, current page -->
+    <Grid RowDefinitions="Auto,*">
+        <controls:TitleBar />
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
+            <DockPanel Width="{StaticResource Size.Rail}" Margin="0,12,0,20">
+                <RadioButton DockPanel.Dock="Bottom"
+                             Theme="{StaticResource NavigationRailItem}"
+                             GroupName="Navigation"
+                             HorizontalAlignment="Center"
+                             Content="{x:Static res:Strings.Nav_Settings}"
+                             controls:ButtonAssist.Icon="{StaticResource Icon.Settings}"
+                             IsEnabled="False"
+                             IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Settings}}" />
+                <StackPanel Spacing="{StaticResource Space.4}" HorizontalAlignment="Center">
+                    <RadioButton Theme="{StaticResource NavigationRailItem}"
+                                 GroupName="Navigation"
+                                 Content="{x:Static res:Strings.Nav_Library}"
+                                 controls:ButtonAssist.Icon="{StaticResource Icon.Library}"
+                                 IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Library}}" />
+                    <RadioButton Theme="{StaticResource NavigationRailItem}"
+                                 GroupName="Navigation"
+                                 Content="{x:Static res:Strings.Nav_Playlists}"
+                                 controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}"
+                                 IsEnabled="False"
+                                 IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Playlists}}" />
+                </StackPanel>
+            </DockPanel>
+
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentView}"
+                            Margin="0,4,16,16" />
+        </Grid>
+    </Grid>
+</Window>
