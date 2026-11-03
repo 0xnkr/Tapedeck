@@ -1,0 +1,226 @@
+<!--
+    Pill buttons from the design system. Pick the variant with a style class:
+      (none)     plain text button in TextSoft, e.g. "Aus Zwischenablage"
+      primary    filled with the accent, at most one per view
+      tonal      Surface3, main action inside an island
+      secondary  outlined, next to the primary button
+      text       accent label, light actions inside islands
+      danger     error label, destructive actions
+      icon       round icon-only button, always set AutomationProperties.Name
+    Sizes: default Control.Md (inside islands), lg = Control.Lg (page header), xl = Control.Xl.
+    A leading icon is set with controls:ButtonAssist.Icon.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:Tapedeck.Controls">
+
+    <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextSoft}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        <Setter Property="Height" Value="{StaticResource Control.Md}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_Container"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <!-- Material state layer: the label color at low opacity on hover and press -->
+                    <Border Name="PART_StateLayer"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="0" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <controls:Glyph Name="PART_Icon"
+                                        Width="18" Height="18"
+                                        Margin="-4,0,0,0"
+                                        Data="{TemplateBinding (controls:ButtonAssist.Icon)}"
+                                        IsVisible="{TemplateBinding (controls:ButtonAssist.Icon), Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          VerticalAlignment="Center"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_StateLayer">
+            <Setter Property="Opacity" Value="0.08" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_StateLayer">
+            <Setter Property="Opacity" Value="0.12" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.38" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <!-- Sizes -->
+        <Style Selector="^.lg">
+            <Setter Property="Height" Value="{StaticResource Control.Lg}" />
+            <Setter Property="Padding" Value="20,0" />
+        </Style>
+        <Style Selector="^.xl">
+            <Setter Property="Height" Value="{StaticResource Control.Xl}" />
+            <Setter Property="Padding" Value="20,0" />
+        </Style>
+
+        <!-- Variants -->
+        <Style Selector="^.primary">
+            <Setter Property="Background" Value="{DynamicResource Brush.Accent}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.OnAccent}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^.tonal">
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface3}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^.secondary">
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        </Style>
+        <Style Selector="^.text">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^.danger">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Error}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^.icon">
+            <Setter Property="Width" Value="{Binding $self.Height}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text2}" />
+        </Style>
+        <Style Selector="^.icon /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <!-- Window buttons in the title bar -->
+        <Style Selector="^.window">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="{StaticResource Control.Sm}" />
+            <Setter Property="CornerRadius" Value="12" />
+        </Style>
+        <Style Selector="^.window /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+        </Style>
+
+        <!-- Star of an interactive RatingView: just the glyph with a round hit area -->
+        <Style Selector="^.star">
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Filter chip: one of a group is active. Use RadioButtons with a shared GroupName. -->
+    <ControlTheme x:Key="FilterChip" TargetType="RadioButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextSoft}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.OutlineVariant}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        <Setter Property="Height" Value="{StaticResource Control.Sm}" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_StateLayer"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="0" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_StateLayer">
+            <Setter Property="Opacity" Value="0.08" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Entry of the navigation rail: icon in a 56x32 indicator, label below. Use RadioButtons with a shared GroupName. -->
+    <ControlTheme x:Key="NavigationRailItem" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text2}" />
+        <Setter Property="Width" Value="80" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Spacing="6" Background="Transparent">
+                    <Panel Width="56" Height="{StaticResource Control.Sm}" HorizontalAlignment="Center">
+                        <Border Name="PART_Indicator" CornerRadius="{StaticResource Radius.Pill}" />
+                        <Border Name="PART_StateLayer"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="{StaticResource Radius.Pill}"
+                                Opacity="0" />
+                        <controls:Glyph Name="PART_Icon"
+                                        Data="{TemplateBinding (controls:ButtonAssist.Icon)}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                    </Panel>
+                    <ContentPresenter Name="PART_Label"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <!-- Label in the "label" text style -->
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Medium" />
+
+        <Style Selector="^:pointerover /template/ Border#PART_StateLayer">
+            <Setter Property="Opacity" Value="0.08" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.38" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Indicator">
+            <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+        </Style>
+        <Style Selector="^:checked /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+        </Style>
+        <Style Selector="^:checked /template/ ContentPresenter#PART_Label">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>
