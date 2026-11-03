@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+/packages/
+TestResults/
+*.trx
+
+# JetBrains Rider: IDE settings stay local (code style belongs in .editorconfig)
+.idea/
+*.iml
+*.sln.iml
+*.DotSettings.user
+/_ReSharper.Caches/
+_ReSharper*/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+
+# Claude Code: personal settings only
+.claude/settings.local.json
+
+# OS
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store
