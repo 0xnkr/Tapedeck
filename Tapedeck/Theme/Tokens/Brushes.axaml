@@ -1,0 +1,33 @@
+<!--
+    One brush per color token. Always reference these with DynamicResource so a runtime
+    theme change reaches every control.
+    The accent brushes (Brush.Accent, Brush.AccentSoft, Brush.AccentOutline, Brush.OnAccent)
+    are not defined here: AccentService creates them from Color.Accent.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="Brush.Bg" Color="{StaticResource Color.Bg}" />
+    <SolidColorBrush x:Key="Brush.Surface1" Color="{StaticResource Color.Surface1}" />
+    <SolidColorBrush x:Key="Brush.Surface2" Color="{StaticResource Color.Surface2}" />
+    <SolidColorBrush x:Key="Brush.Surface3" Color="{StaticResource Color.Surface3}" />
+
+    <SolidColorBrush x:Key="Brush.Outline" Color="{StaticResource Color.Outline}" />
+    <SolidColorBrush x:Key="Brush.OutlineVariant" Color="{StaticResource Color.OutlineVariant}" />
+
+    <SolidColorBrush x:Key="Brush.Text" Color="{StaticResource Color.Text}" />
+    <SolidColorBrush x:Key="Brush.TextSoft" Color="{StaticResource Color.TextSoft}" />
+    <SolidColorBrush x:Key="Brush.Text2" Color="{StaticResource Color.Text2}" />
+    <SolidColorBrush x:Key="Brush.Text3" Color="{StaticResource Color.Text3}" />
+    <SolidColorBrush x:Key="Brush.TextMuted" Color="{StaticResource Color.TextMuted}" />
+
+    <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
+    <SolidColorBrush x:Key="Brush.SuccessContainer" Color="{StaticResource Color.SuccessContainer}" />
+    <SolidColorBrush x:Key="Brush.Info" Color="{StaticResource Color.Info}" />
+    <SolidColorBrush x:Key="Brush.InfoContainer" Color="{StaticResource Color.InfoContainer}" />
+    <SolidColorBrush x:Key="Brush.Pending" Color="{StaticResource Color.Pending}" />
+    <SolidColorBrush x:Key="Brush.PendingContainer" Color="{StaticResource Color.PendingContainer}" />
+    <SolidColorBrush x:Key="Brush.Error" Color="{StaticResource Color.Error}" />
+    <SolidColorBrush x:Key="Brush.ErrorContainer" Color="{StaticResource Color.ErrorContainer}" />
+
+</ResourceDictionary>
