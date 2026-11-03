@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             xmlns:library="using:Tapedeck.Views.Library"
+             x:Class="Tapedeck.Views.Library.TrackRowView"
+             x:DataType="vm:TrackRowViewModel">
+
+    <library:TrackColumnsGrid VerticalAlignment="Center">
+
+        <TextBlock Grid.Column="0"
+                   Classes="support tabular"
+                   Text="{Binding Number}"
+                   Foreground="{DynamicResource Brush.Text3}"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center" />
+
+        <!-- Thumbnail, play mark as placeholder while none is cached -->
+        <Border Grid.Column="1"
+                Width="72" Height="40"
+                CornerRadius="{StaticResource Radius.Thumb}"
+                Background="{DynamicResource Brush.Surface3}"
+                ClipToBounds="True">
+            <Panel>
+                <controls:Glyph Data="{StaticResource Icon.Play}"
+                                IsFilled="True"
+                                StrokeThickness="0"
+                                Width="16" Height="16"
+                                Foreground="{DynamicResource Brush.Text3}"
+                                IsVisible="{Binding ThumbPath, Converter={x:Static ObjectConverters.IsNull}}" />
+                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.Instance}}"
+                       Stretch="UniformToFill" />
+            </Panel>
+        </Border>
+
+        <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+            <TextBlock Classes="body-strong"
+                       Text="{Binding Title}"
+                       Foreground="{DynamicResource Brush.Text}"
+                       TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="support"
+                       Text="{Binding Artist}"
+                       Foreground="{DynamicResource Brush.Text2}"
+                       TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <TextBlock Grid.Column="3"
+                   Classes="support album"
+                   Classes.missing="{Binding !HasAlbum}"
+                   Text="{Binding AlbumText}"
+                   TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center" />
+
+        <TextBlock Grid.Column="4"
+                   Classes="support tabular"
+                   Text="{Binding DurationText}"
+                   Foreground="{DynamicResource Brush.Text2}"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center" />
+
+        <controls:RatingView Grid.Column="5"
+                             Value="{Binding Rating, Mode=OneWay}"
+                             IsReadOnly="True"
+                             VerticalAlignment="Center" />
+
+        <controls:StatusChip Grid.Column="6"
+                             Status="{Binding Status}"
+                             Progress="{Binding Progress}"
+                             VerticalAlignment="Center" />
+
+        <Button Grid.Column="7"
+                Classes="icon"
+                AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}"
+                VerticalAlignment="Center">
+            <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="18" Height="18" />
+            <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedRight">
+                    <MenuItem Header="{x:Static res:Strings.Track_Download}"
+                              Command="{Binding DownloadCommand}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_ShowInFolder}"
+                              Command="{Binding ShowInFolderCommand}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_OpenOnYoutube}"
+                              Command="{Binding OpenOnYoutubeCommand}" />
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+    </library:TrackColumnsGrid>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.album">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.TextSoft}" />
+        </Style>
+        <Style Selector="TextBlock.album.missing">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.TextMuted}" />
+        </Style>
+    </UserControl.Styles>
+</UserControl>
