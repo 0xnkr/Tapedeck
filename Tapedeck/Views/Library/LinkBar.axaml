@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.Library.LinkBar"
+             x:DataType="vm:LibraryViewModel">
+
+    <!-- Add a single YouTube link: input, paste from clipboard, add -->
+    <controls:Island Classes="bar">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+            <controls:Glyph Data="{StaticResource Icon.Link}"
+                            Foreground="{DynamicResource Brush.Text2}"
+                            VerticalAlignment="Center" />
+            <TextBox Grid.Column="1"
+                     Classes="bare"
+                     Text="{Binding NewLink}"
+                     PlaceholderText="{x:Static res:Strings.Library_LinkPlaceholder}"
+                     AutomationProperties.Name="{x:Static res:Strings.Library_LinkLabel}">
+                <TextBox.KeyBindings>
+                    <KeyBinding Gesture="Enter" Command="{Binding AddLinkCommand}" />
+                </TextBox.KeyBindings>
+            </TextBox>
+            <Button Grid.Column="2"
+                    Classes="xl"
+                    Content="{x:Static res:Strings.Library_PasteFromClipboard}"
+                    Command="{Binding PasteLinkCommand}" />
+            <Button Grid.Column="3"
+                    Classes="tonal xl"
+                    Content="{x:Static res:Strings.Library_Add}"
+                    controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                    Command="{Binding AddLinkCommand}" />
+        </Grid>
+    </controls:Island>
+</UserControl>
