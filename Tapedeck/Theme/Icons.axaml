@@ -1,0 +1,39 @@
+<!--
+    Line icons on a 24 unit grid, taken from the design mockup. Render them with
+    <controls:Glyph Data="{StaticResource Icon.X}" />, which strokes in the current foreground.
+    Filled icons (play, more, star) are marked; use IsFilled="True" for them.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Brand mark: a cassette. -->
+    <StreamGeometry x:Key="Icon.Cassette">M6,5.5 H18 A3.5,3.5 0 0 1 21.5,9 V15 A3.5,3.5 0 0 1 18,18.5 H6 A3.5,3.5 0 0 1 2.5,15 V9 A3.5,3.5 0 0 1 6,5.5 Z M6.5,11 A2,2 0 1 0 10.5,11 A2,2 0 1 0 6.5,11 Z M13.5,11 A2,2 0 1 0 17.5,11 A2,2 0 1 0 13.5,11 Z M7,18.5 l1.5,-3 h7 l1.5,3</StreamGeometry>
+
+    <!-- Window buttons -->
+    <StreamGeometry x:Key="Icon.Minimize">M6,12 h12</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Maximize">M8,5 H16 A3,3 0 0 1 19,8 V16 A3,3 0 0 1 16,19 H8 A3,3 0 0 1 5,16 V8 A3,3 0 0 1 8,5 Z</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Close">M6,6 l12,12 M18,6 L6,18</StreamGeometry>
+
+    <!-- Navigation -->
+    <StreamGeometry x:Key="Icon.Library">M9,18 V5 l11,-2 v13 M3,18 A3,3 0 1 0 9,18 A3,3 0 1 0 3,18 Z M14,16 A3,3 0 1 0 20,16 A3,3 0 1 0 14,16 Z</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Playlists">M4,6 h13 M4,12 h13 M4,18 h8 M17,15 v6 M14,18 h6</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Settings">M4,7 h9 M17,7 h3 M4,17 h3 M11,17 h9 M13,7 A2,2 0 1 0 17,7 A2,2 0 1 0 13,7 Z M7,17 A2,2 0 1 0 11,17 A2,2 0 1 0 7,17 Z</StreamGeometry>
+
+    <!-- Actions -->
+    <StreamGeometry x:Key="Icon.Upload">M12,15 V4 M7,9 l5,-5 l5,5 M4,20 h16</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Download">M12,4 v11 M7,10 l5,5 l5,-5 M4,20 h16</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Link">M10,14 a4,4 0 0 0 5.7,0 l3,-3 a4,4 0 0 0 -5.7,-5.7 l-1,1 M14,10 a4,4 0 0 0 -5.7,0 l-3,3 a4,4 0 0 0 5.7,5.7 l1,-1</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Plus">M12,5 v14 M5,12 h14</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Search">M5,11 A6,6 0 1 0 17,11 A6,6 0 1 0 5,11 Z M20,20 l-4.5,-4.5</StreamGeometry>
+
+    <!-- Status -->
+    <StreamGeometry x:Key="Icon.Check">M5,12.5 l4.5,4.5 L19,7</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Clock">M4,12 A8,8 0 1 0 20,12 A8,8 0 1 0 4,12 Z M12,8 v4 l2.5,1.5</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Alert">M4,12 A8,8 0 1 0 20,12 A8,8 0 1 0 4,12 Z M12,8 v4.5 M12,16 v0.01</StreamGeometry>
+
+    <!-- Filled -->
+    <StreamGeometry x:Key="Icon.Play">M8,5.5 v13 l11,-6.5 Z</StreamGeometry>
+    <StreamGeometry x:Key="Icon.More">M10.4,5.5 A1.6,1.6 0 1 0 13.6,5.5 A1.6,1.6 0 1 0 10.4,5.5 Z M10.4,12 A1.6,1.6 0 1 0 13.6,12 A1.6,1.6 0 1 0 10.4,12 Z M10.4,18.5 A1.6,1.6 0 1 0 13.6,18.5 A1.6,1.6 0 1 0 10.4,18.5 Z</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Star">M12,3.5 l2.6,5.5 l5.9,0.6 l-4.5,3.9 l1.3,5.9 l-5.3,-3 l-5.3,3 l1.3,-5.9 l-4.5,-3.9 l5.9,-0.6 Z</StreamGeometry>
+
+</ResourceDictionary>
