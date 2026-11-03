@@ -1,0 +1,59 @@
+<!--
+    Spacing, radius and size tokens from tokens.json. These never change at runtime,
+    so StaticResource is fine.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Font families. Inter comes with Avalonia.Fonts.Inter (WithInterFont). -->
+    <FontFamily x:Key="Font.Sans">fonts:Inter#Inter, $Default</FontFamily>
+    <!-- JetBrains Mono is not bundled yet; fall back to the platform's monospace fonts. -->
+    <FontFamily x:Key="Font.Mono">JetBrains Mono, Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace</FontFamily>
+
+    <!-- Spacing -->
+    <!-- Icon to label in small chips, title to subtitle. -->
+    <x:Double x:Key="Space.1">4</x:Double>
+    <!-- Between buttons and chips, inner padding of the table island. -->
+    <x:Double x:Key="Space.2">8</x:Double>
+    <!-- Between islands and between table columns. -->
+    <x:Double x:Key="Space.3">12</x:Double>
+    <!-- Inner padding of fields, window margin right/bottom. -->
+    <x:Double x:Key="Space.4">16</x:Double>
+    <!-- Inner padding of compact islands. -->
+    <x:Double x:Key="Space.5">20</x:Double>
+    <!-- Inner padding of large islands (settings). -->
+    <x:Double x:Key="Space.6">24</x:Double>
+
+    <Thickness x:Key="Pad.Table">8</Thickness>
+    <Thickness x:Key="Pad.IslandCompact">20</Thickness>
+    <Thickness x:Key="Pad.Island">24</Thickness>
+
+    <!-- Radius -->
+    <!-- Thumbnails in the table. -->
+    <CornerRadius x:Key="Radius.Thumb">8</CornerRadius>
+    <!-- Input fields, table rows, code lines, small covers. -->
+    <CornerRadius x:Key="Radius.Field">16</CornerRadius>
+    <!-- The window frame. -->
+    <CornerRadius x:Key="Radius.Window">24</CornerRadius>
+    <!-- Islands: table, sections, link bar. -->
+    <CornerRadius x:Key="Radius.Island">28</CornerRadius>
+    <!-- Buttons, chips, switches, navigation indicator. -->
+    <CornerRadius x:Key="Radius.Pill">9999</CornerRadius>
+
+    <!-- Sizes -->
+    <!-- Filter chips, genre chips, navigation indicator height. -->
+    <x:Double x:Key="Control.Sm">32</x:Double>
+    <!-- Search field, buttons inside an island, icon buttons in rows. -->
+    <x:Double x:Key="Control.Md">40</x:Double>
+    <!-- Main buttons in the page header, metadata fields. Minimum click target. -->
+    <x:Double x:Key="Control.Lg">44</x:Double>
+    <!-- Fields in settings, buttons in the link bar. -->
+    <x:Double x:Key="Control.Xl">48</x:Double>
+    <!-- Height of a table row. -->
+    <x:Double x:Key="Size.Row">56</x:Double>
+    <!-- Width of the navigation rail. -->
+    <x:Double x:Key="Size.Rail">96</x:Double>
+    <!-- Height of the custom title bar. -->
+    <x:Double x:Key="Size.TitleBar">44</x:Double>
+
+</ResourceDictionary>
