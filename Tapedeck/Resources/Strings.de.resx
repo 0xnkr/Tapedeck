@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Window_Minimize" xml:space="preserve">
+    <value>Minimieren</value>
+  </data>
+  <data name="Window_Maximize" xml:space="preserve">
+    <value>Maximieren</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Nav_Library" xml:space="preserve">
+    <value>Bibliothek</value>
+  </data>
+  <data name="Nav_Playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Status_Done" xml:space="preserve">
+    <value>Geladen</value>
+  </data>
+  <data name="Status_Pending" xml:space="preserve">
+    <value>Ausstehend</value>
+  </data>
+  <data name="Status_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Status_Downloading" xml:space="preserve">
+    <value>Lädt … {0:0%}</value>
+  </data>
+  <data name="Rating_Value" xml:space="preserve">
+    <value>{0} von {1} Sternen</value>
+  </data>
+  <data name="Rating_None" xml:space="preserve">
+    <value>Nicht bewertet</value>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>Bibliothek</value>
+  </data>
+  <data name="Library_ExportCsv" xml:space="preserve">
+    <value>Export als CSV</value>
+  </data>
+  <data name="Library_ImportCsv" xml:space="preserve">
+    <value>Import aus CSV</value>
+  </data>
+  <data name="Library_LinkLabel" xml:space="preserve">
+    <value>YouTube-Link</value>
+  </data>
+  <data name="Library_LinkPlaceholder" xml:space="preserve">
+    <value>YouTube-Link einfügen – youtube.com/watch?v=… oder youtu.be/…</value>
+  </data>
+  <data name="Library_PasteFromClipboard" xml:space="preserve">
+    <value>Aus Zwischenablage</value>
+  </data>
+  <data name="Library_Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
+  <data name="Library_Search" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="Library_DownloadPending" xml:space="preserve">
+    <value>Ausstehende laden</value>
+  </data>
+  <data name="Library_TrackList" xml:space="preserve">
+    <value>Titelliste</value>
+  </data>
+  <data name="Filter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Filter_Done" xml:space="preserve">
+    <value>Geladen</value>
+  </data>
+  <data name="Filter_Pending" xml:space="preserve">
+    <value>Ausstehend</value>
+  </data>
+  <data name="Filter_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Column_Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Column_Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Column_Duration" xml:space="preserve">
+    <value>Dauer</value>
+  </data>
+  <data name="Column_Rating" xml:space="preserve">
+    <value>Bewertung</value>
+  </data>
+  <data name="Column_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Track_MoreActions" xml:space="preserve">
+    <value>Weitere Aktionen</value>
+  </data>
+  <data name="Track_Download" xml:space="preserve">
+    <value>Laden</value>
+  </data>
+  <data name="Track_ShowInFolder" xml:space="preserve">
+    <value>Im Ordner zeigen</value>
+  </data>
+  <data name="Track_OpenOnYoutube" xml:space="preserve">
+    <value>Auf YouTube öffnen</value>
+  </data>
+  <data name="Library_TrackCount_One" xml:space="preserve">
+    <value>{0} Titel</value>
+  </data>
+  <data name="Library_TrackCount_Other" xml:space="preserve">
+    <value>{0} Titel</value>
+  </data>
+  <data name="Library_Summary" xml:space="preserve">
+    <value>{0} · {1} geladen</value>
+  </data>
+  <data name="Library_SummaryErrors" xml:space="preserve">
+    <value>{0} · {1} Fehler</value>
+  </data>
+  <data name="Library_SummaryEmpty" xml:space="preserve">
+    <value>Noch keine Titel</value>
+  </data>
+  <data name="Library_EmptyNoTracks" xml:space="preserve">
+    <value>Noch keine Titel. Füge oben einen YouTube-Link ein.</value>
+  </data>
+  <data name="Library_EmptyFiltered" xml:space="preserve">
+    <value>Keine Titel für diese Auswahl.</value>
+  </data>
+  <data name="Activity_InstallingTools" xml:space="preserve">
+    <value>Lädt yt-dlp, ffmpeg und Deno (einmalig) …</value>
+  </data>
+  <data name="Activity_FetchingInfo" xml:space="preserve">
+    <value>Hole Infos zum Link …</value>
+  </data>
+  <data name="Activity_Downloading" xml:space="preserve">
+    <value>Lädt „{0}“ …</value>
+  </data>
+  <data name="Confirm_Added" xml:space="preserve">
+    <value>„{0}“ hinzugefügt</value>
+  </data>
+  <data name="Confirm_Downloaded" xml:space="preserve">
+    <value>„{0}“ geladen</value>
+  </data>
+  <data name="Notice_AddFailed" xml:space="preserve">
+    <value>Link konnte nicht hinzugefügt werden: {0}</value>
+  </data>
+  <data name="Notice_DownloadFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht geladen werden: {1}</value>
+  </data>
+</root>
