@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             xmlns:library="using:Tapedeck.Views.Library"
+             x:Class="Tapedeck.Views.LibraryView"
+             x:DataType="vm:LibraryViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <controls:PageHeader Title="{x:Static res:Strings.Library_Title}" Subtitle="{Binding Summary}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <!-- CSV import/export have no backend yet -->
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Library_ExportCsv}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Upload}"
+                        IsEnabled="False" />
+                <Button Classes="primary lg"
+                        Content="{x:Static res:Strings.Library_ImportCsv}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
+                        IsEnabled="False" />
+            </StackPanel>
+        </controls:PageHeader>
+
+        <library:LinkBar Grid.Row="1" />
+
+        <TextBlock Grid.Row="2"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="22,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <controls:Island Grid.Row="3" Classes="table">
+            <DockPanel>
+
+                <!-- Toolbar: search, filter chips, bulk action -->
+                <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="4,4,4,8">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                        <TextBox Classes="search"
+                                 Width="260"
+                                 Text="{Binding SearchText}"
+                                 PlaceholderText="{x:Static res:Strings.Library_Search}"
+                                 AutomationProperties.Name="{x:Static res:Strings.Library_Search}">
+                            <TextBox.InnerLeftContent>
+                                <controls:Glyph Data="{StaticResource Icon.Search}"
+                                                Width="18" Height="18"
+                                                Margin="16,0,0,0"
+                                                Foreground="{DynamicResource Brush.Text3}" />
+                            </TextBox.InnerLeftContent>
+                        </TextBox>
+                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_All}"
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
+                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Done}"
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
+                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Pending}"
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
+                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Classes="text"
+                            Content="{x:Static res:Strings.Library_DownloadPending}"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
+                            Command="{Binding DownloadPendingCommand}" />
+                </Grid>
+
+                <!-- Column headers -->
+                <library:TrackColumnsGrid DockPanel.Dock="Top" Height="36" Margin="12,0">
+                    <library:TrackColumnsGrid.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Text3}" />
+                            <Setter Property="LetterSpacing" Value="0.3" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </library:TrackColumnsGrid.Styles>
+                    <TextBlock Grid.Column="0" Classes="label medium" Text="#" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="2" Classes="label medium" Text="{x:Static res:Strings.Column_Title}" />
+                    <TextBlock Grid.Column="3" Classes="label medium" Text="{x:Static res:Strings.Column_Album}" />
+                    <TextBlock Grid.Column="4" Classes="label medium" Text="{x:Static res:Strings.Column_Duration}" HorizontalAlignment="Right" />
+                    <TextBlock Grid.Column="5" Classes="label medium" Text="{x:Static res:Strings.Column_Rating}" />
+                    <TextBlock Grid.Column="6" Classes="label medium" Text="{x:Static res:Strings.Column_Status}" />
+                </library:TrackColumnsGrid>
+
+                <Panel>
+                    <ListBox Theme="{StaticResource PlainList}"
+                             ItemContainerTheme="{StaticResource TableRow}"
+                             ItemsSource="{Binding Tracks}"
+                             SelectedItem="{Binding SelectedTrack}"
+                             AutomationProperties.Name="{x:Static res:Strings.Library_TrackList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TrackRowViewModel">
+                                <library:TrackRowView />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Classes="body"
+                               Text="{Binding EmptyText}"
+                               Foreground="{DynamicResource Brush.Text2}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding EmptyText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                    <!-- Activity toast: spinning record while busy, resting record for the confirmation -->
+                    <controls:Island Classes="toast"
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Bottom"
+                                     Margin="0,0,8,8"
+                                     IsVisible="{Binding ActivityText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.3}">
+                            <controls:VinylSpinner IsSpinning="{Binding IsBusy}" />
+                            <TextBlock Classes="support"
+                                       Text="{Binding ActivityText}"
+                                       Foreground="{DynamicResource Brush.Text}"
+                                       MaxWidth="360"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </controls:Island>
+                </Panel>
+            </DockPanel>
+        </controls:Island>
+    </Grid>
+</UserControl>
