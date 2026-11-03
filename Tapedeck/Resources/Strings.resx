@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Window_Minimize" xml:space="preserve">
+    <value>Minimize</value>
+    <comment>Title bar button</comment>
+  </data>
+  <data name="Window_Maximize" xml:space="preserve">
+    <value>Maximize</value>
+    <comment>Title bar button</comment>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Close</value>
+    <comment>Title bar button</comment>
+  </data>
+  <data name="Nav_Library" xml:space="preserve">
+    <value>Library</value>
+    <comment>Navigation rail</comment>
+  </data>
+  <data name="Nav_Playlists" xml:space="preserve">
+    <value>Playlists</value>
+    <comment>Navigation rail</comment>
+  </data>
+  <data name="Nav_Settings" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Navigation rail</comment>
+  </data>
+  <data name="Status_Done" xml:space="preserve">
+    <value>Downloaded</value>
+    <comment>Download status chip</comment>
+  </data>
+  <data name="Status_Pending" xml:space="preserve">
+    <value>Pending</value>
+    <comment>Download status chip</comment>
+  </data>
+  <data name="Status_Error" xml:space="preserve">
+    <value>Failed</value>
+    <comment>Download status chip</comment>
+  </data>
+  <data name="Status_Downloading" xml:space="preserve">
+    <value>Downloading … {0:0%}</value>
+    <comment>Download status with progress; {0} is the progress from 0 to 1</comment>
+  </data>
+  <data name="Rating_Value" xml:space="preserve">
+    <value>{0} of {1} stars</value>
+    <comment>Accessible name of a rating; {0} rating, {1} maximum</comment>
+  </data>
+  <data name="Rating_None" xml:space="preserve">
+    <value>Not rated</value>
+    <comment>Accessible name of an empty rating</comment>
+  </data>
+  <data name="Library_Title" xml:space="preserve">
+    <value>Library</value>
+    <comment>Page title</comment>
+  </data>
+  <data name="Library_ExportCsv" xml:space="preserve">
+    <value>Export as CSV</value>
+    <comment>Header button</comment>
+  </data>
+  <data name="Library_ImportCsv" xml:space="preserve">
+    <value>Import from CSV</value>
+    <comment>Header button</comment>
+  </data>
+  <data name="Library_LinkLabel" xml:space="preserve">
+    <value>YouTube link</value>
+    <comment>Accessible name of the link field</comment>
+  </data>
+  <data name="Library_LinkPlaceholder" xml:space="preserve">
+    <value>Paste a YouTube link – youtube.com/watch?v=… or youtu.be/…</value>
+    <comment>Placeholder of the link field</comment>
+  </data>
+  <data name="Library_PasteFromClipboard" xml:space="preserve">
+    <value>From clipboard</value>
+    <comment>Link bar button</comment>
+  </data>
+  <data name="Library_Add" xml:space="preserve">
+    <value>Add</value>
+    <comment>Link bar button</comment>
+  </data>
+  <data name="Library_Search" xml:space="preserve">
+    <value>Search</value>
+    <comment>Search field placeholder</comment>
+  </data>
+  <data name="Library_DownloadPending" xml:space="preserve">
+    <value>Download pending</value>
+    <comment>Bulk action above the table</comment>
+  </data>
+  <data name="Library_TrackList" xml:space="preserve">
+    <value>Track list</value>
+    <comment>Accessible name of the table</comment>
+  </data>
+  <data name="Filter_All" xml:space="preserve">
+    <value>All</value>
+    <comment>Filter chip</comment>
+  </data>
+  <data name="Filter_Done" xml:space="preserve">
+    <value>Downloaded</value>
+    <comment>Filter chip</comment>
+  </data>
+  <data name="Filter_Pending" xml:space="preserve">
+    <value>Pending</value>
+    <comment>Filter chip</comment>
+  </data>
+  <data name="Filter_Error" xml:space="preserve">
+    <value>Failed</value>
+    <comment>Filter chip</comment>
+  </data>
+  <data name="Column_Title" xml:space="preserve">
+    <value>Title</value>
+    <comment>Table column</comment>
+  </data>
+  <data name="Column_Album" xml:space="preserve">
+    <value>Album</value>
+    <comment>Table column</comment>
+  </data>
+  <data name="Column_Duration" xml:space="preserve">
+    <value>Duration</value>
+    <comment>Table column</comment>
+  </data>
+  <data name="Column_Rating" xml:space="preserve">
+    <value>Rating</value>
+    <comment>Table column</comment>
+  </data>
+  <data name="Column_Status" xml:space="preserve">
+    <value>Status</value>
+    <comment>Table column</comment>
+  </data>
+  <data name="Track_MoreActions" xml:space="preserve">
+    <value>More actions</value>
+    <comment>Accessible name of the row menu button</comment>
+  </data>
+  <data name="Track_Download" xml:space="preserve">
+    <value>Download</value>
+    <comment>Row menu</comment>
+  </data>
+  <data name="Track_ShowInFolder" xml:space="preserve">
+    <value>Show in folder</value>
+    <comment>Row menu</comment>
+  </data>
+  <data name="Track_OpenOnYoutube" xml:space="preserve">
+    <value>Open on YouTube</value>
+    <comment>Row menu</comment>
+  </data>
+  <data name="Library_TrackCount_One" xml:space="preserve">
+    <value>{0} track</value>
+    <comment>Summary below the title, singular</comment>
+  </data>
+  <data name="Library_TrackCount_Other" xml:space="preserve">
+    <value>{0} tracks</value>
+    <comment>Summary below the title, plural</comment>
+  </data>
+  <data name="Library_Summary" xml:space="preserve">
+    <value>{0} · {1} downloaded</value>
+    <comment>{0} track count, {1} downloaded count</comment>
+  </data>
+  <data name="Library_SummaryErrors" xml:space="preserve">
+    <value>{0} · {1} failed</value>
+    <comment>{0} the summary so far, {1} failed count</comment>
+  </data>
+  <data name="Library_SummaryEmpty" xml:space="preserve">
+    <value>No tracks yet</value>
+    <comment>Summary of an empty library</comment>
+  </data>
+  <data name="Library_EmptyNoTracks" xml:space="preserve">
+    <value>No tracks yet. Paste a YouTube link above.</value>
+    <comment>Empty table</comment>
+  </data>
+  <data name="Library_EmptyFiltered" xml:space="preserve">
+    <value>No tracks match this selection.</value>
+    <comment>Empty table after filter or search</comment>
+  </data>
+  <data name="Activity_InstallingTools" xml:space="preserve">
+    <value>Downloading yt-dlp, ffmpeg and Deno (one time) …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Activity_FetchingInfo" xml:space="preserve">
+    <value>Fetching link info …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Activity_Downloading" xml:space="preserve">
+    <value>Downloading “{0}” …</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Confirm_Added" xml:space="preserve">
+    <value>“{0}” added</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Confirm_Downloaded" xml:space="preserve">
+    <value>“{0}” downloaded</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Notice_AddFailed" xml:space="preserve">
+    <value>Could not add the link: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Notice_DownloadFailed" xml:space="preserve">
+    <value>Could not download “{0}”: {1}</value>
+    <comment>Error line; {0} track title, {1} error message</comment>
+  </data>
+</root>
