@@ -1,0 +1,52 @@
+<!--
+    Color tokens. Names mirror tokens.json of the Tapedeck design system (color.tokens).
+    This is the only file in the app that contains hex values.
+    Views never reference these colors directly; they use the brushes from Brushes.axaml.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- The one accent. Change this value to recolor the app; AccentService derives everything else from it. -->
+    <Color x:Key="Color.Accent">#FFB870</Color>
+    <!-- Text and icons on accent. AccentService picks this or Color.Text, whichever contrasts better. -->
+    <Color x:Key="Color.OnAccent">#1A1206</Color>
+
+    <!-- Window and page background. Pure black, never a surface for content. -->
+    <Color x:Key="Color.Bg">#000000</Color>
+    <!-- Islands: table, sections, link bar. Always sits directly on Bg. -->
+    <Color x:Key="Color.Surface1">#111113</Color>
+    <!-- Fields, search field, selected or hovered table row. -->
+    <Color x:Key="Color.Surface2">#1B1B1F</Color>
+    <!-- Tonal buttons, genre chips, window border. Highest level without accent. -->
+    <Color x:Key="Color.Surface3">#26262B</Color>
+
+    <!-- Border of secondary buttons, segmented buttons, empty rating stars. -->
+    <Color x:Key="Color.Outline">#3A3A42</Color>
+    <!-- Fine border of filter chips. Decoration only, never the only boundary of a control. -->
+    <Color x:Key="Color.OutlineVariant">#2E2E34</Color>
+
+    <!-- Primary text on Bg and all surfaces. -->
+    <Color x:Key="Color.Text">#F4F4F5</Color>
+    <!-- Text on secondary and text buttons, album column. -->
+    <Color x:Key="Color.TextSoft">#D4D4D8</Color>
+    <!-- Secondary text: artist below the title, field labels, idle icons. -->
+    <Color x:Key="Color.Text2">#A1A1AA</Color>
+    <!-- Tertiary text: column headers, placeholders, row numbers. -->
+    <Color x:Key="Color.Text3">#8A8A93</Color>
+    <!-- Placeholder dash for missing values (e.g. no album). -->
+    <Color x:Key="Color.TextMuted">#6B6B73</Color>
+
+    <!-- Status "done". Text on SuccessContainer. -->
+    <Color x:Key="Color.Success">#9AD7B0</Color>
+    <Color x:Key="Color.SuccessContainer">#14271C</Color>
+    <!-- Status "downloading" with progress, source "YouTube". Blue so it differs from "done" for red-green blindness. -->
+    <Color x:Key="Color.Info">#9CC7FF</Color>
+    <Color x:Key="Color.InfoContainer">#1E2A3D</Color>
+    <!-- Status "pending", sources "from title" and "derived". -->
+    <Color x:Key="Color.Pending">#C4C4CC</Color>
+    <Color x:Key="Color.PendingContainer">#1F1F23</Color>
+    <!-- Status "error", destructive text buttons. -->
+    <Color x:Key="Color.Error">#FFB4AB</Color>
+    <Color x:Key="Color.ErrorContainer">#3A1714</Color>
+
+</ResourceDictionary>
