@@ -1,0 +1,13 @@
+<!-- Style root of the Tapedeck theme: typography and styles on top of Fluent's templates. -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StyleInclude Source="avares://Tapedeck/Theme/Tokens/Typography.axaml" />
+    <StyleInclude Source="avares://Tapedeck/Theme/Controls/Inputs.axaml" />
+    <StyleInclude Source="avares://Tapedeck/Theme/Controls/RatingStyles.axaml" />
+
+    <Style Selector="Window">
+        <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Sans}" />
+    </Style>
+</Styles>
