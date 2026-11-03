@@ -1,0 +1,60 @@
+<!--
+    Text fields: no border, Surface2, field radius. These are Styles on top of Fluent's TextBox template,
+    so they win over its pointer-over and focus states.
+    Classes:
+      search    pill-shaped search field (Control.Md), put the icon into InnerLeftContent
+      bare      transparent, for fields embedded in another surface (link bar)
+      user-value  the user corrected this value: accent outline at 40 %
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="PlaceholderForeground" Value="{DynamicResource Brush.Text3}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource Brush.AccentOutline}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Field}" />
+        <Setter Property="MinHeight" Value="{StaticResource Control.Lg}" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- Fluent changes background and border on hover and focus; keep the flat look. -->
+    <Style Selector="TextBox:pointerover, TextBox:focus">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+    </Style>
+    <Style Selector="TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{Binding $parent[TextBox].Background}" />
+        <Setter Property="BorderBrush" Value="{Binding $parent[TextBox].BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{Binding $parent[TextBox].BorderThickness}" />
+        <Setter Property="CornerRadius" Value="{Binding $parent[TextBox].CornerRadius}" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement, TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="{Binding $parent[TextBox].Background}" />
+        <Setter Property="BorderBrush" Value="{Binding $parent[TextBox].BorderBrush}" />
+        <Setter Property="BorderThickness" Value="{Binding $parent[TextBox].BorderThickness}" />
+    </Style>
+
+    <Style Selector="TextBox.search">
+        <Setter Property="MinHeight" Value="{StaticResource Control.Md}" />
+        <Setter Property="Height" Value="{StaticResource Control.Md}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        <Setter Property="Padding" Value="8,0,16,0" />
+    </Style>
+
+    <Style Selector="TextBox.bare">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="15" />
+    </Style>
+
+    <Style Selector="TextBox.user-value">
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.AccentOutline}" />
+    </Style>
+
+</Styles>
