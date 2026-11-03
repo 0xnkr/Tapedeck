@@ -1,0 +1,13 @@
+<!-- Star colors of RatingView: filled stars in the accent, empty ones in Outline (also as buttons). -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Tapedeck.Controls">
+
+    <Style Selector="controls|RatingView Button.star">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Outline}" />
+    </Style>
+    <Style Selector="controls|RatingView controls|Glyph.on">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+    </Style>
+
+</Styles>
