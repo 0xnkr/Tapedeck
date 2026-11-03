@@ -1,0 +1,314 @@
+<!--
+    ControlThemes for Tapedeck's own controls (Tapedeck.Controls) and for lists.
+    Colors always via DynamicResource so the accent can change at runtime.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:res="using:Tapedeck.Resources"
+                    xmlns:controls="using:Tapedeck.Controls"
+                    xmlns:chrome="using:Avalonia.Controls.Chrome">
+
+    <!-- Island: Surface1 with large radius. Classes: table (tight padding), large (settings). -->
+    <ControlTheme x:Key="{x:Type controls:Island}" TargetType="controls:Island">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface1}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Island}" />
+        <Setter Property="Padding" Value="{StaticResource Pad.IslandCompact}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.table">
+            <Setter Property="Padding" Value="{StaticResource Pad.Table}" />
+        </Style>
+        <Style Selector="^.large">
+            <Setter Property="Padding" Value="{StaticResource Pad.Island}" />
+        </Style>
+        <!-- Pill-shaped bar, e.g. the link bar below the library header -->
+        <Style Selector="^.bar">
+            <Setter Property="Height" Value="64" />
+            <Setter Property="Padding" Value="22,8,8,8" />
+            <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        </Style>
+        <!-- Small pill floating above an island, e.g. the activity toast. One level brighter than Surface1. -->
+        <Style Selector="^.toast">
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+            <Setter Property="Padding" Value="8,8,20,8" />
+            <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Page header: headline and summary left, actions right. -->
+    <ControlTheme x:Key="{x:Type controls:PageHeader}" TargetType="controls:PageHeader">
+        <Setter Property="MinHeight" Value="56" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Classes="headline"
+                                   Text="{TemplateBinding Title}"
+                                   Foreground="{DynamicResource Brush.Text}" />
+                        <TextBlock Classes="support"
+                                   Text="{TemplateBinding Subtitle}"
+                                   Foreground="{DynamicResource Brush.Text2}"
+                                   IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </StackPanel>
+                    <ContentPresenter Grid.Column="1"
+                                      Content="{TemplateBinding Content}"
+                                      VerticalAlignment="Center" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Thin progress bar (6 px) used by the downloading status. -->
+    <ControlTheme x:Key="SlimProgressBar" TargetType="ProgressBar">
+        <Setter Property="Background" Value="{DynamicResource Brush.InfoContainer}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Info}" />
+        <Setter Property="Height" Value="6" />
+        <Setter Property="MinHeight" Value="6" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}" CornerRadius="3" ClipToBounds="True">
+                    <Border Name="PART_Indicator"
+                            Background="{TemplateBinding Foreground}"
+                            CornerRadius="3"
+                            HorizontalAlignment="Left" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Download status: color pair per status, icon and word. Downloading shows label and progress instead. -->
+    <ControlTheme x:Key="{x:Type controls:StatusChip}" TargetType="controls:StatusChip">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_Chip"
+                            Height="28"
+                            Padding="8,0,12,0"
+                            HorizontalAlignment="Left"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{StaticResource Radius.Pill}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <controls:Glyph Name="PART_Icon" Width="16" Height="16" StrokeThickness="2" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Label" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <StackPanel Name="PART_Progress"
+                                Width="132"
+                                Spacing="6"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                IsVisible="False">
+                        <TextBlock Text="{Binding Progress, RelativeSource={RelativeSource TemplatedParent}, StringFormat={x:Static res:Strings.Status_Downloading}}" />
+                        <ProgressBar Theme="{StaticResource SlimProgressBar}"
+                                     Minimum="0" Maximum="1"
+                                     Value="{TemplateBinding Progress}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:done">
+            <Setter Property="Background" Value="{DynamicResource Brush.SuccessContainer}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Success}" />
+        </Style>
+        <Style Selector="^:done /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Data" Value="{StaticResource Icon.Check}" />
+            <Setter Property="StrokeThickness" Value="2.2" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Status_Done}" />
+        </Style>
+
+        <Style Selector="^:pending">
+            <Setter Property="Background" Value="{DynamicResource Brush.PendingContainer}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Pending}" />
+        </Style>
+        <Style Selector="^:pending /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Data" Value="{StaticResource Icon.Clock}" />
+        </Style>
+        <Style Selector="^:pending /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Status_Pending}" />
+        </Style>
+
+        <Style Selector="^:error">
+            <Setter Property="Background" Value="{DynamicResource Brush.ErrorContainer}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Error}" />
+        </Style>
+        <Style Selector="^:error /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Data" Value="{StaticResource Icon.Alert}" />
+        </Style>
+        <Style Selector="^:error /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Status_Error}" />
+        </Style>
+
+        <Style Selector="^:downloading">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Info}" />
+        </Style>
+        <Style Selector="^:downloading /template/ Border#PART_Chip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:downloading /template/ StackPanel#PART_Progress">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Vinyl record on a 48 unit grid: black disc, grooves, two light reflections, label in the accent.
+         Spins at 33 1/3 rpm (1.8 s per turn) while :spinning. -->
+    <ControlTheme x:Key="{x:Type controls:VinylSpinner}" TargetType="controls:VinylSpinner">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Viewbox>
+                    <Canvas Name="PART_Disc" Width="48" Height="48">
+                        <Canvas.RenderTransform>
+                            <RotateTransform />
+                        </Canvas.RenderTransform>
+                        <Ellipse Canvas.Left="1" Canvas.Top="1" Width="46" Height="46"
+                                 Fill="{DynamicResource Brush.Bg}"
+                                 Stroke="{DynamicResource Brush.Outline}" StrokeThickness="1" />
+                        <Ellipse Canvas.Left="4" Canvas.Top="4" Width="40" Height="40"
+                                 Stroke="{DynamicResource Brush.OutlineVariant}" StrokeThickness="0.75" />
+                        <Ellipse Canvas.Left="7" Canvas.Top="7" Width="34" Height="34"
+                                 Stroke="{DynamicResource Brush.OutlineVariant}" StrokeThickness="0.75" />
+                        <Ellipse Canvas.Left="10" Canvas.Top="10" Width="28" Height="28"
+                                 Stroke="{DynamicResource Brush.OutlineVariant}" StrokeThickness="0.75" />
+                        <Path Fill="{DynamicResource Brush.Text}" Opacity="0.12"
+                              Data="M3.33,16.48 A22,22 0 0 1 14.70,4.06 L19.77,14.94 A10,10 0 0 0 14.60,20.58 Z M44.67,31.52 A22,22 0 0 1 33.30,43.94 L28.23,33.06 A10,10 0 0 0 33.40,27.42 Z" />
+                        <Ellipse Canvas.Left="16" Canvas.Top="16" Width="16" Height="16"
+                                 Fill="{DynamicResource Brush.Accent}" />
+                        <!-- Mark on the label so the turning is visible -->
+                        <Ellipse Canvas.Left="22.75" Canvas.Top="18" Width="2.5" Height="2.5"
+                                 Fill="{DynamicResource Brush.OnAccent}" Opacity="0.6" />
+                        <Ellipse Canvas.Left="22.5" Canvas.Top="22.5" Width="3" Height="3"
+                                 Fill="{DynamicResource Brush.Bg}" />
+                    </Canvas>
+                </Viewbox>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:spinning /template/ Canvas#PART_Disc">
+            <Style.Animations>
+                <Animation Duration="0:0:1.8" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="360" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </ControlTheme>
+
+    <!-- Rating: empty stars as outline. The accent of filled stars is in RatingStyles.axaml,
+         because ControlThemes cannot style the generated star children. -->
+    <ControlTheme x:Key="{x:Type controls:RatingView}" TargetType="controls:RatingView">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Outline}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel Name="PART_Stars" Orientation="Horizontal" Spacing="2" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Title bar: brand mark in the accent, app name, window buttons. -->
+    <ControlTheme x:Key="{x:Type controls:TitleBar}" TargetType="controls:TitleBar">
+        <Setter Property="Height" Value="{StaticResource Size.TitleBar}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="*,Auto"
+                      Background="Transparent"
+                      chrome:WindowDecorationProperties.ElementRole="TitleBar">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10"
+                                Margin="20,0,0,0"
+                                VerticalAlignment="Center"
+                                IsHitTestVisible="False">
+                        <controls:Glyph Data="{StaticResource Icon.Cassette}"
+                                        Foreground="{DynamicResource Brush.Accent}" />
+                        <TextBlock Text="{Binding $parent[Window].Title}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   LetterSpacing="0.2"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"
+                                Orientation="Horizontal"
+                                Spacing="2"
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Center">
+                        <Button Name="PART_Minimize"
+                                Classes="icon window"
+                                AutomationProperties.Name="{x:Static res:Strings.Window_Minimize}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Minimize}"
+                                chrome:WindowDecorationProperties.ElementRole="MinimizeButton" />
+                        <Button Name="PART_Maximize"
+                                Classes="icon window"
+                                AutomationProperties.Name="{x:Static res:Strings.Window_Maximize}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Maximize}"
+                                chrome:WindowDecorationProperties.ElementRole="MaximizeButton" />
+                        <Button Name="PART_Close"
+                                Classes="icon window"
+                                AutomationProperties.Name="{x:Static res:Strings.Window_Close}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                chrome:WindowDecorationProperties.ElementRole="CloseButton" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- List without chrome: just scrolling items. -->
+    <ControlTheme x:Key="PlainList" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ScrollViewer Name="PART_ScrollViewer"
+                              Background="{TemplateBinding Background}"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Table row: no divider, hover and selection tint the row with Surface2. -->
+    <ControlTheme x:Key="TableRow" TargetType="ListBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Field}" />
+        <Setter Property="Height" Value="{StaticResource Size.Row}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Margin" Value="0,0,0,2" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>
