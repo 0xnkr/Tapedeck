@@ -1,0 +1,74 @@
+<!--
+    Type scale from tokens.json (type.groups). Apply with style classes, e.g.
+    <TextBlock Classes="headline" />. Colors are not part of a text style.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Page title, once per view. -->
+    <Style Selector="TextBlock.headline">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="LineHeight" Value="34" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LetterSpacing" Value="-0.4" />
+    </Style>
+
+    <!-- Heading of an island. -->
+    <Style Selector="TextBlock.title">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="LineHeight" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Field contents, body text, buttons. -->
+    <Style Selector="TextBlock.body">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+
+    <!-- Title in the table, primary button label. -->
+    <Style Selector="TextBlock.body-strong">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Artist below the title, subtitles, hints. -->
+    <Style Selector="TextBlock.support">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="18" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+
+    <!-- Status chips, rail labels, column headers (then with class "medium"). -->
+    <Style Selector="TextBlock.label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="LineHeight" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="TextBlock.label.medium">
+        <Setter Property="FontWeight" Value="Medium" />
+    </Style>
+
+    <!-- Source chips next to metadata fields. -->
+    <Style Selector="TextBlock.caption">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="LineHeight" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LetterSpacing" Value="0.3" />
+    </Style>
+
+    <!-- File names, paths, video IDs, versions. -->
+    <Style Selector="TextBlock.mono">
+        <Setter Property="FontFamily" Value="{DynamicResource Font.Mono}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <!-- Numbers that line up in columns (durations, row numbers). -->
+    <Style Selector="TextBlock.tabular">
+        <Setter Property="FontFeatures" Value="+tnum" />
+    </Style>
+
+</Styles>
