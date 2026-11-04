@@ -285,4 +285,151 @@
   <data name="Notice_SaveFailed" xml:space="preserve">
     <value>Änderungen konnten nicht gespeichert werden: {0}</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Settings_Library" xml:space="preserve">
+    <value>Bibliothek</value>
+  </data>
+  <data name="Settings_LibraryHint" xml:space="preserve">
+    <value>Hier landen die Audio-Dateien. Diesen Ordner aufs Handy kopieren.</value>
+  </data>
+  <data name="Settings_Location" xml:space="preserve">
+    <value>Speicherort</value>
+  </data>
+  <data name="Settings_Change" xml:space="preserve">
+    <value>Ändern</value>
+  </data>
+  <data name="Settings_ChooseFolder" xml:space="preserve">
+    <value>Ordner für die Bibliothek wählen</value>
+  </data>
+  <data name="Settings_FileName" xml:space="preserve">
+    <value>Dateiname</value>
+  </data>
+  <data name="Settings_FileNamePattern" xml:space="preserve">
+    <value>Artist - Title.opus</value>
+  </data>
+  <data name="Settings_FileNameCollision" xml:space="preserve">
+    <value>bei Kollision: Artist - Title [video_id].opus</value>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>Wird nach einem Neustart wirksam</value>
+  </data>
+  <data name="Settings_LanguageSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Settings_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Settings_LanguageGerman" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>Akzentfarbe</value>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>Hervorhebungen, aktive Elemente und der Haupt-Button</value>
+  </data>
+  <data name="Settings_AccentCustom" xml:space="preserve">
+    <value>Eigene Farbe (Hex)</value>
+  </data>
+  <data name="Settings_AccentPreset" xml:space="preserve">
+    <value>Akzent {0}</value>
+  </data>
+  <data name="Settings_AccentInvalid" xml:space="preserve">
+    <value>„{0}“ ist keine Farbe. Format: #RRGGBB.</value>
+  </data>
+  <data name="Settings_Tools" xml:space="preserve">
+    <value>Werkzeuge</value>
+  </data>
+  <data name="Settings_ToolsHint" xml:space="preserve">
+    <value>Werden automatisch geladen. yt-dlp regelmäßig aktualisieren, sonst bricht YouTube den Download.</value>
+  </data>
+  <data name="Tools_NotInstalled" xml:space="preserve">
+    <value>Noch nicht installiert</value>
+  </data>
+  <data name="Tools_Update" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Move_SameFolder" xml:space="preserve">
+    <value>Das ist bereits der Bibliotheksordner.</value>
+  </data>
+  <data name="Move_InsideCurrentFolder" xml:space="preserve">
+    <value>Der neue Ordner darf nicht im bisherigen liegen.</value>
+  </data>
+  <data name="Move_NotWritable" xml:space="preserve">
+    <value>In diesen Ordner kann Tapedeck nicht schreiben.</value>
+  </data>
+  <data name="Move_NameTaken" xml:space="preserve">
+    <value>„{0}“ gibt es im neuen Ordner schon.</value>
+  </data>
+  <data name="Csv_FileType" xml:space="preserve">
+    <value>CSV-Datei</value>
+  </data>
+  <data name="Csv_ExportTitle" xml:space="preserve">
+    <value>Bibliothek exportieren</value>
+  </data>
+  <data name="Csv_ImportTitle" xml:space="preserve">
+    <value>Bibliothek importieren</value>
+  </data>
+  <data name="Csv_DefaultFileName" xml:space="preserve">
+    <value>tapedeck-bibliothek.csv</value>
+  </data>
+  <data name="Csv_ErrorLine" xml:space="preserve">
+    <value>Zeile {0}: {1}</value>
+  </data>
+  <data name="Csv_MissingUrlColumn" xml:space="preserve">
+    <value>die Datei hat keine Spalte „url“</value>
+  </data>
+  <data name="Csv_Malformed" xml:space="preserve">
+    <value>fehlerhaftes CSV ab hier</value>
+  </data>
+  <data name="Csv_InvalidUrl" xml:space="preserve">
+    <value>„{0}“ ist kein YouTube-Link</value>
+  </data>
+  <data name="Csv_InvalidYear" xml:space="preserve">
+    <value>„{0}“ ist kein Jahr</value>
+  </data>
+  <data name="Csv_InvalidRating" xml:space="preserve">
+    <value>„{0}“ ist keine Bewertung von 1 bis 5</value>
+  </data>
+  <data name="Activity_Importing" xml:space="preserve">
+    <value>Importiere {0}/{1} …</value>
+  </data>
+  <data name="Activity_MovingLibrary" xml:space="preserve">
+    <value>Verschiebe Dateien {0}/{1} …</value>
+  </data>
+  <data name="Activity_UpdatingYtDlp" xml:space="preserve">
+    <value>Aktualisiere yt-dlp …</value>
+  </data>
+  <data name="Confirm_Exported" xml:space="preserve">
+    <value>{0} Titel exportiert</value>
+  </data>
+  <data name="Confirm_Imported" xml:space="preserve">
+    <value>{0} Titel importiert</value>
+  </data>
+  <data name="Confirm_LibraryMoved" xml:space="preserve">
+    <value>{0} Dateien verschoben</value>
+  </data>
+  <data name="Confirm_YtDlpUpdated" xml:space="preserve">
+    <value>yt-dlp ist jetzt {0}</value>
+  </data>
+  <data name="Notice_ImportResult" xml:space="preserve">
+    <value>{0} importiert, {1} übersprungen – {2}</value>
+  </data>
+  <data name="Notice_ExportFailed" xml:space="preserve">
+    <value>Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Notice_MoveFailed" xml:space="preserve">
+    <value>Bibliothek konnte nicht verschoben werden: {0}</value>
+  </data>
+  <data name="Notice_UpdateFailed" xml:space="preserve">
+    <value>yt-dlp konnte nicht aktualisiert werden: {0}</value>
+  </data>
 </root>
