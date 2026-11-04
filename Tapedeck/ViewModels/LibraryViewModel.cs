@@ -30,7 +30,7 @@ public partial class LibraryViewModel(
     ITrackRepository repository,
     TrackImportService importer,
     DownloadService downloader,
-    ToolService tools,
+    ToolSetup toolSetup,
     AppPaths paths,
     IPlatformService platform,
     ActivityService activity,
@@ -46,7 +46,6 @@ public partial class LibraryViewModel(
     private readonly Dictionary<long, CancellationTokenSource> running = [];
     // the current "download pending" or "download missing" run
     private CancellationTokenSource? batch;
-    private Task? toolsReady;
 
     /// <summary>Rows that pass the current filter and search.</summary>
     public ObservableCollection<TrackRowViewModel> Tracks { get; } = [];
@@ -102,9 +101,22 @@ public partial class LibraryViewModel(
         this.Notice = null;
         // the field stays editable while tools and metadata load, so import the link that was confirmed
         var link = this.NewLink;
+        if (PlaylistLink.TryParse(link, out var listId))
+        {
+            // a video opened inside a playlist: only the user knows which of the two is meant
+            var wholePlaylist = VideoId.TryParse(link, out _) ? await this.AskWholePlaylistAsync() : true;
+            if (wholePlaylist is null)
+                return;
+            if (wholePlaylist.Value)
+            {
+                await this.ImportPlaylistAsync(link, listId);
+                return;
+            }
+        }
+
         try
         {
-            await this.EnsureToolsAsync();
+            await toolSetup.EnsureAsync();
             long id;
             using (activity.Begin(Strings.Activity_FetchingInfo))
                 id = await importer.AddAsync(link);
@@ -122,7 +134,32 @@ public partial class LibraryViewModel(
         }
     }
 
-    private bool CanAddLink() => VideoId.TryParse(this.NewLink, out _);
+    private bool CanAddLink() => VideoId.TryParse(this.NewLink, out _) || PlaylistLink.TryParse(this.NewLink, out _);
+
+    /// <returns><c>true</c> for the whole playlist, <c>false</c> for the single video, <c>null</c> when cancelled.</returns>
+    private async Task<bool?> AskWholePlaylistAsync()
+    {
+        var answer = await dialogs.ConfirmAsync(new ConfirmRequest(
+            Strings.LinkInPlaylist_Title, Strings.LinkInPlaylist_Message, Strings.Library_Add,
+            OptionText: Strings.LinkInPlaylist_Option));
+        return answer?.Option;
+    }
+
+    /// <summary>Reads the playlist, then the playlists page creates or syncs the linked playlist and opens it.</summary>
+    private async Task ImportPlaylistAsync(string link, string listId)
+    {
+        try
+        {
+            var source = await playlists.FetchPlaylistAsync(listId);
+            if (this.NewLink == link)
+                this.NewLink = string.Empty;
+            await playlists.ImportAsync(source);
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_PlaylistReadFailed, ex.Message);
+        }
+    }
 
     [RelayCommand]
     private async Task PasteLinkAsync()
@@ -239,7 +276,7 @@ public partial class LibraryViewModel(
         {
             try
             {
-                await this.EnsureToolsAsync();
+                await toolSetup.EnsureAsync();
                 imported = await this.ImportTracksAsync(csv.Tracks, errors);
             }
             catch (Exception ex)
@@ -339,6 +376,26 @@ public partial class LibraryViewModel(
             await playlists.AddTrackAsync(playlist.Id, row.Id, row.Title);
     }
 
+    /// <summary>
+    /// Adds rows for tracks created elsewhere, e.g. by a playlist import. Existing rows stay as they are,
+    /// so running downloads keep their progress and other pages their shared rows.
+    /// </summary>
+    public async Task AddNewTracksAsync()
+    {
+        var existing = this.all.ToDictionary(r => r.Id);
+        var rows = (await repository.ListDisplayAsync()).Select((track, index) =>
+        {
+            if (!existing.TryGetValue(track.Id, out var row))
+                return this.NewRow(track, index + 1);
+            row.Number = index + 1;
+            return row;
+        }).ToList();
+
+        this.all.Clear();
+        this.all.AddRange(rows);
+        this.OnTracksChanged();
+    }
+
     /// <summary>The shared row of a track, so other pages show the same status and progress.</summary>
     public TrackRowViewModel? RowFor(long trackId) => this.all.Find(r => r.Id == trackId);
 
@@ -398,7 +455,7 @@ public partial class LibraryViewModel(
         this.IsDownloading = true;
         try
         {
-            await this.EnsureToolsAsync();
+            await toolSetup.EnsureAsync();
             using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
                 await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p), cts.Token);
             activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
@@ -419,23 +476,6 @@ public partial class LibraryViewModel(
         }
 
         await this.RefreshRowAsync(row.Id);
-    }
-
-    /// <summary>yt-dlp, ffmpeg and Deno are downloaded once on first use.</summary>
-    private async Task EnsureToolsAsync()
-    {
-        try
-        {
-            if (tools.HasAllTools)
-                return;
-            using (activity.Begin(Strings.Activity_InstallingTools))
-                await (this.toolsReady ??= tools.EnsureToolsAsync());
-        }
-        catch
-        {
-            this.toolsReady = null;
-            throw;
-        }
     }
 
     private async Task RefreshRowAsync(long id)

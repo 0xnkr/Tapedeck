@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -5,6 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
+using Tapedeck.Core.Services;
+using Tapedeck.Resources;
 using Tapedeck.Services;
 
 namespace Tapedeck.ViewModels;
@@ -20,14 +23,19 @@ public sealed class PlaylistEntryViewModel(int position, TrackRowViewModel row) 
     public TrackRowViewModel Row { get; } = row;
 }
 
-/// <summary>One playlist: its tracks in order, reorder, remove, download, rename and delete.</summary>
+/// <summary>One playlist: its tracks in order, reorder, remove, download, rename and delete; sync when linked to YouTube.</summary>
 public partial class PlaylistDetailViewModel(
     long playlistId,
     IPlaylistRepository repository,
+    PlaylistImportService importer,
     LibraryViewModel library,
     PlaylistsViewModel playlists,
+    ActivityService activity,
     NavigationService navigation) : ViewModelBase
 {
+    // the playlist's YouTube source, null when it was made in the app
+    private string? sourceUrl;
+
     public ObservableCollection<PlaylistEntryViewModel> Entries { get; } = [];
 
     [ObservableProperty]
@@ -40,6 +48,19 @@ public partial class PlaylistDetailViewModel(
     public partial PlaylistEntryViewModel? SelectedEntry { get; set; }
 
     public bool IsEmpty => this.Entries.Count == 0;
+
+    /// <summary>Linked to a YouTube playlist, so it can be synced.</summary>
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SyncCommand))]
+    public partial bool IsLinked { get; private set; }
+
+    /// <summary>Videos that could not be added during the last import or sync.</summary>
+    [ObservableProperty]
+    public partial string? Notice { get; private set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SyncCommand))]
+    public partial bool IsSyncing { get; private set; }
 
     [RelayCommand]
     private async Task LoadAsync()
@@ -57,16 +78,82 @@ public partial class PlaylistDetailViewModel(
             .ToList();
 
         this.Name = playlist.Name;
+        this.sourceUrl = playlist.SourceUrl;
+        this.IsLinked = playlist.SourceUrl is not null;
         this.Entries.Clear();
         for (var i = 0; i < rows.Count; i++)
             this.Entries.Add(new PlaylistEntryViewModel(i, rows[i]));
         this.SelectedEntry = this.Entries.FirstOrDefault(e => e.Row.Id == selectedTrack);
-        this.Summary = PlaylistsViewModel.SummaryOf(rows.Count, rows.Count(r => r.Status == DownloadStatus.Done));
+        this.Summary = PlaylistsViewModel.SummaryOf(rows.Count, rows.Count(r => r.Status == DownloadStatus.Done), this.IsLinked);
         this.OnPropertyChanged(nameof(this.IsEmpty));
     }
 
     [RelayCommand]
     private void Back() => navigation.Back();
+
+    /// <summary>Reads the YouTube playlist again and adds its new videos.</summary>
+    [RelayCommand(CanExecute = nameof(CanSync))]
+    private async Task SyncAsync()
+    {
+        if (!PlaylistLink.TryParse(this.sourceUrl, out var listId))
+            return;
+
+        this.Notice = null;
+        YtPlaylist source;
+        try
+        {
+            source = await playlists.FetchPlaylistAsync(listId);
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_PlaylistReadFailed, ex.Message);
+            return;
+        }
+        await this.ImportAsync(source);
+    }
+
+    private bool CanSync() => this.IsLinked && !this.IsSyncing;
+
+    /// <summary>
+    /// Appends the videos of the YouTube playlist that are not in this playlist yet; new ones are fetched like a
+    /// pasted link. Videos that fail are listed in <see cref="Notice"/> and tried again on the next sync.
+    /// </summary>
+    public async Task ImportAsync(YtPlaylist source)
+    {
+        // right after creating the playlist, its page may not have loaded the name yet
+        var name = this.Name.Length > 0 ? this.Name : source.Title ?? string.Empty;
+        this.Notice = null;
+        this.IsSyncing = true;
+        PlaylistImportResult result;
+        try
+        {
+            using var progress = activity.Begin(string.Format(Strings.Activity_ImportingPlaylist, name, 0, source.Entries.Count));
+            result = await importer.ImportAsync(playlistId, source, new Progress<(int Done, int Total)>(p =>
+                progress.Update(string.Format(Strings.Activity_ImportingPlaylist, name, p.Done, p.Total))));
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_PlaylistImportFailed, ex.Message);
+            return;
+        }
+        finally
+        {
+            this.IsSyncing = false;
+            // also after a failure: some tracks may be in the library already
+            await library.AddNewTracksAsync();
+            await this.ChangedAsync();
+        }
+
+        this.Notice = result.Errors.Count == 0 ? null : string.Format(Strings.Notice_PlaylistVideosFailed, result.Errors.Count,
+            string.Join("; ", result.Errors.Take(3).Select(e => string.Format(Strings.Playlist_VideoError, e.Title ?? e.VideoId, e.Message)))
+            + (result.Errors.Count > 3 ? " …" : string.Empty));
+        activity.Confirm(result.Added switch
+        {
+            0 => string.Format(Strings.Confirm_PlaylistUpToDate, name),
+            1 => string.Format(Strings.Confirm_PlaylistImported_One, name),
+            _ => string.Format(Strings.Confirm_PlaylistImported_Other, name, result.Added),
+        });
+    }
 
     /// <summary>Downloads the playlist's pending and missing tracks with the library's download logic.</summary>
     [RelayCommand]

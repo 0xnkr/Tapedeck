@@ -36,11 +36,13 @@ public static class AppServices
         services.AddSingleton<TagWriter>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
+        services.AddSingleton<PlaylistImportService>();
         services.AddSingleton<LibraryMover>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
         services.AddSingleton<ActivityService>();
+        services.AddSingleton<ToolSetup>();
         services.AddSingleton<NavigationService>();
         services.AddSingleton<DialogService>();
         services.AddSingleton<LibraryFiles>();

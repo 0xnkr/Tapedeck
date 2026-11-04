@@ -10,10 +10,17 @@
 
         <controls:PageHeader Title="{x:Static res:Strings.Playlists_Title}"
                              Subtitle="{x:Static res:Strings.Playlists_Hint}">
-            <Button Classes="primary lg"
-                    Content="{x:Static res:Strings.Playlists_New}"
-                    controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
-                    Command="{Binding CreateCommand}" />
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Playlists_FromLink}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Link}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlists_FromLinkHint}"
+                        Command="{Binding ImportFromLinkCommand}" />
+                <Button Classes="primary lg"
+                        Content="{x:Static res:Strings.Playlists_New}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                        Command="{Binding CreateCommand}" />
+            </StackPanel>
         </controls:PageHeader>
 
         <controls:Island Grid.Row="1" Classes="table">

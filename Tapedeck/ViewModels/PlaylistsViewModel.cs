@@ -25,7 +25,7 @@ public partial class PlaylistItemViewModel(Playlist playlist, int downloaded, Ac
     public string Name { get; } = playlist.Name;
 
     /// <summary>"20 tracks · 18 downloaded"; missing files do not count as downloaded.</summary>
-    public string Summary { get; } = PlaylistsViewModel.SummaryOf(playlist.TrackCount, downloaded);
+    public string Summary { get; } = PlaylistsViewModel.SummaryOf(playlist.TrackCount, downloaded, playlist.SourceUrl is not null);
 
     public string OpenLabel => string.Format(Strings.Playlists_Open, this.Name);
 
@@ -44,6 +44,9 @@ public partial class PlaylistsViewModel(
     ActivityService activity,
     NavigationService navigation,
     PlaylistSync sync,
+    ToolSetup toolSetup,
+    MetadataService metadata,
+    IPlatformService platform,
     PlaylistDetailFactory createDetail) : ViewModelBase
 {
     /// <summary>All playlists by name; shared with the "add to playlist" menus.</summary>
@@ -70,6 +73,55 @@ public partial class PlaylistsViewModel(
 
     [RelayCommand]
     private Task CreateAsync() => this.CreateWithPromptAsync();
+
+    /// <summary>Asks for the link of a YouTube playlist; the dialog stays open with the reason until it can be read.</summary>
+    [RelayCommand]
+    private async Task ImportFromLinkAsync()
+    {
+        // offer the clipboard when it holds a playlist link, the usual way to get here
+        var clipboard = (await platform.GetClipboardTextAsync())?.Trim();
+        var initial = PlaylistLink.TryParse(clipboard, out _) ? clipboard! : string.Empty;
+
+        YtPlaylist? source = null;
+        var link = await dialogs.PromptAsync(new PromptRequest(
+            Strings.Prompt_ImportPlaylistTitle, Strings.Prompt_PlaylistLink, Strings.Prompt_Import, initial,
+            async text =>
+            {
+                if (!PlaylistLink.TryParse(text, out var listId))
+                    return PlaylistLink.IsMixLink(text) ? Strings.Prompt_MixLink : Strings.Prompt_NotAPlaylistLink;
+                try
+                {
+                    source = await this.FetchPlaylistAsync(listId);
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    return string.Format(Strings.Notice_PlaylistReadFailed, ex.Message);
+                }
+            }));
+        if (link is not null && source is not null)
+            await this.ImportAsync(source);
+    }
+
+    /// <summary>Reads the videos of a YouTube playlist; installs the tools first if needed.</summary>
+    public async Task<YtPlaylist> FetchPlaylistAsync(string listId)
+    {
+        await toolSetup.EnsureAsync();
+        using (activity.Begin(Strings.Activity_ReadingPlaylist))
+            return await metadata.FetchPlaylistAsync(listId);
+    }
+
+    /// <summary>
+    /// Creates a playlist linked to the YouTube playlist, or takes the one imported before, opens it and adds the videos.
+    /// </summary>
+    public async Task ImportAsync(YtPlaylist source)
+    {
+        var url = PlaylistLink.Url(source.Id);
+        var id = (await repository.FindBySourceAsync(url))?.Id
+                 ?? await repository.CreateAsync(await this.FreeNameAsync(source.Title ?? Strings.Playlist_YoutubeName), url);
+        await this.ChangedAsync();
+        await this.Open(id).ImportAsync(source);
+    }
 
     /// <summary>Asks for a name and creates the playlist.</summary>
     /// <returns>The new playlist, or <c>null</c> when cancelled.</returns>
@@ -132,17 +184,31 @@ public partial class PlaylistsViewModel(
         sync.Request();
     }
 
-    public static string SummaryOf(int trackCount, int doneCount)
+    public static string SummaryOf(int trackCount, int doneCount, bool isLinked)
     {
         var count = string.Format(trackCount == 1 ? Strings.Library_TrackCount_One : Strings.Library_TrackCount_Other, trackCount);
-        return string.Format(Strings.Library_Summary, count, doneCount);
+        var summary = string.Format(Strings.Library_Summary, count, doneCount);
+        return isLinked ? string.Format(Strings.Playlist_Linked, summary) : summary;
     }
 
-    private void OpenPlaylist(PlaylistItemViewModel playlist)
+    private void OpenPlaylist(PlaylistItemViewModel playlist) => this.Open(playlist.Id);
+
+    private PlaylistDetailViewModel Open(long id)
     {
-        var detail = createDetail(playlist.Id);
+        var detail = createDetail(id);
         navigation.Open(detail);
         detail.LoadCommand.Execute(null);
+        return detail;
+    }
+
+    /// <summary>The wanted name, or "Name (2)", "Name (3)", … when it is taken.</summary>
+    private async Task<string> FreeNameAsync(string wanted)
+    {
+        var baseName = wanted.Trim().Length > 0 ? wanted.Trim() : Strings.Playlist_YoutubeName;
+        var name = baseName;
+        for (var i = 2; await this.ValidateNameAsync(name, exceptId: null) is not null; i++)
+            name = string.Format(Strings.Playlist_NumberedName, baseName, i);
+        return name;
     }
 
     /// <summary>The name must be set, unused and must not map to another playlist's .m3u8 file name.</summary>
