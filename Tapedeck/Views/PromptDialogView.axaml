@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.PromptDialogView"
+             x:DataType="vm:PromptDialogViewModel">
+
+    <!-- Scrim over the window, the text field on an island in the middle -->
+    <Panel>
+        <Border Background="{DynamicResource Brush.Bg}" Opacity="0.7" />
+        <controls:Island Classes="large"
+                         Width="440"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
+            <StackPanel Spacing="{StaticResource Space.4}">
+                <TextBlock Classes="title" Text="{Binding Request.Title}" TextWrapping="Wrap" />
+                <StackPanel Spacing="{StaticResource Space.2}">
+                    <TextBlock Classes="support" Text="{Binding Request.Label}" Foreground="{DynamicResource Brush.Text2}" />
+                    <TextBox Name="InputBox"
+                             Text="{Binding Text}"
+                             AutomationProperties.Name="{Binding Request.Label}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding Gesture="Enter" Command="{Binding ConfirmCommand}" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                    <TextBlock Classes="support"
+                               Text="{Binding Error}"
+                               Foreground="{DynamicResource Brush.Error}"
+                               TextWrapping="Wrap"
+                               IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}" HorizontalAlignment="Right">
+                    <Button Content="{x:Static res:Strings.Dialog_Cancel}"
+                            Command="{Binding CancelCommand}" />
+                    <Button Classes="tonal"
+                            Content="{Binding Request.ConfirmText}"
+                            Command="{Binding ConfirmCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </controls:Island>
+    </Panel>
+</UserControl>

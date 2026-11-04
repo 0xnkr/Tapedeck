@@ -4,38 +4,50 @@ using Tapedeck.ViewModels;
 
 namespace Tapedeck.Services;
 
-/// <summary>Shows confirmations as overlay in the main window, one at a time.</summary>
+/// <summary>Shows confirmations and text prompts as overlay in the main window, one at a time.</summary>
 public sealed partial class DialogService : ObservableObject
 {
-    /// <summary>The open dialog, or <c>null</c>.</summary>
+    /// <summary>The open dialog (<see cref="ConfirmDialogViewModel"/> or <see cref="PromptDialogViewModel"/>), or <c>null</c>.</summary>
     [ObservableProperty]
-    public partial ConfirmDialogViewModel? Current { get; private set; }
+    public partial ViewModelBase? Current { get; private set; }
 
     /// <returns>The answer, or <c>null</c> when cancelled or another dialog is already open.</returns>
-    public async Task<ConfirmResult?> ConfirmAsync(ConfirmRequest request)
+    public Task<ConfirmResult?> ConfirmAsync(ConfirmRequest request)
     {
-        if (this.Current is not null)
-            return null;
-
         var dialog = new ConfirmDialogViewModel(request);
-        this.Current = dialog;
-        try
-        {
-            return await dialog.Answer;
-        }
-        finally
-        {
-            this.Current = null;
-        }
+        return this.ShowAsync(dialog, dialog.Answer);
+    }
+
+    /// <returns>The entered text, or <c>null</c> when cancelled or another dialog is already open.</returns>
+    public Task<string?> PromptAsync(PromptRequest request)
+    {
+        var dialog = new PromptDialogViewModel(request);
+        return this.ShowAsync(dialog, dialog.Answer);
     }
 
     /// <summary>Cancels the open dialog, e.g. on Escape.</summary>
     /// <returns><c>true</c> when a dialog was open.</returns>
     public bool CancelCurrent()
     {
-        if (this.Current is not { } dialog)
+        if (this.Current is not IDialog dialog)
             return false;
-        dialog.CancelCommand.Execute(null);
+        dialog.Cancel();
         return true;
+    }
+
+    private async Task<T?> ShowAsync<T>(ViewModelBase dialog, Task<T?> answer) where T : class
+    {
+        if (this.Current is not null)
+            return null;
+
+        this.Current = dialog;
+        try
+        {
+            return await answer;
+        }
+        finally
+        {
+            this.Current = null;
+        }
     }
 }
