@@ -20,6 +20,13 @@ public interface ITrackRepository
     /// </summary>
     /// <returns>Number of reset tracks.</returns>
     Task<int> ResetInterruptedDownloadsAsync();
+
+    /// <summary>Points the track to its renamed file (relative to the library).</summary>
+    Task SetFilePathAsync(long id, string filePath);
+
+    /// <summary>Removes the track with its genres and playlist entries. Files are up to the caller.</summary>
+    Task DeleteAsync(long id);
+
     Task SetThumbPathAsync(long id, string thumbPath);
     Task SetCoverAsync(long id, string coverPath, string coverSource);
 

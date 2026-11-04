@@ -43,6 +43,9 @@ public sealed class DownloadService(ITrackRepository repository, ToolService too
                 name => File.Exists(paths.ToLibraryPath(name)));
             // overwrite only ever hits the track's own file from an earlier download
             File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
+            // a correction since the last download gave the file a new name; drop the outdated copy
+            if (track.FilePath is { } oldFile && !string.Equals(oldFile, fileName, StringComparison.OrdinalIgnoreCase))
+                File.Delete(paths.ToLibraryPath(oldFile));
 
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, FORMAT);
             await tagWriter.WriteTagsAsync(trackId);
@@ -50,7 +53,9 @@ public sealed class DownloadService(ITrackRepository repository, ToolService too
         }
         catch (OperationCanceledException)
         {
-            await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Pending);
+            // a cancelled repeat download leaves the earlier file in place
+            var hadFile = track.FilePath is { } file && File.Exists(paths.ToLibraryPath(file));
+            await repository.UpdateDownloadStateAsync(trackId, hadFile ? DownloadStatus.Done : DownloadStatus.Pending);
             this.CleanTemp(track.VideoId);
             throw;
         }
