@@ -30,5 +30,6 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths)
                 : [];
             file.Save();
         });
+        await repository.MarkTagsWrittenAsync(trackId);
     }
 }

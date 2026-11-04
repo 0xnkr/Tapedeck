@@ -1,4 +1,6 @@
+using System.Data.Common;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
 
@@ -6,6 +8,9 @@ namespace Tapedeck.Data;
 
 public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) : ITrackRepository
 {
+    // Milliseconds, so an edit right after writing the tags still counts as newer
+    private const string Now = "strftime('%Y-%m-%dT%H:%M:%fZ', 'now')";
+
     public async Task<long> AddAsync(string videoId, string url)
     {
         await using var connection = await connectionFactory.OpenAsync();
@@ -108,14 +113,15 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
     {
         await using var connection = await connectionFactory.OpenAsync();
         await connection.ExecuteAsync(
-            """
+            $"""
             UPDATE tracks SET
                 user_artist       = @Artist,
                 user_title        = @Title,
                 user_album        = @Album,
                 user_album_artist = @AlbumArtist,
                 user_year         = @Year,
-                notes             = @Notes
+                notes             = @Notes,
+                edited_at         = {Now}
             WHERE id = @id;
             """,
             new { id, f.Artist, f.Title, f.Album, f.AlbumArtist, f.Year, f.Notes });
@@ -131,6 +137,33 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
     {
         await using var connection = await connectionFactory.OpenAsync();
         await using var transaction = await connection.BeginTransactionAsync();
+        await InsertTagAsync(connection, transaction, trackId, name, source);
+        await transaction.CommitAsync();
+    }
+
+    public async Task SetUserTagsAsync(long trackId, IReadOnlyList<string> names)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        await connection.ExecuteAsync(
+            "DELETE FROM track_tags WHERE track_id = @trackId AND source = @source;",
+            new { trackId, source = TagSource.User.ToDb() }, transaction);
+        foreach (var name in names)
+            await InsertTagAsync(connection, transaction, trackId, name, TagSource.User);
+        await connection.ExecuteAsync(
+            $"UPDATE tracks SET edited_at = {Now} WHERE id = @trackId;", new { trackId }, transaction);
+        await transaction.CommitAsync();
+    }
+
+    public async Task MarkTagsWrittenAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {Now} WHERE id = @id;", new { id });
+    }
+
+    private static async Task InsertTagAsync(SqliteConnection connection, DbTransaction transaction,
+        long trackId, string name, TagSource source)
+    {
         await connection.ExecuteAsync(
             "INSERT INTO tags (name) VALUES (@name) ON CONFLICT (name) DO NOTHING;", new { name }, transaction);
         await connection.ExecuteAsync(
@@ -140,6 +173,5 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
             ON CONFLICT DO NOTHING;
             """,
             new { trackId, name, source = source.ToDb() }, transaction);
-        await transaction.CommitAsync();
     }
 }
