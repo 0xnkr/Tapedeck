@@ -26,6 +26,16 @@
                         Content="{x:Static res:Strings.Track_OpenOnYoutube}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
                         Command="{Binding OpenOnYoutubeCommand}" />
+                <Button Classes="lg"
+                        Content="{x:Static res:Strings.Track_AddToPlaylist}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight"
+                                    FlyoutPresenterClasses="playlist-menu"
+                                    ItemsSource="{Binding Row.PlaylistMenu}"
+                                    Opening="OnPlaylistMenuOpening" />
+                    </Button.Flyout>
+                </Button>
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Detail_Redownload}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"

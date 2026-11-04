@@ -20,5 +20,6 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="avares://Tapedeck/Theme/TapedeckStyles.axaml" />
+        <StyleInclude Source="avares://Tapedeck/Views/PlaylistMenuStyles.axaml" />
     </Application.Styles>
 </Application>

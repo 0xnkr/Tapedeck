@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Resources;
@@ -61,9 +62,10 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly IAccentService accent;
     private readonly ActivityService activity;
     private readonly IPlatformService platform;
+    private readonly PlaylistSync playlistSync;
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
-        IAccentService accent, ActivityService activity, IPlatformService platform)
+        IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync)
     {
         this.store = store;
         this.paths = paths;
@@ -72,6 +74,7 @@ public partial class SettingsViewModel : ViewModelBase
         this.accent = accent;
         this.activity = activity;
         this.platform = platform;
+        this.playlistSync = playlistSync;
 
         this.Accents = accent.PresetHexes.Select(hex => new AccentOptionViewModel(hex, this.SelectAccent)).ToList();
         this.Credits = Tapedeck.Credits.ALL.Select(credit => new CreditViewModel(credit, platform)).ToList();
@@ -174,6 +177,7 @@ public partial class SettingsViewModel : ViewModelBase
         try
         {
             int moved;
+            var oldDir = this.paths.LibraryDir;
             using (var progress = this.activity.Begin(string.Format(Strings.Activity_MovingLibrary, 0, "…")))
             {
                 moved = await this.mover.MoveAsync(folder, new Progress<(int Done, int Total)>(p =>
@@ -181,6 +185,9 @@ public partial class SettingsViewModel : ViewModelBase
             }
 
             this.store.Update(s => s with { LibraryDir = folder });
+            // the .m3u8 files are written anew next to the moved tracks
+            PlaylistExporter.RemoveExported(oldDir);
+            await this.playlistSync.SyncNowAsync();
             this.LibraryDir = folder;
             this.activity.Confirm(string.Format(Strings.Confirm_LibraryMoved, moved));
         }

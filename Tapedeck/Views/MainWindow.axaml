@@ -45,10 +45,9 @@
                                  GroupName="Navigation"
                                  Content="{x:Static res:Strings.Nav_Playlists}"
                                  controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}"
-                                 IsEnabled="False"
                                  IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Playlists}}"
-                             Command="{Binding ShowPageCommand}"
-                             CommandParameter="{x:Static vm:AppPage.Playlists}" />
+                                 Command="{Binding ShowPageCommand}"
+                                 CommandParameter="{x:Static vm:AppPage.Playlists}" />
                 </StackPanel>
             </DockPanel>
 

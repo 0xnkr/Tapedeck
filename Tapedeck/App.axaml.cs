@@ -48,6 +48,8 @@ public partial class App : Application
             desktop.MainWindow = new MainWindow { DataContext = main };
             desktop.Exit += (_, _) => services.Dispose();
             main.Library.LoadCommand.Execute(null);
+            // the "add to playlist" menus need the playlists before the page is opened
+            main.Playlists.LoadCommand.Execute(null);
         }
 
         base.OnFrameworkInitializationCompleted();
