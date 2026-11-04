@@ -24,34 +24,34 @@ public delegate TrackDetailViewModel TrackDetailFactory(TrackRowViewModel row, I
 /// </summary>
 public partial class TrackDetailViewModel : ViewModelBase
 {
-    private static readonly TimeSpan SaveDelay = TimeSpan.FromMilliseconds(600);
+    private static readonly TimeSpan SAVE_DELAY = TimeSpan.FromMilliseconds(600);
 
-    private readonly ITrackActions _actions;
-    private readonly ITrackRepository _repository;
-    private readonly TagWriter _tagWriter;
-    private readonly ActivityService _activity;
-    private readonly NavigationService _navigation;
+    private readonly ITrackActions actions;
+    private readonly ITrackRepository repository;
+    private readonly TagWriter tagWriter;
+    private readonly ActivityService activity;
+    private readonly NavigationService navigation;
 
-    private CancellationTokenSource? _pendingSave;
-    private string? _notes;
-    private bool _loading;
+    private CancellationTokenSource? pendingSave;
+    private string? notes;
+    private bool loading;
 
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, ITrackRepository repository,
         TagWriter tagWriter, ActivityService activity, NavigationService navigation)
     {
-        Row = row;
-        _actions = actions;
-        _repository = repository;
-        _tagWriter = tagWriter;
-        _activity = activity;
-        _navigation = navigation;
+        this.Row = row;
+        this.actions = actions;
+        this.repository = repository;
+        this.tagWriter = tagWriter;
+        this.activity = activity;
+        this.navigation = navigation;
 
-        ArtistField = new MetadataFieldViewModel(Strings.Field_Artist, ScheduleSave);
-        TitleField = new MetadataFieldViewModel(Strings.Field_Title, ScheduleSave);
-        AlbumField = new MetadataFieldViewModel(Strings.Field_Album, ScheduleSave);
-        AlbumArtistField = new MetadataFieldViewModel(Strings.Field_AlbumArtist, ScheduleSave);
-        YearField = new MetadataFieldViewModel(Strings.Field_Year, ScheduleSave);
-        Fields = [ArtistField, TitleField, AlbumField, AlbumArtistField, YearField];
+        this.ArtistField = new MetadataFieldViewModel(Strings.Field_Artist, this.ScheduleSave);
+        this.TitleField = new MetadataFieldViewModel(Strings.Field_Title, this.ScheduleSave);
+        this.AlbumField = new MetadataFieldViewModel(Strings.Field_Album, this.ScheduleSave);
+        this.AlbumArtistField = new MetadataFieldViewModel(Strings.Field_AlbumArtist, this.ScheduleSave);
+        this.YearField = new MetadataFieldViewModel(Strings.Field_Year, this.ScheduleSave);
+        this.Fields = [this.ArtistField, this.TitleField, this.AlbumField, this.AlbumArtistField, this.YearField];
     }
 
     /// <summary>The library row: status and progress stay in sync with downloads started anywhere.</summary>
@@ -93,7 +93,7 @@ public partial class TrackDetailViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(WriteTagsCommand))]
     public partial string? FileName { get; private set; }
 
-    public bool HasFile => FileName is not null;
+    public bool HasFile => this.FileName is not null;
 
     [ObservableProperty]
     public partial string? FileFormat { get; private set; }
@@ -126,108 +126,108 @@ public partial class TrackDetailViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadAsync()
     {
-        if (await _repository.GetDisplayAsync(Row.Id) is not { } track)
+        if (await this.repository.GetDisplayAsync(this.Row.Id) is not { } track)
             return;
 
-        _loading = true;
-        Title = track.Title;
-        Subtitle = string.Join(" · ", new[] { track.Artist, track.Album, Row.DurationText }.Where(p => !string.IsNullOrEmpty(p)));
-        ThumbPath = track.ThumbPath;
-        FileName = track.FilePath;
-        FileFormat = track.FileFormat;
-        DownloadedAt = FormatTimestamp(track.DownloadedAt);
-        ErrorMessage = track.ErrorMsg;
-        TagsStale = track.TagsStale;
-        Channel = track.Channel;
-        UploadedAt = FormatUploadDate(track.UploadDate);
-        VideoId = track.VideoId;
-        AddedAt = FormatTimestamp(track.AddedAt);
-        Rating = track.Rating;
-        _notes = track.Notes;
+        this.loading = true;
+        this.Title = track.Title;
+        this.Subtitle = string.Join(" · ", new[] { track.Artist, track.Album, Row.DurationText }.Where(p => !string.IsNullOrEmpty(p)));
+        this.ThumbPath = track.ThumbPath;
+        this.FileName = track.FilePath;
+        this.FileFormat = track.FileFormat;
+        this.DownloadedAt = FormatTimestamp(track.DownloadedAt);
+        this.ErrorMessage = track.ErrorMsg;
+        this.TagsStale = track.TagsStale;
+        this.Channel = track.Channel;
+        this.UploadedAt = FormatUploadDate(track.UploadDate);
+        this.VideoId = track.VideoId;
+        this.AddedAt = FormatTimestamp(track.AddedAt);
+        this.Rating = track.Rating;
+        this.notes = track.Notes;
 
-        Genres.Clear();
+        this.Genres.Clear();
         foreach (var genre in track.GenreList)
-            Genres.Add(genre);
-        GenresSource = track.GenresFrom;
+            this.Genres.Add(genre);
+        this.GenresSource = track.GenresFrom;
 
         // fields the user is typing in right now keep their text
-        LoadField(ArtistField, track.Artist, track.ArtistFrom);
-        LoadField(TitleField, track.Title, track.TitleFrom);
-        LoadField(AlbumField, track.Album, track.AlbumFrom);
-        LoadField(AlbumArtistField, track.AlbumArtist, track.AlbumArtistFrom);
-        LoadField(YearField, track.Year?.ToString(CultureInfo.InvariantCulture), track.YearFrom);
-        _loading = false;
+        this.LoadField(this.ArtistField, track.Artist, track.ArtistFrom);
+        this.LoadField(this.TitleField, track.Title, track.TitleFrom);
+        this.LoadField(this.AlbumField, track.Album, track.AlbumFrom);
+        this.LoadField(this.AlbumArtistField, track.AlbumArtist, track.AlbumArtistFrom);
+        this.LoadField(this.YearField, track.Year?.ToString(CultureInfo.InvariantCulture), track.YearFrom);
+        this.loading = false;
     }
 
     [RelayCommand]
-    private void Back() => _navigation.Back();
+    private void Back() => this.navigation.Back();
 
     [RelayCommand]
-    private Task OpenOnYoutubeAsync() => _actions.OpenOnYoutubeAsync(Row);
+    private Task OpenOnYoutubeAsync() => this.actions.OpenOnYoutubeAsync(this.Row);
 
     [RelayCommand]
-    private Task ShowInFolderAsync() => _actions.ShowInFolderAsync(Row);
+    private Task ShowInFolderAsync() => this.actions.ShowInFolderAsync(this.Row);
 
     [RelayCommand]
     private async Task RedownloadAsync()
     {
-        await SaveNowAsync();
-        await _actions.DownloadAsync(Row);
-        await LoadAsync();
+        await this.SaveNowAsync();
+        await this.actions.DownloadAsync(this.Row);
+        await this.LoadAsync();
     }
 
     [RelayCommand(CanExecute = nameof(HasFile))]
     private async Task WriteTagsAsync()
     {
-        await SaveNowAsync();
-        Notice = null;
+        await this.SaveNowAsync();
+        this.Notice = null;
         try
         {
-            using (_activity.Begin(Strings.Activity_WritingTags))
-                await _tagWriter.WriteTagsAsync(Row.Id);
-            _activity.Confirm(string.Format(Strings.Confirm_TagsWritten, Title));
+            using (this.activity.Begin(Strings.Activity_WritingTags))
+                await this.tagWriter.WriteTagsAsync(this.Row.Id);
+            this.activity.Confirm(string.Format(Strings.Confirm_TagsWritten, this.Title));
         }
         catch (Exception ex)
         {
-            Notice = string.Format(Strings.Notice_WriteTagsFailed, ex.Message);
+            this.Notice = string.Format(Strings.Notice_WriteTagsFailed, ex.Message);
         }
 
-        await LoadAsync();
+        await this.LoadAsync();
     }
 
     [RelayCommand]
     private void StartAddGenre()
     {
-        NewGenre = "";
-        IsAddingGenre = true;
+        this.NewGenre = string.Empty;
+        this.IsAddingGenre = true;
     }
 
     [RelayCommand]
-    private void CancelAddGenre() => IsAddingGenre = false;
+    private void CancelAddGenre() => this.IsAddingGenre = false;
 
     [RelayCommand]
     private async Task AddGenreAsync()
     {
-        var genre = NewGenre.Trim();
-        IsAddingGenre = false;
-        if (genre.Length == 0 || Genres.Contains(genre, StringComparer.CurrentCultureIgnoreCase))
+        var genre = this.NewGenre.Trim();
+        this.IsAddingGenre = false;
+        if (genre.Length == 0 || this.Genres.Contains(genre, StringComparer.CurrentCultureIgnoreCase))
             return;
-        await SaveGenresAsync([.. Genres, genre]);
+        await this.SaveGenresAsync([.. this.Genres, genre]);
     }
 
     [RelayCommand]
     private Task RemoveGenreAsync(string genre) =>
-        SaveGenresAsync(Genres.Where(g => g != genre).ToList());
+        this.SaveGenresAsync(this.Genres.Where(g => g != genre).ToList());
 
     partial void OnRatingChanged(int? value)
     {
-        if (!_loading)
+        if (!loading)
             _ = SaveRatingAsync(value);
     }
 
     private async Task SaveRatingAsync(int? rating)
     {
-        await RunSaveAsync(() => _repository.SetRatingAsync(Row.Id, rating));
+        await this.RunSaveAsync(() => this.repository.SetRatingAsync(this.Row.Id, rating));
     }
 
     /// <summary>
@@ -235,23 +235,23 @@ public partial class TrackDetailViewModel : ViewModelBase
     /// so the next best source shows again.
     /// </summary>
     private Task SaveGenresAsync(IReadOnlyList<string> genres) =>
-        RunSaveAsync(() => _repository.SetUserTagsAsync(Row.Id, genres));
+        this.RunSaveAsync(() => this.repository.SetUserTagsAsync(this.Row.Id, genres));
 
     private void ScheduleSave()
     {
-        if (_loading)
+        if (this.loading)
             return;
 
-        _pendingSave?.Cancel();
-        var cts = _pendingSave = new CancellationTokenSource();
-        _ = SaveAfterDelayAsync(cts);
+        pendingSave?.Cancel();
+        var cts = this.pendingSave = new CancellationTokenSource();
+        _ = this.SaveAfterDelayAsync(cts);
     }
 
     private async Task SaveAfterDelayAsync(CancellationTokenSource cts)
     {
         try
         {
-            await Task.Delay(SaveDelay, cts.Token);
+            await Task.Delay(SAVE_DELAY, cts.Token);
         }
         catch (OperationCanceledException)
         {
@@ -259,63 +259,63 @@ public partial class TrackDetailViewModel : ViewModelBase
         }
         finally
         {
-            if (_pendingSave == cts)
-                _pendingSave = null;
+            if (this.pendingSave == cts)
+                this.pendingSave = null;
             cts.Dispose();
         }
 
-        await SaveFieldsAsync();
+        await this.SaveFieldsAsync();
     }
 
     /// <summary>Saves edits still waiting for the typing pause before an action that relies on them.</summary>
     private async Task SaveNowAsync()
     {
-        if (_pendingSave is null)
+        if (this.pendingSave is null)
             return;
-        _pendingSave.Cancel();
-        _pendingSave = null;
-        await SaveFieldsAsync();
+        this.pendingSave.Cancel();
+        this.pendingSave = null;
+        await this.SaveFieldsAsync();
     }
 
     private async Task SaveFieldsAsync()
     {
         int? year = null;
-        if (YearField.UserValue is { } yearText)
+        if (this.YearField.UserValue is { } yearText)
         {
             if (!int.TryParse(yearText, NumberStyles.None, CultureInfo.InvariantCulture, out var parsed) || parsed is < 1000 or > 9999)
             {
-                Notice = string.Format(Strings.Detail_InvalidYear, yearText);
+                this.Notice = string.Format(Strings.Detail_InvalidYear, yearText);
                 return;
             }
             year = parsed;
         }
 
-        var fields = new UserFields(ArtistField.UserValue, TitleField.UserValue, AlbumField.UserValue,
-            AlbumArtistField.UserValue, year, _notes);
-        await RunSaveAsync(() => _repository.SetUserFieldsAsync(Row.Id, fields));
+        var fields = new UserFields(this.ArtistField.UserValue, this.TitleField.UserValue, this.AlbumField.UserValue,
+            this.AlbumArtistField.UserValue, year, this.notes);
+        await this.RunSaveAsync(() => this.repository.SetUserFieldsAsync(this.Row.Id, fields));
     }
 
     private async Task RunSaveAsync(Func<Task> save)
     {
-        Notice = null;
+        this.Notice = null;
         try
         {
             await save();
         }
         catch (Exception ex)
         {
-            Notice = string.Format(Strings.Notice_SaveFailed, ex.Message);
+            this.Notice = string.Format(Strings.Notice_SaveFailed, ex.Message);
             return;
         }
 
-        await LoadAsync();
-        await _actions.RefreshAsync(Row);
+        await this.LoadAsync();
+        await this.actions.RefreshAsync(this.Row);
     }
 
     private void LoadField(MetadataFieldViewModel field, string? value, FieldSource source)
     {
         // text typed while the last save ran is saved after the next pause; don't overwrite it
-        if (_pendingSave is not null && field.Text != (value ?? ""))
+        if (this.pendingSave is not null && field.Text != (value ?? string.Empty))
             return;
         field.Load(value, source);
     }

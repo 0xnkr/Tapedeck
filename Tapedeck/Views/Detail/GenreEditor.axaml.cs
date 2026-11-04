@@ -9,16 +9,16 @@ public partial class GenreEditor : UserControl
 {
     public GenreEditor()
     {
-        InitializeComponent();
+        this.InitializeComponent();
         // The new genre field appears in place of the button; type right away
-        NewGenreBox.PropertyChanged += (_, e) =>
+        this.NewGenreBox.PropertyChanged += (_, e) =>
         {
-            if (e.Property == IsVisibleProperty && NewGenreBox.IsVisible)
-                NewGenreBox.Focus(NavigationMethod.Tab);
+            if (e.Property == IsVisibleProperty && this.NewGenreBox.IsVisible)
+                this.NewGenreBox.Focus(NavigationMethod.Tab);
         };
-        NewGenreBox.LostFocus += (_, _) =>
+        this.NewGenreBox.LostFocus += (_, _) =>
         {
-            if (DataContext is TrackDetailViewModel detail && detail.IsAddingGenre)
+            if (this.DataContext is TrackDetailViewModel detail && detail.IsAddingGenre)
                 detail.AddGenreCommand.Execute(null);
         };
     }

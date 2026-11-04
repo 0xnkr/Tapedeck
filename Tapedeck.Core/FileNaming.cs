@@ -8,7 +8,7 @@ namespace Tapedeck.Core;
 /// </summary>
 public static class FileNaming
 {
-    public const int MaxBaseLength = 150;
+    public const int MAX_BASE_LENGTH = 150;
 
     public static string BaseName(string artist, string title)
     {
@@ -27,7 +27,7 @@ public static class FileNaming
         var plain = $"{baseName}.{ext}";
         if (!isTaken(plain))
             return plain;
-        return $"{Truncate(baseName, MaxBaseLength - videoId.Length - 3)} [{videoId}].{ext}";
+        return $"{Truncate(baseName, MAX_BASE_LENGTH - videoId.Length - 3)} [{videoId}].{ext}";
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public static class FileNaming
             {
                 ':' or '|' or '/' or '\\' => " - ",
                 '"' => "'",
-                '<' or '>' or '?' or '*' => "",
+                '<' or '>' or '?' or '*' => string.Empty,
                 _ => c.ToString(),
             });
         }
@@ -63,7 +63,7 @@ public static class FileNaming
         while (collapsed.Contains(" - - "))
             collapsed = collapsed.Replace(" - - ", " - ");
 
-        var result = Truncate(collapsed, MaxBaseLength).Trim(' ', '-').TrimEnd('.');
+        var result = Truncate(collapsed, MAX_BASE_LENGTH).Trim(' ', '-').TrimEnd('.');
         return result.Length == 0 ? "Untitled" : result;
     }
 

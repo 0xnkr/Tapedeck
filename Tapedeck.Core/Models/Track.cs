@@ -4,9 +4,9 @@ namespace Tapedeck.Core.Models;
 public sealed class Track
 {
     public long Id { get; init; }
-    public string VideoId { get; init; } = "";
-    public string Url { get; init; } = "";
-    public string AddedAt { get; init; } = "";
+    public string VideoId { get; init; } = string.Empty;
+    public string Url { get; init; } = string.Empty;
+    public string AddedAt { get; init; } = string.Empty;
 
     public string? YtTitle { get; init; }
     public string? Channel { get; init; }

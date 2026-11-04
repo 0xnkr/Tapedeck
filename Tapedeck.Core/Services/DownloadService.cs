@@ -9,7 +9,7 @@ namespace Tapedeck.Core.Services;
 /// </summary>
 public sealed class DownloadService(ITrackRepository repository, ToolService tools, TagWriter tagWriter, AppPaths paths)
 {
-    public const string Format = "opus";
+    public const string FORMAT = "opus";
 
     public async Task DownloadAsync(long trackId, IProgress<double>? progress = null, CancellationToken ct = default)
     {
@@ -39,25 +39,25 @@ public sealed class DownloadService(ITrackRepository repository, ToolService too
             if (!result.Success)
                 throw new InvalidOperationException(string.Join(Environment.NewLine, result.ErrorOutput));
 
-            var fileName = FileNaming.ChooseForTrack(track.FilePath, track.Artist, track.Title, track.VideoId, Format,
+            var fileName = FileNaming.ChooseForTrack(track.FilePath, track.Artist, track.Title, track.VideoId, FORMAT,
                 name => File.Exists(paths.ToLibraryPath(name)));
             // overwrite only ever hits the track's own file from an earlier download
             File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
 
-            await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, Format);
+            await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, FORMAT);
             await tagWriter.WriteTagsAsync(trackId);
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Done);
         }
         catch (OperationCanceledException)
         {
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Pending);
-            CleanTemp(track.VideoId);
+            this.CleanTemp(track.VideoId);
             throw;
         }
         catch (Exception ex)
         {
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Error, errorMsg: ex.Message);
-            CleanTemp(track.VideoId);
+            this.CleanTemp(track.VideoId);
             throw;
         }
     }

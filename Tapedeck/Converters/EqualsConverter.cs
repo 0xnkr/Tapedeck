@@ -11,7 +11,7 @@ namespace Tapedeck.Converters;
 /// </summary>
 public sealed class EqualsConverter : IValueConverter
 {
-    public static readonly EqualsConverter Instance = new();
+    public static readonly EqualsConverter INSTANCE = new();
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         Equals(value, parameter);

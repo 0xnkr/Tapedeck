@@ -6,6 +6,6 @@ public partial class LibraryView : UserControl
 {
     public LibraryView()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

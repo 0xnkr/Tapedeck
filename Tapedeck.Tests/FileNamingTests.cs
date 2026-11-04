@@ -19,7 +19,7 @@ public class FileNamingTests
     public void Truncates_long_names()
     {
         var name = FileNaming.BaseName("A", new string('x', 500));
-        Assert.True(name.Length <= FileNaming.MaxBaseLength);
+        Assert.True(name.Length <= FileNaming.MAX_BASE_LENGTH);
     }
 
     [Fact]

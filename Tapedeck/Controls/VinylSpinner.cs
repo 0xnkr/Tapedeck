@@ -9,24 +9,24 @@ namespace Tapedeck.Controls;
 /// A small vinyl record with the accent as its label. Spins while <see cref="IsSpinning"/> is set,
 /// used as the busy indicator of the activity toast. Drawing and animation live in the ControlTheme.
 /// </summary>
-[PseudoClasses(Spinning)]
+[PseudoClasses(SPINNING)]
 public sealed class VinylSpinner : TemplatedControl
 {
-    private const string Spinning = ":spinning";
+    private const string SPINNING = ":spinning";
 
     public static readonly StyledProperty<bool> IsSpinningProperty =
         AvaloniaProperty.Register<VinylSpinner, bool>(nameof(IsSpinning));
 
     public bool IsSpinning
     {
-        get => GetValue(IsSpinningProperty);
-        set => SetValue(IsSpinningProperty, value);
+        get => this.GetValue(IsSpinningProperty);
+        set => this.SetValue(IsSpinningProperty, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == IsSpinningProperty)
-            PseudoClasses.Set(Spinning, IsSpinning);
+            this.PseudoClasses.Set(SPINNING, this.IsSpinning);
     }
 }

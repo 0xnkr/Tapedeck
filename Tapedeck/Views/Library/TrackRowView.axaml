@@ -30,7 +30,7 @@
                                 Width="16" Height="16"
                                 Foreground="{DynamicResource Brush.Text3}"
                                 IsVisible="{Binding ThumbPath, Converter={x:Static ObjectConverters.IsNull}}" />
-                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.Instance}}"
+                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}}"
                        Stretch="UniformToFill" />
             </Panel>
         </Border>

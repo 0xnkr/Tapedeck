@@ -10,13 +10,13 @@ namespace Tapedeck.Controls;
 /// Download status of a track: icon, word and color pair. While downloading it shows a label with a progress bar instead.
 /// The look per status lives in the ControlTheme, keyed by the pseudo classes below.
 /// </summary>
-[PseudoClasses(Done, Downloading, Pending, Error)]
+[PseudoClasses(DONE, DOWNLOADING, PENDING, ERROR)]
 public sealed class StatusChip : TemplatedControl
 {
-    private const string Done = ":done";
-    private const string Downloading = ":downloading";
-    private const string Pending = ":pending";
-    private const string Error = ":error";
+    private const string DONE = ":done";
+    private const string DOWNLOADING = ":downloading";
+    private const string PENDING = ":pending";
+    private const string ERROR = ":error";
 
     public static readonly StyledProperty<DownloadStatus> StatusProperty =
         AvaloniaProperty.Register<StatusChip, DownloadStatus>(nameof(Status));
@@ -27,33 +27,33 @@ public sealed class StatusChip : TemplatedControl
 
     public StatusChip()
     {
-        UpdatePseudoClasses();
+        this.UpdatePseudoClasses();
     }
 
     public DownloadStatus Status
     {
-        get => GetValue(StatusProperty);
-        set => SetValue(StatusProperty, value);
+        get => this.GetValue(StatusProperty);
+        set => this.SetValue(StatusProperty, value);
     }
 
     public double Progress
     {
-        get => GetValue(ProgressProperty);
-        set => SetValue(ProgressProperty, value);
+        get => this.GetValue(ProgressProperty);
+        set => this.SetValue(ProgressProperty, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == StatusProperty)
-            UpdatePseudoClasses();
+            this.UpdatePseudoClasses();
     }
 
     private void UpdatePseudoClasses()
     {
-        PseudoClasses.Set(Done, Status == DownloadStatus.Done);
-        PseudoClasses.Set(Downloading, Status == DownloadStatus.Downloading);
-        PseudoClasses.Set(Pending, Status == DownloadStatus.Pending);
-        PseudoClasses.Set(Error, Status == DownloadStatus.Error);
+        this.PseudoClasses.Set(DONE, this.Status == DownloadStatus.Done);
+        this.PseudoClasses.Set(DOWNLOADING, this.Status == DownloadStatus.Downloading);
+        this.PseudoClasses.Set(PENDING, this.Status == DownloadStatus.Pending);
+        this.PseudoClasses.Set(ERROR, this.Status == DownloadStatus.Error);
     }
 }

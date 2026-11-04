@@ -53,13 +53,13 @@
                             </TextBox.InnerLeftContent>
                         </TextBox>
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_All}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Done}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Pending}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
                     </StackPanel>
                     <Button Grid.Column="1"
                             Classes="text"

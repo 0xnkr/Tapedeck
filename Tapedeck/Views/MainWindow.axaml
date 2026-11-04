@@ -31,7 +31,7 @@
                              Content="{x:Static res:Strings.Nav_Settings}"
                              controls:ButtonAssist.Icon="{StaticResource Icon.Settings}"
                              IsEnabled="False"
-                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Settings}}"
+                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Settings}}"
                              Command="{Binding ShowPageCommand}"
                              CommandParameter="{x:Static vm:AppPage.Settings}" />
                 <StackPanel Spacing="{StaticResource Space.4}" HorizontalAlignment="Center">
@@ -39,7 +39,7 @@
                                  GroupName="Navigation"
                                  Content="{x:Static res:Strings.Nav_Library}"
                                  controls:ButtonAssist.Icon="{StaticResource Icon.Library}"
-                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Library}}"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Library}}"
                              Command="{Binding ShowPageCommand}"
                              CommandParameter="{x:Static vm:AppPage.Library}" />
                     <RadioButton Theme="{StaticResource NavigationRailItem}"
@@ -47,7 +47,7 @@
                                  Content="{x:Static res:Strings.Nav_Playlists}"
                                  controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}"
                                  IsEnabled="False"
-                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Playlists}}"
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Playlists}}"
                              Command="{Binding ShowPageCommand}"
                              CommandParameter="{x:Static vm:AppPage.Playlists}" />
                 </StackPanel>

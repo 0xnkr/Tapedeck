@@ -9,7 +9,7 @@ namespace Tapedeck.Data;
 public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) : ITrackRepository
 {
     // Milliseconds, so an edit right after writing the tags still counts as newer
-    private const string Now = "strftime('%Y-%m-%dT%H:%M:%fZ', 'now')";
+    private const string NOW = "strftime('%Y-%m-%dT%H:%M:%fZ', 'now')";
 
     public async Task<long> AddAsync(string videoId, string url)
     {
@@ -121,7 +121,7 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
                 user_album_artist = @AlbumArtist,
                 user_year         = @Year,
                 notes             = @Notes,
-                edited_at         = {Now}
+                edited_at         = {NOW}
             WHERE id = @id;
             """,
             new { id, f.Artist, f.Title, f.Album, f.AlbumArtist, f.Year, f.Notes });
@@ -151,14 +151,14 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         foreach (var name in names)
             await InsertTagAsync(connection, transaction, trackId, name, TagSource.User);
         await connection.ExecuteAsync(
-            $"UPDATE tracks SET edited_at = {Now} WHERE id = @trackId;", new { trackId }, transaction);
+            $"UPDATE tracks SET edited_at = {NOW} WHERE id = @trackId;", new { trackId }, transaction);
         await transaction.CommitAsync();
     }
 
     public async Task MarkTagsWrittenAsync(long id)
     {
         await using var connection = await connectionFactory.OpenAsync();
-        await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {Now} WHERE id = @id;", new { id });
+        await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {NOW} WHERE id = @id;", new { id });
     }
 
     private static async Task InsertTagAsync(SqliteConnection connection, DbTransaction transaction,

@@ -18,10 +18,10 @@ public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel(LibraryViewModel library, NavigationService navigation, ActivityService activity)
     {
-        Library = library;
-        Navigation = navigation;
-        Activity = activity;
-        Navigation.Reset(Library);
+        this.Library = library;
+        this.Navigation = navigation;
+        this.Activity = activity;
+        this.Navigation.Reset(this.Library);
     }
 
     public LibraryViewModel Library { get; }
@@ -37,15 +37,15 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private void ShowPage(AppPage page)
     {
-        CurrentPage = page;
-        Navigation.Reset(page switch
+        this.CurrentPage = page;
+        this.Navigation.Reset(page switch
         {
-            AppPage.Library => Library,
+            AppPage.Library => this.Library,
             // Playlists and Settings are disabled in the rail until they exist
             _ => throw new NotSupportedException($"Page {page} is not implemented yet."),
         });
     }
 
     [RelayCommand]
-    private void Back() => Navigation.Back();
+    private void Back() => this.Navigation.Back();
 }

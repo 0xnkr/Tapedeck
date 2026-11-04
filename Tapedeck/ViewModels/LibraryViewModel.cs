@@ -35,8 +35,8 @@ public partial class LibraryViewModel(
     NavigationService navigation,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
-    private readonly List<TrackRowViewModel> _all = [];
-    private Task? _toolsReady;
+    private readonly List<TrackRowViewModel> all = [];
+    private Task? toolsReady;
 
     /// <summary>Rows that pass the current filter and search.</summary>
     public ObservableCollection<TrackRowViewModel> Tracks { get; } = [];
@@ -73,58 +73,58 @@ public partial class LibraryViewModel(
     private async Task LoadAsync()
     {
         var tracks = await repository.ListDisplayAsync();
-        _all.Clear();
-        _all.AddRange(tracks.Select((track, index) => new TrackRowViewModel(track, index + 1, this)));
-        OnTracksChanged();
+        this.all.Clear();
+        this.all.AddRange(tracks.Select((track, index) => new TrackRowViewModel(track, index + 1, this)));
+        this.OnTracksChanged();
     }
 
     [RelayCommand(CanExecute = nameof(CanAddLink))]
     private async Task AddLinkAsync()
     {
-        Notice = null;
+        this.Notice = null;
         // the field stays editable while tools and metadata load, so import the link that was confirmed
-        var link = NewLink;
+        var link = this.NewLink;
         try
         {
-            await EnsureToolsAsync();
+            await this.EnsureToolsAsync();
             long id;
             using (activity.Begin(Strings.Activity_FetchingInfo))
                 id = await importer.AddAsync(link);
-            if (NewLink == link)
-                NewLink = "";
-            await RefreshRowAsync(id);
-            if (_all.Find(r => r.Id == id) is { } row)
+            if (this.NewLink == link)
+                this.NewLink = string.Empty;
+            await this.RefreshRowAsync(id);
+            if (this.all.Find(r => r.Id == id) is { } row)
                 activity.Confirm(string.Format(Strings.Confirm_Added, row.Title));
         }
         catch (Exception ex)
         {
-            Notice = string.Format(Strings.Notice_AddFailed, ex.Message);
+            this.Notice = string.Format(Strings.Notice_AddFailed, ex.Message);
             // the track may exist without metadata now
-            await LoadAsync();
+            await this.LoadAsync();
         }
     }
 
-    private bool CanAddLink() => VideoId.TryParse(NewLink, out _);
+    private bool CanAddLink() => VideoId.TryParse(this.NewLink, out _);
 
     [RelayCommand]
     private async Task PasteLinkAsync()
     {
         if (await platform.GetClipboardTextAsync() is { } text)
-            NewLink = text.Trim();
+            this.NewLink = text.Trim();
     }
 
     [RelayCommand(CanExecute = nameof(HasPending))]
     private async Task DownloadPendingAsync()
     {
-        foreach (var row in _all.Where(r => r.Status == DownloadStatus.Pending).ToList())
-            await DownloadRowAsync(row);
+        foreach (var row in this.all.Where(r => r.Status == DownloadStatus.Pending).ToList())
+            await this.DownloadRowAsync(row);
     }
 
-    private bool HasPending() => _all.Any(r => r.Status == DownloadStatus.Pending);
+    private bool HasPending() => this.all.Any(r => r.Status == DownloadStatus.Pending);
 
     Task ITrackActions.OpenOnYoutubeAsync(TrackRowViewModel row) => platform.OpenUrlAsync(row.Url);
 
-    Task ITrackActions.DownloadAsync(TrackRowViewModel row) => DownloadRowAsync(row);
+    Task ITrackActions.DownloadAsync(TrackRowViewModel row) => this.DownloadRowAsync(row);
 
     Task ITrackActions.ShowInFolderAsync(TrackRowViewModel row) =>
         platform.OpenFolderAsync(row.FilePath is { } file
@@ -133,29 +133,29 @@ public partial class LibraryViewModel(
 
     void ITrackActions.OpenDetails(TrackRowViewModel row) => navigation.Open(createDetail(row, this));
 
-    Task ITrackActions.RefreshAsync(TrackRowViewModel row) => RefreshRowAsync(row.Id);
+    Task ITrackActions.RefreshAsync(TrackRowViewModel row) => this.RefreshRowAsync(row.Id);
 
     private async Task DownloadRowAsync(TrackRowViewModel row)
     {
         if (row.Status == DownloadStatus.Downloading)
             return;
 
-        Notice = null;
+        this.Notice = null;
         row.Status = DownloadStatus.Downloading;
         row.Progress = 0;
         try
         {
-            await EnsureToolsAsync();
+            await this.EnsureToolsAsync();
             using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
                 await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p));
             activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
         }
         catch (Exception ex)
         {
-            Notice = string.Format(Strings.Notice_DownloadFailed, row.Title, ex.Message);
+            this.Notice = string.Format(Strings.Notice_DownloadFailed, row.Title, ex.Message);
         }
 
-        await RefreshRowAsync(row.Id);
+        await this.RefreshRowAsync(row.Id);
     }
 
     /// <summary>yt-dlp, ffmpeg and Deno are downloaded once on first use.</summary>
@@ -166,11 +166,11 @@ public partial class LibraryViewModel(
             if (tools.HasAllTools)
                 return;
             using (activity.Begin(Strings.Activity_InstallingTools))
-                await (_toolsReady ??= tools.EnsureToolsAsync());
+                await (this.toolsReady ??= tools.EnsureToolsAsync());
         }
         catch
         {
-            _toolsReady = null;
+            this.toolsReady = null;
             throw;
         }
     }
@@ -180,37 +180,37 @@ public partial class LibraryViewModel(
         if (await repository.GetDisplayAsync(id) is not { } track)
             return;
 
-        if (_all.Find(r => r.Id == id) is { } row)
+        if (this.all.Find(r => r.Id == id) is { } row)
             row.Update(track);
         else
-            _all.Add(new TrackRowViewModel(track, _all.Count + 1, this));
-        OnTracksChanged();
+            this.all.Add(new TrackRowViewModel(track, this.all.Count + 1, this));
+        this.OnTracksChanged();
     }
 
     private void OnTracksChanged()
     {
-        ApplyFilter();
-        UpdateSummary();
-        DownloadPendingCommand.NotifyCanExecuteChanged();
+        this.ApplyFilter();
+        this.UpdateSummary();
+        this.DownloadPendingCommand.NotifyCanExecuteChanged();
     }
 
     private void ApplyFilter()
     {
-        var search = SearchText.Trim();
-        var visible = _all.Where(r => MatchesFilter(r.Status) && (search.Length == 0 || r.Matches(search)));
+        var search = this.SearchText.Trim();
+        var visible = this.all.Where(r => this.MatchesFilter(r.Status) && (search.Length == 0 || r.Matches(search)));
 
-        var selected = SelectedTrack;
-        Tracks.Clear();
+        var selected = this.SelectedTrack;
+        this.Tracks.Clear();
         foreach (var row in visible)
-            Tracks.Add(row);
-        SelectedTrack = selected is not null && Tracks.Contains(selected) ? selected : null;
+            this.Tracks.Add(row);
+        this.SelectedTrack = selected is not null && this.Tracks.Contains(selected) ? selected : null;
 
-        EmptyText = Tracks.Count > 0 ? null
-            : _all.Count == 0 ? Strings.Library_EmptyNoTracks
+        this.EmptyText = this.Tracks.Count > 0 ? null
+            : this.all.Count == 0 ? Strings.Library_EmptyNoTracks
             : Strings.Library_EmptyFiltered;
     }
 
-    private bool MatchesFilter(DownloadStatus status) => Filter switch
+    private bool MatchesFilter(DownloadStatus status) => this.Filter switch
     {
         TrackFilter.Done => status == DownloadStatus.Done,
         TrackFilter.Pending => status is DownloadStatus.Pending or DownloadStatus.Downloading,
@@ -220,16 +220,16 @@ public partial class LibraryViewModel(
 
     private void UpdateSummary()
     {
-        if (_all.Count == 0)
+        if (this.all.Count == 0)
         {
-            Summary = Strings.Library_SummaryEmpty;
+            this.Summary = Strings.Library_SummaryEmpty;
             return;
         }
 
-        var done = _all.Count(r => r.Status == DownloadStatus.Done);
-        var errors = _all.Count(r => r.Status == DownloadStatus.Error);
-        var count = string.Format(_all.Count == 1 ? Strings.Library_TrackCount_One : Strings.Library_TrackCount_Other, _all.Count);
+        var done = this.all.Count(r => r.Status == DownloadStatus.Done);
+        var errors = this.all.Count(r => r.Status == DownloadStatus.Error);
+        var count = string.Format(this.all.Count == 1 ? Strings.Library_TrackCount_One : Strings.Library_TrackCount_Other, this.all.Count);
         var summary = string.Format(Strings.Library_Summary, count, done);
-        Summary = errors > 0 ? string.Format(Strings.Library_SummaryErrors, summary, errors) : summary;
+        this.Summary = errors > 0 ? string.Format(Strings.Library_SummaryErrors, summary, errors) : summary;
     }
 }

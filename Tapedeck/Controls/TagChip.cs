@@ -21,36 +21,36 @@ public sealed class TagChip : TemplatedControl
     public static readonly DirectProperty<TagChip, string> RemoveLabelProperty =
         AvaloniaProperty.RegisterDirect<TagChip, string>(nameof(RemoveLabel), o => o.RemoveLabel);
 
-    private string _removeLabel = "";
+    private string removeLabel = string.Empty;
 
     public string? Text
     {
-        get => GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        get => this.GetValue(TextProperty);
+        set => this.SetValue(TextProperty, value);
     }
 
     public ICommand? RemoveCommand
     {
-        get => GetValue(RemoveCommandProperty);
-        set => SetValue(RemoveCommandProperty, value);
+        get => this.GetValue(RemoveCommandProperty);
+        set => this.SetValue(RemoveCommandProperty, value);
     }
 
     public object? RemoveCommandParameter
     {
-        get => GetValue(RemoveCommandParameterProperty);
-        set => SetValue(RemoveCommandParameterProperty, value);
+        get => this.GetValue(RemoveCommandParameterProperty);
+        set => this.SetValue(RemoveCommandParameterProperty, value);
     }
 
     public string RemoveLabel
     {
-        get => _removeLabel;
-        private set => SetAndRaise(RemoveLabelProperty, ref _removeLabel, value);
+        get => this.removeLabel;
+        private set => this.SetAndRaise(RemoveLabelProperty, ref this.removeLabel, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == TextProperty)
-            RemoveLabel = string.Format(Strings.Genre_Remove, Text);
+            this.RemoveLabel = string.Format(Strings.Genre_Remove, this.Text);
     }
 }

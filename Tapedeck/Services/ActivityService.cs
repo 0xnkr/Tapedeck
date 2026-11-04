@@ -12,10 +12,10 @@ namespace Tapedeck.Services;
 /// </summary>
 public sealed partial class ActivityService : ObservableObject
 {
-    private static readonly TimeSpan ConfirmationDuration = TimeSpan.FromSeconds(3);
+    private static readonly TimeSpan CONFIRMATION_DURATION = TimeSpan.FromSeconds(3);
 
-    private readonly List<string> _activities = [];
-    private CancellationTokenSource? _confirmation;
+    private readonly List<string> activities = [];
+    private CancellationTokenSource? confirmation;
 
     /// <summary>Current activity or confirmation; <c>null</c> hides the toast.</summary>
     [ObservableProperty]
@@ -28,45 +28,45 @@ public sealed partial class ActivityService : ObservableObject
     /// <summary>Shows <paramref name="text"/> with a spinning record until the returned handle is disposed.</summary>
     public IDisposable Begin(string text)
     {
-        _activities.Add(text);
-        Update();
+        this.activities.Add(text);
+        this.Update();
         return new Handle(() =>
         {
-            _activities.Remove(text);
-            Update();
+            this.activities.Remove(text);
+            this.Update();
         });
     }
 
     /// <summary>A short confirmation with a resting record, unless other work is still running.</summary>
-    public void Confirm(string text) => _ = ConfirmAsync(text);
+    public void Confirm(string text) => _ = this.ConfirmAsync(text);
 
     private void Update()
     {
-        IsBusy = _activities.Count > 0;
-        if (IsBusy)
+        this.IsBusy = this.activities.Count > 0;
+        if (this.IsBusy)
         {
-            _confirmation?.Cancel();
-            _confirmation = null;
-            Text = _activities[^1];
+            confirmation?.Cancel();
+            this.confirmation = null;
+            this.Text = this.activities[^1];
         }
-        else if (_confirmation is null)
+        else if (this.confirmation is null)
         {
-            Text = null;
+            this.Text = null;
         }
     }
 
     private async Task ConfirmAsync(string text)
     {
-        if (IsBusy)
+        if (this.IsBusy)
             return;
 
-        _confirmation?.Cancel();
-        using var cts = _confirmation = new CancellationTokenSource();
-        Text = text;
+        confirmation?.Cancel();
+        using var cts = this.confirmation = new CancellationTokenSource();
+        this.Text = text;
         try
         {
-            await Task.Delay(ConfirmationDuration, cts.Token);
-            Text = null;
+            await Task.Delay(CONFIRMATION_DURATION, cts.Token);
+            this.Text = null;
         }
         catch (OperationCanceledException)
         {
@@ -74,8 +74,8 @@ public sealed partial class ActivityService : ObservableObject
         }
         finally
         {
-            if (_confirmation == cts)
-                _confirmation = null;
+            if (this.confirmation == cts)
+                this.confirmation = null;
         }
     }
 

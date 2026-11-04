@@ -12,8 +12,8 @@ namespace Tapedeck.Controls;
 /// </summary>
 public sealed class Glyph : Control
 {
-    private const double GridSize = 24;
-    private const double DefaultSize = 20;
+    private const double GRID_SIZE = 24;
+    private const double DEFAULT_SIZE = 20;
 
     public static readonly StyledProperty<Geometry?> DataProperty =
         AvaloniaProperty.Register<Glyph, Geometry?>(nameof(Data));
@@ -37,44 +37,44 @@ public sealed class Glyph : Control
 
     public Geometry? Data
     {
-        get => GetValue(DataProperty);
-        set => SetValue(DataProperty, value);
+        get => this.GetValue(DataProperty);
+        set => this.SetValue(DataProperty, value);
     }
 
     public IBrush? Foreground
     {
-        get => GetValue(ForegroundProperty);
-        set => SetValue(ForegroundProperty, value);
+        get => this.GetValue(ForegroundProperty);
+        set => this.SetValue(ForegroundProperty, value);
     }
 
     public double StrokeThickness
     {
-        get => GetValue(StrokeThicknessProperty);
-        set => SetValue(StrokeThicknessProperty, value);
+        get => this.GetValue(StrokeThicknessProperty);
+        set => this.SetValue(StrokeThicknessProperty, value);
     }
 
     public bool IsFilled
     {
-        get => GetValue(IsFilledProperty);
-        set => SetValue(IsFilledProperty, value);
+        get => this.GetValue(IsFilledProperty);
+        set => this.SetValue(IsFilledProperty, value);
     }
 
-    protected override Size MeasureOverride(Size availableSize) => new(DefaultSize, DefaultSize);
+    protected override Size MeasureOverride(Size availableSize) => new(DEFAULT_SIZE, DEFAULT_SIZE);
 
     public override void Render(DrawingContext context)
     {
-        if (Data is null || Foreground is null)
+        if (this.Data is null || this.Foreground is null)
             return;
 
-        var size = Math.Min(Bounds.Width, Bounds.Height);
-        var scale = size / GridSize;
-        var offset = new Point((Bounds.Width - size) / 2, (Bounds.Height - size) / 2);
+        var size = Math.Min(this.Bounds.Width, this.Bounds.Height);
+        var scale = size / GRID_SIZE;
+        var offset = new Point((this.Bounds.Width - size) / 2, (this.Bounds.Height - size) / 2);
 
-        var pen = StrokeThickness > 0
-            ? new Pen(Foreground, StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round)
+        var pen = this.StrokeThickness > 0
+            ? new Pen(this.Foreground, this.StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round)
             : null;
 
         using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(offset.X, offset.Y)))
-            context.DrawGeometry(IsFilled ? Foreground : null, pen, Data);
+            context.DrawGeometry(this.IsFilled ? this.Foreground : null, pen, this.Data);
     }
 }

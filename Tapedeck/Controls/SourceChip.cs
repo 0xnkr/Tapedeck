@@ -18,31 +18,31 @@ public sealed class SourceChip : TemplatedControl
 
     public SourceChip()
     {
-        UpdatePseudoClasses();
+        this.UpdatePseudoClasses();
     }
 
     public FieldSource Source
     {
-        get => GetValue(SourceProperty);
-        set => SetValue(SourceProperty, value);
+        get => this.GetValue(SourceProperty);
+        set => this.SetValue(SourceProperty, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == SourceProperty)
-            UpdatePseudoClasses();
+            this.UpdatePseudoClasses();
     }
 
     private void UpdatePseudoClasses()
     {
-        PseudoClasses.Set(":none", Source == FieldSource.None);
-        PseudoClasses.Set(":user", Source == FieldSource.User);
-        PseudoClasses.Set(":mb", Source == FieldSource.Mb);
-        PseudoClasses.Set(":lastfm", Source == FieldSource.Lastfm);
-        PseudoClasses.Set(":yt", Source == FieldSource.Yt);
-        PseudoClasses.Set(":parsed", Source == FieldSource.Parsed);
-        PseudoClasses.Set(":channel", Source == FieldSource.Channel);
-        PseudoClasses.Set(":derived", Source == FieldSource.Derived);
+        this.PseudoClasses.Set(":none", this.Source == FieldSource.None);
+        this.PseudoClasses.Set(":user", this.Source == FieldSource.User);
+        this.PseudoClasses.Set(":mb", this.Source == FieldSource.Mb);
+        this.PseudoClasses.Set(":lastfm", this.Source == FieldSource.Lastfm);
+        this.PseudoClasses.Set(":yt", this.Source == FieldSource.Yt);
+        this.PseudoClasses.Set(":parsed", this.Source == FieldSource.Parsed);
+        this.PseudoClasses.Set(":channel", this.Source == FieldSource.Channel);
+        this.PseudoClasses.Set(":derived", this.Source == FieldSource.Derived);
     }
 }

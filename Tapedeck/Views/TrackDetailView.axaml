@@ -66,7 +66,7 @@
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
                                 <Panel>
-                                    <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.Instance}, ConverterParameter=752}"
+                                    <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=752}"
                                            Stretch="UniformToFill" />
                                     <Border Width="56" Height="56"
                                             CornerRadius="{StaticResource Radius.Pill}"
@@ -84,7 +84,7 @@
                                     CornerRadius="{StaticResource Radius.Field}"
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
-                                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.Instance}, ConverterParameter=224}"
+                                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=224}"
                                        Stretch="UniformToFill" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">

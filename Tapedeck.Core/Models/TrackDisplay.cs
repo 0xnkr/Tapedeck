@@ -4,17 +4,17 @@ namespace Tapedeck.Core.Models;
 public sealed class TrackDisplay
 {
     public long Id { get; init; }
-    public string VideoId { get; init; } = "";
-    public string Url { get; init; } = "";
-    public string AddedAt { get; init; } = "";
+    public string VideoId { get; init; } = string.Empty;
+    public string Url { get; init; } = string.Empty;
+    public string AddedAt { get; init; } = string.Empty;
     public string? Channel { get; init; }
     /// <summary>Upload date as yt-dlp reports it (<c>YYYYMMDD</c>), not the release date.</summary>
     public string? UploadDate { get; init; }
 
-    public string Artist { get; init; } = "";
-    public string Title { get; init; } = "";
+    public string Artist { get; init; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
     public string? Album { get; init; }
-    public string AlbumArtist { get; init; } = "";
+    public string AlbumArtist { get; init; } = string.Empty;
     public int? Year { get; init; }
     /// <summary>Genres from the best available source, separated by <c>;</c>.</summary>
     public string? Genres { get; init; }
@@ -42,15 +42,15 @@ public sealed class TrackDisplay
     public string? ErrorMsg { get; init; }
     public string? ThumbPath { get; init; }
 
-    public DownloadStatus DownloadStatus => DownloadStatusExtensions.ParseDb(Status);
+    public DownloadStatus DownloadStatus => DownloadStatusExtensions.ParseDb(this.Status);
 
-    public FieldSource ArtistFrom => FieldSourceExtensions.ParseDb(ArtistSource);
-    public FieldSource TitleFrom => FieldSourceExtensions.ParseDb(TitleSource);
-    public FieldSource AlbumFrom => FieldSourceExtensions.ParseDb(AlbumSource);
-    public FieldSource AlbumArtistFrom => FieldSourceExtensions.ParseDb(AlbumArtistSource);
-    public FieldSource YearFrom => FieldSourceExtensions.ParseDb(YearSource);
-    public FieldSource GenresFrom => FieldSourceExtensions.ParseDb(GenresSource);
+    public FieldSource ArtistFrom => FieldSourceExtensions.ParseDb(this.ArtistSource);
+    public FieldSource TitleFrom => FieldSourceExtensions.ParseDb(this.TitleSource);
+    public FieldSource AlbumFrom => FieldSourceExtensions.ParseDb(this.AlbumSource);
+    public FieldSource AlbumArtistFrom => FieldSourceExtensions.ParseDb(this.AlbumArtistSource);
+    public FieldSource YearFrom => FieldSourceExtensions.ParseDb(this.YearSource);
+    public FieldSource GenresFrom => FieldSourceExtensions.ParseDb(this.GenresSource);
 
     public IReadOnlyList<string> GenreList =>
-        string.IsNullOrEmpty(Genres) ? [] : Genres.Split(';', StringSplitOptions.RemoveEmptyEntries);
+        string.IsNullOrEmpty(this.Genres) ? [] : this.Genres.Split(';', StringSplitOptions.RemoveEmptyEntries);
 }

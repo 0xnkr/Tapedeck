@@ -7,7 +7,7 @@ public partial class TrackRowView : UserControl
 {
     public TrackRowView()
     {
-        InitializeComponent();
-        DoubleTapped += (_, _) => (DataContext as TrackRowViewModel)?.OpenDetailsCommand.Execute(null);
+        this.InitializeComponent();
+        this.DoubleTapped += (_, _) => (this.DataContext as TrackRowViewModel)?.OpenDetailsCommand.Execute(null);
     }
 }
