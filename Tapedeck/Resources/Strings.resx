@@ -692,4 +692,108 @@
     <value>Could not remove “{0}”: {1}</value>
     <comment>Error line; {0} track title, {1} error message</comment>
   </data>
+  <data name="Playlists_Title" xml:space="preserve">
+    <value>Playlists</value>
+    <comment>Page title</comment>
+  </data>
+  <data name="Playlists_Hint" xml:space="preserve">
+    <value>Each playlist is also saved as .m3u8 in the library folder, ready for your phone.</value>
+    <comment>Summary below the page title</comment>
+  </data>
+  <data name="Playlists_New" xml:space="preserve">
+    <value>New playlist</value>
+    <comment>Primary header button</comment>
+  </data>
+  <data name="Playlists_Empty" xml:space="preserve">
+    <value>No playlists yet. Create one, then add tracks with “Add to playlist” in a track's menu.</value>
+    <comment>Empty page</comment>
+  </data>
+  <data name="Playlists_Open" xml:space="preserve">
+    <value>Open {0}</value>
+    <comment>Accessible name of a playlist card; {0} playlist name</comment>
+  </data>
+  <data name="Playlist_Download" xml:space="preserve">
+    <value>Download playlist</value>
+    <comment>Primary header button: downloads pending and missing tracks of this playlist</comment>
+  </data>
+  <data name="Playlist_Rename" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Header button</comment>
+  </data>
+  <data name="Playlist_Delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Destructive header button</comment>
+  </data>
+  <data name="Playlist_DeleteTitle" xml:space="preserve">
+    <value>Delete “{0}”?</value>
+    <comment>Dialog title; {0} playlist name</comment>
+  </data>
+  <data name="Playlist_DeleteMessage" xml:space="preserve">
+    <value>The playlist and its .m3u8 file are deleted. The tracks stay in the library.</value>
+    <comment>Dialog text</comment>
+  </data>
+  <data name="Playlist_RemoveTrack" xml:space="preserve">
+    <value>Remove from playlist</value>
+    <comment>Accessible name of the remove button in a playlist row</comment>
+  </data>
+  <data name="Playlist_DragHandle" xml:space="preserve">
+    <value>Drag to reorder, or Alt+Up / Alt+Down</value>
+    <comment>Tooltip and accessible name of the drag handle</comment>
+  </data>
+  <data name="Playlist_Empty" xml:space="preserve">
+    <value>This playlist is empty. Add tracks with “Add to playlist” in the library.</value>
+    <comment>Empty playlist</comment>
+  </data>
+  <data name="Track_AddToPlaylist" xml:space="preserve">
+    <value>Add to playlist</value>
+    <comment>Row menu entry with a sub menu, also a button on the detail page</comment>
+  </data>
+  <data name="Track_NewPlaylist" xml:space="preserve">
+    <value>New playlist …</value>
+    <comment>First entry of the add to playlist sub menu</comment>
+  </data>
+  <data name="Prompt_NewPlaylistTitle" xml:space="preserve">
+    <value>New playlist</value>
+    <comment>Dialog title</comment>
+  </data>
+  <data name="Prompt_RenamePlaylistTitle" xml:space="preserve">
+    <value>Rename playlist</value>
+    <comment>Dialog title</comment>
+  </data>
+  <data name="Prompt_PlaylistName" xml:space="preserve">
+    <value>Name</value>
+    <comment>Label of the name field</comment>
+  </data>
+  <data name="Prompt_Create" xml:space="preserve">
+    <value>Create</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="Prompt_Rename" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="Prompt_NameEmpty" xml:space="preserve">
+    <value>Enter a name.</value>
+    <comment>Validation message</comment>
+  </data>
+  <data name="Prompt_NameTaken" xml:space="preserve">
+    <value>There is already a playlist called “{0}”.</value>
+    <comment>Validation message; {0} name</comment>
+  </data>
+  <data name="Prompt_FileNameTaken" xml:space="preserve">
+    <value>“{0}” would get the same file name as “{1}”.</value>
+    <comment>Validation message; {0} new name, {1} existing playlist</comment>
+  </data>
+  <data name="Confirm_AddedToPlaylist" xml:space="preserve">
+    <value>“{0}” added to “{1}”</value>
+    <comment>Activity toast; {0} track title, {1} playlist</comment>
+  </data>
+  <data name="Confirm_AlreadyInPlaylist" xml:space="preserve">
+    <value>“{0}” is already in “{1}”</value>
+    <comment>Activity toast; {0} track title, {1} playlist</comment>
+  </data>
+  <data name="Confirm_PlaylistDeleted" xml:space="preserve">
+    <value>“{0}” deleted</value>
+    <comment>Activity toast; {0} playlist name</comment>
+  </data>
 </root>
