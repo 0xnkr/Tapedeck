@@ -39,6 +39,8 @@ public static class AppServices
         services.AddSingleton<IPlatformService, PlatformService>();
         services.AddSingleton<ActivityService>();
         services.AddSingleton<NavigationService>();
+        services.AddSingleton<DialogService>();
+        services.AddSingleton<LibraryFiles>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<SettingsViewModel>();
