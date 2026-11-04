@@ -208,4 +208,172 @@
     <value>Could not download “{0}”: {1}</value>
     <comment>Error line; {0} track title, {1} error message</comment>
   </data>
+  <data name="Track_Details" xml:space="preserve">
+    <value>Details</value>
+    <comment>Row menu, opens the detail page</comment>
+  </data>
+  <data name="Source_User" xml:space="preserve">
+    <value>Own</value>
+    <comment>Source chip: value corrected by the user</comment>
+  </data>
+  <data name="Source_Mb" xml:space="preserve">
+    <value>MusicBrainz</value>
+    <comment>Source chip</comment>
+  </data>
+  <data name="Source_Lastfm" xml:space="preserve">
+    <value>Last.fm</value>
+    <comment>Source chip</comment>
+  </data>
+  <data name="Source_Yt" xml:space="preserve">
+    <value>YouTube</value>
+    <comment>Source chip</comment>
+  </data>
+  <data name="Source_Parsed" xml:space="preserve">
+    <value>From title</value>
+    <comment>Source chip: split from the YouTube title</comment>
+  </data>
+  <data name="Source_Channel" xml:space="preserve">
+    <value>Channel</value>
+    <comment>Source chip: the YouTube channel name</comment>
+  </data>
+  <data name="Source_Derived" xml:space="preserve">
+    <value>Derived</value>
+    <comment>Source chip: taken from another field</comment>
+  </data>
+  <data name="Genre_Add" xml:space="preserve">
+    <value>Genre</value>
+    <comment>Button that adds a genre, shown with a plus icon</comment>
+  </data>
+  <data name="Genre_NewLabel" xml:space="preserve">
+    <value>New genre</value>
+    <comment>Accessible name and placeholder of the new genre field</comment>
+  </data>
+  <data name="Genre_Remove" xml:space="preserve">
+    <value>Remove {0}</value>
+    <comment>Accessible name of a genre chip's remove button; {0} genre</comment>
+  </data>
+  <data name="Detail_Back" xml:space="preserve">
+    <value>Back to library</value>
+    <comment>Accessible name of the back button</comment>
+  </data>
+  <data name="Detail_Redownload" xml:space="preserve">
+    <value>Download again</value>
+    <comment>Header button</comment>
+  </data>
+  <data name="Detail_WriteTags" xml:space="preserve">
+    <value>Write tags</value>
+    <comment>Primary header button, writes the values into the audio file</comment>
+  </data>
+  <data name="Detail_TagsStale" xml:space="preserve">
+    <value>The tags in the file are outdated.</value>
+    <comment>Hint below the header</comment>
+  </data>
+  <data name="Detail_Preview" xml:space="preserve">
+    <value>Preview</value>
+    <comment>Accessible name of the preview island</comment>
+  </data>
+  <data name="Detail_Cover" xml:space="preserve">
+    <value>Cover</value>
+    <comment>Cover row</comment>
+  </data>
+  <data name="Detail_CoverFromThumbnail" xml:space="preserve">
+    <value>From thumbnail (16:9)</value>
+    <comment>Where the cover comes from</comment>
+  </data>
+  <data name="Detail_ChangeCover" xml:space="preserve">
+    <value>Change</value>
+    <comment>Cover button</comment>
+  </data>
+  <data name="Detail_File" xml:space="preserve">
+    <value>File</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Detail_Format" xml:space="preserve">
+    <value>Format</value>
+    <comment>File island label</comment>
+  </data>
+  <data name="Detail_DownloadedAt" xml:space="preserve">
+    <value>Downloaded on</value>
+    <comment>File island label</comment>
+  </data>
+  <data name="Detail_NoFile" xml:space="preserve">
+    <value>Not downloaded yet</value>
+    <comment>File island without a file</comment>
+  </data>
+  <data name="Detail_Metadata" xml:space="preserve">
+    <value>Metadata</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Detail_MetadataHint" xml:space="preserve">
+    <value>Right: where the value comes from</value>
+    <comment>Hint next to the metadata title</comment>
+  </data>
+  <data name="Detail_YouTube" xml:space="preserve">
+    <value>YouTube</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Detail_Channel" xml:space="preserve">
+    <value>Channel</value>
+    <comment>YouTube island label</comment>
+  </data>
+  <data name="Detail_Uploaded" xml:space="preserve">
+    <value>Uploaded</value>
+    <comment>YouTube island label</comment>
+  </data>
+  <data name="Detail_VideoId" xml:space="preserve">
+    <value>Video ID</value>
+    <comment>YouTube island label</comment>
+  </data>
+  <data name="Detail_Added" xml:space="preserve">
+    <value>Added</value>
+    <comment>YouTube island label</comment>
+  </data>
+  <data name="Detail_InvalidYear" xml:space="preserve">
+    <value>“{0}” is not a valid year.</value>
+    <comment>Error line; {0} the entered text</comment>
+  </data>
+  <data name="Field_Artist" xml:space="preserve">
+    <value>Artist</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_Title" xml:space="preserve">
+    <value>Title</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_Album" xml:space="preserve">
+    <value>Album</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_AlbumArtist" xml:space="preserve">
+    <value>Album artist</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_Year" xml:space="preserve">
+    <value>Year</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_Genres" xml:space="preserve">
+    <value>Genres</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Field_Rating" xml:space="preserve">
+    <value>Rating</value>
+    <comment>Metadata field label</comment>
+  </data>
+  <data name="Activity_WritingTags" xml:space="preserve">
+    <value>Writing tags …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Confirm_TagsWritten" xml:space="preserve">
+    <value>Tags written to “{0}”</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Notice_WriteTagsFailed" xml:space="preserve">
+    <value>Could not write the tags: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Notice_SaveFailed" xml:space="preserve">
+    <value>Could not save the changes: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
 </root>

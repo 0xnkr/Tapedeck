@@ -159,4 +159,130 @@
   <data name="Notice_DownloadFailed" xml:space="preserve">
     <value>„{0}“ konnte nicht geladen werden: {1}</value>
   </data>
+  <data name="Track_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Source_User" xml:space="preserve">
+    <value>Eigene</value>
+  </data>
+  <data name="Source_Mb" xml:space="preserve">
+    <value>MusicBrainz</value>
+  </data>
+  <data name="Source_Lastfm" xml:space="preserve">
+    <value>Last.fm</value>
+  </data>
+  <data name="Source_Yt" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
+  <data name="Source_Parsed" xml:space="preserve">
+    <value>Aus Titel</value>
+  </data>
+  <data name="Source_Channel" xml:space="preserve">
+    <value>Kanal</value>
+  </data>
+  <data name="Source_Derived" xml:space="preserve">
+    <value>Abgeleitet</value>
+  </data>
+  <data name="Genre_Add" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Genre_NewLabel" xml:space="preserve">
+    <value>Neues Genre</value>
+  </data>
+  <data name="Genre_Remove" xml:space="preserve">
+    <value>{0} entfernen</value>
+  </data>
+  <data name="Detail_Back" xml:space="preserve">
+    <value>Zurück zur Bibliothek</value>
+  </data>
+  <data name="Detail_Redownload" xml:space="preserve">
+    <value>Neu laden</value>
+  </data>
+  <data name="Detail_WriteTags" xml:space="preserve">
+    <value>Tags schreiben</value>
+  </data>
+  <data name="Detail_TagsStale" xml:space="preserve">
+    <value>Die Tags in der Datei sind veraltet.</value>
+  </data>
+  <data name="Detail_Preview" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Detail_Cover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="Detail_CoverFromThumbnail" xml:space="preserve">
+    <value>Aus Thumbnail (16:9)</value>
+  </data>
+  <data name="Detail_ChangeCover" xml:space="preserve">
+    <value>Ändern</value>
+  </data>
+  <data name="Detail_File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="Detail_Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Detail_DownloadedAt" xml:space="preserve">
+    <value>Geladen am</value>
+  </data>
+  <data name="Detail_NoFile" xml:space="preserve">
+    <value>Noch nicht geladen</value>
+  </data>
+  <data name="Detail_Metadata" xml:space="preserve">
+    <value>Metadaten</value>
+  </data>
+  <data name="Detail_MetadataHint" xml:space="preserve">
+    <value>Rechts: woher der Wert kommt</value>
+  </data>
+  <data name="Detail_YouTube" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
+  <data name="Detail_Channel" xml:space="preserve">
+    <value>Kanal</value>
+  </data>
+  <data name="Detail_Uploaded" xml:space="preserve">
+    <value>Hochgeladen</value>
+  </data>
+  <data name="Detail_VideoId" xml:space="preserve">
+    <value>Video-ID</value>
+  </data>
+  <data name="Detail_Added" xml:space="preserve">
+    <value>Hinzugefügt</value>
+  </data>
+  <data name="Detail_InvalidYear" xml:space="preserve">
+    <value>„{0}“ ist kein gültiges Jahr.</value>
+  </data>
+  <data name="Field_Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="Field_Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Field_Album" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Field_AlbumArtist" xml:space="preserve">
+    <value>Album-Artist</value>
+  </data>
+  <data name="Field_Year" xml:space="preserve">
+    <value>Jahr</value>
+  </data>
+  <data name="Field_Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="Field_Rating" xml:space="preserve">
+    <value>Bewertung</value>
+  </data>
+  <data name="Activity_WritingTags" xml:space="preserve">
+    <value>Schreibe Tags …</value>
+  </data>
+  <data name="Confirm_TagsWritten" xml:space="preserve">
+    <value>Tags in „{0}“ geschrieben</value>
+  </data>
+  <data name="Notice_WriteTagsFailed" xml:space="preserve">
+    <value>Tags konnten nicht geschrieben werden: {0}</value>
+  </data>
+  <data name="Notice_SaveFailed" xml:space="preserve">
+    <value>Änderungen konnten nicht gespeichert werden: {0}</value>
+  </data>
 </root>
