@@ -48,17 +48,24 @@
         <Setter Property="MinHeight" Value="56" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Button Classes="tonal icon lg"
+                            Command="{TemplateBinding BackCommand}"
+                            AutomationProperties.Name="{x:Static res:Strings.Detail_Back}"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.ArrowLeft}"
+                            VerticalAlignment="Center"
+                            IsVisible="{TemplateBinding BackCommand, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                         <TextBlock Classes="headline"
                                    Text="{TemplateBinding Title}"
+                                   TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource Brush.Text}" />
                         <TextBlock Classes="support"
                                    Text="{TemplateBinding Subtitle}"
                                    Foreground="{DynamicResource Brush.Text2}"
                                    IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
                     </StackPanel>
-                    <ContentPresenter Grid.Column="1"
+                    <ContentPresenter Grid.Column="2"
                                       Content="{TemplateBinding Content}"
                                       VerticalAlignment="Center" />
                 </Grid>
@@ -265,6 +272,81 @@
                                 chrome:WindowDecorationProperties.ElementRole="CloseButton" />
                     </StackPanel>
                 </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Source chip next to a metadata field: YouTube in info, own values in the accent, the rest neutral. -->
+    <ControlTheme x:Key="{x:Type controls:SourceChip}" TargetType="controls:SourceChip">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface3}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Pending}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Height="24"
+                        Padding="10,0"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{StaticResource Radius.Pill}">
+                    <TextBlock Name="PART_Label" Classes="caption" VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:none">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:user">
+            <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+        </Style>
+        <Style Selector="^:user /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_User}" />
+        </Style>
+        <Style Selector="^:yt">
+            <Setter Property="Background" Value="{DynamicResource Brush.InfoContainer}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Info}" />
+        </Style>
+        <Style Selector="^:yt /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Yt}" />
+        </Style>
+        <Style Selector="^:mb /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Mb}" />
+        </Style>
+        <Style Selector="^:lastfm /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Lastfm}" />
+        </Style>
+        <Style Selector="^:parsed /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Parsed}" />
+        </Style>
+        <Style Selector="^:channel /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Channel}" />
+        </Style>
+        <Style Selector="^:derived /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Source_Derived}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Removable chip (genres): Surface3 pill, text, round remove button. -->
+    <ControlTheme x:Key="{x:Type controls:TagChip}" TargetType="controls:TagChip">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface3}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Height="{StaticResource Control.Sm}"
+                        Padding="14,0,4,0"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{StaticResource Radius.Pill}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="{TemplateBinding Text}" VerticalAlignment="Center" />
+                        <Button Name="PART_Remove"
+                                Classes="icon small"
+                                Command="{TemplateBinding RemoveCommand}"
+                                CommandParameter="{TemplateBinding RemoveCommandParameter}"
+                                AutomationProperties.Name="{TemplateBinding RemoveLabel}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
             </ControlTemplate>
         </Setter>
     </ControlTheme>

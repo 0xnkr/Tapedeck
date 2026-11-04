@@ -6,7 +6,10 @@ using Avalonia.Media.Imaging;
 
 namespace Tapedeck.Converters;
 
-/// <summary>Loads a local thumbnail file, decoded at the small size the table needs.</summary>
+/// <summary>
+/// Loads a local thumbnail file, decoded at the size the view needs.
+/// The optional converter parameter is the decode width in pixels (default: table size).
+/// </summary>
 public sealed class ThumbnailConverter : IValueConverter
 {
     public static readonly ThumbnailConverter Instance = new();
@@ -22,7 +25,8 @@ public sealed class ThumbnailConverter : IValueConverter
         try
         {
             using var stream = File.OpenRead(path);
-            return Bitmap.DecodeToWidth(stream, DecodeWidth);
+            var width = parameter is string text && int.TryParse(text, out var w) ? w : DecodeWidth;
+            return Bitmap.DecodeToWidth(stream, width);
         }
         catch (Exception ex) when (ex is IOException or ArgumentException or NotSupportedException)
         {

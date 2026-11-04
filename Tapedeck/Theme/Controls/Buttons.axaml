@@ -7,6 +7,9 @@
       text       accent label, light actions inside islands
       danger     error label, destructive actions
       icon       round icon-only button, always set AutomationProperties.Name
+      link       bare text that opens something, e.g. the track title in the table
+      dashed     small chip with a dashed outline that adds something, e.g. "+ Genre"
+      small      with icon: 24 px round button inside a chip
     Sizes: default Control.Md (inside islands), lg = Control.Lg (page header), xl = Control.Xl.
     A leading icon is set with controls:ButtonAssist.Icon.
 -->
@@ -35,19 +38,26 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}" />
+                    <!-- Dashed outline, only shown for the "dashed" variant -->
+                    <Rectangle Name="PART_Dash"
+                               IsVisible="False"
+                               Stroke="{TemplateBinding BorderBrush}"
+                               StrokeThickness="1"
+                               StrokeDashArray="4,3"
+                               RadiusX="16" RadiusY="16" />
                     <!-- Material state layer: the label color at low opacity on hover and press -->
                     <Border Name="PART_StateLayer"
                             Background="{TemplateBinding Foreground}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Opacity="0" />
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="8"
-                                Margin="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                    <!-- DockPanel so content can stretch (HorizontalContentAlignment="Stretch") -->
+                    <DockPanel Margin="{TemplateBinding Padding}"
+                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                         <controls:Glyph Name="PART_Icon"
+                                        DockPanel.Dock="Left"
                                         Width="18" Height="18"
-                                        Margin="-4,0,0,0"
+                                        Margin="-4,0,8,0"
                                         Data="{TemplateBinding (controls:ButtonAssist.Icon)}"
                                         IsVisible="{TemplateBinding (controls:ButtonAssist.Icon), Converter={x:Static ObjectConverters.IsNotNull}}" />
                         <ContentPresenter Name="PART_ContentPresenter"
@@ -55,7 +65,7 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                           VerticalAlignment="Center"
                                           IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
-                    </StackPanel>
+                    </DockPanel>
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -112,6 +122,44 @@
         </Style>
         <Style Selector="^.icon /template/ controls|Glyph#PART_Icon">
             <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style Selector="^.link">
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^.link /template/ Border#PART_StateLayer">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^.link:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+        </Style>
+        <Style Selector="^.dashed">
+            <Setter Property="Height" Value="{StaticResource Control.Sm}" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}" />
+        </Style>
+        <Style Selector="^.dashed /template/ Rectangle#PART_Dash">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.dashed /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Width" Value="14" />
+            <Setter Property="Height" Value="14" />
+        </Style>
+
+        <!-- Small round icon button inside a chip -->
+        <Style Selector="^.small">
+            <Setter Property="Height" Value="24" />
+        </Style>
+        <Style Selector="^.small /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Width" Value="14" />
+            <Setter Property="Height" Value="14" />
         </Style>
 
         <!-- Window buttons in the title bar -->

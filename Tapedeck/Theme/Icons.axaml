@@ -26,6 +26,12 @@
     <StreamGeometry x:Key="Icon.Plus">M12,5 v14 M5,12 h14</StreamGeometry>
     <StreamGeometry x:Key="Icon.Search">M5,11 A6,6 0 1 0 17,11 A6,6 0 1 0 5,11 Z M20,20 l-4.5,-4.5</StreamGeometry>
 
+    <StreamGeometry x:Key="Icon.ArrowLeft">M19,12 H5 M11,6 l-6,6 l6,6</StreamGeometry>
+    <StreamGeometry x:Key="Icon.ExternalLink">M14,4 h6 v6 M20,4 l-9,9 M18,14 v5 a1,1 0 0 1 -1,1 H5 a1,1 0 0 1 -1,-1 V7 a1,1 0 0 1 1,-1 h5</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Refresh">M20,11 A8,8 0 1 0 17.7,16.7 M20,4 v7 h-7</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Tag">M3,12 V4 h8 l10,10 l-8,8 Z M6.1,7.5 A1.4,1.4 0 1 0 8.9,7.5 A1.4,1.4 0 1 0 6.1,7.5 Z</StreamGeometry>
+    <StreamGeometry x:Key="Icon.Folder">M3,7 a2,2 0 0 1 2,-2 h4 l2,2 h8 a2,2 0 0 1 2,2 v8 a2,2 0 0 1 -2,2 H5 a2,2 0 0 1 -2,-2 Z</StreamGeometry>
+
     <!-- Status -->
     <StreamGeometry x:Key="Icon.Check">M5,12.5 l4.5,4.5 L19,7</StreamGeometry>
     <StreamGeometry x:Key="Icon.Clock">M4,12 A8,8 0 1 0 20,12 A8,8 0 1 0 4,12 Z M12,8 v4 l2.5,1.5</StreamGeometry>
