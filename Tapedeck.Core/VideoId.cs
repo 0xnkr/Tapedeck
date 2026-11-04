@@ -52,12 +52,12 @@ public static partial class VideoId
 
     public static string WatchUrl(string videoId) => $"https://www.youtube.com/watch?v={videoId}";
 
-    private static bool IsYoutubeHost(string host) =>
+    internal static bool IsYoutubeHost(string host) =>
         host is "youtube.com" or "youtube-nocookie.com"
         || host.EndsWith(".youtube.com", StringComparison.Ordinal)
         || host.EndsWith(".youtube-nocookie.com", StringComparison.Ordinal);
 
-    private static string? QueryValue(Uri uri, string key)
+    internal static string? QueryValue(Uri uri, string key)
     {
         foreach (var part in uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries))
         {
