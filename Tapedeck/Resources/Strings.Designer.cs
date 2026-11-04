@@ -211,11 +211,29 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to “{0}” removed.
+        /// </summary>
+        public static string Confirm_Removed {
+            get {
+                return ResourceManager.GetString("Confirm_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tags written to “{0}”.
         /// </summary>
         public static string Confirm_TagsWritten {
             get {
                 return ResourceManager.GetString("Confirm_TagsWritten", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags written, file renamed to “{0}”.
+        /// </summary>
+        public static string Confirm_TagsWrittenRenamed {
+            get {
+                return ResourceManager.GetString("Confirm_TagsWrittenRenamed", resourceCulture);
             }
         }
         
@@ -562,6 +580,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove track.
+        /// </summary>
+        public static string Detail_Remove {
+            get {
+                return ResourceManager.GetString("Detail_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The tags in the file are outdated..
         /// </summary>
         public static string Detail_TagsStale {
@@ -603,6 +630,15 @@ namespace Tapedeck.Resources {
         public static string Detail_YouTube {
             get {
                 return ResourceManager.GetString("Detail_YouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Dialog_Cancel {
+            get {
+                return ResourceManager.GetString("Dialog_Cancel", resourceCulture);
             }
         }
         
@@ -742,6 +778,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel downloads.
+        /// </summary>
+        public static string Library_CancelDownloads {
+            get {
+                return ResourceManager.GetString("Library_CancelDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download missing.
+        /// </summary>
+        public static string Library_DownloadMissing {
+            get {
+                return ResourceManager.GetString("Library_DownloadMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download pending.
         /// </summary>
         public static string Library_DownloadPending {
@@ -846,6 +900,15 @@ namespace Tapedeck.Resources {
         public static string Library_SummaryErrors {
             get {
                 return ResourceManager.GetString("Library_SummaryErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} · {1} missing.
+        /// </summary>
+        public static string Library_SummaryMissing {
+            get {
+                return ResourceManager.GetString("Library_SummaryMissing", resourceCulture);
             }
         }
         
@@ -994,6 +1057,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not remove “{0}”: {1}.
+        /// </summary>
+        public static string Notice_RemoveFailed {
+            get {
+                return ResourceManager.GetString("Notice_RemoveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not save the changes: {0}.
         /// </summary>
         public static string Notice_SaveFailed {
@@ -1035,6 +1107,42 @@ namespace Tapedeck.Resources {
         public static string Rating_Value {
             get {
                 return ResourceManager.GetString("Rating_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Remove_Confirm {
+            get {
+                return ResourceManager.GetString("Remove_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also delete the audio file.
+        /// </summary>
+        public static string Remove_DeleteFile {
+            get {
+                return ResourceManager.GetString("Remove_DeleteFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The track disappears from the library, together with its corrections, rating and genres..
+        /// </summary>
+        public static string Remove_Message {
+            get {
+                return ResourceManager.GetString("Remove_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove “{0}”?.
+        /// </summary>
+        public static string Remove_Title {
+            get {
+                return ResourceManager.GetString("Remove_Title", resourceCulture);
             }
         }
         
@@ -1354,6 +1462,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing.
+        /// </summary>
+        public static string Status_Missing {
+            get {
+                return ResourceManager.GetString("Status_Missing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending.
         /// </summary>
         public static string Status_Pending {
@@ -1377,6 +1494,15 @@ namespace Tapedeck.Resources {
         public static string Tools_Update {
             get {
                 return ResourceManager.GetString("Tools_Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel download.
+        /// </summary>
+        public static string Track_CancelDownload {
+            get {
+                return ResourceManager.GetString("Track_CancelDownload", resourceCulture);
             }
         }
         
@@ -1413,6 +1539,15 @@ namespace Tapedeck.Resources {
         public static string Track_OpenOnYoutube {
             get {
                 return ResourceManager.GetString("Track_OpenOnYoutube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Track_Remove {
+            get {
+                return ResourceManager.GetString("Track_Remove", resourceCulture);
             }
         }
         

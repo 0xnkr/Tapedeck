@@ -477,4 +477,49 @@
   <data name="Credit_Inter" xml:space="preserve">
     <value>Schrift der Oberfläche</value>
   </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Status_Missing" xml:space="preserve">
+    <value>Fehlt</value>
+  </data>
+  <data name="Track_Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Track_CancelDownload" xml:space="preserve">
+    <value>Download abbrechen</value>
+  </data>
+  <data name="Library_CancelDownloads" xml:space="preserve">
+    <value>Downloads abbrechen</value>
+  </data>
+  <data name="Library_DownloadMissing" xml:space="preserve">
+    <value>Fehlende laden</value>
+  </data>
+  <data name="Library_SummaryMissing" xml:space="preserve">
+    <value>{0} · {1} fehlen</value>
+  </data>
+  <data name="Remove_Title" xml:space="preserve">
+    <value>„{0}“ entfernen?</value>
+  </data>
+  <data name="Remove_Message" xml:space="preserve">
+    <value>Der Titel verschwindet aus der Bibliothek, mit seinen Korrekturen, der Bewertung und den Genres.</value>
+  </data>
+  <data name="Remove_DeleteFile" xml:space="preserve">
+    <value>Audio-Datei ebenfalls löschen</value>
+  </data>
+  <data name="Remove_Confirm" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Detail_Remove" xml:space="preserve">
+    <value>Titel entfernen</value>
+  </data>
+  <data name="Confirm_Removed" xml:space="preserve">
+    <value>„{0}“ entfernt</value>
+  </data>
+  <data name="Confirm_TagsWrittenRenamed" xml:space="preserve">
+    <value>Tags geschrieben, Datei heißt jetzt „{0}“</value>
+  </data>
+  <data name="Notice_RemoveFailed" xml:space="preserve">
+    <value>„{0}“ konnte nicht entfernt werden: {1}</value>
+  </data>
 </root>
