@@ -37,150 +37,201 @@
                    TextWrapping="Wrap"
                    IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="{StaticResource Space.3}">
-
-            <!-- Left: library and appearance -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Spacing="{StaticResource Space.3}">
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="{StaticResource Space.3}">
+
+                    <!-- Left: library and appearance -->
+                    <StackPanel Spacing="{StaticResource Space.3}">
+                        <controls:Island Classes="large">
+                            <StackPanel Spacing="{StaticResource Space.4}">
+                                <StackPanel Classes="heading">
+                                    <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Library}" />
+                                    <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
+                                               Text="{x:Static res:Strings.Settings_LibraryHint}" />
+                                </StackPanel>
+
+                                <StackPanel Spacing="{StaticResource Space.2}">
+                                    <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_Location}" />
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                        <TextBox Text="{Binding LibraryDir}"
+                                                 IsReadOnly="True"
+                                                 MinHeight="{StaticResource Control.Xl}"
+                                                 AutomationProperties.Name="{x:Static res:Strings.Settings_Location}" />
+                                        <Button Grid.Column="1"
+                                                Classes="tonal xl"
+                                                Content="{x:Static res:Strings.Settings_Change}"
+                                                Command="{Binding ChangeLibraryCommand}" />
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Spacing="{StaticResource Space.2}">
+                                    <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_FileName}" />
+                                    <Border Classes="code">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Classes="mono" Text="{x:Static res:Strings.Settings_FileNamePattern}" />
+                                            <TextBlock Classes="mono" Foreground="{DynamicResource Brush.Text3}"
+                                                       Text="{x:Static res:Strings.Settings_FileNameCollision}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </controls:Island>
+
+                        <controls:Island Classes="large">
+                            <StackPanel Spacing="{StaticResource Space.4}">
+                                <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Appearance}" />
+
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.4}">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body" FontWeight="Medium" Text="{x:Static res:Strings.Settings_Language}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_LanguageHint}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Classes="segmented" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
+                                                         Content="{x:Static res:Strings.Settings_LanguageSystem}"
+                                                         IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.System}}" />
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
+                                                         Content="{x:Static res:Strings.Settings_LanguageEnglish}"
+                                                         IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.English}}" />
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
+                                                         Content="{x:Static res:Strings.Settings_LanguageGerman}"
+                                                         IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.German}}" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Spacing="{StaticResource Space.2}">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Classes="body" FontWeight="Medium" Text="{x:Static res:Strings.Settings_Accent}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_AccentHint}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                                        <ItemsControl ItemsSource="{Binding Accents}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" Spacing="4" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:AccentOptionViewModel">
+                                                    <RadioButton Theme="{StaticResource AccentSwatch}"
+                                                                 GroupName="Accent"
+                                                                 Background="{Binding Hex, Converter={x:Static converters:HexToBrushConverter.INSTANCE}}"
+                                                                 IsChecked="{Binding IsSelected, Mode=OneWay}"
+                                                                 Command="{Binding SelectCommand}"
+                                                                 AutomationProperties.Name="{Binding Label}" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBox Classes="chip"
+                                                 Width="130"
+                                                 Text="{Binding CustomAccent}"
+                                                 Classes.user-value="{Binding CustomAccent, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                 PlaceholderText="#RRGGBB"
+                                                 AutomationProperties.Name="{x:Static res:Strings.Settings_AccentCustom}"
+                                                 VerticalAlignment="Center">
+                                            <TextBox.KeyBindings>
+                                                <KeyBinding Gesture="Enter" Command="{Binding ApplyCustomAccentCommand}" />
+                                            </TextBox.KeyBindings>
+                                        </TextBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </controls:Island>
+                    </StackPanel>
+
+                    <!-- Right: tools -->
+                    <controls:Island Grid.Column="1" Classes="large" VerticalAlignment="Top">
+                        <StackPanel Spacing="{StaticResource Space.3}">
+                            <StackPanel Classes="heading">
+                                <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Tools}" />
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
+                                           Text="{x:Static res:Strings.Settings_ToolsHint}" />
+                            </StackPanel>
+
+                            <Border Classes="row">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="yt-dlp" />
+                                        <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
+                                                   Text="{Binding YtDlpVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Classes="primary"
+                                            Content="{x:Static res:Strings.Tools_Update}"
+                                            controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
+                                            Command="{Binding UpdateYtDlpCommand}" />
+                                </Grid>
+                            </Border>
+
+                            <Border Classes="row">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Classes="body-strong" Text="ffmpeg" />
+                                    <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
+                                               Text="{Binding FFmpegVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Classes="row">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Classes="body-strong" Text="Deno" />
+                                    <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
+                                               Text="{Binding DenoVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </controls:Island>
+                </Grid>
+
+                <!-- Credits: the open source projects Tapedeck builds on -->
                 <controls:Island Classes="large">
                     <StackPanel Spacing="{StaticResource Space.4}">
                         <StackPanel Classes="heading">
-                            <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Library}" />
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Credits}" />
                             <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
-                                       Text="{x:Static res:Strings.Settings_LibraryHint}" />
+                                       Text="{x:Static res:Strings.Settings_CreditsHint}" />
                         </StackPanel>
-
-                        <StackPanel Spacing="{StaticResource Space.2}">
-                            <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_Location}" />
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
-                                <TextBox Text="{Binding LibraryDir}"
-                                         IsReadOnly="True"
-                                         MinHeight="{StaticResource Control.Xl}"
-                                         AutomationProperties.Name="{x:Static res:Strings.Settings_Location}" />
-                                <Button Grid.Column="1"
-                                        Classes="tonal xl"
-                                        Content="{x:Static res:Strings.Settings_Change}"
-                                        Command="{Binding ChangeLibraryCommand}" />
-                            </Grid>
-                        </StackPanel>
-
-                        <StackPanel Spacing="{StaticResource Space.2}">
-                            <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_FileName}" />
-                            <Border Classes="code">
-                                <StackPanel Spacing="4">
-                                    <TextBlock Classes="mono" Text="{x:Static res:Strings.Settings_FileNamePattern}" />
-                                    <TextBlock Classes="mono" Foreground="{DynamicResource Brush.Text3}"
-                                               Text="{x:Static res:Strings.Settings_FileNameCollision}" />
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-                    </StackPanel>
-                </controls:Island>
-
-                <controls:Island Classes="large">
-                    <StackPanel Spacing="{StaticResource Space.4}">
-                        <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Appearance}" />
-
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.4}">
-                            <StackPanel Spacing="2" VerticalAlignment="Center">
-                                <TextBlock Classes="body" FontWeight="Medium" Text="{x:Static res:Strings.Settings_Language}" />
-                                <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_LanguageHint}" />
-                            </StackPanel>
-                            <Border Grid.Column="1" Classes="segmented" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal">
-                                    <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
-                                                 Content="{x:Static res:Strings.Settings_LanguageSystem}"
-                                                 IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.System}}" />
-                                    <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
-                                                 Content="{x:Static res:Strings.Settings_LanguageEnglish}"
-                                                 IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.English}}" />
-                                    <RadioButton Theme="{StaticResource Segment}" GroupName="Language"
-                                                 Content="{x:Static res:Strings.Settings_LanguageGerman}"
-                                                 IsChecked="{Binding Language, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:LanguageChoice.German}}" />
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <StackPanel Spacing="{StaticResource Space.2}">
-                            <StackPanel Spacing="2">
-                                <TextBlock Classes="body" FontWeight="Medium" Text="{x:Static res:Strings.Settings_Accent}" />
-                                <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_AccentHint}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
-                                <ItemsControl ItemsSource="{Binding Accents}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="4" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="vm:AccentOptionViewModel">
-                                            <RadioButton Theme="{StaticResource AccentSwatch}"
-                                                         GroupName="Accent"
-                                                         Background="{Binding Hex, Converter={x:Static converters:HexToBrushConverter.INSTANCE}}"
-                                                         IsChecked="{Binding IsSelected, Mode=OneWay}"
-                                                         Command="{Binding SelectCommand}"
-                                                         AutomationProperties.Name="{Binding Label}" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <TextBox Classes="chip"
-                                         Width="130"
-                                         Text="{Binding CustomAccent}"
-                                         Classes.user-value="{Binding CustomAccent, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                                         PlaceholderText="#RRGGBB"
-                                         AutomationProperties.Name="{x:Static res:Strings.Settings_AccentCustom}"
-                                         VerticalAlignment="Center">
-                                    <TextBox.KeyBindings>
-                                        <KeyBinding Gesture="Enter" Command="{Binding ApplyCustomAccentCommand}" />
-                                    </TextBox.KeyBindings>
-                                </TextBox>
-                            </StackPanel>
-                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Credits}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CreditViewModel">
+                                    <Button Classes="link"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            Command="{Binding OpenCommand}"
+                                            AutomationProperties.Name="{Binding OpenLabel}">
+                                        <Border Classes="row">
+                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                                <StackPanel Spacing="2" VerticalAlignment="Center">
+                                                    <TextBlock Classes="body-strong" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Classes="support" Text="{Binding Purpose}" Foreground="{DynamicResource Brush.Text2}"
+                                                               TextWrapping="Wrap" />
+                                                </StackPanel>
+                                                <Border Grid.Column="1" Classes="pill" VerticalAlignment="Center">
+                                                    <TextBlock Classes="caption" Text="{Binding License}" />
+                                                </Border>
+                                                <controls:Glyph Grid.Column="2"
+                                                                Data="{StaticResource Icon.ExternalLink}"
+                                                                Width="16" Height="16"
+                                                                Foreground="{DynamicResource Brush.Text3}"
+                                                                VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </controls:Island>
             </StackPanel>
-
-            <!-- Right: tools -->
-            <controls:Island Grid.Column="1" Classes="large" VerticalAlignment="Top">
-                <StackPanel Spacing="{StaticResource Space.3}">
-                    <StackPanel Classes="heading">
-                        <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Tools}" />
-                        <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
-                                   Text="{x:Static res:Strings.Settings_ToolsHint}" />
-                    </StackPanel>
-
-                    <Border Classes="row">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
-                            <StackPanel Spacing="2" VerticalAlignment="Center">
-                                <TextBlock Classes="body-strong" Text="yt-dlp" />
-                                <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
-                                           Text="{Binding YtDlpVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
-                            </StackPanel>
-                            <Button Grid.Column="1"
-                                    Classes="primary"
-                                    Content="{x:Static res:Strings.Tools_Update}"
-                                    controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
-                                    Command="{Binding UpdateYtDlpCommand}" />
-                        </Grid>
-                    </Border>
-
-                    <Border Classes="row">
-                        <StackPanel Spacing="2">
-                            <TextBlock Classes="body-strong" Text="ffmpeg" />
-                            <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
-                                       Text="{Binding FFmpegVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
-                        </StackPanel>
-                    </Border>
-
-                    <Border Classes="row">
-                        <StackPanel Spacing="2">
-                            <TextBlock Classes="body-strong" Text="Deno" />
-                            <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
-                                       Text="{Binding DenoVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </controls:Island>
-        </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
