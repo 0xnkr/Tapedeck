@@ -8,7 +8,7 @@
              x:Class="Tapedeck.Views.PlaylistDetailView"
              x:DataType="vm:PlaylistDetailViewModel">
 
-    <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
 
         <controls:PageHeader Title="{Binding Name}"
                              Subtitle="{Binding Summary}"
@@ -21,6 +21,12 @@
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlist_Rename}"
                         Command="{Binding RenameCommand}" />
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Playlist_Sync}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlist_SyncHint}"
+                        Command="{Binding SyncCommand}"
+                        IsVisible="{Binding IsLinked}" />
                 <Button Classes="primary lg"
                         Content="{x:Static res:Strings.Playlist_Download}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
@@ -28,7 +34,15 @@
             </StackPanel>
         </controls:PageHeader>
 
-        <controls:Island Grid.Row="1" Classes="table">
+        <TextBlock Grid.Row="1"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="22,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <controls:Island Grid.Row="2" Classes="table">
             <DockPanel>
                 <views:PlaylistColumnsGrid DockPanel.Dock="Top" Height="36" Margin="12,4,12,0">
                     <views:PlaylistColumnsGrid.Styles>
