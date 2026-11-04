@@ -85,6 +85,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Writing tags ….
+        /// </summary>
+        public static string Activity_WritingTags {
+            get {
+                return ResourceManager.GetString("Activity_WritingTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
         public static string Column_Album {
@@ -148,6 +157,258 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tags written to “{0}”.
+        /// </summary>
+        public static string Confirm_TagsWritten {
+            get {
+                return ResourceManager.GetString("Confirm_TagsWritten", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Added.
+        /// </summary>
+        public static string Detail_Added {
+            get {
+                return ResourceManager.GetString("Detail_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back to library.
+        /// </summary>
+        public static string Detail_Back {
+            get {
+                return ResourceManager.GetString("Detail_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        public static string Detail_ChangeCover {
+            get {
+                return ResourceManager.GetString("Detail_ChangeCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel.
+        /// </summary>
+        public static string Detail_Channel {
+            get {
+                return ResourceManager.GetString("Detail_Channel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cover.
+        /// </summary>
+        public static string Detail_Cover {
+            get {
+                return ResourceManager.GetString("Detail_Cover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From thumbnail (16:9).
+        /// </summary>
+        public static string Detail_CoverFromThumbnail {
+            get {
+                return ResourceManager.GetString("Detail_CoverFromThumbnail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloaded on.
+        /// </summary>
+        public static string Detail_DownloadedAt {
+            get {
+                return ResourceManager.GetString("Detail_DownloadedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string Detail_File {
+            get {
+                return ResourceManager.GetString("Detail_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format.
+        /// </summary>
+        public static string Detail_Format {
+            get {
+                return ResourceManager.GetString("Detail_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a valid year..
+        /// </summary>
+        public static string Detail_InvalidYear {
+            get {
+                return ResourceManager.GetString("Detail_InvalidYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metadata.
+        /// </summary>
+        public static string Detail_Metadata {
+            get {
+                return ResourceManager.GetString("Detail_Metadata", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right: where the value comes from.
+        /// </summary>
+        public static string Detail_MetadataHint {
+            get {
+                return ResourceManager.GetString("Detail_MetadataHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not downloaded yet.
+        /// </summary>
+        public static string Detail_NoFile {
+            get {
+                return ResourceManager.GetString("Detail_NoFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        public static string Detail_Preview {
+            get {
+                return ResourceManager.GetString("Detail_Preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download again.
+        /// </summary>
+        public static string Detail_Redownload {
+            get {
+                return ResourceManager.GetString("Detail_Redownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The tags in the file are outdated..
+        /// </summary>
+        public static string Detail_TagsStale {
+            get {
+                return ResourceManager.GetString("Detail_TagsStale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploaded.
+        /// </summary>
+        public static string Detail_Uploaded {
+            get {
+                return ResourceManager.GetString("Detail_Uploaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video ID.
+        /// </summary>
+        public static string Detail_VideoId {
+            get {
+                return ResourceManager.GetString("Detail_VideoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write tags.
+        /// </summary>
+        public static string Detail_WriteTags {
+            get {
+                return ResourceManager.GetString("Detail_WriteTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube.
+        /// </summary>
+        public static string Detail_YouTube {
+            get {
+                return ResourceManager.GetString("Detail_YouTube", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Album.
+        /// </summary>
+        public static string Field_Album {
+            get {
+                return ResourceManager.GetString("Field_Album", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Album artist.
+        /// </summary>
+        public static string Field_AlbumArtist {
+            get {
+                return ResourceManager.GetString("Field_AlbumArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist.
+        /// </summary>
+        public static string Field_Artist {
+            get {
+                return ResourceManager.GetString("Field_Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genres.
+        /// </summary>
+        public static string Field_Genres {
+            get {
+                return ResourceManager.GetString("Field_Genres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rating.
+        /// </summary>
+        public static string Field_Rating {
+            get {
+                return ResourceManager.GetString("Field_Rating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string Field_Title {
+            get {
+                return ResourceManager.GetString("Field_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Field_Year {
+            get {
+                return ResourceManager.GetString("Field_Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string Filter_All {
@@ -180,6 +441,33 @@ namespace Tapedeck.Resources {
         public static string Filter_Pending {
             get {
                 return ResourceManager.GetString("Filter_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genre.
+        /// </summary>
+        public static string Genre_Add {
+            get {
+                return ResourceManager.GetString("Genre_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New genre.
+        /// </summary>
+        public static string Genre_NewLabel {
+            get {
+                return ResourceManager.GetString("Genre_NewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0}.
+        /// </summary>
+        public static string Genre_Remove {
+            get {
+                return ResourceManager.GetString("Genre_Remove", resourceCulture);
             }
         }
         
@@ -382,6 +670,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not save the changes: {0}.
+        /// </summary>
+        public static string Notice_SaveFailed {
+            get {
+                return ResourceManager.GetString("Notice_SaveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not write the tags: {0}.
+        /// </summary>
+        public static string Notice_WriteTagsFailed {
+            get {
+                return ResourceManager.GetString("Notice_WriteTagsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not rated.
         /// </summary>
         public static string Rating_None {
@@ -396,6 +702,69 @@ namespace Tapedeck.Resources {
         public static string Rating_Value {
             get {
                 return ResourceManager.GetString("Rating_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel.
+        /// </summary>
+        public static string Source_Channel {
+            get {
+                return ResourceManager.GetString("Source_Channel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Derived.
+        /// </summary>
+        public static string Source_Derived {
+            get {
+                return ResourceManager.GetString("Source_Derived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last.fm.
+        /// </summary>
+        public static string Source_Lastfm {
+            get {
+                return ResourceManager.GetString("Source_Lastfm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz.
+        /// </summary>
+        public static string Source_Mb {
+            get {
+                return ResourceManager.GetString("Source_Mb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From title.
+        /// </summary>
+        public static string Source_Parsed {
+            get {
+                return ResourceManager.GetString("Source_Parsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own.
+        /// </summary>
+        public static string Source_User {
+            get {
+                return ResourceManager.GetString("Source_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube.
+        /// </summary>
+        public static string Source_Yt {
+            get {
+                return ResourceManager.GetString("Source_Yt", resourceCulture);
             }
         }
         
@@ -432,6 +801,15 @@ namespace Tapedeck.Resources {
         public static string Status_Pending {
             get {
                 return ResourceManager.GetString("Status_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string Track_Details {
+            get {
+                return ResourceManager.GetString("Track_Details", resourceCulture);
             }
         }
         
