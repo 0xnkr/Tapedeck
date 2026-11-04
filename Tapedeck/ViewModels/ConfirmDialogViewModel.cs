@@ -16,8 +16,14 @@ public sealed record ConfirmRequest(
 /// <summary>The answer to a confirmed dialog; <see cref="Option"/> is the state of the check box.</summary>
 public sealed record ConfirmResult(bool Option);
 
+/// <summary>A dialog shown as overlay in the main window; Escape cancels it.</summary>
+public interface IDialog
+{
+    void Cancel();
+}
+
 /// <summary>A confirmation shown as overlay in the main window until confirmed or cancelled.</summary>
-public partial class ConfirmDialogViewModel(ConfirmRequest request) : ViewModelBase
+public partial class ConfirmDialogViewModel(ConfirmRequest request) : ViewModelBase, IDialog
 {
     private readonly TaskCompletionSource<ConfirmResult?> answer = new();
 
@@ -36,4 +42,6 @@ public partial class ConfirmDialogViewModel(ConfirmRequest request) : ViewModelB
 
     [RelayCommand]
     private void Cancel() => this.answer.TrySetResult(null);
+
+    void IDialog.Cancel() => this.Cancel();
 }
