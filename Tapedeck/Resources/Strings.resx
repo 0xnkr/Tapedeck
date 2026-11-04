@@ -77,7 +77,7 @@
     <comment>Accessible name of the link field</comment>
   </data>
   <data name="Library_LinkPlaceholder" xml:space="preserve">
-    <value>Paste a YouTube link – youtube.com/watch?v=… or youtu.be/…</value>
+    <value>Paste a YouTube link to a video or playlist</value>
     <comment>Placeholder of the link field</comment>
   </data>
   <data name="Library_PasteFromClipboard" xml:space="preserve">
@@ -795,5 +795,101 @@
   <data name="Confirm_PlaylistDeleted" xml:space="preserve">
     <value>“{0}” deleted</value>
     <comment>Activity toast; {0} playlist name</comment>
+  </data>
+  <data name="LinkInPlaylist_Title" xml:space="preserve">
+    <value>This link belongs to a playlist</value>
+    <comment>Dialog title when a pasted video link also names a playlist</comment>
+  </data>
+  <data name="LinkInPlaylist_Message" xml:space="preserve">
+    <value>Add only this video, or import the whole playlist. An imported playlist stays linked to YouTube and can be synced later.</value>
+    <comment>Dialog text when a pasted video link also names a playlist</comment>
+  </data>
+  <data name="LinkInPlaylist_Option" xml:space="preserve">
+    <value>Import the whole playlist</value>
+    <comment>Check box in the dialog; unchecked adds only the video</comment>
+  </data>
+  <data name="Notice_PlaylistReadFailed" xml:space="preserve">
+    <value>Could not read the playlist: {0}</value>
+    <comment>Error; {0} message from yt-dlp</comment>
+  </data>
+  <data name="Notice_PlaylistImportFailed" xml:space="preserve">
+    <value>Import stopped: {0}</value>
+    <comment>Error on the playlist page; {0} error message</comment>
+  </data>
+  <data name="Notice_PlaylistVideosFailed" xml:space="preserve">
+    <value>{0} videos could not be added, the next sync tries again: {1}</value>
+    <comment>Error on the playlist page; {0} number of videos, {1} list of videos with reasons</comment>
+  </data>
+  <data name="Playlist_VideoError" xml:space="preserve">
+    <value>“{0}”: {1}</value>
+    <comment>One entry of Notice_PlaylistVideosFailed; {0} video title, {1} error message</comment>
+  </data>
+  <data name="Prompt_ImportPlaylistTitle" xml:space="preserve">
+    <value>Import a YouTube playlist</value>
+    <comment>Prompt dialog title</comment>
+  </data>
+  <data name="Prompt_PlaylistLink" xml:space="preserve">
+    <value>Link to the playlist – youtube.com/playlist?list=…</value>
+    <comment>Label of the link field in the import dialog</comment>
+  </data>
+  <data name="Prompt_Import" xml:space="preserve">
+    <value>Import</value>
+    <comment>Confirm button of the import dialog</comment>
+  </data>
+  <data name="Prompt_NotAPlaylistLink" xml:space="preserve">
+    <value>This is not a link to a YouTube playlist.</value>
+    <comment>Validation error in the import dialog</comment>
+  </data>
+  <data name="Prompt_MixLink" xml:space="preserve">
+    <value>Mixes change every time they are opened and cannot be imported. Add single videos instead.</value>
+    <comment>Validation error in the import dialog for list=RD… links</comment>
+  </data>
+  <data name="Activity_ReadingPlaylist" xml:space="preserve">
+    <value>Reading playlist …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Activity_ImportingPlaylist" xml:space="preserve">
+    <value>Importing “{0}” {1}/{2} …</value>
+    <comment>Activity toast; {0} playlist name, {1} videos done, {2} videos to import</comment>
+  </data>
+  <data name="Playlist_YoutubeName" xml:space="preserve">
+    <value>YouTube playlist</value>
+    <comment>Name of an imported playlist without title</comment>
+  </data>
+  <data name="Playlist_NumberedName" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Name of an imported playlist when the name is taken; {0} name, {1} number from 2</comment>
+  </data>
+  <data name="Playlist_Linked" xml:space="preserve">
+    <value>{0} · linked to YouTube</value>
+    <comment>Playlist summary; {0} track summary</comment>
+  </data>
+  <data name="Confirm_PlaylistUpToDate" xml:space="preserve">
+    <value>“{0}” is up to date</value>
+    <comment>Activity toast after a sync without new videos; {0} playlist name</comment>
+  </data>
+  <data name="Confirm_PlaylistImported_One" xml:space="preserve">
+    <value>“{0}”: 1 track added</value>
+    <comment>Activity toast after import or sync; {0} playlist name</comment>
+  </data>
+  <data name="Confirm_PlaylistImported_Other" xml:space="preserve">
+    <value>“{0}”: {1} tracks added</value>
+    <comment>Activity toast after import or sync; {0} playlist name, {1} number of tracks</comment>
+  </data>
+  <data name="Playlists_FromLink" xml:space="preserve">
+    <value>From link</value>
+    <comment>Playlists page button that imports a YouTube playlist</comment>
+  </data>
+  <data name="Playlists_FromLinkHint" xml:space="preserve">
+    <value>Import a YouTube playlist and keep it linked</value>
+    <comment>Tooltip of Playlists_FromLink</comment>
+  </data>
+  <data name="Playlist_Sync" xml:space="preserve">
+    <value>Sync</value>
+    <comment>Playlist page button of a linked playlist</comment>
+  </data>
+  <data name="Playlist_SyncHint" xml:space="preserve">
+    <value>Adds the new videos of the YouTube playlist. Nothing is removed or reordered.</value>
+    <comment>Tooltip of Playlist_Sync</comment>
   </data>
 </root>
