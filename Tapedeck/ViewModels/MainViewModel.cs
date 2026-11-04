@@ -16,8 +16,10 @@ public enum AppPage
 /// <summary>Shell of the main window: navigation rail, current page and the activity toast.</summary>
 public partial class MainViewModel : ViewModelBase
 {
-    public MainViewModel(LibraryViewModel library, SettingsViewModel settings, NavigationService navigation, ActivityService activity)
+    public MainViewModel(LibraryViewModel library, SettingsViewModel settings, NavigationService navigation,
+        ActivityService activity, DialogService dialogs)
     {
+        this.Dialogs = dialogs;
         this.Library = library;
         this.Settings = settings;
         this.Navigation = navigation;
@@ -32,6 +34,8 @@ public partial class MainViewModel : ViewModelBase
     public NavigationService Navigation { get; }
 
     public ActivityService Activity { get; }
+
+    public DialogService Dialogs { get; }
 
     [ObservableProperty]
     public partial AppPage CurrentPage { get; private set; } = AppPage.Library;
@@ -50,8 +54,15 @@ public partial class MainViewModel : ViewModelBase
         });
         if (page == AppPage.Settings)
             this.Settings.LoadCommand.Execute(null);
+        else if (page == AppPage.Library)
+            this.Library.RecheckFiles();
     }
 
+    /// <summary>Escape and the mouse back button: close an open dialog first, else go back.</summary>
     [RelayCommand]
-    private void Back() => this.Navigation.Back();
+    private void Back()
+    {
+        if (!this.Dialogs.CancelCurrent())
+            this.Navigation.Back();
+    }
 }

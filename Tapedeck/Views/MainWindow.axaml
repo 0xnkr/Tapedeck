@@ -6,7 +6,7 @@
         xmlns:converters="using:Tapedeck.Converters"
         x:Class="Tapedeck.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/tapedeck.ico"
         Title="Tapedeck"
         Width="1280" Height="800"
         MinWidth="960" MinHeight="600"
@@ -73,5 +73,10 @@
                 </controls:Island>
             </Panel>
         </Grid>
+
+        <!-- Confirmation dialog over everything below the title bar -->
+        <ContentControl Grid.Row="1"
+                        Content="{Binding Dialogs.Current}"
+                        IsVisible="{Binding Dialogs.Current, Converter={x:Static ObjectConverters.IsNotNull}}" />
     </Grid>
 </Window>
