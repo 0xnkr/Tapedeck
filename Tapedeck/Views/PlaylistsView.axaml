@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.PlaylistsView"
+             x:DataType="vm:PlaylistsViewModel">
+
+    <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <controls:PageHeader Title="{x:Static res:Strings.Playlists_Title}"
+                             Subtitle="{x:Static res:Strings.Playlists_Hint}">
+            <Button Classes="primary lg"
+                    Content="{x:Static res:Strings.Playlists_New}"
+                    controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                    Command="{Binding CreateCommand}" />
+        </controls:PageHeader>
+
+        <controls:Island Grid.Row="1" Classes="table">
+            <Panel>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding Playlists}" Margin="4" VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:PlaylistItemViewModel">
+                                <Button Classes="link"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Stretch"
+                                        Command="{Binding OpenCommand}"
+                                        AutomationProperties.Name="{Binding OpenLabel}">
+                                    <Border Classes="row">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space.3}">
+                                            <controls:Glyph Data="{StaticResource Icon.Playlists}"
+                                                            Width="24" Height="24"
+                                                            Foreground="{DynamicResource Brush.Text2}"
+                                                            VerticalAlignment="Center" />
+                                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                <TextBlock Classes="body-strong" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Classes="support" Text="{Binding Summary}" Foreground="{DynamicResource Brush.Text2}" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <TextBlock Classes="body"
+                           Text="{x:Static res:Strings.Playlists_Empty}"
+                           Foreground="{DynamicResource Brush.Text2}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           MaxWidth="420"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding IsEmpty}" />
+            </Panel>
+        </controls:Island>
+    </Grid>
+</UserControl>

@@ -1,0 +1,16 @@
+<!--
+    "Add to playlist" menus are filled from TrackRowViewModel.PlaylistMenu. The generated menu items take
+    header and command from their PlaylistMenuEntry. Mark the parent with the class "playlist-menu":
+    a MenuItem (sub menu in the row menu) or a MenuFlyout via FlyoutPresenterClasses (button on the detail page).
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Tapedeck.ViewModels">
+
+    <Style Selector="MenuItem.playlist-menu > MenuItem, MenuFlyoutPresenter.playlist-menu > MenuItem"
+           x:DataType="vm:PlaylistMenuEntry">
+        <Setter Property="Header" Value="{Binding Header}" />
+        <Setter Property="Command" Value="{Binding Command}" />
+    </Style>
+
+</Styles>

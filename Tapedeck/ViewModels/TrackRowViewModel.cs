@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
+using Tapedeck.Resources;
 
 namespace Tapedeck.ViewModels;
 
@@ -26,7 +29,18 @@ public interface ITrackActions
     Task<bool> RemoveAsync(TrackRowViewModel row);
 
     void CancelDownload(TrackRowViewModel row);
+
+    /// <summary>The playlists offered in the "add to playlist" menu.</summary>
+    IReadOnlyList<PlaylistItemViewModel> Playlists { get; }
+
+    Task AddToPlaylistAsync(TrackRowViewModel row, long playlistId);
+
+    /// <summary>Asks for a name, creates the playlist and adds the track.</summary>
+    Task AddToNewPlaylistAsync(TrackRowViewModel row);
 }
+
+/// <summary>One entry of the "add to playlist" menu.</summary>
+public sealed record PlaylistMenuEntry(string Header, IAsyncRelayCommand Command);
 
 /// <summary>One row of the library table, built from <see cref="TrackDisplay"/>.</summary>
 public partial class TrackRowViewModel : ViewModelBase
@@ -42,6 +56,9 @@ public partial class TrackRowViewModel : ViewModelBase
     }
 
     public long Id { get; private set; }
+
+    /// <summary>"New playlist …" and all playlists; filled by <see cref="RefreshPlaylistMenu"/> when the menu opens.</summary>
+    public ObservableCollection<PlaylistMenuEntry> PlaylistMenu { get; } = [];
 
     public string Url { get; private set; } = string.Empty;
 
@@ -122,6 +139,19 @@ public partial class TrackRowViewModel : ViewModelBase
 
     [RelayCommand]
     private void CancelDownload() => this.actions.CancelDownload(this);
+
+    /// <summary>Rebuilds the "add to playlist" menu, so it shows playlists created since the last time.</summary>
+    public void RefreshPlaylistMenu()
+    {
+        this.PlaylistMenu.Clear();
+        this.PlaylistMenu.Add(new PlaylistMenuEntry(Strings.Track_NewPlaylist,
+            new AsyncRelayCommand(() => this.actions.AddToNewPlaylistAsync(this))));
+        foreach (var playlist in this.actions.Playlists)
+        {
+            this.PlaylistMenu.Add(new PlaylistMenuEntry(playlist.Name,
+                new AsyncRelayCommand(() => this.actions.AddToPlaylistAsync(this, playlist.Id))));
+        }
+    }
 
     public bool Matches(string search) =>
         this.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)

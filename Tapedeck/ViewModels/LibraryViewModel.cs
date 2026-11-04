@@ -37,6 +37,8 @@ public partial class LibraryViewModel(
     NavigationService navigation,
     LibraryFiles files,
     DialogService dialogs,
+    PlaylistsViewModel playlists,
+    PlaylistSync playlistSync,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     private readonly List<TrackRowViewModel> all = [];
@@ -162,12 +164,16 @@ public partial class LibraryViewModel(
         this.OnTracksChanged();
     }
 
-    private async Task DownloadAllAsync(DownloadStatus status)
+    private Task DownloadAllAsync(DownloadStatus status) =>
+        this.DownloadTracksAsync(this.all.Where(r => r.Status == status).ToList());
+
+    /// <summary>Downloads the given rows one by one; "Cancel downloads" stops the rest.</summary>
+    public async Task DownloadTracksAsync(IReadOnlyList<TrackRowViewModel> rows)
     {
         using var cts = this.batch = new CancellationTokenSource();
         try
         {
-            foreach (var row in this.all.Where(r => r.Status == status).ToList())
+            foreach (var row in rows)
             {
                 if (cts.IsCancellationRequested)
                     break;
@@ -315,7 +321,26 @@ public partial class LibraryViewModel(
 
     void ITrackActions.OpenDetails(TrackRowViewModel row) => navigation.Open(createDetail(row, this));
 
-    Task ITrackActions.RefreshAsync(TrackRowViewModel row) => this.RefreshRowAsync(row.Id);
+    async Task ITrackActions.RefreshAsync(TrackRowViewModel row)
+    {
+        await this.RefreshRowAsync(row.Id);
+        // writing tags may have renamed the file the .m3u8 files point to
+        playlistSync.Request();
+    }
+
+    IReadOnlyList<PlaylistItemViewModel> ITrackActions.Playlists => playlists.Playlists;
+
+    Task ITrackActions.AddToPlaylistAsync(TrackRowViewModel row, long playlistId) =>
+        playlists.AddTrackAsync(playlistId, row.Id, row.Title);
+
+    async Task ITrackActions.AddToNewPlaylistAsync(TrackRowViewModel row)
+    {
+        if (await playlists.CreateWithPromptAsync() is { } playlist)
+            await playlists.AddTrackAsync(playlist.Id, row.Id, row.Title);
+    }
+
+    /// <summary>The shared row of a track, so other pages show the same status and progress.</summary>
+    public TrackRowViewModel? RowFor(long trackId) => this.all.Find(r => r.Id == trackId);
 
     void ITrackActions.CancelDownload(TrackRowViewModel row)
     {
@@ -355,6 +380,8 @@ public partial class LibraryViewModel(
             this.all[i].Number = i + 1;
         this.OnTracksChanged();
         activity.Confirm(string.Format(Strings.Confirm_Removed, row.Title));
+        // the playlists lose the track, so their counts and .m3u8 files change
+        await playlists.ChangedAsync();
         return true;
     }
 
@@ -375,6 +402,7 @@ public partial class LibraryViewModel(
             using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
                 await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p), cts.Token);
             activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
+            playlistSync.Request();
         }
         catch (OperationCanceledException)
         {

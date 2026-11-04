@@ -16,9 +16,10 @@ public enum AppPage
 /// <summary>Shell of the main window: navigation rail, current page and the activity toast.</summary>
 public partial class MainViewModel : ViewModelBase
 {
-    public MainViewModel(LibraryViewModel library, SettingsViewModel settings, NavigationService navigation,
-        ActivityService activity, DialogService dialogs)
+    public MainViewModel(LibraryViewModel library, PlaylistsViewModel playlists, SettingsViewModel settings,
+        NavigationService navigation, ActivityService activity, DialogService dialogs)
     {
+        this.Playlists = playlists;
         this.Dialogs = dialogs;
         this.Library = library;
         this.Settings = settings;
@@ -28,6 +29,8 @@ public partial class MainViewModel : ViewModelBase
     }
 
     public LibraryViewModel Library { get; }
+
+    public PlaylistsViewModel Playlists { get; }
 
     public SettingsViewModel Settings { get; }
 
@@ -48,12 +51,13 @@ public partial class MainViewModel : ViewModelBase
         this.Navigation.Reset(page switch
         {
             AppPage.Library => this.Library,
-            AppPage.Settings => this.Settings,
-            // Playlists is disabled in the rail until it exists
-            _ => throw new NotSupportedException($"Page {page} is not implemented yet."),
+            AppPage.Playlists => this.Playlists,
+            _ => this.Settings,
         });
         if (page == AppPage.Settings)
             this.Settings.LoadCommand.Execute(null);
+        else if (page == AppPage.Playlists)
+            this.Playlists.LoadCommand.Execute(null);
         else if (page == AppPage.Library)
             this.Library.RecheckFiles();
     }

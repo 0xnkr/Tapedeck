@@ -1,6 +1,7 @@
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Tapedeck.Core;
+using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Data;
@@ -25,6 +26,8 @@ public static class AppServices
         services.AddSingleton(new SqliteConnectionFactory(paths.DatabasePath));
         services.AddSingleton<Migrator>();
         services.AddSingleton<ITrackRepository, TrackRepository>();
+        services.AddSingleton<IPlaylistRepository, PlaylistRepository>();
+        services.AddSingleton<PlaylistExporter>();
 
         services.AddSingleton<HttpClient>();
         services.AddSingleton<ToolService>();
@@ -41,8 +44,13 @@ public static class AppServices
         services.AddSingleton<NavigationService>();
         services.AddSingleton<DialogService>();
         services.AddSingleton<LibraryFiles>();
+        services.AddSingleton<PlaylistSync>();
 
         services.AddSingleton<LibraryViewModel>();
+        services.AddSingleton<PlaylistsViewModel>();
+        // resolved on use: the playlist page needs the library and the playlists view models
+        services.AddSingleton<PlaylistDetailFactory>(sp =>
+            id => ActivatorUtilities.CreateInstance<PlaylistDetailViewModel>(sp, id));
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<TrackDetailFactory>(sp => (row, actions) =>
