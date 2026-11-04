@@ -376,4 +376,200 @@
     <value>Could not save the changes: {0}</value>
     <comment>Error line; {0} error message</comment>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Page title</comment>
+  </data>
+  <data name="Settings_Library" xml:space="preserve">
+    <value>Library</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Settings_LibraryHint" xml:space="preserve">
+    <value>The audio files are saved here. Copy this folder to your phone.</value>
+    <comment>Hint below the island title</comment>
+  </data>
+  <data name="Settings_Location" xml:space="preserve">
+    <value>Location</value>
+    <comment>Field label</comment>
+  </data>
+  <data name="Settings_Change" xml:space="preserve">
+    <value>Change</value>
+    <comment>Button that picks another library folder</comment>
+  </data>
+  <data name="Settings_ChooseFolder" xml:space="preserve">
+    <value>Choose the library folder</value>
+    <comment>Folder dialog title</comment>
+  </data>
+  <data name="Settings_FileName" xml:space="preserve">
+    <value>File name</value>
+    <comment>Label above the file name pattern</comment>
+  </data>
+  <data name="Settings_FileNamePattern" xml:space="preserve">
+    <value>Artist - Title.opus</value>
+    <comment>File name pattern, shown in monospace</comment>
+  </data>
+  <data name="Settings_FileNameCollision" xml:space="preserve">
+    <value>if taken: Artist - Title [video_id].opus</value>
+    <comment>File name pattern when the name is taken</comment>
+  </data>
+  <data name="Settings_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Language</value>
+    <comment>Setting title</comment>
+  </data>
+  <data name="Settings_LanguageHint" xml:space="preserve">
+    <value>Takes effect after a restart</value>
+    <comment>Hint below the language setting</comment>
+  </data>
+  <data name="Settings_LanguageSystem" xml:space="preserve">
+    <value>System</value>
+    <comment>Language option: follow the operating system</comment>
+  </data>
+  <data name="Settings_LanguageEnglish" xml:space="preserve">
+    <value>English</value>
+    <comment>Language option, always in its own language</comment>
+  </data>
+  <data name="Settings_LanguageGerman" xml:space="preserve">
+    <value>Deutsch</value>
+    <comment>Language option, always in its own language</comment>
+  </data>
+  <data name="Settings_Accent" xml:space="preserve">
+    <value>Accent color</value>
+    <comment>Setting title</comment>
+  </data>
+  <data name="Settings_AccentHint" xml:space="preserve">
+    <value>Highlights, active elements and the main button</value>
+    <comment>Hint below the accent setting</comment>
+  </data>
+  <data name="Settings_AccentCustom" xml:space="preserve">
+    <value>Own color (hex)</value>
+    <comment>Placeholder and accessible name of the hex field</comment>
+  </data>
+  <data name="Settings_AccentPreset" xml:space="preserve">
+    <value>Accent {0}</value>
+    <comment>Accessible name of a color swatch; {0} hex value</comment>
+  </data>
+  <data name="Settings_AccentInvalid" xml:space="preserve">
+    <value>“{0}” is not a color. Use the form #RRGGBB.</value>
+    <comment>Error line; {0} the entered text</comment>
+  </data>
+  <data name="Settings_Tools" xml:space="preserve">
+    <value>Tools</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Settings_ToolsHint" xml:space="preserve">
+    <value>Downloaded automatically. Update yt-dlp regularly, or YouTube downloads will break.</value>
+    <comment>Hint below the island title</comment>
+  </data>
+  <data name="Tools_NotInstalled" xml:space="preserve">
+    <value>Not installed yet</value>
+    <comment>Instead of a version number</comment>
+  </data>
+  <data name="Tools_Update" xml:space="preserve">
+    <value>Update</value>
+    <comment>Button that updates yt-dlp</comment>
+  </data>
+  <data name="Move_SameFolder" xml:space="preserve">
+    <value>That is already the library folder.</value>
+    <comment>Error line when moving the library</comment>
+  </data>
+  <data name="Move_InsideCurrentFolder" xml:space="preserve">
+    <value>The new folder must not be inside the current library.</value>
+    <comment>Error line when moving the library</comment>
+  </data>
+  <data name="Move_NotWritable" xml:space="preserve">
+    <value>Tapedeck cannot write to this folder.</value>
+    <comment>Error line when moving the library</comment>
+  </data>
+  <data name="Move_NameTaken" xml:space="preserve">
+    <value>“{0}” already exists in the new folder.</value>
+    <comment>Error line when moving the library; {0} file name</comment>
+  </data>
+  <data name="Csv_FileType" xml:space="preserve">
+    <value>CSV file</value>
+    <comment>File type in open and save dialogs</comment>
+  </data>
+  <data name="Csv_ExportTitle" xml:space="preserve">
+    <value>Export library</value>
+    <comment>Save dialog title</comment>
+  </data>
+  <data name="Csv_ImportTitle" xml:space="preserve">
+    <value>Import library</value>
+    <comment>Open dialog title</comment>
+  </data>
+  <data name="Csv_DefaultFileName" xml:space="preserve">
+    <value>tapedeck-library.csv</value>
+    <comment>Suggested file name for the export</comment>
+  </data>
+  <data name="Csv_ErrorLine" xml:space="preserve">
+    <value>line {0}: {1}</value>
+    <comment>One import error; {0} line, {1} problem</comment>
+  </data>
+  <data name="Csv_MissingUrlColumn" xml:space="preserve">
+    <value>the file has no “url” column</value>
+    <comment>Import problem</comment>
+  </data>
+  <data name="Csv_Malformed" xml:space="preserve">
+    <value>broken CSV from here on</value>
+    <comment>Import problem</comment>
+  </data>
+  <data name="Csv_InvalidUrl" xml:space="preserve">
+    <value>“{0}” is not a YouTube link</value>
+    <comment>Import problem; {0} cell value</comment>
+  </data>
+  <data name="Csv_InvalidYear" xml:space="preserve">
+    <value>“{0}” is not a year</value>
+    <comment>Import problem; {0} cell value</comment>
+  </data>
+  <data name="Csv_InvalidRating" xml:space="preserve">
+    <value>“{0}” is not a rating from 1 to 5</value>
+    <comment>Import problem; {0} cell value</comment>
+  </data>
+  <data name="Activity_Importing" xml:space="preserve">
+    <value>Importing {0}/{1} …</value>
+    <comment>Activity toast; {0} current row, {1} rows</comment>
+  </data>
+  <data name="Activity_MovingLibrary" xml:space="preserve">
+    <value>Moving files {0}/{1} …</value>
+    <comment>Activity toast; {0} done, {1} total</comment>
+  </data>
+  <data name="Activity_UpdatingYtDlp" xml:space="preserve">
+    <value>Updating yt-dlp …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Confirm_Exported" xml:space="preserve">
+    <value>{0} tracks exported</value>
+    <comment>Activity toast; {0} count</comment>
+  </data>
+  <data name="Confirm_Imported" xml:space="preserve">
+    <value>{0} tracks imported</value>
+    <comment>Activity toast; {0} count</comment>
+  </data>
+  <data name="Confirm_LibraryMoved" xml:space="preserve">
+    <value>{0} files moved</value>
+    <comment>Activity toast; {0} count</comment>
+  </data>
+  <data name="Confirm_YtDlpUpdated" xml:space="preserve">
+    <value>yt-dlp is now {0}</value>
+    <comment>Activity toast; {0} version</comment>
+  </data>
+  <data name="Notice_ImportResult" xml:space="preserve">
+    <value>{0} imported, {1} skipped – {2}</value>
+    <comment>Error line after an import; {0} and {1} counts, {2} the errors</comment>
+  </data>
+  <data name="Notice_ExportFailed" xml:space="preserve">
+    <value>Could not export: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Notice_MoveFailed" xml:space="preserve">
+    <value>Could not move the library: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Notice_UpdateFailed" xml:space="preserve">
+    <value>Could not update yt-dlp: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
 </root>

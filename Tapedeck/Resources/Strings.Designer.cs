@@ -76,11 +76,38 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing {0}/{1} ….
+        /// </summary>
+        public static string Activity_Importing {
+            get {
+                return ResourceManager.GetString("Activity_Importing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading yt-dlp, ffmpeg and Deno (one time) ….
         /// </summary>
         public static string Activity_InstallingTools {
             get {
                 return ResourceManager.GetString("Activity_InstallingTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Moving files {0}/{1} ….
+        /// </summary>
+        public static string Activity_MovingLibrary {
+            get {
+                return ResourceManager.GetString("Activity_MovingLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating yt-dlp ….
+        /// </summary>
+        public static string Activity_UpdatingYtDlp {
+            get {
+                return ResourceManager.GetString("Activity_UpdatingYtDlp", resourceCulture);
             }
         }
         
@@ -157,11 +184,137 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} tracks exported.
+        /// </summary>
+        public static string Confirm_Exported {
+            get {
+                return ResourceManager.GetString("Confirm_Exported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks imported.
+        /// </summary>
+        public static string Confirm_Imported {
+            get {
+                return ResourceManager.GetString("Confirm_Imported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} files moved.
+        /// </summary>
+        public static string Confirm_LibraryMoved {
+            get {
+                return ResourceManager.GetString("Confirm_LibraryMoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tags written to “{0}”.
         /// </summary>
         public static string Confirm_TagsWritten {
             get {
                 return ResourceManager.GetString("Confirm_TagsWritten", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to yt-dlp is now {0}.
+        /// </summary>
+        public static string Confirm_YtDlpUpdated {
+            get {
+                return ResourceManager.GetString("Confirm_YtDlpUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tapedeck-library.csv.
+        /// </summary>
+        public static string Csv_DefaultFileName {
+            get {
+                return ResourceManager.GetString("Csv_DefaultFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to line {0}: {1}.
+        /// </summary>
+        public static string Csv_ErrorLine {
+            get {
+                return ResourceManager.GetString("Csv_ErrorLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export library.
+        /// </summary>
+        public static string Csv_ExportTitle {
+            get {
+                return ResourceManager.GetString("Csv_ExportTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CSV file.
+        /// </summary>
+        public static string Csv_FileType {
+            get {
+                return ResourceManager.GetString("Csv_FileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import library.
+        /// </summary>
+        public static string Csv_ImportTitle {
+            get {
+                return ResourceManager.GetString("Csv_ImportTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a rating from 1 to 5.
+        /// </summary>
+        public static string Csv_InvalidRating {
+            get {
+                return ResourceManager.GetString("Csv_InvalidRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a YouTube link.
+        /// </summary>
+        public static string Csv_InvalidUrl {
+            get {
+                return ResourceManager.GetString("Csv_InvalidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a year.
+        /// </summary>
+        public static string Csv_InvalidYear {
+            get {
+                return ResourceManager.GetString("Csv_InvalidYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to broken CSV from here on.
+        /// </summary>
+        public static string Csv_Malformed {
+            get {
+                return ResourceManager.GetString("Csv_Malformed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the file has no “url” column.
+        /// </summary>
+        public static string Csv_MissingUrlColumn {
+            get {
+                return ResourceManager.GetString("Csv_MissingUrlColumn", resourceCulture);
             }
         }
         
@@ -625,6 +778,42 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The new folder must not be inside the current library..
+        /// </summary>
+        public static string Move_InsideCurrentFolder {
+            get {
+                return ResourceManager.GetString("Move_InsideCurrentFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” already exists in the new folder..
+        /// </summary>
+        public static string Move_NameTaken {
+            get {
+                return ResourceManager.GetString("Move_NameTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck cannot write to this folder..
+        /// </summary>
+        public static string Move_NotWritable {
+            get {
+                return ResourceManager.GetString("Move_NotWritable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to That is already the library folder..
+        /// </summary>
+        public static string Move_SameFolder {
+            get {
+                return ResourceManager.GetString("Move_SameFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Library.
         /// </summary>
         public static string Nav_Library {
@@ -670,11 +859,47 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not export: {0}.
+        /// </summary>
+        public static string Notice_ExportFailed {
+            get {
+                return ResourceManager.GetString("Notice_ExportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} imported, {1} skipped – {2}.
+        /// </summary>
+        public static string Notice_ImportResult {
+            get {
+                return ResourceManager.GetString("Notice_ImportResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not move the library: {0}.
+        /// </summary>
+        public static string Notice_MoveFailed {
+            get {
+                return ResourceManager.GetString("Notice_MoveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not save the changes: {0}.
         /// </summary>
         public static string Notice_SaveFailed {
             get {
                 return ResourceManager.GetString("Notice_SaveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not update yt-dlp: {0}.
+        /// </summary>
+        public static string Notice_UpdateFailed {
+            get {
+                return ResourceManager.GetString("Notice_UpdateFailed", resourceCulture);
             }
         }
         
@@ -702,6 +927,204 @@ namespace Tapedeck.Resources {
         public static string Rating_Value {
             get {
                 return ResourceManager.GetString("Rating_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accent color.
+        /// </summary>
+        public static string Settings_Accent {
+            get {
+                return ResourceManager.GetString("Settings_Accent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Own color (hex).
+        /// </summary>
+        public static string Settings_AccentCustom {
+            get {
+                return ResourceManager.GetString("Settings_AccentCustom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlights, active elements and the main button.
+        /// </summary>
+        public static string Settings_AccentHint {
+            get {
+                return ResourceManager.GetString("Settings_AccentHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a color. Use the form #RRGGBB..
+        /// </summary>
+        public static string Settings_AccentInvalid {
+            get {
+                return ResourceManager.GetString("Settings_AccentInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accent {0}.
+        /// </summary>
+        public static string Settings_AccentPreset {
+            get {
+                return ResourceManager.GetString("Settings_AccentPreset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appearance.
+        /// </summary>
+        public static string Settings_Appearance {
+            get {
+                return ResourceManager.GetString("Settings_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change.
+        /// </summary>
+        public static string Settings_Change {
+            get {
+                return ResourceManager.GetString("Settings_Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the library folder.
+        /// </summary>
+        public static string Settings_ChooseFolder {
+            get {
+                return ResourceManager.GetString("Settings_ChooseFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name.
+        /// </summary>
+        public static string Settings_FileName {
+            get {
+                return ResourceManager.GetString("Settings_FileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if taken: Artist - Title [video_id].opus.
+        /// </summary>
+        public static string Settings_FileNameCollision {
+            get {
+                return ResourceManager.GetString("Settings_FileNameCollision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist - Title.opus.
+        /// </summary>
+        public static string Settings_FileNamePattern {
+            get {
+                return ResourceManager.GetString("Settings_FileNamePattern", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Settings_Language {
+            get {
+                return ResourceManager.GetString("Settings_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string Settings_LanguageEnglish {
+            get {
+                return ResourceManager.GetString("Settings_LanguageEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deutsch.
+        /// </summary>
+        public static string Settings_LanguageGerman {
+            get {
+                return ResourceManager.GetString("Settings_LanguageGerman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takes effect after a restart.
+        /// </summary>
+        public static string Settings_LanguageHint {
+            get {
+                return ResourceManager.GetString("Settings_LanguageHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System.
+        /// </summary>
+        public static string Settings_LanguageSystem {
+            get {
+                return ResourceManager.GetString("Settings_LanguageSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Library.
+        /// </summary>
+        public static string Settings_Library {
+            get {
+                return ResourceManager.GetString("Settings_Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The audio files are saved here. Copy this folder to your phone..
+        /// </summary>
+        public static string Settings_LibraryHint {
+            get {
+                return ResourceManager.GetString("Settings_LibraryHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location.
+        /// </summary>
+        public static string Settings_Location {
+            get {
+                return ResourceManager.GetString("Settings_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings_Title {
+            get {
+                return ResourceManager.GetString("Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tools.
+        /// </summary>
+        public static string Settings_Tools {
+            get {
+                return ResourceManager.GetString("Settings_Tools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloaded automatically. Update yt-dlp regularly, or YouTube downloads will break..
+        /// </summary>
+        public static string Settings_ToolsHint {
+            get {
+                return ResourceManager.GetString("Settings_ToolsHint", resourceCulture);
             }
         }
         
@@ -801,6 +1224,24 @@ namespace Tapedeck.Resources {
         public static string Status_Pending {
             get {
                 return ResourceManager.GetString("Status_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not installed yet.
+        /// </summary>
+        public static string Tools_NotInstalled {
+            get {
+                return ResourceManager.GetString("Tools_NotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Tools_Update {
+            get {
+                return ResourceManager.GetString("Tools_Update", resourceCulture);
             }
         }
         
