@@ -572,4 +572,64 @@
     <value>Could not update yt-dlp: {0}</value>
     <comment>Error line; {0} error message</comment>
   </data>
+  <data name="Settings_Credits" xml:space="preserve">
+    <value>Open source</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Settings_CreditsHint" xml:space="preserve">
+    <value>Tapedeck is built on these open source projects. Thank you!</value>
+    <comment>Hint below the island title</comment>
+  </data>
+  <data name="Settings_CreditOpen" xml:space="preserve">
+    <value>Open the website of {0}</value>
+    <comment>Accessible name of a credit; {0} project name</comment>
+  </data>
+  <data name="Credit_YtDlp" xml:space="preserve">
+    <value>Downloads audio and metadata from YouTube</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_FFmpeg" xml:space="preserve">
+    <value>Converts the audio</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_Deno" xml:space="preserve">
+    <value>JavaScript runtime for yt-dlp</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_Avalonia" xml:space="preserve">
+    <value>Cross-platform user interface</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_YoutubeDLSharp" xml:space="preserve">
+    <value>Controls yt-dlp from .NET</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_TagLibSharp" xml:space="preserve">
+    <value>Writes tags into the audio files</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_SQLite" xml:space="preserve">
+    <value>Stores the library</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_MicrosoftDataSqlite" xml:space="preserve">
+    <value>Connects .NET to SQLite</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_Dapper" xml:space="preserve">
+    <value>Maps SQL results to objects</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_CommunityToolkit" xml:space="preserve">
+    <value>MVVM building blocks</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_DotNet" xml:space="preserve">
+    <value>Runtime and dependency injection</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_Inter" xml:space="preserve">
+    <value>Typeface of the interface</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
 </root>

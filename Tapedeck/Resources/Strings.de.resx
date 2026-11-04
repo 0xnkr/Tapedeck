@@ -432,4 +432,49 @@
   <data name="Notice_UpdateFailed" xml:space="preserve">
     <value>yt-dlp konnte nicht aktualisiert werden: {0}</value>
   </data>
+  <data name="Settings_Credits" xml:space="preserve">
+    <value>Open Source</value>
+  </data>
+  <data name="Settings_CreditsHint" xml:space="preserve">
+    <value>Tapedeck baut auf diesen Open-Source-Projekten auf. Danke!</value>
+  </data>
+  <data name="Settings_CreditOpen" xml:space="preserve">
+    <value>Website von {0} öffnen</value>
+  </data>
+  <data name="Credit_YtDlp" xml:space="preserve">
+    <value>Lädt Audio und Metadaten von YouTube</value>
+  </data>
+  <data name="Credit_FFmpeg" xml:space="preserve">
+    <value>Wandelt das Audio um</value>
+  </data>
+  <data name="Credit_Deno" xml:space="preserve">
+    <value>JavaScript-Runtime für yt-dlp</value>
+  </data>
+  <data name="Credit_Avalonia" xml:space="preserve">
+    <value>Plattformübergreifende Oberfläche</value>
+  </data>
+  <data name="Credit_YoutubeDLSharp" xml:space="preserve">
+    <value>Steuert yt-dlp aus .NET</value>
+  </data>
+  <data name="Credit_TagLibSharp" xml:space="preserve">
+    <value>Schreibt Tags in die Audio-Dateien</value>
+  </data>
+  <data name="Credit_SQLite" xml:space="preserve">
+    <value>Speichert die Bibliothek</value>
+  </data>
+  <data name="Credit_MicrosoftDataSqlite" xml:space="preserve">
+    <value>Verbindet .NET mit SQLite</value>
+  </data>
+  <data name="Credit_Dapper" xml:space="preserve">
+    <value>Bildet SQL-Ergebnisse auf Objekte ab</value>
+  </data>
+  <data name="Credit_CommunityToolkit" xml:space="preserve">
+    <value>MVVM-Bausteine</value>
+  </data>
+  <data name="Credit_DotNet" xml:space="preserve">
+    <value>Laufzeit und Dependency Injection</value>
+  </data>
+  <data name="Credit_Inter" xml:space="preserve">
+    <value>Schrift der Oberfläche</value>
+  </data>
 </root>
