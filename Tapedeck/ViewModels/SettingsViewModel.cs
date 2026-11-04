@@ -36,7 +36,22 @@ public partial class AccentOptionViewModel(string hex, Action<string> select) : 
     private void Select() => select(this.Hex);
 }
 
-/// <summary>Settings page: library folder, language, accent and the bundled tools.</summary>
+/// <summary>One open source project in the credits; opens its website.</summary>
+public partial class CreditViewModel(Credit credit, IPlatformService platform) : ViewModelBase
+{
+    public string Name => credit.Name;
+
+    public string Purpose => credit.Purpose;
+
+    public string License => credit.License;
+
+    public string OpenLabel => string.Format(Strings.Settings_CreditOpen, credit.Name);
+
+    [RelayCommand]
+    private Task OpenAsync() => platform.OpenUrlAsync(credit.Url);
+}
+
+/// <summary>Settings page: library folder, language, accent, the bundled tools and the open source credits.</summary>
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly SettingsStore store;
@@ -59,6 +74,7 @@ public partial class SettingsViewModel : ViewModelBase
         this.platform = platform;
 
         this.Accents = accent.PresetHexes.Select(hex => new AccentOptionViewModel(hex, this.SelectAccent)).ToList();
+        this.Credits = Tapedeck.Credits.ALL.Select(credit => new CreditViewModel(credit, platform)).ToList();
         this.Language = FromCode(store.Load().Language);
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
@@ -66,6 +82,8 @@ public partial class SettingsViewModel : ViewModelBase
     }
 
     public IReadOnlyList<AccentOptionViewModel> Accents { get; }
+
+    public IReadOnlyList<CreditViewModel> Credits { get; }
 
     [ObservableProperty]
     public partial LanguageChoice Language { get; set; }
