@@ -12,8 +12,12 @@ public interface IPlaylistRepository
     /// <summary>Whether a playlist with this name exists, ignoring case; <paramref name="exceptId"/> is left out.</summary>
     Task<bool> NameExistsAsync(string name, long? exceptId = null);
 
+    /// <summary>The playlist linked to this YouTube playlist, if it was imported before.</summary>
+    Task<Playlist?> FindBySourceAsync(string sourceUrl);
+
+    /// <param name="sourceUrl">The YouTube playlist to link, or <c>null</c>.</param>
     /// <returns>The new playlist's id.</returns>
-    Task<long> CreateAsync(string name);
+    Task<long> CreateAsync(string name, string? sourceUrl = null);
 
     Task RenameAsync(long id, string name);
 

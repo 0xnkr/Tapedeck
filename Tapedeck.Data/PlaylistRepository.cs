@@ -13,6 +13,7 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
     private const string SELECT_PLAYLISTS = """
         SELECT p.id,
                p.name,
+               p.source_url,
                COUNT(pt.track_id) AS track_count
           FROM playlists p
           LEFT JOIN playlist_tracks pt ON pt.playlist_id = p.id
@@ -41,11 +42,18 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
             new { name, exceptId });
     }
 
-    public async Task<long> CreateAsync(string name)
+    public async Task<Playlist?> FindBySourceAsync(string sourceUrl)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        return await connection.QuerySingleOrDefaultAsync<Playlist>(
+            $"{SELECT_PLAYLISTS} WHERE p.source_url = @sourceUrl GROUP BY p.id;", new { sourceUrl });
+    }
+
+    public async Task<long> CreateAsync(string name, string? sourceUrl = null)
     {
         await using var connection = await connectionFactory.OpenAsync();
         return await connection.ExecuteScalarAsync<long>(
-            "INSERT INTO playlists (name) VALUES (@name) RETURNING id;", new { name });
+            "INSERT INTO playlists (name, source_url) VALUES (@name, @sourceUrl) RETURNING id;", new { name, sourceUrl });
     }
 
     public async Task RenameAsync(long id, string name)
