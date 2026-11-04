@@ -20,6 +20,12 @@ public interface ITrackActions
 
     /// <summary>Reloads the row after its values changed elsewhere, e.g. on the detail page.</summary>
     Task RefreshAsync(TrackRowViewModel row);
+
+    /// <summary>Asks for confirmation, then removes the track.</summary>
+    /// <returns><c>true</c> when the track was removed.</returns>
+    Task<bool> RemoveAsync(TrackRowViewModel row);
+
+    void CancelDownload(TrackRowViewModel row);
 }
 
 /// <summary>One row of the library table, built from <see cref="TrackDisplay"/>.</summary>
@@ -27,11 +33,12 @@ public partial class TrackRowViewModel : ViewModelBase
 {
     private readonly ITrackActions actions;
 
-    public TrackRowViewModel(TrackDisplay track, int number, ITrackActions actions)
+    /// <param name="status">The status to show, which can differ from the stored one (<see cref="DownloadStatus.Missing"/>).</param>
+    public TrackRowViewModel(TrackDisplay track, DownloadStatus status, int number, ITrackActions actions)
     {
         this.actions = actions;
         this.Number = number;
-        this.Update(track);
+        this.Update(track, status);
     }
 
     public long Id { get; private set; }
@@ -41,26 +48,32 @@ public partial class TrackRowViewModel : ViewModelBase
     /// <summary>Audio file relative to the library folder, once downloaded.</summary>
     public string? FilePath { get; private set; }
 
-    public int Number { get; }
+    /// <summary>Position in the library, renumbered after a track is removed.</summary>
+    [ObservableProperty]
+    public partial int Number { get; set; }
 
     [ObservableProperty]
-    public partial string Title { get; private set; } = "";
+    public partial string Title { get; private set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string Artist { get; private set; } = "";
+    public partial string Artist { get; private set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AlbumText), nameof(HasAlbum))]
     public partial string? Album { get; private set; }
 
     [ObservableProperty]
-    public partial string DurationText { get; private set; } = "";
+    public partial string DurationText { get; private set; } = string.Empty;
 
     [ObservableProperty]
     public partial int? Rating { get; private set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDownloading))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveCommand))]
     public partial DownloadStatus Status { get; set; }
+
+    public bool IsDownloading => this.Status == DownloadStatus.Downloading;
 
     /// <summary>Download progress from 0 to 1 while <see cref="Status"/> is downloading.</summary>
     [ObservableProperty]
@@ -74,7 +87,7 @@ public partial class TrackRowViewModel : ViewModelBase
 
     public bool HasAlbum => this.Album is not null;
 
-    public void Update(TrackDisplay track)
+    public void Update(TrackDisplay track, DownloadStatus status)
     {
         this.Id = track.Id;
         this.Url = track.Url.Length > 0 ? track.Url : VideoId.WatchUrl(track.VideoId);
@@ -83,7 +96,7 @@ public partial class TrackRowViewModel : ViewModelBase
         this.Album = string.IsNullOrWhiteSpace(track.Album) ? null : track.Album;
         this.DurationText = FormatDuration(track.DurationS);
         this.Rating = track.Rating;
-        this.Status = track.DownloadStatus;
+        this.Status = status;
         this.Progress = 0;
         this.ThumbPath = track.ThumbPath;
         this.FilePath = track.FilePath;
@@ -101,10 +114,19 @@ public partial class TrackRowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenDetails() => this.actions.OpenDetails(this);
 
+    /// <summary>Not while downloading: cancel first, so no half written file stays behind.</summary>
+    [RelayCommand(CanExecute = nameof(CanRemove))]
+    private Task RemoveAsync() => this.actions.RemoveAsync(this);
+
+    private bool CanRemove() => !this.IsDownloading;
+
+    [RelayCommand]
+    private void CancelDownload() => this.actions.CancelDownload(this);
+
     public bool Matches(string search) =>
         this.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)
         || this.Artist.Contains(search, StringComparison.CurrentCultureIgnoreCase)
-        || (Album?.Contains(search, StringComparison.CurrentCultureIgnoreCase) ?? false);
+        || (this.Album?.Contains(search, StringComparison.CurrentCultureIgnoreCase) ?? false);
 
     private static string FormatDuration(int? seconds)
     {

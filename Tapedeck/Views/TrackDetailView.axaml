@@ -122,12 +122,28 @@
                                    Foreground="{DynamicResource Brush.Error}"
                                    TextWrapping="Wrap"
                                    IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-                        <Button Classes="text"
-                                HorizontalAlignment="Left"
-                                Margin="-8,0,0,0"
-                                Content="{x:Static res:Strings.Track_ShowInFolder}"
-                                controls:ButtonAssist.Icon="{StaticResource Icon.Folder}"
-                                Command="{Binding ShowInFolderCommand}" />
+                        <!-- File actions; the cancel button only shows while downloading -->
+                        <StackPanel>
+                            <Button Classes="text"
+                                    HorizontalAlignment="Left"
+                                    Margin="-8,0,0,0"
+                                    Content="{x:Static res:Strings.Track_ShowInFolder}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Folder}"
+                                    Command="{Binding ShowInFolderCommand}" />
+                            <Button Classes="danger"
+                                    HorizontalAlignment="Left"
+                                    Margin="-8,0,0,0"
+                                    Content="{x:Static res:Strings.Track_CancelDownload}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
+                                    Command="{Binding Row.CancelDownloadCommand}"
+                                    IsVisible="{Binding Row.IsDownloading}" />
+                            <Button Classes="danger"
+                                    HorizontalAlignment="Left"
+                                    Margin="-8,0,0,0"
+                                    Content="{x:Static res:Strings.Detail_Remove}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Trash}"
+                                    Command="{Binding Row.RemoveCommand}" />
+                        </StackPanel>
                     </StackPanel>
                 </controls:Island>
             </Grid>

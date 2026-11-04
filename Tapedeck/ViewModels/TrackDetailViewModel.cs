@@ -29,6 +29,7 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly ITrackActions actions;
     private readonly ITrackRepository repository;
     private readonly TagWriter tagWriter;
+    private readonly LibraryFiles files;
     private readonly ActivityService activity;
     private readonly NavigationService navigation;
 
@@ -37,12 +38,13 @@ public partial class TrackDetailViewModel : ViewModelBase
     private bool loading;
 
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, ITrackRepository repository,
-        TagWriter tagWriter, ActivityService activity, NavigationService navigation)
+        TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation)
     {
         this.Row = row;
         this.actions = actions;
         this.repository = repository;
         this.tagWriter = tagWriter;
+        this.files = files;
         this.activity = activity;
         this.navigation = navigation;
 
@@ -183,9 +185,16 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.Notice = null;
         try
         {
+            string? renamed;
             using (this.activity.Begin(Strings.Activity_WritingTags))
+            {
+                // the file name follows corrected artist and title, then the tags go in
+                renamed = await this.files.RenameToMatchAsync(this.Row.Id);
                 await this.tagWriter.WriteTagsAsync(this.Row.Id);
-            this.activity.Confirm(string.Format(Strings.Confirm_TagsWritten, this.Title));
+            }
+            this.activity.Confirm(renamed is null
+                ? string.Format(Strings.Confirm_TagsWritten, this.Title)
+                : string.Format(Strings.Confirm_TagsWrittenRenamed, renamed));
         }
         catch (Exception ex)
         {
@@ -193,6 +202,7 @@ public partial class TrackDetailViewModel : ViewModelBase
         }
 
         await this.LoadAsync();
+        await this.actions.RefreshAsync(this.Row);
     }
 
     [RelayCommand]

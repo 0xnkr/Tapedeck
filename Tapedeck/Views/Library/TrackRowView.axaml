@@ -82,11 +82,18 @@
                     <MenuItem Header="{x:Static res:Strings.Track_Details}"
                               Command="{Binding OpenDetailsCommand}" />
                     <MenuItem Header="{x:Static res:Strings.Track_Download}"
-                              Command="{Binding DownloadCommand}" />
+                              Command="{Binding DownloadCommand}"
+                              IsVisible="{Binding !IsDownloading}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_CancelDownload}"
+                              Command="{Binding CancelDownloadCommand}"
+                              IsVisible="{Binding IsDownloading}" />
                     <MenuItem Header="{x:Static res:Strings.Track_ShowInFolder}"
                               Command="{Binding ShowInFolderCommand}" />
                     <MenuItem Header="{x:Static res:Strings.Track_OpenOnYoutube}"
                               Command="{Binding OpenOnYoutubeCommand}" />
+                    <Separator />
+                    <MenuItem Header="{x:Static res:Strings.Track_Remove}"
+                              Command="{Binding RemoveCommand}" />
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
