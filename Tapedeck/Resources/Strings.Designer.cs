@@ -229,6 +229,114 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cross-platform user interface.
+        /// </summary>
+        public static string Credit_Avalonia {
+            get {
+                return ResourceManager.GetString("Credit_Avalonia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MVVM building blocks.
+        /// </summary>
+        public static string Credit_CommunityToolkit {
+            get {
+                return ResourceManager.GetString("Credit_CommunityToolkit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maps SQL results to objects.
+        /// </summary>
+        public static string Credit_Dapper {
+            get {
+                return ResourceManager.GetString("Credit_Dapper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JavaScript runtime for yt-dlp.
+        /// </summary>
+        public static string Credit_Deno {
+            get {
+                return ResourceManager.GetString("Credit_Deno", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runtime and dependency injection.
+        /// </summary>
+        public static string Credit_DotNet {
+            get {
+                return ResourceManager.GetString("Credit_DotNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converts the audio.
+        /// </summary>
+        public static string Credit_FFmpeg {
+            get {
+                return ResourceManager.GetString("Credit_FFmpeg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typeface of the interface.
+        /// </summary>
+        public static string Credit_Inter {
+            get {
+                return ResourceManager.GetString("Credit_Inter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connects .NET to SQLite.
+        /// </summary>
+        public static string Credit_MicrosoftDataSqlite {
+            get {
+                return ResourceManager.GetString("Credit_MicrosoftDataSqlite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stores the library.
+        /// </summary>
+        public static string Credit_SQLite {
+            get {
+                return ResourceManager.GetString("Credit_SQLite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Writes tags into the audio files.
+        /// </summary>
+        public static string Credit_TagLibSharp {
+            get {
+                return ResourceManager.GetString("Credit_TagLibSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controls yt-dlp from .NET.
+        /// </summary>
+        public static string Credit_YoutubeDLSharp {
+            get {
+                return ResourceManager.GetString("Credit_YoutubeDLSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloads audio and metadata from YouTube.
+        /// </summary>
+        public static string Credit_YtDlp {
+            get {
+                return ResourceManager.GetString("Credit_YtDlp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to tapedeck-library.csv.
         /// </summary>
         public static string Csv_DefaultFileName {
@@ -999,6 +1107,33 @@ namespace Tapedeck.Resources {
         public static string Settings_ChooseFolder {
             get {
                 return ResourceManager.GetString("Settings_ChooseFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the website of {0}.
+        /// </summary>
+        public static string Settings_CreditOpen {
+            get {
+                return ResourceManager.GetString("Settings_CreditOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open source.
+        /// </summary>
+        public static string Settings_Credits {
+            get {
+                return ResourceManager.GetString("Settings_Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck is built on these open source projects. Thank you!.
+        /// </summary>
+        public static string Settings_CreditsHint {
+            get {
+                return ResourceManager.GetString("Settings_CreditsHint", resourceCulture);
             }
         }
         
