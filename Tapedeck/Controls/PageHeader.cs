@@ -21,19 +21,19 @@ public sealed class PageHeader : ContentControl
 
     public ICommand? BackCommand
     {
-        get => GetValue(BackCommandProperty);
-        set => SetValue(BackCommandProperty, value);
+        get => this.GetValue(BackCommandProperty);
+        set => this.SetValue(BackCommandProperty, value);
     }
 
     public string? Title
     {
-        get => GetValue(TitleProperty);
-        set => SetValue(TitleProperty, value);
+        get => this.GetValue(TitleProperty);
+        set => this.SetValue(TitleProperty, value);
     }
 
     public string? Subtitle
     {
-        get => GetValue(SubtitleProperty);
-        set => SetValue(SubtitleProperty, value);
+        get => this.GetValue(SubtitleProperty);
+        set => this.SetValue(SubtitleProperty, value);
     }
 }

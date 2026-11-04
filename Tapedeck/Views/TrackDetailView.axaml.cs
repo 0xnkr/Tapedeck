@@ -6,6 +6,6 @@ public partial class TrackDetailView : UserControl
 {
     public TrackDetailView()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

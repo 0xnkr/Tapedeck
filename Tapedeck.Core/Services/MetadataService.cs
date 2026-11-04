@@ -11,19 +11,19 @@ namespace Tapedeck.Core.Services;
 public sealed class MetadataService(ToolService tools)
 {
     // would otherwise bloat info_json to several hundred KB
-    private static readonly string[] DroppedKeys =
+    private static readonly string[] DROPPED_KEYS =
         ["formats", "requested_formats", "automatic_captions", "subtitles", "heatmap", "thumbnails"];
 
     public async Task<YtMetadata> FetchAsync(string url, CancellationToken ct = default)
     {
-        var json = await RunYtDlpAsync(url, ct);
+        var json = await this.RunYtDlpAsync(url, ct);
         return Parse(json);
     }
 
     public static YtMetadata Parse(string json)
     {
         var root = JsonNode.Parse(json)?.AsObject() ?? throw new InvalidDataException("yt-dlp did not return a JSON object.");
-        foreach (var key in DroppedKeys)
+        foreach (var key in DROPPED_KEYS)
             root.Remove(key);
 
         var title = Str(root, "title");

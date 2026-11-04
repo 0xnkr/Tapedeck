@@ -9,10 +9,10 @@ public sealed class AppPaths(string dataDir, string libraryDir)
     /// <summary>Flat music library. <c>tracks.file_path</c> is relative to this folder.</summary>
     public string LibraryDir { get; } = libraryDir;
 
-    public string DatabasePath => Path.Combine(DataDir, "tapedeck.db");
-    public string ToolsDir => Path.Combine(DataDir, "tools");
-    public string ThumbsDir => Path.Combine(DataDir, "thumbs");
-    public string TempDir => Path.Combine(DataDir, "tmp");
+    public string DatabasePath => Path.Combine(this.DataDir, "tapedeck.db");
+    public string ToolsDir => Path.Combine(this.DataDir, "tools");
+    public string ThumbsDir => Path.Combine(this.DataDir, "thumbs");
+    public string TempDir => Path.Combine(this.DataDir, "tmp");
 
     public static AppPaths Default()
     {
@@ -29,5 +29,5 @@ public sealed class AppPaths(string dataDir, string libraryDir)
             Directory.CreateDirectory(dir);
     }
 
-    public string ToLibraryPath(string relativePath) => Path.Combine(LibraryDir, relativePath);
+    public string ToLibraryPath(string relativePath) => Path.Combine(this.LibraryDir, relativePath);
 }

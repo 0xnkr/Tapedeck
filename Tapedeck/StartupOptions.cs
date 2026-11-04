@@ -35,10 +35,10 @@ public sealed record StartupOptions(CultureInfo? Language, Color? Accent)
     /// <summary>Sets the UI culture for this run; the system language applies when none is given.</summary>
     public void ApplyLanguage()
     {
-        if (Language is null)
+        if (this.Language is null)
             return;
-        CultureInfo.DefaultThreadCurrentUICulture = Language;
-        CultureInfo.CurrentUICulture = Language;
+        CultureInfo.DefaultThreadCurrentUICulture = this.Language;
+        CultureInfo.CurrentUICulture = this.Language;
     }
 
     private static CultureInfo? TryGetCulture(string name)

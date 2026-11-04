@@ -31,7 +31,7 @@ public static partial class TitleParser
 
     public static string Clean(string rawTitle)
     {
-        var result = NoisePattern().Replace(rawTitle, "");
+        var result = NoisePattern().Replace(rawTitle, string.Empty);
         return MultiSpace().Replace(result, " ").Trim();
     }
 }

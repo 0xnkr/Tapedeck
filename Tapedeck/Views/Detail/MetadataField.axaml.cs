@@ -6,6 +6,6 @@ public partial class MetadataField : UserControl
 {
     public MetadataField()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

@@ -9,38 +9,38 @@ namespace Tapedeck.Controls;
 /// Custom title bar for a window with an extended client area: brand mark, app name and pill-shaped window buttons.
 /// The drag area and the buttons carry window decoration roles, so Windows treats them like native chrome (snap layouts).
 /// </summary>
-[TemplatePart(MinimizePartName, typeof(Button))]
-[TemplatePart(MaximizePartName, typeof(Button))]
-[TemplatePart(ClosePartName, typeof(Button))]
+[TemplatePart(MINIMIZE_PART_NAME, typeof(Button))]
+[TemplatePart(MAXIMIZE_PART_NAME, typeof(Button))]
+[TemplatePart(CLOSE_PART_NAME, typeof(Button))]
 public sealed class TitleBar : TemplatedControl
 {
-    private const string MinimizePartName = "PART_Minimize";
-    private const string MaximizePartName = "PART_Maximize";
-    private const string ClosePartName = "PART_Close";
+    private const string MINIMIZE_PART_NAME = "PART_Minimize";
+    private const string MAXIMIZE_PART_NAME = "PART_Maximize";
+    private const string CLOSE_PART_NAME = "PART_Close";
 
-    private Button? _minimize;
-    private Button? _maximize;
-    private Button? _close;
+    private Button? minimize;
+    private Button? maximize;
+    private Button? close;
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        Detach();
+        this.Detach();
 
-        _minimize = e.NameScope.Find<Button>(MinimizePartName);
-        _maximize = e.NameScope.Find<Button>(MaximizePartName);
-        _close = e.NameScope.Find<Button>(ClosePartName);
+        this.minimize = e.NameScope.Find<Button>(MINIMIZE_PART_NAME);
+        this.maximize = e.NameScope.Find<Button>(MAXIMIZE_PART_NAME);
+        this.close = e.NameScope.Find<Button>(CLOSE_PART_NAME);
 
-        _minimize?.Click += OnMinimize;
-        _maximize?.Click += OnMaximize;
-        _close?.Click += OnClose;
+        minimize?.Click += this.OnMinimize;
+        maximize?.Click += this.OnMaximize;
+        close?.Click += this.OnClose;
     }
 
     private void Detach()
     {
-        _minimize?.Click -= OnMinimize;
-        _maximize?.Click -= OnMaximize;
-        _close?.Click -= OnClose;
+        minimize?.Click -= this.OnMinimize;
+        maximize?.Click -= this.OnMaximize;
+        close?.Click -= this.OnClose;
     }
 
     private Window? Window => TopLevel.GetTopLevel(this) as Window;
@@ -49,7 +49,7 @@ public sealed class TitleBar : TemplatedControl
 
     private void OnMaximize(object? sender, RoutedEventArgs e)
     {
-        if (Window is { } window)
+        if (this.Window is { } window)
             window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     }
 

@@ -22,19 +22,19 @@ public interface IAccentService
 public sealed class AccentService : IAccentService
 {
     // Alpha values from the design system: accent-soft is accent + 0x29, the "user value" outline accent + 0x66
-    private const byte SoftAlpha = 0x29;
-    private const byte OutlineAlpha = 0x66;
+    private const byte SOFT_ALPHA = 0x29;
+    private const byte OUTLINE_ALPHA = 0x66;
 
-    private readonly IResourceDictionary _resources;
-    private readonly Color _darkOnAccent;
-    private readonly Color _lightOnAccent;
+    private readonly IResourceDictionary resources;
+    private readonly Color darkOnAccent;
+    private readonly Color lightOnAccent;
 
     public AccentService(IResourceDictionary resources)
     {
-        _resources = resources;
-        _darkOnAccent = Lookup("Color.OnAccent");
-        _lightOnAccent = Lookup("Color.Text");
-        Apply(Lookup("Color.Accent"));
+        this.resources = resources;
+        this.darkOnAccent = this.Lookup("Color.OnAccent");
+        this.lightOnAccent = this.Lookup("Color.Text");
+        this.Apply(this.Lookup("Color.Accent"));
     }
 
     public Color Accent { get; private set; }
@@ -43,30 +43,30 @@ public sealed class AccentService : IAccentService
 
     public void Apply(Color accent)
     {
-        Accent = accent;
-        var onAccent = ColorMath.Contrast(accent, _darkOnAccent) >= ColorMath.Contrast(accent, _lightOnAccent)
-            ? _darkOnAccent
-            : _lightOnAccent;
+        this.Accent = accent;
+        var onAccent = ColorMath.Contrast(accent, this.darkOnAccent) >= ColorMath.Contrast(accent, this.lightOnAccent)
+            ? this.darkOnAccent
+            : this.lightOnAccent;
 
-        _resources["Color.Accent"] = accent;
-        _resources["Brush.Accent"] = new SolidColorBrush(accent);
-        _resources["Brush.AccentSoft"] = new SolidColorBrush(accent.WithAlpha(SoftAlpha));
-        _resources["Brush.AccentOutline"] = new SolidColorBrush(accent.WithAlpha(OutlineAlpha));
-        _resources["Brush.OnAccent"] = new SolidColorBrush(onAccent);
+        this.resources["Color.Accent"] = accent;
+        this.resources["Brush.Accent"] = new SolidColorBrush(accent);
+        this.resources["Brush.AccentSoft"] = new SolidColorBrush(accent.WithAlpha(SOFT_ALPHA));
+        this.resources["Brush.AccentOutline"] = new SolidColorBrush(accent.WithAlpha(OUTLINE_ALPHA));
+        this.resources["Brush.OnAccent"] = new SolidColorBrush(onAccent);
 
         // Fluent controls (focus, selection, sliders) follow the system accent keys
-        _resources["SystemAccentColor"] = accent;
+        this.resources["SystemAccentColor"] = accent;
         for (var step = 1; step <= 3; step++)
         {
-            _resources[$"SystemAccentColorDark{step}"] = accent.Mix(Colors.Black, 0.15 * step);
-            _resources[$"SystemAccentColorLight{step}"] = accent.Mix(Colors.White, 0.15 * step);
+            this.resources[$"SystemAccentColorDark{step}"] = accent.Mix(Colors.Black, 0.15 * step);
+            this.resources[$"SystemAccentColorLight{step}"] = accent.Mix(Colors.White, 0.15 * step);
         }
 
         AccentChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private Color Lookup(string key) =>
-        _resources.TryGetResource(key, ThemeVariant.Dark, out var value) && value is Color color
+        this.resources.TryGetResource(key, ThemeVariant.Dark, out var value) && value is Color color
             ? color
             : throw new InvalidOperationException($"Color resource '{key}' is missing from the palette.");
 }

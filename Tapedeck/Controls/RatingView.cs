@@ -14,11 +14,11 @@ namespace Tapedeck.Controls;
 /// Rating from 1 to 5 stars. Read-only it only displays the value (table),
 /// otherwise each star is a button and clicking the current value clears it (detail page).
 /// </summary>
-[TemplatePart(StarsPartName, typeof(StackPanel))]
+[TemplatePart(STARS_PART_NAME, typeof(StackPanel))]
 public sealed class RatingView : TemplatedControl
 {
-    public const int MaxRating = 5;
-    private const string StarsPartName = "PART_Stars";
+    public const int MAX_RATING = 5;
+    private const string STARS_PART_NAME = "PART_Stars";
 
     public static readonly StyledProperty<int?> ValueProperty =
         AvaloniaProperty.Register<RatingView, int?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
@@ -30,87 +30,87 @@ public sealed class RatingView : TemplatedControl
     public static readonly StyledProperty<double> StarSizeProperty =
         AvaloniaProperty.Register<RatingView, double>(nameof(StarSize), 16);
 
-    private StackPanel? _stars;
+    private StackPanel? stars;
 
     public int? Value
     {
-        get => GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
+        get => this.GetValue(ValueProperty);
+        set => this.SetValue(ValueProperty, value);
     }
 
     public bool IsReadOnly
     {
-        get => GetValue(IsReadOnlyProperty);
-        set => SetValue(IsReadOnlyProperty, value);
+        get => this.GetValue(IsReadOnlyProperty);
+        set => this.SetValue(IsReadOnlyProperty, value);
     }
 
     public double StarSize
     {
-        get => GetValue(StarSizeProperty);
-        set => SetValue(StarSizeProperty, value);
+        get => this.GetValue(StarSizeProperty);
+        set => this.SetValue(StarSizeProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _stars = e.NameScope.Find<StackPanel>(StarsPartName);
-        BuildStars();
+        this.stars = e.NameScope.Find<StackPanel>(STARS_PART_NAME);
+        this.BuildStars();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == IsReadOnlyProperty || change.Property == StarSizeProperty)
-            BuildStars();
+            this.BuildStars();
         else if (change.Property == ValueProperty)
-            UpdateStars();
+            this.UpdateStars();
     }
 
     private void BuildStars()
     {
-        if (_stars is null)
+        if (this.stars is null)
             return;
 
-        _stars.Children.Clear();
+        this.stars.Children.Clear();
         var star = this.FindResource("Icon.Star") as Geometry;
-        for (var rating = 1; rating <= MaxRating; rating++)
+        for (var rating = 1; rating <= MAX_RATING; rating++)
         {
             var glyph = new Glyph { Data = star, Width = StarSize, Height = StarSize, StrokeThickness = 1.6 };
 
-            if (IsReadOnly)
+            if (this.IsReadOnly)
             {
-                _stars.Children.Add(glyph);
+                this.stars.Children.Add(glyph);
                 continue;
             }
 
             var button = new Button { Content = glyph, Tag = rating, Classes = { "star" } };
-            AutomationProperties.SetName(button, string.Format(Strings.Rating_Value, rating, MaxRating));
-            button.Click += OnStarClick;
-            _stars.Children.Add(button);
+            AutomationProperties.SetName(button, string.Format(Strings.Rating_Value, rating, MAX_RATING));
+            button.Click += this.OnStarClick;
+            this.stars.Children.Add(button);
         }
 
-        UpdateStars();
+        this.UpdateStars();
     }
 
     private void UpdateStars()
     {
-        if (_stars is null)
+        if (this.stars is null)
             return;
 
-        var value = Value ?? 0;
-        for (var i = 0; i < _stars.Children.Count; i++)
+        var value = this.Value ?? 0;
+        for (var i = 0; i < this.stars.Children.Count; i++)
         {
-            var glyph = _stars.Children[i] as Glyph ?? (Glyph)((Button)_stars.Children[i]).Content!;
+            var glyph = this.stars.Children[i] as Glyph ?? (Glyph)((Button)this.stars.Children[i]).Content!;
             glyph.Classes.Set("on", i < value);
             glyph.IsFilled = i < value;
         }
 
-        AutomationProperties.SetName(this, value > 0 ? string.Format(Strings.Rating_Value, value, MaxRating) : Strings.Rating_None);
+        AutomationProperties.SetName(this, value > 0 ? string.Format(Strings.Rating_Value, value, MAX_RATING) : Strings.Rating_None);
     }
 
     private void OnStarClick(object? sender, RoutedEventArgs e)
     {
         var rating = (int)((Button)sender!).Tag!;
-        Value = Value == rating ? null : rating;
+        this.Value = this.Value == rating ? null : rating;
     }
 }

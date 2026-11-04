@@ -9,7 +9,7 @@ namespace Tapedeck.Data;
 /// </summary>
 public sealed class Migrator(SqliteConnectionFactory connectionFactory)
 {
-    private const string ResourcePrefix = "Tapedeck.Data.Migrations.";
+    private const string RESOURCE_PREFIX = "Tapedeck.Data.Migrations.";
 
     public async Task<int> MigrateAsync()
     {
@@ -34,8 +34,8 @@ public sealed class Migrator(SqliteConnectionFactory connectionFactory)
 
     private static IEnumerable<(int Version, string Resource)> Scripts() =>
         typeof(Migrator).Assembly.GetManifestResourceNames()
-            .Where(n => n.StartsWith(ResourcePrefix, StringComparison.Ordinal) && n.EndsWith(".sql", StringComparison.Ordinal))
-            .Select(n => (Version: int.Parse(n[ResourcePrefix.Length..].Split('_')[0]), Resource: n))
+            .Where(n => n.StartsWith(RESOURCE_PREFIX, StringComparison.Ordinal) && n.EndsWith(".sql", StringComparison.Ordinal))
+            .Select(n => (Version: int.Parse(n[RESOURCE_PREFIX.Length..].Split('_')[0]), Resource: n))
             .OrderBy(s => s.Version);
 
     private static string ReadResource(string name)

@@ -13,22 +13,22 @@ public sealed class ToolService(AppPaths paths)
     public string DenoPath => Path.Combine(paths.ToolsDir, OperatingSystem.IsWindows() ? "deno.exe" : "deno");
 
     /// <summary>All binaries are present, so <see cref="EnsureToolsAsync"/> has nothing to download.</summary>
-    public bool HasAllTools => File.Exists(YtDlpPath) && File.Exists(FFmpegPath) && File.Exists(DenoPath);
+    public bool HasAllTools => File.Exists(this.YtDlpPath) && File.Exists(this.FFmpegPath) && File.Exists(this.DenoPath);
 
     /// <summary>Downloads missing binaries. Existing ones are left untouched.</summary>
     public async Task EnsureToolsAsync()
     {
         Directory.CreateDirectory(paths.ToolsDir);
-        if (!File.Exists(YtDlpPath))
+        if (!File.Exists(this.YtDlpPath))
             await Utils.DownloadYtDlp(paths.ToolsDir);
-        if (!File.Exists(FFmpegPath))
+        if (!File.Exists(this.FFmpegPath))
             await Utils.DownloadFFmpeg(paths.ToolsDir);
-        if (!File.Exists(DenoPath))
+        if (!File.Exists(this.DenoPath))
             await Utils.DownloadDeno(paths.ToolsDir);
     }
 
     /// <summary><c>yt-dlp -U</c>. Without regular updates yt-dlp breaks whenever YouTube changes.</summary>
-    public Task<string> UpdateYtDlpAsync() => CreateClient().RunUpdate();
+    public Task<string> UpdateYtDlpAsync() => this.CreateClient().RunUpdate();
 
     public YoutubeDL CreateClient() => new()
     {
@@ -39,5 +39,5 @@ public sealed class ToolService(AppPaths paths)
 
     /// <summary>Arguments that make yt-dlp use the bundled Deno runtime.</summary>
     public IReadOnlyList<string> JsRuntimeArgs =>
-        File.Exists(DenoPath) ? ["--js-runtimes", $"deno:{DenoPath}"] : [];
+        File.Exists(this.DenoPath) ? ["--js-runtimes", $"deno:{this.DenoPath}"] : [];
 }

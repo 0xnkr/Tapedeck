@@ -12,10 +12,10 @@ namespace Tapedeck.Converters;
 /// </summary>
 public sealed class ThumbnailConverter : IValueConverter
 {
-    public static readonly ThumbnailConverter Instance = new();
+    public static readonly ThumbnailConverter INSTANCE = new();
 
     // Twice the 72 px cell width for sharp output on high-DPI screens
-    private const int DecodeWidth = 144;
+    private const int DECODE_WIDTH = 144;
 
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -25,7 +25,7 @@ public sealed class ThumbnailConverter : IValueConverter
         try
         {
             using var stream = File.OpenRead(path);
-            var width = parameter is string text && int.TryParse(text, out var w) ? w : DecodeWidth;
+            var width = parameter is string text && int.TryParse(text, out var w) ? w : DECODE_WIDTH;
             return Bitmap.DecodeToWidth(stream, width);
         }
         catch (Exception ex) when (ex is IOException or ArgumentException or NotSupportedException)

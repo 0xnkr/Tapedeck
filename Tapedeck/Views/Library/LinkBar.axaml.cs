@@ -6,6 +6,6 @@ public partial class LinkBar : UserControl
 {
     public LinkBar()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 }

@@ -10,7 +10,7 @@ public sealed class TrackColumnsGrid : Grid
 {
     public TrackColumnsGrid()
     {
-        ColumnDefinitions = ColumnDefinitions.Parse("36,72,2.2*,1.4*,64,116,150,44");
-        ColumnSpacing = 12;
+        this.ColumnDefinitions = ColumnDefinitions.Parse("36,72,2.2*,1.4*,64,116,150,44");
+        this.ColumnSpacing = 12;
     }
 }

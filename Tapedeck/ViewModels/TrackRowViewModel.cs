@@ -25,18 +25,18 @@ public interface ITrackActions
 /// <summary>One row of the library table, built from <see cref="TrackDisplay"/>.</summary>
 public partial class TrackRowViewModel : ViewModelBase
 {
-    private readonly ITrackActions _actions;
+    private readonly ITrackActions actions;
 
     public TrackRowViewModel(TrackDisplay track, int number, ITrackActions actions)
     {
-        _actions = actions;
-        Number = number;
-        Update(track);
+        this.actions = actions;
+        this.Number = number;
+        this.Update(track);
     }
 
     public long Id { get; private set; }
 
-    public string Url { get; private set; } = "";
+    public string Url { get; private set; } = string.Empty;
 
     /// <summary>Audio file relative to the library folder, once downloaded.</summary>
     public string? FilePath { get; private set; }
@@ -70,46 +70,46 @@ public partial class TrackRowViewModel : ViewModelBase
     public partial string? ThumbPath { get; private set; }
 
     /// <summary>Missing albums show a dash instead of an empty cell.</summary>
-    public string AlbumText => Album ?? "—";
+    public string AlbumText => this.Album ?? "—";
 
-    public bool HasAlbum => Album is not null;
+    public bool HasAlbum => this.Album is not null;
 
     public void Update(TrackDisplay track)
     {
-        Id = track.Id;
-        Url = track.Url.Length > 0 ? track.Url : VideoId.WatchUrl(track.VideoId);
-        Title = track.Title;
-        Artist = track.Artist;
-        Album = string.IsNullOrWhiteSpace(track.Album) ? null : track.Album;
-        DurationText = FormatDuration(track.DurationS);
-        Rating = track.Rating;
-        Status = track.DownloadStatus;
-        Progress = 0;
-        ThumbPath = track.ThumbPath;
-        FilePath = track.FilePath;
+        this.Id = track.Id;
+        this.Url = track.Url.Length > 0 ? track.Url : VideoId.WatchUrl(track.VideoId);
+        this.Title = track.Title;
+        this.Artist = track.Artist;
+        this.Album = string.IsNullOrWhiteSpace(track.Album) ? null : track.Album;
+        this.DurationText = FormatDuration(track.DurationS);
+        this.Rating = track.Rating;
+        this.Status = track.DownloadStatus;
+        this.Progress = 0;
+        this.ThumbPath = track.ThumbPath;
+        this.FilePath = track.FilePath;
     }
 
     [RelayCommand]
-    private Task DownloadAsync() => _actions.DownloadAsync(this);
+    private Task DownloadAsync() => this.actions.DownloadAsync(this);
 
     [RelayCommand]
-    private Task OpenOnYoutubeAsync() => _actions.OpenOnYoutubeAsync(this);
+    private Task OpenOnYoutubeAsync() => this.actions.OpenOnYoutubeAsync(this);
 
     [RelayCommand]
-    private Task ShowInFolderAsync() => _actions.ShowInFolderAsync(this);
+    private Task ShowInFolderAsync() => this.actions.ShowInFolderAsync(this);
 
     [RelayCommand]
-    private void OpenDetails() => _actions.OpenDetails(this);
+    private void OpenDetails() => this.actions.OpenDetails(this);
 
     public bool Matches(string search) =>
-        Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)
-        || Artist.Contains(search, StringComparison.CurrentCultureIgnoreCase)
+        this.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)
+        || this.Artist.Contains(search, StringComparison.CurrentCultureIgnoreCase)
         || (Album?.Contains(search, StringComparison.CurrentCultureIgnoreCase) ?? false);
 
     private static string FormatDuration(int? seconds)
     {
         if (seconds is not { } s)
-            return "";
+            return string.Empty;
         var time = TimeSpan.FromSeconds(s);
         return time.TotalHours >= 1 ? time.ToString(@"h\:mm\:ss") : $"{(int)time.TotalMinutes}:{time.Seconds:00}";
     }
