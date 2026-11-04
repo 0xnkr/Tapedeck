@@ -89,6 +89,88 @@ public sealed class TracksDisplayTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Sources_follow_the_best_value()
+    {
+        var id = await _repo.AddAsync("dQw4w9WgXcQ", "u");
+        var display = await _repo.GetDisplayAsync(id);
+        Assert.Equal(FieldSource.None, display!.ArtistFrom);
+        Assert.Equal(FieldSource.None, display.TitleFrom);
+
+        await _repo.UpdateYtMetadataAsync(id, Meta());
+        display = await _repo.GetDisplayAsync(id);
+        Assert.Equal(FieldSource.Parsed, display!.ArtistFrom);
+        Assert.Equal(FieldSource.Parsed, display.TitleFrom);
+        Assert.Equal(FieldSource.Derived, display.AlbumArtistFrom);
+        Assert.Equal(FieldSource.None, display.AlbumFrom);
+        Assert.Equal(FieldSource.None, display.YearFrom);
+        Assert.Equal("RickAstleyVEVO", display.Channel);
+        Assert.Equal("20091025", display.UploadDate);
+
+        await _repo.UpdateYtMetadataAsync(id, Meta(artist: "Rick Astley", track: "NGGYU"));
+        await _repo.SetUserFieldsAsync(id, new UserFields(null, null, "Whenever You Need Somebody", "Various", 1987, null));
+        display = await _repo.GetDisplayAsync(id);
+        Assert.Equal(FieldSource.Yt, display!.ArtistFrom);
+        Assert.Equal(FieldSource.Yt, display.TitleFrom);
+        Assert.Equal(FieldSource.User, display.AlbumFrom);
+        Assert.Equal(FieldSource.User, display.AlbumArtistFrom);
+        Assert.Equal(FieldSource.User, display.YearFrom);
+    }
+
+    [Fact]
+    public async Task Artist_falls_back_to_channel()
+    {
+        var id = await _repo.AddAsync("dQw4w9WgXcQ", "u");
+        await _repo.UpdateYtMetadataAsync(id, new YtMetadata(
+            "dQw4w9WgXcQ", "Untitled upload", "Some Channel", "20240101", 100, null, null, null, null, null, null, [], "{}"));
+
+        var display = await _repo.GetDisplayAsync(id);
+        Assert.Equal("Some Channel", display!.Artist);
+        Assert.Equal(FieldSource.Channel, display.ArtistFrom);
+        Assert.Equal(FieldSource.Yt, display.TitleFrom);
+    }
+
+    [Fact]
+    public async Task User_genres_replace_and_fall_back()
+    {
+        var id = await _repo.AddAsync("dQw4w9WgXcQ", "u");
+        await _repo.AddTagAsync(id, "Pop", TagSource.Yt);
+        Assert.Equal(FieldSource.Yt, (await _repo.GetDisplayAsync(id))!.GenresFrom);
+
+        await _repo.SetUserTagsAsync(id, ["Synth-Pop", "Dance"]);
+        var display = await _repo.GetDisplayAsync(id);
+        Assert.Equal(["Dance", "Synth-Pop"], display!.GenreList);
+        Assert.Equal(FieldSource.User, display.GenresFrom);
+
+        await _repo.SetUserTagsAsync(id, ["Dance"]);
+        Assert.Equal(["Dance"], (await _repo.GetDisplayAsync(id))!.GenreList);
+
+        await _repo.SetUserTagsAsync(id, []);
+        display = await _repo.GetDisplayAsync(id);
+        Assert.Equal(["Pop"], display!.GenreList);
+        Assert.Equal(FieldSource.Yt, display.GenresFrom);
+    }
+
+    [Fact]
+    public async Task Tags_are_stale_after_edits_until_written()
+    {
+        var id = await _repo.AddAsync("dQw4w9WgXcQ", "u");
+        await _repo.SetUserFieldsAsync(id, new UserFields("Rick", null, null, null, null, null));
+        Assert.False((await _repo.GetDisplayAsync(id))!.TagsStale); // no file yet
+
+        await _repo.UpdateDownloadStateAsync(id, DownloadStatus.Done, "Rick - Title.opus", "opus");
+        Assert.True((await _repo.GetDisplayAsync(id))!.TagsStale);
+
+        await _repo.MarkTagsWrittenAsync(id);
+        Assert.False((await _repo.GetDisplayAsync(id))!.TagsStale);
+
+        await _repo.SetRatingAsync(id, 4);
+        Assert.False((await _repo.GetDisplayAsync(id))!.TagsStale);
+
+        await _repo.SetUserTagsAsync(id, ["Pop"]);
+        Assert.True((await _repo.GetDisplayAsync(id))!.TagsStale);
+    }
+
+    [Fact]
     public async Task Interrupted_download_is_pending_again()
     {
         var interrupted = await _repo.AddAsync("dQw4w9WgXcQ", "u1");
