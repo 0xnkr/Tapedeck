@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -34,16 +35,22 @@ public partial class LibraryViewModel(
     IPlatformService platform,
     ActivityService activity,
     NavigationService navigation,
+    LibraryFiles files,
+    DialogService dialogs,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     private readonly List<TrackRowViewModel> all = [];
+    // one per running download, so a single row can be cancelled
+    private readonly Dictionary<long, CancellationTokenSource> running = [];
+    // the current "download pending" or "download missing" run
+    private CancellationTokenSource? batch;
     private Task? toolsReady;
 
     /// <summary>Rows that pass the current filter and search.</summary>
     public ObservableCollection<TrackRowViewModel> Tracks { get; } = [];
 
     [ObservableProperty]
-    public partial string Summary { get; private set; } = "";
+    public partial string Summary { get; private set; } = string.Empty;
 
     /// <summary>Shown instead of the table when no row is visible; <c>null</c> otherwise.</summary>
     [ObservableProperty]
@@ -55,27 +62,35 @@ public partial class LibraryViewModel(
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AddLinkCommand))]
-    public partial string NewLink { get; set; } = "";
+    public partial string NewLink { get; set; } = string.Empty;
 
     [ObservableProperty]
     public partial TrackFilter Filter { get; set; }
 
     [ObservableProperty]
-    public partial string SearchText { get; set; } = "";
+    public partial string SearchText { get; set; } = string.Empty;
+
+    /// <summary>At least one download runs; the toolbar offers to cancel them.</summary>
+    [ObservableProperty]
+    public partial bool IsDownloading { get; private set; }
+
+    /// <summary>Some downloaded files were deleted or moved outside the app.</summary>
+    [ObservableProperty]
+    public partial bool HasMissing { get; private set; }
 
     [ObservableProperty]
     public partial TrackRowViewModel? SelectedTrack { get; set; }
 
-    partial void OnFilterChanged(TrackFilter value) => ApplyFilter();
+    partial void OnFilterChanged(TrackFilter value) => this.ApplyFilter();
 
-    partial void OnSearchTextChanged(string value) => ApplyFilter();
+    partial void OnSearchTextChanged(string value) => this.ApplyFilter();
 
     [RelayCommand]
     private async Task LoadAsync()
     {
         var tracks = await repository.ListDisplayAsync();
         this.all.Clear();
-        this.all.AddRange(tracks.Select((track, index) => new TrackRowViewModel(track, index + 1, this)));
+        this.all.AddRange(tracks.Select((track, index) => this.NewRow(track, index + 1)));
         this.OnTracksChanged();
     }
 
@@ -115,13 +130,55 @@ public partial class LibraryViewModel(
     }
 
     [RelayCommand(CanExecute = nameof(HasPending))]
-    private async Task DownloadPendingAsync()
-    {
-        foreach (var row in this.all.Where(r => r.Status == DownloadStatus.Pending).ToList())
-            await this.DownloadRowAsync(row);
-    }
+    private Task DownloadPendingAsync() => this.DownloadAllAsync(DownloadStatus.Pending);
 
     private bool HasPending() => this.all.Any(r => r.Status == DownloadStatus.Pending);
+
+    /// <summary>Downloads the tracks whose files were deleted or moved outside the app.</summary>
+    [RelayCommand]
+    private Task DownloadMissingAsync() => this.DownloadAllAsync(DownloadStatus.Missing);
+
+    /// <summary>Stops the running batch and every single download.</summary>
+    [RelayCommand]
+    private void CancelDownloads()
+    {
+        this.batch?.Cancel();
+        foreach (var cts in this.running.Values)
+            cts.Cancel();
+    }
+
+    /// <summary>
+    /// Checks again which downloaded files still exist, e.g. when the library page is shown.
+    /// Only touches the status, so running downloads keep their rows.
+    /// </summary>
+    public void RecheckFiles()
+    {
+        foreach (var row in this.all.Where(r => r.Status is DownloadStatus.Done or DownloadStatus.Missing))
+        {
+            row.Status = row.FilePath is { } file && File.Exists(paths.ToLibraryPath(file))
+                ? DownloadStatus.Done
+                : DownloadStatus.Missing;
+        }
+        this.OnTracksChanged();
+    }
+
+    private async Task DownloadAllAsync(DownloadStatus status)
+    {
+        using var cts = this.batch = new CancellationTokenSource();
+        try
+        {
+            foreach (var row in this.all.Where(r => r.Status == status).ToList())
+            {
+                if (cts.IsCancellationRequested)
+                    break;
+                await this.DownloadRowAsync(row);
+            }
+        }
+        finally
+        {
+            this.batch = null;
+        }
+    }
 
     private static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
 
@@ -260,6 +317,47 @@ public partial class LibraryViewModel(
 
     Task ITrackActions.RefreshAsync(TrackRowViewModel row) => this.RefreshRowAsync(row.Id);
 
+    void ITrackActions.CancelDownload(TrackRowViewModel row)
+    {
+        if (this.running.TryGetValue(row.Id, out var cts))
+            cts.Cancel();
+    }
+
+    async Task<bool> ITrackActions.RemoveAsync(TrackRowViewModel row)
+    {
+        var answer = await dialogs.ConfirmAsync(new ConfirmRequest(
+            string.Format(Strings.Remove_Title, row.Title),
+            Strings.Remove_Message,
+            Strings.Remove_Confirm,
+            OptionText: row.FilePath is null ? null : Strings.Remove_DeleteFile,
+            OptionDefault: true,
+            IsDestructive: true));
+        if (answer is null)
+            return false;
+
+        this.Notice = null;
+        try
+        {
+            await files.RemoveAsync(row.Id, deleteFile: answer.Option);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            this.Notice = string.Format(Strings.Notice_RemoveFailed, row.Title, ex.Message);
+            return false;
+        }
+
+        // removed from its own detail page: that page has nothing left to show
+        if (navigation.Current is TrackDetailViewModel detail && detail.Row == row)
+            navigation.Back();
+
+        this.all.Remove(row);
+        for (var i = 0; i < this.all.Count; i++)
+            this.all[i].Number = i + 1;
+        this.OnTracksChanged();
+        activity.Confirm(string.Format(Strings.Confirm_Removed, row.Title));
+        return true;
+    }
+
     private async Task DownloadRowAsync(TrackRowViewModel row)
     {
         if (row.Status == DownloadStatus.Downloading)
@@ -268,16 +366,28 @@ public partial class LibraryViewModel(
         this.Notice = null;
         row.Status = DownloadStatus.Downloading;
         row.Progress = 0;
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(this.batch?.Token ?? CancellationToken.None);
+        this.running[row.Id] = cts;
+        this.IsDownloading = true;
         try
         {
             await this.EnsureToolsAsync();
             using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
-                await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p));
+                await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p), cts.Token);
             activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
+        }
+        catch (OperationCanceledException)
+        {
+            // cancelled on purpose; the download service already restored the status
         }
         catch (Exception ex)
         {
             this.Notice = string.Format(Strings.Notice_DownloadFailed, row.Title, ex.Message);
+        }
+        finally
+        {
+            this.running.Remove(row.Id);
+            this.IsDownloading = this.running.Count > 0;
         }
 
         await this.RefreshRowAsync(row.Id);
@@ -306,14 +416,17 @@ public partial class LibraryViewModel(
             return;
 
         if (this.all.Find(r => r.Id == id) is { } row)
-            row.Update(track);
+            row.Update(track, files.StatusOf(track));
         else
-            this.all.Add(new TrackRowViewModel(track, this.all.Count + 1, this));
+            this.all.Add(this.NewRow(track, this.all.Count + 1));
         this.OnTracksChanged();
     }
 
+    private TrackRowViewModel NewRow(TrackDisplay track, int number) => new(track, files.StatusOf(track), number, this);
+
     private void OnTracksChanged()
     {
+        this.HasMissing = this.all.Any(r => r.Status == DownloadStatus.Missing);
         this.ApplyFilter();
         this.UpdateSummary();
         this.DownloadPendingCommand.NotifyCanExecuteChanged();
@@ -339,7 +452,7 @@ public partial class LibraryViewModel(
     {
         TrackFilter.Done => status == DownloadStatus.Done,
         TrackFilter.Pending => status is DownloadStatus.Pending or DownloadStatus.Downloading,
-        TrackFilter.Error => status == DownloadStatus.Error,
+        TrackFilter.Error => status is DownloadStatus.Error or DownloadStatus.Missing,
         _ => true,
     };
 
@@ -353,8 +466,13 @@ public partial class LibraryViewModel(
 
         var done = this.all.Count(r => r.Status == DownloadStatus.Done);
         var errors = this.all.Count(r => r.Status == DownloadStatus.Error);
+        var missing = this.all.Count(r => r.Status == DownloadStatus.Missing);
         var count = string.Format(this.all.Count == 1 ? Strings.Library_TrackCount_One : Strings.Library_TrackCount_Other, this.all.Count);
         var summary = string.Format(Strings.Library_Summary, count, done);
-        this.Summary = errors > 0 ? string.Format(Strings.Library_SummaryErrors, summary, errors) : summary;
+        if (errors > 0)
+            summary = string.Format(Strings.Library_SummaryErrors, summary, errors);
+        if (missing > 0)
+            summary = string.Format(Strings.Library_SummaryMissing, summary, missing);
+        this.Summary = summary;
     }
 }

@@ -10,13 +10,14 @@ namespace Tapedeck.Controls;
 /// Download status of a track: icon, word and color pair. While downloading it shows a label with a progress bar instead.
 /// The look per status lives in the ControlTheme, keyed by the pseudo classes below.
 /// </summary>
-[PseudoClasses(DONE, DOWNLOADING, PENDING, ERROR)]
+[PseudoClasses(DONE, DOWNLOADING, PENDING, ERROR, MISSING)]
 public sealed class StatusChip : TemplatedControl
 {
     private const string DONE = ":done";
     private const string DOWNLOADING = ":downloading";
     private const string PENDING = ":pending";
     private const string ERROR = ":error";
+    private const string MISSING = ":missing";
 
     public static readonly StyledProperty<DownloadStatus> StatusProperty =
         AvaloniaProperty.Register<StatusChip, DownloadStatus>(nameof(Status));
@@ -55,5 +56,6 @@ public sealed class StatusChip : TemplatedControl
         this.PseudoClasses.Set(DOWNLOADING, this.Status == DownloadStatus.Downloading);
         this.PseudoClasses.Set(PENDING, this.Status == DownloadStatus.Pending);
         this.PseudoClasses.Set(ERROR, this.Status == DownloadStatus.Error);
+        this.PseudoClasses.Set(MISSING, this.Status == DownloadStatus.Missing);
     }
 }

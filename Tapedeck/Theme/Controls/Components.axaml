@@ -158,6 +158,18 @@
             <Setter Property="Text" Value="{x:Static res:Strings.Status_Error}" />
         </Style>
 
+        <!-- Missing: neutral colors like pending, told apart by icon and word -->
+        <Style Selector="^:missing">
+            <Setter Property="Background" Value="{DynamicResource Brush.PendingContainer}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Pending}" />
+        </Style>
+        <Style Selector="^:missing /template/ controls|Glyph#PART_Icon">
+            <Setter Property="Data" Value="{StaticResource Icon.FileMissing}" />
+        </Style>
+        <Style Selector="^:missing /template/ TextBlock#PART_Label">
+            <Setter Property="Text" Value="{x:Static res:Strings.Status_Missing}" />
+        </Style>
+
         <Style Selector="^:downloading">
             <Setter Property="Foreground" Value="{DynamicResource Brush.Info}" />
         </Style>

@@ -60,11 +60,23 @@
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
                                      IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
                     </StackPanel>
-                    <Button Grid.Column="1"
-                            Classes="text"
-                            Content="{x:Static res:Strings.Library_DownloadPending}"
-                            controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
-                            Command="{Binding DownloadPendingCommand}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{StaticResource Space.1}">
+                        <Button Classes="text"
+                                Content="{x:Static res:Strings.Library_DownloadMissing}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
+                                Command="{Binding DownloadMissingCommand}"
+                                IsVisible="{Binding HasMissing}" />
+                        <Button Classes="text"
+                                Content="{x:Static res:Strings.Library_DownloadPending}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
+                                Command="{Binding DownloadPendingCommand}"
+                                IsVisible="{Binding !IsDownloading}" />
+                        <Button Classes="danger"
+                                Content="{x:Static res:Strings.Library_CancelDownloads}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
+                                Command="{Binding CancelDownloadsCommand}"
+                                IsVisible="{Binding IsDownloading}" />
+                    </StackPanel>
                 </Grid>
 
                 <!-- Column headers -->
