@@ -30,7 +30,6 @@
                              HorizontalAlignment="Center"
                              Content="{x:Static res:Strings.Nav_Settings}"
                              controls:ButtonAssist.Icon="{StaticResource Icon.Settings}"
-                             IsEnabled="False"
                              IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Settings}}"
                              Command="{Binding ShowPageCommand}"
                              CommandParameter="{x:Static vm:AppPage.Settings}" />

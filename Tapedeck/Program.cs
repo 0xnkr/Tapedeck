@@ -1,5 +1,7 @@
 ﻿using Avalonia;
 using System;
+using Tapedeck.Core;
+using Tapedeck.Core.Settings;
 
 namespace Tapedeck;
 
@@ -12,7 +14,8 @@ abstract class Program
     public static void Main(string[] args)
     {
         // Before any window or resource lookup, so every text uses the chosen language
-        StartupOptions.Parse(args).ApplyLanguage();
+        var settings = new SettingsStore(AppPaths.DefaultDataDir()).Load();
+        StartupOptions.Parse(args).ApplyLanguage(settings.Language);
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 

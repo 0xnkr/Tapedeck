@@ -16,15 +16,18 @@ public enum AppPage
 /// <summary>Shell of the main window: navigation rail, current page and the activity toast.</summary>
 public partial class MainViewModel : ViewModelBase
 {
-    public MainViewModel(LibraryViewModel library, NavigationService navigation, ActivityService activity)
+    public MainViewModel(LibraryViewModel library, SettingsViewModel settings, NavigationService navigation, ActivityService activity)
     {
         this.Library = library;
+        this.Settings = settings;
         this.Navigation = navigation;
         this.Activity = activity;
         this.Navigation.Reset(this.Library);
     }
 
     public LibraryViewModel Library { get; }
+
+    public SettingsViewModel Settings { get; }
 
     public NavigationService Navigation { get; }
 
@@ -41,9 +44,12 @@ public partial class MainViewModel : ViewModelBase
         this.Navigation.Reset(page switch
         {
             AppPage.Library => this.Library,
-            // Playlists and Settings are disabled in the rail until they exist
+            AppPage.Settings => this.Settings,
+            // Playlists is disabled in the rail until it exists
             _ => throw new NotSupportedException($"Page {page} is not implemented yet."),
         });
+        if (page == AppPage.Settings)
+            this.Settings.LoadCommand.Execute(null);
     }
 
     [RelayCommand]
