@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Csv;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
 using Tapedeck.Resources;
@@ -121,6 +122,130 @@ public partial class LibraryViewModel(
     }
 
     private bool HasPending() => this.all.Any(r => r.Status == DownloadStatus.Pending);
+
+    private static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
+
+    [RelayCommand]
+    private async Task ExportCsvAsync()
+    {
+        var path = await platform.PickSaveFileAsync(Strings.Csv_ExportTitle, Strings.Csv_DefaultFileName, CsvFilter);
+        if (path is null)
+            return;
+
+        this.Notice = null;
+        try
+        {
+            var tracks = await repository.ListDisplayAsync();
+            await using (var writer = new StreamWriter(path, append: false, CsvFormat.ENCODING))
+                LibraryCsv.Export(tracks, writer);
+            activity.Confirm(string.Format(Strings.Confirm_Exported, tracks.Count));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            this.Notice = string.Format(Strings.Notice_ExportFailed, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Adds the tracks of a CSV backup one by one and applies its corrections, genres and ratings.
+    /// Known tracks are not fetched again; rows that fail are listed afterwards.
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportCsvAsync()
+    {
+        var path = await platform.PickOpenFileAsync(Strings.Csv_ImportTitle, CsvFilter);
+        if (path is null)
+            return;
+
+        this.Notice = null;
+        CsvReadResult csv;
+        try
+        {
+            using var reader = new StreamReader(path, detectEncodingFromByteOrderMarks: true);
+            csv = LibraryCsv.Read(reader);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            this.Notice = string.Format(Strings.Notice_ImportResult, 0, 0, ex.Message);
+            return;
+        }
+
+        var errors = csv.Errors.Select(Describe).ToList();
+        var imported = 0;
+        if (csv.Tracks.Count > 0)
+        {
+            try
+            {
+                await this.EnsureToolsAsync();
+                imported = await this.ImportTracksAsync(csv.Tracks, errors);
+            }
+            catch (Exception ex)
+            {
+                errors.Add(ex.Message);
+            }
+        }
+
+        await this.LoadAsync();
+        if (errors.Count == 0)
+        {
+            activity.Confirm(string.Format(Strings.Confirm_Imported, imported));
+            return;
+        }
+
+        var shown = string.Join("; ", errors.Take(3)) + (errors.Count > 3 ? " …" : string.Empty);
+        this.Notice = string.Format(Strings.Notice_ImportResult, imported, errors.Count, shown);
+    }
+
+    private async Task<int> ImportTracksAsync(IReadOnlyList<CsvTrack> rows, List<string> errors)
+    {
+        var known = (await repository.ListDisplayAsync()).ToDictionary(t => t.VideoId, t => t.Id);
+        var imported = 0;
+        using var progress = activity.Begin(string.Format(Strings.Activity_Importing, 0, rows.Count));
+        for (var i = 0; i < rows.Count; i++)
+        {
+            var row = rows[i];
+            progress.Update(string.Format(Strings.Activity_Importing, i + 1, rows.Count));
+            try
+            {
+                if (!known.TryGetValue(row.VideoId, out var id))
+                {
+                    id = await importer.AddAsync(row.Url);
+                    known[row.VideoId] = id;
+                }
+
+                if (await repository.GetDisplayAsync(id) is { } current)
+                {
+                    var corrections = LibraryCsv.Corrections(row, current);
+                    if (corrections.Fields is { } fields)
+                        await repository.SetUserFieldsAsync(id, fields);
+                    if (corrections.Genres is { } genres)
+                        await repository.SetUserTagsAsync(id, genres);
+                    if (corrections.Rating is { } rating)
+                        await repository.SetRatingAsync(id, rating);
+                }
+                imported++;
+            }
+            catch (Exception ex)
+            {
+                errors.Add(string.Format(Strings.Csv_ErrorLine, row.Line, ex.Message));
+            }
+        }
+
+        return imported;
+    }
+
+    private static string Describe(CsvError error)
+    {
+        var problem = error.Problem switch
+        {
+            CsvProblem.MissingUrlColumn => Strings.Csv_MissingUrlColumn,
+            CsvProblem.Malformed => Strings.Csv_Malformed,
+            CsvProblem.InvalidUrl => string.Format(Strings.Csv_InvalidUrl, error.Value),
+            CsvProblem.InvalidYear => string.Format(Strings.Csv_InvalidYear, error.Value),
+            _ => string.Format(Strings.Csv_InvalidRating, error.Value),
+        };
+        return string.Format(Strings.Csv_ErrorLine, error.Line, problem);
+    }
 
     Task ITrackActions.OpenOnYoutubeAsync(TrackRowViewModel row) => platform.OpenUrlAsync(row.Url);
 
