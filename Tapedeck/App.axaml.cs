@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Tapedeck.Core;
+using Tapedeck.Core.Settings;
 using Tapedeck.Data;
 using Tapedeck.Theme;
 using Tapedeck.ViewModels;
@@ -26,10 +27,15 @@ public partial class App : Application
     {
         if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var store = new SettingsStore(AppPaths.DefaultDataDir());
+            var settings = store.Load();
+            // --accent for this run, else the saved accent, else the palette
             if (StartupOptions.Parse(desktop.Args ?? []).Accent is { } accent)
                 this.accent.Apply(accent);
+            else if (settings.Accent is { } savedAccent)
+                this.accent.TryApply(savedAccent);
 
-            var services = AppServices.Build(this.accent);
+            var services = AppServices.Build(this.accent, store, settings);
             // Off the UI thread: blocking on an await that resumes on the dispatcher would deadlock
             Task.Run(async () =>
             {

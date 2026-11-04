@@ -2,6 +2,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Tapedeck.Core;
 using Tapedeck.Core.Services;
+using Tapedeck.Core.Settings;
 using Tapedeck.Data;
 using Tapedeck.Services;
 using Tapedeck.Theme;
@@ -12,14 +13,15 @@ namespace Tapedeck;
 /// <summary>Composition root: wires backend, platform services and view models.</summary>
 public static class AppServices
 {
-    public static ServiceProvider Build(IAccentService accent)
+    public static ServiceProvider Build(IAccentService accent, SettingsStore store, AppSettings settings)
     {
-        var paths = AppPaths.Default();
+        var paths = AppPaths.Default(settings.LibraryDir);
         paths.EnsureDirectories();
 
         var services = new ServiceCollection();
 
         services.AddSingleton(paths);
+        services.AddSingleton(store);
         services.AddSingleton(new SqliteConnectionFactory(paths.DatabasePath));
         services.AddSingleton<Migrator>();
         services.AddSingleton<ITrackRepository, TrackRepository>();
@@ -31,6 +33,7 @@ public static class AppServices
         services.AddSingleton<TagWriter>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
+        services.AddSingleton<LibraryMover>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
@@ -38,6 +41,7 @@ public static class AppServices
         services.AddSingleton<NavigationService>();
 
         services.AddSingleton<LibraryViewModel>();
+        services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<TrackDetailFactory>(sp => (row, actions) =>
         {

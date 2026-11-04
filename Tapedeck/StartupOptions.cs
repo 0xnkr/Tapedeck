@@ -7,6 +7,7 @@ namespace Tapedeck;
 /// <summary>
 /// Command line options for trying things out without code changes:
 /// <c>--lang en</c> overrides the UI language, <c>--accent #C8B6FF</c> the accent color.
+/// They win over the saved settings for this run only.
 /// </summary>
 public sealed record StartupOptions(CultureInfo? Language, Color? Accent)
 {
@@ -32,13 +33,16 @@ public sealed record StartupOptions(CultureInfo? Language, Color? Accent)
         return new StartupOptions(language, accent);
     }
 
-    /// <summary>Sets the UI culture for this run; the system language applies when none is given.</summary>
-    public void ApplyLanguage()
+    /// <summary>
+    /// Sets the UI culture for this run: <c>--lang</c>, else the saved language, else the system language.
+    /// </summary>
+    public void ApplyLanguage(string? savedLanguage)
     {
-        if (this.Language is null)
+        var language = this.Language ?? (savedLanguage is null ? null : TryGetCulture(savedLanguage));
+        if (language is null)
             return;
-        CultureInfo.DefaultThreadCurrentUICulture = this.Language;
-        CultureInfo.CurrentUICulture = this.Language;
+        CultureInfo.DefaultThreadCurrentUICulture = language;
+        CultureInfo.CurrentUICulture = language;
     }
 
     private static CultureInfo? TryGetCulture(string name)
