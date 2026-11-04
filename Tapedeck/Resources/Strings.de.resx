@@ -522,4 +522,82 @@
   <data name="Notice_RemoveFailed" xml:space="preserve">
     <value>„{0}“ konnte nicht entfernt werden: {1}</value>
   </data>
+  <data name="Playlists_Title" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="Playlists_Hint" xml:space="preserve">
+    <value>Jede Playlist liegt auch als .m3u8 im Bibliotheksordner, fertig fürs Handy.</value>
+  </data>
+  <data name="Playlists_New" xml:space="preserve">
+    <value>Neue Playlist</value>
+  </data>
+  <data name="Playlists_Empty" xml:space="preserve">
+    <value>Noch keine Playlists. Lege eine an und füge Titel über „Zu Playlist“ im Menü eines Titels hinzu.</value>
+  </data>
+  <data name="Playlists_Open" xml:space="preserve">
+    <value>{0} öffnen</value>
+  </data>
+  <data name="Playlist_Download" xml:space="preserve">
+    <value>Playlist laden</value>
+  </data>
+  <data name="Playlist_Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="Playlist_Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Playlist_DeleteTitle" xml:space="preserve">
+    <value>„{0}“ löschen?</value>
+  </data>
+  <data name="Playlist_DeleteMessage" xml:space="preserve">
+    <value>Die Playlist und ihre .m3u8-Datei werden gelöscht. Die Titel bleiben in der Bibliothek.</value>
+  </data>
+  <data name="Playlist_RemoveTrack" xml:space="preserve">
+    <value>Aus Playlist entfernen</value>
+  </data>
+  <data name="Playlist_DragHandle" xml:space="preserve">
+    <value>Ziehen zum Sortieren, oder Alt+Pfeil hoch / runter</value>
+  </data>
+  <data name="Playlist_Empty" xml:space="preserve">
+    <value>Diese Playlist ist leer. Füge Titel über „Zu Playlist“ in der Bibliothek hinzu.</value>
+  </data>
+  <data name="Track_AddToPlaylist" xml:space="preserve">
+    <value>Zu Playlist</value>
+  </data>
+  <data name="Track_NewPlaylist" xml:space="preserve">
+    <value>Neue Playlist …</value>
+  </data>
+  <data name="Prompt_NewPlaylistTitle" xml:space="preserve">
+    <value>Neue Playlist</value>
+  </data>
+  <data name="Prompt_RenamePlaylistTitle" xml:space="preserve">
+    <value>Playlist umbenennen</value>
+  </data>
+  <data name="Prompt_PlaylistName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Prompt_Create" xml:space="preserve">
+    <value>Anlegen</value>
+  </data>
+  <data name="Prompt_Rename" xml:space="preserve">
+    <value>Umbenennen</value>
+  </data>
+  <data name="Prompt_NameEmpty" xml:space="preserve">
+    <value>Bitte einen Namen eingeben.</value>
+  </data>
+  <data name="Prompt_NameTaken" xml:space="preserve">
+    <value>Eine Playlist „{0}“ gibt es schon.</value>
+  </data>
+  <data name="Prompt_FileNameTaken" xml:space="preserve">
+    <value>„{0}“ bekäme denselben Dateinamen wie „{1}“.</value>
+  </data>
+  <data name="Confirm_AddedToPlaylist" xml:space="preserve">
+    <value>„{0}“ zu „{1}“ hinzugefügt</value>
+  </data>
+  <data name="Confirm_AlreadyInPlaylist" xml:space="preserve">
+    <value>„{0}“ ist schon in „{1}“</value>
+  </data>
+  <data name="Confirm_PlaylistDeleted" xml:space="preserve">
+    <value>„{0}“ gelöscht</value>
+  </data>
 </root>

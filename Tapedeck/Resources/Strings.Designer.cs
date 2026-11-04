@@ -175,6 +175,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to “{0}” added to “{1}”.
+        /// </summary>
+        public static string Confirm_AddedToPlaylist {
+            get {
+                return ResourceManager.GetString("Confirm_AddedToPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is already in “{1}”.
+        /// </summary>
+        public static string Confirm_AlreadyInPlaylist {
+            get {
+                return ResourceManager.GetString("Confirm_AlreadyInPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to “{0}” downloaded.
         /// </summary>
         public static string Confirm_Downloaded {
@@ -207,6 +225,15 @@ namespace Tapedeck.Resources {
         public static string Confirm_LibraryMoved {
             get {
                 return ResourceManager.GetString("Confirm_LibraryMoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” deleted.
+        /// </summary>
+        public static string Confirm_PlaylistDeleted {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistDeleted", resourceCulture);
             }
         }
         
@@ -1093,6 +1120,195 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Playlist_Delete {
+            get {
+                return ResourceManager.GetString("Playlist_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The playlist and its .m3u8 file are deleted. The tracks stay in the library..
+        /// </summary>
+        public static string Playlist_DeleteMessage {
+            get {
+                return ResourceManager.GetString("Playlist_DeleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete “{0}”?.
+        /// </summary>
+        public static string Playlist_DeleteTitle {
+            get {
+                return ResourceManager.GetString("Playlist_DeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download playlist.
+        /// </summary>
+        public static string Playlist_Download {
+            get {
+                return ResourceManager.GetString("Playlist_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag to reorder, or Alt+Up / Alt+Down.
+        /// </summary>
+        public static string Playlist_DragHandle {
+            get {
+                return ResourceManager.GetString("Playlist_DragHandle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This playlist is empty. Add tracks with “Add to playlist” in the library..
+        /// </summary>
+        public static string Playlist_Empty {
+            get {
+                return ResourceManager.GetString("Playlist_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove from playlist.
+        /// </summary>
+        public static string Playlist_RemoveTrack {
+            get {
+                return ResourceManager.GetString("Playlist_RemoveTrack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string Playlist_Rename {
+            get {
+                return ResourceManager.GetString("Playlist_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No playlists yet. Create one, then add tracks with “Add to playlist” in a track's menu..
+        /// </summary>
+        public static string Playlists_Empty {
+            get {
+                return ResourceManager.GetString("Playlists_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each playlist is also saved as .m3u8 in the library folder, ready for your phone..
+        /// </summary>
+        public static string Playlists_Hint {
+            get {
+                return ResourceManager.GetString("Playlists_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New playlist.
+        /// </summary>
+        public static string Playlists_New {
+            get {
+                return ResourceManager.GetString("Playlists_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open {0}.
+        /// </summary>
+        public static string Playlists_Open {
+            get {
+                return ResourceManager.GetString("Playlists_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlists.
+        /// </summary>
+        public static string Playlists_Title {
+            get {
+                return ResourceManager.GetString("Playlists_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string Prompt_Create {
+            get {
+                return ResourceManager.GetString("Prompt_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” would get the same file name as “{1}”..
+        /// </summary>
+        public static string Prompt_FileNameTaken {
+            get {
+                return ResourceManager.GetString("Prompt_FileNameTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a name..
+        /// </summary>
+        public static string Prompt_NameEmpty {
+            get {
+                return ResourceManager.GetString("Prompt_NameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is already a playlist called “{0}”..
+        /// </summary>
+        public static string Prompt_NameTaken {
+            get {
+                return ResourceManager.GetString("Prompt_NameTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New playlist.
+        /// </summary>
+        public static string Prompt_NewPlaylistTitle {
+            get {
+                return ResourceManager.GetString("Prompt_NewPlaylistTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Prompt_PlaylistName {
+            get {
+                return ResourceManager.GetString("Prompt_PlaylistName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string Prompt_Rename {
+            get {
+                return ResourceManager.GetString("Prompt_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename playlist.
+        /// </summary>
+        public static string Prompt_RenamePlaylistTitle {
+            get {
+                return ResourceManager.GetString("Prompt_RenamePlaylistTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not rated.
         /// </summary>
         public static string Rating_None {
@@ -1498,6 +1714,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add to playlist.
+        /// </summary>
+        public static string Track_AddToPlaylist {
+            get {
+                return ResourceManager.GetString("Track_AddToPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel download.
         /// </summary>
         public static string Track_CancelDownload {
@@ -1530,6 +1755,15 @@ namespace Tapedeck.Resources {
         public static string Track_MoreActions {
             get {
                 return ResourceManager.GetString("Track_MoreActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New playlist ….
+        /// </summary>
+        public static string Track_NewPlaylist {
+            get {
+                return ResourceManager.GetString("Track_NewPlaylist", resourceCulture);
             }
         }
         
