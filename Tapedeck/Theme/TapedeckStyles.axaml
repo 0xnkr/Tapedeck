@@ -12,6 +12,22 @@
         <Setter Property="Padding" Value="14,12" />
     </Style>
 
+    <!-- Frame of a segmented button (RadioButtons with Theme="{StaticResource Segment}") -->
+    <Style Selector="Border.segmented">
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        <Setter Property="Height" Value="{StaticResource Control.Md}" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
+    <!-- A row on an island, e.g. one tool in the settings -->
+    <Style Selector="Border.row">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Field}" />
+        <Setter Property="Padding" Value="16,12,12,12" />
+    </Style>
+
     <Style Selector="Window">
         <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />

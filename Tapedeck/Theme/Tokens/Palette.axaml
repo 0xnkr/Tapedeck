@@ -8,6 +8,10 @@
 
     <!-- The one accent. Change this value to recolor the app; AccentService derives everything else from it. -->
     <Color x:Key="Color.Accent">#FFB870</Color>
+    <!-- Alternative accents offered in the settings, next to Color.Accent (from the design mockup). -->
+    <Color x:Key="Color.AccentAlternative1">#C8B6FF</Color>
+    <Color x:Key="Color.AccentAlternative2">#8FD3C8</Color>
+    <Color x:Key="Color.AccentAlternative3">#FF9E9E</Color>
     <!-- Text and icons on accent. AccentService picks this or Color.Text, whichever contrasts better. -->
     <Color x:Key="Color.OnAccent">#1A1206</Color>
 
