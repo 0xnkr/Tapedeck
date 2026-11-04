@@ -5,6 +5,13 @@
     <StyleInclude Source="avares://Tapedeck/Theme/Controls/Inputs.axaml" />
     <StyleInclude Source="avares://Tapedeck/Theme/Controls/RatingStyles.axaml" />
 
+    <!-- Code line on an island: file names, paths -->
+    <Style Selector="Border.code">
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Field}" />
+        <Setter Property="Padding" Value="14,12" />
+    </Style>
+
     <Style Selector="Window">
         <Setter Property="Background" Value="{DynamicResource Brush.Bg}" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
