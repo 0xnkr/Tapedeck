@@ -63,7 +63,7 @@
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          VerticalAlignment="Center"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
                     </DockPanel>
                 </Panel>
