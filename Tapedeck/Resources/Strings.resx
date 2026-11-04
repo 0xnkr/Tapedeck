@@ -632,4 +632,64 @@
     <value>Typeface of the interface</value>
     <comment>What the project does for Tapedeck</comment>
   </data>
+  <data name="Dialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Dialog button that closes without doing anything</comment>
+  </data>
+  <data name="Status_Missing" xml:space="preserve">
+    <value>Missing</value>
+    <comment>Download status chip: the file was deleted or moved outside the app</comment>
+  </data>
+  <data name="Track_Remove" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Row menu</comment>
+  </data>
+  <data name="Track_CancelDownload" xml:space="preserve">
+    <value>Cancel download</value>
+    <comment>Row menu while a track downloads</comment>
+  </data>
+  <data name="Library_CancelDownloads" xml:space="preserve">
+    <value>Cancel downloads</value>
+    <comment>Bulk action while downloads run</comment>
+  </data>
+  <data name="Library_DownloadMissing" xml:space="preserve">
+    <value>Download missing</value>
+    <comment>Bulk action, shown when files are missing</comment>
+  </data>
+  <data name="Library_SummaryMissing" xml:space="preserve">
+    <value>{0} · {1} missing</value>
+    <comment>{0} the summary so far, {1} missing count</comment>
+  </data>
+  <data name="Remove_Title" xml:space="preserve">
+    <value>Remove “{0}”?</value>
+    <comment>Dialog title; {0} track title</comment>
+  </data>
+  <data name="Remove_Message" xml:space="preserve">
+    <value>The track disappears from the library, together with its corrections, rating and genres.</value>
+    <comment>Dialog text</comment>
+  </data>
+  <data name="Remove_DeleteFile" xml:space="preserve">
+    <value>Also delete the audio file</value>
+    <comment>Check box in the remove dialog</comment>
+  </data>
+  <data name="Remove_Confirm" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Destructive dialog button</comment>
+  </data>
+  <data name="Detail_Remove" xml:space="preserve">
+    <value>Remove track</value>
+    <comment>Destructive text button in the file island</comment>
+  </data>
+  <data name="Confirm_Removed" xml:space="preserve">
+    <value>“{0}” removed</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Confirm_TagsWrittenRenamed" xml:space="preserve">
+    <value>Tags written, file renamed to “{0}”</value>
+    <comment>Activity toast; {0} new file name</comment>
+  </data>
+  <data name="Notice_RemoveFailed" xml:space="preserve">
+    <value>Could not remove “{0}”: {1}</value>
+    <comment>Error line; {0} track title, {1} error message</comment>
+  </data>
 </root>
