@@ -4,6 +4,8 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ApplicationManifest>app.manifest</ApplicationManifest>
+        <!-- Icon of the .exe in Explorer and the taskbar; the window uses the same file (MainWindow.Icon) -->
+        <ApplicationIcon>Assets\tapedeck.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
