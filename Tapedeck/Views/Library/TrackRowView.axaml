@@ -36,10 +36,12 @@
         </Border>
 
         <StackPanel Grid.Column="2" Spacing="2" VerticalAlignment="Center">
-            <TextBlock Classes="body-strong"
-                       Text="{Binding Title}"
-                       Foreground="{DynamicResource Brush.Text}"
-                       TextTrimming="CharacterEllipsis" />
+            <Button Classes="link"
+                    Command="{Binding OpenDetailsCommand}">
+                <TextBlock Classes="body-strong"
+                           Text="{Binding Title}"
+                           TextTrimming="CharacterEllipsis" />
+            </Button>
             <TextBlock Classes="support"
                        Text="{Binding Artist}"
                        Foreground="{DynamicResource Brush.Text2}"
@@ -77,6 +79,8 @@
             <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="18" Height="18" />
             <Button.Flyout>
                 <MenuFlyout Placement="BottomEdgeAlignedRight">
+                    <MenuItem Header="{x:Static res:Strings.Track_Details}"
+                              Command="{Binding OpenDetailsCommand}" />
                     <MenuItem Header="{x:Static res:Strings.Track_Download}"
                               Command="{Binding DownloadCommand}" />
                     <MenuItem Header="{x:Static res:Strings.Track_ShowInFolder}"

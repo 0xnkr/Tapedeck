@@ -34,9 +34,17 @@ public static class AppServices
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
+        services.AddSingleton<ActivityService>();
+        services.AddSingleton<NavigationService>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<MainViewModel>();
+        services.AddSingleton<TrackDetailFactory>(sp => (row, actions) =>
+        {
+            var detail = ActivatorUtilities.CreateInstance<TrackDetailViewModel>(sp, row, actions);
+            detail.LoadCommand.Execute(null);
+            return detail;
+        });
 
         return services.BuildServiceProvider();
     }

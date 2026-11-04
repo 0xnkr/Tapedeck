@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.Detail.GenreEditor"
+             x:DataType="vm:TrackDetailViewModel">
+
+    <!-- Genre chips with remove buttons, then "+ Genre" which turns into a small field -->
+    <WrapPanel ItemSpacing="6" LineSpacing="6">
+        <ItemsControl ItemsSource="{Binding Genres}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemSpacing="6" LineSpacing="6" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <controls:TagChip Text="{Binding}"
+                                      RemoveCommand="{Binding $parent[ItemsControl].((vm:TrackDetailViewModel)DataContext).RemoveGenreCommand}"
+                                      RemoveCommandParameter="{Binding}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Button Classes="dashed"
+                Content="{x:Static res:Strings.Genre_Add}"
+                controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                Command="{Binding StartAddGenreCommand}"
+                IsVisible="{Binding !IsAddingGenre}" />
+
+        <TextBox Name="NewGenreBox"
+                 Classes="chip"
+                 Text="{Binding NewGenre}"
+                 PlaceholderText="{x:Static res:Strings.Genre_NewLabel}"
+                 AutomationProperties.Name="{x:Static res:Strings.Genre_NewLabel}"
+                 IsVisible="{Binding IsAddingGenre}">
+            <TextBox.KeyBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding AddGenreCommand}" />
+                <KeyBinding Gesture="Escape" Command="{Binding CancelAddGenreCommand}" />
+            </TextBox.KeyBindings>
+        </TextBox>
+    </WrapPanel>
+</UserControl>

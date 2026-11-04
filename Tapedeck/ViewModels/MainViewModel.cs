@@ -1,5 +1,7 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Tapedeck.Services;
 
 namespace Tapedeck.ViewModels;
 
@@ -11,19 +13,39 @@ public enum AppPage
     Settings,
 }
 
-/// <summary>Shell of the main window: which page the navigation rail shows.</summary>
-public partial class MainViewModel(LibraryViewModel library) : ViewModelBase
+/// <summary>Shell of the main window: navigation rail, current page and the activity toast.</summary>
+public partial class MainViewModel : ViewModelBase
 {
-    public LibraryViewModel Library { get; } = library;
+    public MainViewModel(LibraryViewModel library, NavigationService navigation, ActivityService activity)
+    {
+        Library = library;
+        Navigation = navigation;
+        Activity = activity;
+        Navigation.Reset(Library);
+    }
+
+    public LibraryViewModel Library { get; }
+
+    public NavigationService Navigation { get; }
+
+    public ActivityService Activity { get; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(CurrentView))]
-    public partial AppPage CurrentPage { get; set; } = AppPage.Library;
+    public partial AppPage CurrentPage { get; private set; } = AppPage.Library;
 
-    public ViewModelBase CurrentView => CurrentPage switch
+    /// <summary>Rail click: shows the page, also when it is already selected but a sub page is open.</summary>
+    [RelayCommand]
+    private void ShowPage(AppPage page)
     {
-        AppPage.Library => Library,
-        // Playlists and Settings are disabled in the rail until they exist
-        _ => throw new NotSupportedException($"Page {CurrentPage} is not implemented yet."),
-    };
+        CurrentPage = page;
+        Navigation.Reset(page switch
+        {
+            AppPage.Library => Library,
+            // Playlists and Settings are disabled in the rail until they exist
+            _ => throw new NotSupportedException($"Page {page} is not implemented yet."),
+        });
+    }
+
+    [RelayCommand]
+    private void Back() => Navigation.Back();
 }

@@ -14,6 +14,10 @@
         ExtendClientAreaToDecorationsHint="True"
         WindowDecorations="BorderOnly">
 
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Escape" Command="{Binding BackCommand}" />
+    </Window.KeyBindings>
+
     <!-- Shell: custom title bar, navigation rail, current page -->
     <Grid RowDefinitions="Auto,*">
         <controls:TitleBar />
@@ -27,25 +31,48 @@
                              Content="{x:Static res:Strings.Nav_Settings}"
                              controls:ButtonAssist.Icon="{StaticResource Icon.Settings}"
                              IsEnabled="False"
-                             IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Settings}}" />
+                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Settings}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Settings}" />
                 <StackPanel Spacing="{StaticResource Space.4}" HorizontalAlignment="Center">
                     <RadioButton Theme="{StaticResource NavigationRailItem}"
                                  GroupName="Navigation"
                                  Content="{x:Static res:Strings.Nav_Library}"
                                  controls:ButtonAssist.Icon="{StaticResource Icon.Library}"
-                                 IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Library}}" />
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Library}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Library}" />
                     <RadioButton Theme="{StaticResource NavigationRailItem}"
                                  GroupName="Navigation"
                                  Content="{x:Static res:Strings.Nav_Playlists}"
                                  controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}"
                                  IsEnabled="False"
-                                 IsChecked="{Binding CurrentPage, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Playlists}}" />
+                                 IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.Instance}, ConverterParameter={x:Static vm:AppPage.Playlists}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Playlists}" />
                 </StackPanel>
             </DockPanel>
 
-            <ContentControl Grid.Column="1"
-                            Content="{Binding CurrentView}"
-                            Margin="0,4,16,16" />
+            <Panel Grid.Column="1" Margin="0,4,16,16">
+                <ContentControl Content="{Binding Navigation.Current}" />
+
+                <!-- Activity toast: spinning record while busy, resting record for the confirmation -->
+                <controls:Island Classes="toast"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Bottom"
+                                 Margin="0,0,16,16"
+                                 IsVisible="{Binding Activity.Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.3}">
+                        <controls:VinylSpinner IsSpinning="{Binding Activity.IsBusy}" />
+                        <TextBlock Classes="support"
+                                   Text="{Binding Activity.Text}"
+                                   Foreground="{DynamicResource Brush.Text}"
+                                   MaxWidth="360"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:Island>
+            </Panel>
         </Grid>
     </Grid>
 </Window>

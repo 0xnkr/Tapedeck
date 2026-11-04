@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.Detail.MetadataField"
+             x:DataType="vm:MetadataFieldViewModel">
+
+    <!-- Label, editable value, and where the value comes from -->
+    <Grid ColumnDefinitions="112,*,96" ColumnSpacing="{StaticResource Space.3}">
+        <TextBlock Classes="support"
+                   Text="{Binding Label}"
+                   Foreground="{DynamicResource Brush.Text2}"
+                   VerticalAlignment="Center" />
+        <TextBox Grid.Column="1"
+                 Text="{Binding Text}"
+                 Classes.user-value="{Binding IsUserValue}"
+                 AutomationProperties.Name="{Binding Label}" />
+        <controls:SourceChip Grid.Column="2"
+                             Source="{Binding Source}"
+                             VerticalAlignment="Center" />
+    </Grid>
+</UserControl>
