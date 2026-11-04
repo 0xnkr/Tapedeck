@@ -23,8 +23,20 @@ public interface ITrackRepository
     Task SetThumbPathAsync(long id, string thumbPath);
     Task SetCoverAsync(long id, string coverPath, string coverSource);
 
+    /// <summary>Stores the user's corrections and marks the file's tags as outdated.</summary>
     Task SetUserFieldsAsync(long id, UserFields fields);
+
+    /// <summary>The rating is not written into the file, so it does not mark the tags as outdated.</summary>
     Task SetRatingAsync(long id, int? rating);
 
     Task AddTagAsync(long trackId, string name, TagSource source);
+
+    /// <summary>
+    /// Replaces the user's genres of a track and marks the file's tags as outdated.
+    /// An empty list removes them, so the next best genre source applies again.
+    /// </summary>
+    Task SetUserTagsAsync(long trackId, IReadOnlyList<string> names);
+
+    /// <summary>Records that the tags in the file now match the displayed values.</summary>
+    Task MarkTagsWrittenAsync(long id);
 }
