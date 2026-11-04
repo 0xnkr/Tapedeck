@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using YoutubeDLSharp;
 
 namespace Tapedeck.Core.Services;
@@ -32,12 +34,64 @@ public sealed class ToolService(AppPaths paths)
 
     public YoutubeDL CreateClient() => new()
     {
-        YoutubeDLPath = YtDlpPath,
-        FFmpegPath = FFmpegPath,
+        YoutubeDLPath = this.YtDlpPath,
+        FFmpegPath = this.FFmpegPath,
         OutputFolder = paths.TempDir,
     };
+
+    /// <summary>Installed versions; <c>null</c> for a tool that is missing or does not start.</summary>
+    public async Task<ToolVersions> GetVersionsAsync() => new(
+        await FirstLineAsync(this.YtDlpPath, "--version"),
+        await FirstLineAsync(this.FFmpegPath, "-version"),
+        await FirstLineAsync(this.DenoPath, "--version"));
+
+    /// <summary>
+    /// Shortens a version line to the version itself:
+    /// <c>ffmpeg version 7.1-full_build …</c> → <c>7.1-full_build</c>, <c>deno 2.1.4 (stable …)</c> → <c>2.1.4</c>.
+    /// </summary>
+    public static string ShortVersion(string line)
+    {
+        var parts = line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts switch
+        {
+            ["ffmpeg", "version", var version, ..] => version,
+            ["deno", var version, ..] => version,
+            _ => line.Trim(),
+        };
+    }
+
+    private static async Task<string?> FirstLineAsync(string exe, string argument)
+    {
+        if (!File.Exists(exe))
+            return null;
+
+        var psi = new ProcessStartInfo(exe)
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        };
+        psi.ArgumentList.Add(argument);
+        try
+        {
+            using var process = Process.Start(psi);
+            if (process is null)
+                return null;
+            var line = await process.StandardOutput.ReadLineAsync();
+            await process.WaitForExitAsync();
+            return string.IsNullOrWhiteSpace(line) ? null : ShortVersion(line);
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            return null;
+        }
+    }
 
     /// <summary>Arguments that make yt-dlp use the bundled Deno runtime.</summary>
     public IReadOnlyList<string> JsRuntimeArgs =>
         File.Exists(this.DenoPath) ? ["--js-runtimes", $"deno:{this.DenoPath}"] : [];
 }
+
+/// <summary>Versions of the bundled tools; <c>null</c> when a tool is missing.</summary>
+public sealed record ToolVersions(string? YtDlp, string? FFmpeg, string? Deno);
