@@ -14,10 +14,20 @@ public sealed class MetadataService(ToolService tools)
     private static readonly string[] DROPPED_KEYS =
         ["formats", "requested_formats", "automatic_captions", "subtitles", "heatmap", "thumbnails"];
 
+    // placeholders yt-dlp lists for videos that cannot be played anymore
+    private static readonly string[] UNAVAILABLE_TITLES = ["[Private video]", "[Deleted video]"];
+
     public async Task<YtMetadata> FetchAsync(string url, CancellationToken ct = default)
     {
-        var json = await this.RunYtDlpAsync(url, ct);
+        var json = await this.RunYtDlpAsync(["--no-playlist", "--", url], ct);
         return Parse(json);
+    }
+
+    /// <summary>Reads the videos of a playlist without fetching each video, which takes seconds instead of minutes.</summary>
+    public async Task<YtPlaylist> FetchPlaylistAsync(string listId, CancellationToken ct = default)
+    {
+        var json = await this.RunYtDlpAsync(["--flat-playlist", "--yes-playlist", "--", PlaylistLink.Url(listId)], ct);
+        return ParsePlaylist(json);
     }
 
     public static YtMetadata Parse(string json)
@@ -47,7 +57,31 @@ public sealed class MetadataService(ToolService tools)
             InfoJson: root.ToJsonString());
     }
 
-    private async Task<string> RunYtDlpAsync(string url, CancellationToken ct)
+    /// <summary>Maps the flat playlist JSON; unavailable and repeated videos are left out.</summary>
+    public static YtPlaylist ParsePlaylist(string json)
+    {
+        var root = JsonNode.Parse(json)?.AsObject() ?? throw new InvalidDataException("yt-dlp did not return a JSON object.");
+        var entries = new List<YtPlaylistEntry>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        if (root["entries"] is JsonArray items)
+        {
+            foreach (var item in items.OfType<JsonObject>())
+            {
+                var title = Str(item, "title");
+                if (!VideoId.TryParse(Str(item, "id"), out var videoId) || (title is not null && UNAVAILABLE_TITLES.Contains(title)) || !seen.Add(videoId))
+                    continue;
+                entries.Add(new YtPlaylistEntry(videoId, title));
+            }
+        }
+
+        return new YtPlaylist(
+            Id: Str(root, "id") ?? throw new InvalidDataException("yt-dlp did not return a playlist ID."),
+            Title: Str(root, "title"),
+            Channel: Str(root, "channel") ?? Str(root, "uploader"),
+            Entries: entries);
+    }
+
+    private async Task<string> RunYtDlpAsync(IReadOnlyList<string> args, CancellationToken ct)
     {
         var psi = new ProcessStartInfo(tools.YtDlpPath)
         {
@@ -58,7 +92,7 @@ public sealed class MetadataService(ToolService tools)
         };
         foreach (var arg in tools.JsRuntimeArgs)
             psi.ArgumentList.Add(arg);
-        foreach (var arg in new[] { "-J", "--no-playlist", "--no-warnings", "--", url })
+        foreach (var arg in (string[])["-J", "--no-warnings", .. args])
             psi.ArgumentList.Add(arg);
 
         using var process = Process.Start(psi) ?? throw new InvalidOperationException("Could not start yt-dlp.");
