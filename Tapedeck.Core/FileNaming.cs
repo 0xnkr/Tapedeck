@@ -31,16 +31,24 @@ public static class FileNaming
     }
 
     /// <summary>
-    /// Like <see cref="Choose"/>, but keeps the file a track already owns, so a repeated download
-    /// overwrites it instead of treating it as a collision and leaving the old file behind.
+    /// The name a track's file should have now. Keeps the current file when its name still fits artist and title
+    /// (also the <c>[id]</c> variant), so a repeated download overwrites it instead of treating it as a collision.
+    /// After a correction it returns the new name; the track's own file never counts as taken.
     /// </summary>
     public static string ChooseForTrack(string? currentFile, string artist, string title, string videoId, string extension,
         Func<string, bool> isTaken)
     {
         var ext = extension.TrimStart('.');
-        if (currentFile is not null && currentFile.EndsWith($".{ext}", StringComparison.OrdinalIgnoreCase))
+        var baseName = BaseName(artist, title);
+        var fitting = new[]
+        {
+            $"{baseName}.{ext}",
+            $"{Truncate(baseName, MAX_BASE_LENGTH - videoId.Length - 3)} [{videoId}].{ext}",
+        };
+        if (currentFile is not null && fitting.Contains(currentFile, StringComparer.OrdinalIgnoreCase))
             return currentFile;
-        return Choose(artist, title, videoId, ext, isTaken);
+        return Choose(artist, title, videoId, ext,
+            name => !string.Equals(name, currentFile, StringComparison.OrdinalIgnoreCase) && isTaken(name));
     }
 
     public static string Sanitize(string name)

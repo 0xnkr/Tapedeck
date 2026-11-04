@@ -95,6 +95,19 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
             new { pending = DownloadStatus.Pending.ToDb(), downloading = DownloadStatus.Downloading.ToDb() });
     }
 
+    public async Task SetFilePathAsync(long id, string filePath)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync("UPDATE tracks SET file_path = @filePath WHERE id = @id;", new { id, filePath });
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        // track_tags and playlist_tracks follow via ON DELETE CASCADE
+        await connection.ExecuteAsync("DELETE FROM tracks WHERE id = @id;", new { id });
+    }
+
     public async Task SetThumbPathAsync(long id, string thumbPath)
     {
         await using var connection = await connectionFactory.OpenAsync();
