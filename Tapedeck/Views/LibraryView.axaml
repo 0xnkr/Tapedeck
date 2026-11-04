@@ -12,15 +12,14 @@
 
         <controls:PageHeader Title="{x:Static res:Strings.Library_Title}" Subtitle="{Binding Summary}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
-                <!-- CSV import/export have no backend yet -->
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Library_ExportCsv}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Upload}"
-                        IsEnabled="False" />
+                        Command="{Binding ExportCsvCommand}" />
                 <Button Classes="primary lg"
                         Content="{x:Static res:Strings.Library_ImportCsv}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
-                        IsEnabled="False" />
+                        Command="{Binding ImportCsvCommand}" />
             </StackPanel>
         </controls:PageHeader>
 
