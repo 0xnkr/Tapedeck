@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -31,13 +30,12 @@ public partial class LibraryViewModel(
     DownloadService downloader,
     ToolService tools,
     AppPaths paths,
-    IPlatformService platform) : ViewModelBase, ITrackActions
+    IPlatformService platform,
+    ActivityService activity,
+    NavigationService navigation,
+    TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
-    private static readonly TimeSpan ConfirmationDuration = TimeSpan.FromSeconds(3);
-
     private readonly List<TrackRowViewModel> _all = [];
-    private readonly List<string> _activities = [];
-    private CancellationTokenSource? _confirmation;
     private Task? _toolsReady;
 
     /// <summary>Rows that pass the current filter and search.</summary>
@@ -53,14 +51,6 @@ public partial class LibraryViewModel(
     /// <summary>Last error, shown below the link bar.</summary>
     [ObservableProperty]
     public partial string? Notice { get; private set; }
-
-    /// <summary>What the app is doing right now, or a short confirmation afterwards; <c>null</c> hides the toast.</summary>
-    [ObservableProperty]
-    public partial string? ActivityText { get; private set; }
-
-    /// <summary>Work is in progress (the record spins).</summary>
-    [ObservableProperty]
-    public partial bool IsBusy { get; private set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AddLinkCommand))]
@@ -98,13 +88,13 @@ public partial class LibraryViewModel(
         {
             await EnsureToolsAsync();
             long id;
-            using (BeginActivity(Strings.Activity_FetchingInfo))
+            using (activity.Begin(Strings.Activity_FetchingInfo))
                 id = await importer.AddAsync(link);
             if (NewLink == link)
                 NewLink = "";
             await RefreshRowAsync(id);
             if (_all.Find(r => r.Id == id) is { } row)
-                _ = ShowConfirmationAsync(string.Format(Strings.Confirm_Added, row.Title));
+                activity.Confirm(string.Format(Strings.Confirm_Added, row.Title));
         }
         catch (Exception ex)
         {
@@ -141,6 +131,10 @@ public partial class LibraryViewModel(
             ? Path.GetDirectoryName(paths.ToLibraryPath(file)) ?? paths.LibraryDir
             : paths.LibraryDir);
 
+    void ITrackActions.OpenDetails(TrackRowViewModel row) => navigation.Open(createDetail(row, this));
+
+    Task ITrackActions.RefreshAsync(TrackRowViewModel row) => RefreshRowAsync(row.Id);
+
     private async Task DownloadRowAsync(TrackRowViewModel row)
     {
         if (row.Status == DownloadStatus.Downloading)
@@ -152,9 +146,9 @@ public partial class LibraryViewModel(
         try
         {
             await EnsureToolsAsync();
-            using (BeginActivity(string.Format(Strings.Activity_Downloading, row.Title)))
+            using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
                 await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p));
-            _ = ShowConfirmationAsync(string.Format(Strings.Confirm_Downloaded, row.Title));
+            activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
         }
         catch (Exception ex)
         {
@@ -171,7 +165,7 @@ public partial class LibraryViewModel(
         {
             if (tools.HasAllTools)
                 return;
-            using (BeginActivity(Strings.Activity_InstallingTools))
+            using (activity.Begin(Strings.Activity_InstallingTools))
                 await (_toolsReady ??= tools.EnsureToolsAsync());
         }
         catch
@@ -179,63 +173,6 @@ public partial class LibraryViewModel(
             _toolsReady = null;
             throw;
         }
-    }
-
-    /// <summary>Shows <paramref name="text"/> with a spinning record until the returned handle is disposed.</summary>
-    private IDisposable BeginActivity(string text)
-    {
-        _activities.Add(text);
-        UpdateActivity();
-        return new ActivityHandle(() =>
-        {
-            _activities.Remove(text);
-            UpdateActivity();
-        });
-    }
-
-    private void UpdateActivity()
-    {
-        IsBusy = _activities.Count > 0;
-        if (IsBusy)
-        {
-            _confirmation?.Cancel();
-            _confirmation = null;
-            ActivityText = _activities[^1];
-        }
-        else if (_confirmation is null)
-        {
-            ActivityText = null;
-        }
-    }
-
-    /// <summary>A short confirmation with a resting record, unless other work is still running.</summary>
-    private async Task ShowConfirmationAsync(string text)
-    {
-        if (IsBusy)
-            return;
-
-        _confirmation?.Cancel();
-        using var cts = _confirmation = new CancellationTokenSource();
-        ActivityText = text;
-        try
-        {
-            await Task.Delay(ConfirmationDuration, cts.Token);
-            ActivityText = null;
-        }
-        catch (OperationCanceledException)
-        {
-            // replaced by new work or another confirmation
-        }
-        finally
-        {
-            if (_confirmation == cts)
-                _confirmation = null;
-        }
-    }
-
-    private sealed class ActivityHandle(Action end) : IDisposable
-    {
-        public void Dispose() => end();
     }
 
     private async Task RefreshRowAsync(long id)

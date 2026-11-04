@@ -91,6 +91,9 @@
                              ItemsSource="{Binding Tracks}"
                              SelectedItem="{Binding SelectedTrack}"
                              AutomationProperties.Name="{x:Static res:Strings.Library_TrackList}">
+                        <ListBox.KeyBindings>
+                            <KeyBinding Gesture="Enter" Command="{Binding SelectedTrack.OpenDetailsCommand, FallbackValue={x:Null}}" />
+                        </ListBox.KeyBindings>
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="vm:TrackRowViewModel">
                                 <library:TrackRowView />
@@ -104,22 +107,6 @@
                                VerticalAlignment="Center"
                                IsVisible="{Binding EmptyText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-                    <!-- Activity toast: spinning record while busy, resting record for the confirmation -->
-                    <controls:Island Classes="toast"
-                                     HorizontalAlignment="Right"
-                                     VerticalAlignment="Bottom"
-                                     Margin="0,0,8,8"
-                                     IsVisible="{Binding ActivityText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.3}">
-                            <controls:VinylSpinner IsSpinning="{Binding IsBusy}" />
-                            <TextBlock Classes="support"
-                                       Text="{Binding ActivityText}"
-                                       Foreground="{DynamicResource Brush.Text}"
-                                       MaxWidth="360"
-                                       TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                    </controls:Island>
                 </Panel>
             </DockPanel>
         </controls:Island>

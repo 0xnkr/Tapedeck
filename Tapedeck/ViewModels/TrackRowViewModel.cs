@@ -15,6 +15,11 @@ public interface ITrackActions
     Task OpenOnYoutubeAsync(TrackRowViewModel row);
 
     Task ShowInFolderAsync(TrackRowViewModel row);
+
+    void OpenDetails(TrackRowViewModel row);
+
+    /// <summary>Reloads the row after its values changed elsewhere, e.g. on the detail page.</summary>
+    Task RefreshAsync(TrackRowViewModel row);
 }
 
 /// <summary>One row of the library table, built from <see cref="TrackDisplay"/>.</summary>
@@ -92,6 +97,9 @@ public partial class TrackRowViewModel : ViewModelBase
 
     [RelayCommand]
     private Task ShowInFolderAsync() => _actions.ShowInFolderAsync(this);
+
+    [RelayCommand]
+    private void OpenDetails() => _actions.OpenDetails(this);
 
     public bool Matches(string search) =>
         Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)
