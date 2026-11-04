@@ -85,6 +85,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing “{0}” {1}/{2} ….
+        /// </summary>
+        public static string Activity_ImportingPlaylist {
+            get {
+                return ResourceManager.GetString("Activity_ImportingPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading yt-dlp, ffmpeg and Deno (one time) ….
         /// </summary>
         public static string Activity_InstallingTools {
@@ -99,6 +108,15 @@ namespace Tapedeck.Resources {
         public static string Activity_MovingLibrary {
             get {
                 return ResourceManager.GetString("Activity_MovingLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading playlist ….
+        /// </summary>
+        public static string Activity_ReadingPlaylist {
+            get {
+                return ResourceManager.GetString("Activity_ReadingPlaylist", resourceCulture);
             }
         }
         
@@ -234,6 +252,33 @@ namespace Tapedeck.Resources {
         public static string Confirm_PlaylistDeleted {
             get {
                 return ResourceManager.GetString("Confirm_PlaylistDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}”: 1 track added.
+        /// </summary>
+        public static string Confirm_PlaylistImported_One {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistImported_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}”: {1} tracks added.
+        /// </summary>
+        public static string Confirm_PlaylistImported_Other {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistImported_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is up to date.
+        /// </summary>
+        public static string Confirm_PlaylistUpToDate {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistUpToDate", resourceCulture);
             }
         }
         
@@ -877,7 +922,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Paste a YouTube link – youtube.com/watch?v=… or youtu.be/….
+        ///   Looks up a localized string similar to Paste a YouTube link to a video or playlist.
         /// </summary>
         public static string Library_LinkPlaceholder {
             get {
@@ -972,6 +1017,33 @@ namespace Tapedeck.Resources {
         public static string Library_TrackList {
             get {
                 return ResourceManager.GetString("Library_TrackList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add only this video, or import the whole playlist. An imported playlist stays linked to YouTube and can be synced later..
+        /// </summary>
+        public static string LinkInPlaylist_Message {
+            get {
+                return ResourceManager.GetString("LinkInPlaylist_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import the whole playlist.
+        /// </summary>
+        public static string LinkInPlaylist_Option {
+            get {
+                return ResourceManager.GetString("LinkInPlaylist_Option", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This link belongs to a playlist.
+        /// </summary>
+        public static string LinkInPlaylist_Title {
+            get {
+                return ResourceManager.GetString("LinkInPlaylist_Title", resourceCulture);
             }
         }
         
@@ -1084,6 +1156,33 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import stopped: {0}.
+        /// </summary>
+        public static string Notice_PlaylistImportFailed {
+            get {
+                return ResourceManager.GetString("Notice_PlaylistImportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read the playlist: {0}.
+        /// </summary>
+        public static string Notice_PlaylistReadFailed {
+            get {
+                return ResourceManager.GetString("Notice_PlaylistReadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} videos could not be added, the next sync tries again: {1}.
+        /// </summary>
+        public static string Notice_PlaylistVideosFailed {
+            get {
+                return ResourceManager.GetString("Notice_PlaylistVideosFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not remove “{0}”: {1}.
         /// </summary>
         public static string Notice_RemoveFailed {
@@ -1174,6 +1273,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} · linked to YouTube.
+        /// </summary>
+        public static string Playlist_Linked {
+            get {
+                return ResourceManager.GetString("Playlist_Linked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} ({1}).
+        /// </summary>
+        public static string Playlist_NumberedName {
+            get {
+                return ResourceManager.GetString("Playlist_NumberedName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove from playlist.
         /// </summary>
         public static string Playlist_RemoveTrack {
@@ -1192,11 +1309,65 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sync.
+        /// </summary>
+        public static string Playlist_Sync {
+            get {
+                return ResourceManager.GetString("Playlist_Sync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the new videos of the YouTube playlist. Nothing is removed or reordered..
+        /// </summary>
+        public static string Playlist_SyncHint {
+            get {
+                return ResourceManager.GetString("Playlist_SyncHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}”: {1}.
+        /// </summary>
+        public static string Playlist_VideoError {
+            get {
+                return ResourceManager.GetString("Playlist_VideoError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube playlist.
+        /// </summary>
+        public static string Playlist_YoutubeName {
+            get {
+                return ResourceManager.GetString("Playlist_YoutubeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No playlists yet. Create one, then add tracks with “Add to playlist” in a track's menu..
         /// </summary>
         public static string Playlists_Empty {
             get {
                 return ResourceManager.GetString("Playlists_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From link.
+        /// </summary>
+        public static string Playlists_FromLink {
+            get {
+                return ResourceManager.GetString("Playlists_FromLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import a YouTube playlist and keep it linked.
+        /// </summary>
+        public static string Playlists_FromLinkHint {
+            get {
+                return ResourceManager.GetString("Playlists_FromLinkHint", resourceCulture);
             }
         }
         
@@ -1255,6 +1426,33 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string Prompt_Import {
+            get {
+                return ResourceManager.GetString("Prompt_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import a YouTube playlist.
+        /// </summary>
+        public static string Prompt_ImportPlaylistTitle {
+            get {
+                return ResourceManager.GetString("Prompt_ImportPlaylistTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mixes change every time they are opened and cannot be imported. Add single videos instead..
+        /// </summary>
+        public static string Prompt_MixLink {
+            get {
+                return ResourceManager.GetString("Prompt_MixLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter a name..
         /// </summary>
         public static string Prompt_NameEmpty {
@@ -1278,6 +1476,24 @@ namespace Tapedeck.Resources {
         public static string Prompt_NewPlaylistTitle {
             get {
                 return ResourceManager.GetString("Prompt_NewPlaylistTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is not a link to a YouTube playlist..
+        /// </summary>
+        public static string Prompt_NotAPlaylistLink {
+            get {
+                return ResourceManager.GetString("Prompt_NotAPlaylistLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Link to the playlist – youtube.com/playlist?list=….
+        /// </summary>
+        public static string Prompt_PlaylistLink {
+            get {
+                return ResourceManager.GetString("Prompt_PlaylistLink", resourceCulture);
             }
         }
         
