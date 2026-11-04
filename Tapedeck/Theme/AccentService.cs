@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -10,9 +12,18 @@ public interface IAccentService
 {
     Color Accent { get; }
 
+    /// <summary>Current accent as <c>#RRGGBB</c>, for view models that do not know Avalonia types.</summary>
+    string AccentHex { get; }
+
+    /// <summary>The palette's accent and its alternatives, as <c>#RRGGBB</c>.</summary>
+    IReadOnlyList<string> PresetHexes { get; }
+
     event EventHandler? AccentChanged;
 
     void Apply(Color accent);
+
+    /// <summary>Applies a hex color such as <c>#C8B6FF</c>; returns <c>false</c> and changes nothing when it is not one.</summary>
+    bool TryApply(string hex);
 }
 
 /// <summary>
@@ -34,10 +45,23 @@ public sealed class AccentService : IAccentService
         this.resources = resources;
         this.darkOnAccent = this.Lookup("Color.OnAccent");
         this.lightOnAccent = this.Lookup("Color.Text");
-        this.Apply(this.Lookup("Color.Accent"));
+
+        var paletteAccent = this.Lookup("Color.Accent");
+        this.PresetHexes =
+        [
+            ToHex(paletteAccent),
+            ToHex(this.Lookup("Color.AccentAlternative1")),
+            ToHex(this.Lookup("Color.AccentAlternative2")),
+            ToHex(this.Lookup("Color.AccentAlternative3")),
+        ];
+        this.Apply(paletteAccent);
     }
 
     public Color Accent { get; private set; }
+
+    public string AccentHex => ToHex(this.Accent);
+
+    public IReadOnlyList<string> PresetHexes { get; }
 
     public event EventHandler? AccentChanged;
 
@@ -62,8 +86,23 @@ public sealed class AccentService : IAccentService
             this.resources[$"SystemAccentColorLight{step}"] = accent.Mix(Colors.White, 0.15 * step);
         }
 
-        AccentChanged?.Invoke(this, EventArgs.Empty);
+        this.AccentChanged?.Invoke(this, EventArgs.Empty);
     }
+
+    public bool TryApply(string hex)
+    {
+        // only opaque #RRGGBB: an accent with alpha would make the derived tints unpredictable
+        var text = hex.Trim();
+        if (!text.StartsWith('#'))
+            text = "#" + text;
+        if (text.Length != 7 || !Color.TryParse(text, out var color))
+            return false;
+        this.Apply(color);
+        return true;
+    }
+
+    private static string ToHex(Color color) =>
+        string.Create(CultureInfo.InvariantCulture, $"#{color.R:X2}{color.G:X2}{color.B:X2}");
 
     private Color Lookup(string key) =>
         this.resources.TryGetResource(key, ThemeVariant.Dark, out var value) && value is Color color

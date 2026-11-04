@@ -223,6 +223,88 @@
         </Style>
     </ControlTheme>
 
+    <!-- One option of a segmented button: RadioButtons with a shared GroupName inside a Border.segmented.
+         The checked option is tinted with the accent and shows a check mark. -->
+    <ControlTheme x:Key="Segment" TargetType="RadioButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextSoft}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}" />
+        <Setter Property="BorderThickness" Value="1,0,0,0" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <controls:Glyph Name="PART_Check"
+                                        Data="{StaticResource Icon.Check}"
+                                        StrokeThickness="2.2"
+                                        Width="16" Height="16"
+                                        IsVisible="False" />
+                        <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:nth-child(1)">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{DynamicResource Brush.AccentSoft}" />
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Accent}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^:checked /template/ controls|Glyph#PART_Check">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Color swatch: a filled circle (Background) with a ring and check mark when chosen. -->
+    <ControlTheme x:Key="AccentSwatch" TargetType="RadioButton">
+        <Setter Property="Width" Value="{StaticResource Control.Md}" />
+        <Setter Property="Height" Value="{StaticResource Control.Md}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_Ring"
+                            CornerRadius="{StaticResource Radius.Pill}"
+                            BorderBrush="Transparent"
+                            BorderThickness="2" />
+                    <Border Margin="6"
+                            CornerRadius="{StaticResource Radius.Pill}"
+                            Background="{TemplateBinding Background}" />
+                    <controls:Glyph Name="PART_Check"
+                                    Data="{StaticResource Icon.Check}"
+                                    StrokeThickness="2.4"
+                                    Width="16" Height="16"
+                                    Foreground="{DynamicResource Brush.Bg}"
+                                    IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Outline}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Text}" />
+        </Style>
+        <Style Selector="^:checked /template/ controls|Glyph#PART_Check">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
     <!-- Entry of the navigation rail: icon in a 56x32 indicator, label below. Use RadioButtons with a shared GroupName. -->
     <ControlTheme x:Key="NavigationRailItem" TargetType="RadioButton">
         <Setter Property="Foreground" Value="{DynamicResource Brush.Text2}" />
