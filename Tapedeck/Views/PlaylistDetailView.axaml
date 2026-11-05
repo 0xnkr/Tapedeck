@@ -19,6 +19,10 @@
                         controls:ButtonAssist.Icon="{StaticResource Icon.Trash}"
                         Command="{Binding DeleteCommand}" />
                 <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Library_ExportCsv}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Upload}"
+                        Command="{Binding ExportCsvCommand}" />
+                <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlist_Rename}"
                         Command="{Binding RenameCommand}" />
                 <Button Classes="secondary lg"
