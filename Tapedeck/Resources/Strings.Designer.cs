@@ -544,6 +544,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tapedeck-{0}.csv.
+        /// </summary>
+        public static string Csv_PlaylistFileName {
+            get {
+                return ResourceManager.GetString("Csv_PlaylistFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Added.
         /// </summary>
         public static string Detail_Added {
@@ -1147,6 +1156,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file contains no tracks..
+        /// </summary>
+        public static string Notice_CsvNoTracks {
+            get {
+                return ResourceManager.GetString("Notice_CsvNoTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not download “{0}”: {1}.
         /// </summary>
         public static string Notice_DownloadFailed {
@@ -1381,6 +1399,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to From CSV.
+        /// </summary>
+        public static string Playlists_FromCsv {
+            get {
+                return ResourceManager.GetString("Playlists_FromCsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a playlist from a CSV file, e.g. a playlist export.
+        /// </summary>
+        public static string Playlists_FromCsvHint {
+            get {
+                return ResourceManager.GetString("Playlists_FromCsvHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From link.
         /// </summary>
         public static string Playlists_FromLink {
@@ -1440,6 +1476,15 @@ namespace Tapedeck.Resources {
         public static string Prompt_Create {
             get {
                 return ResourceManager.GetString("Prompt_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist from CSV.
+        /// </summary>
+        public static string Prompt_CsvPlaylistTitle {
+            get {
+                return ResourceManager.GetString("Prompt_CsvPlaylistTitle", resourceCulture);
             }
         }
         

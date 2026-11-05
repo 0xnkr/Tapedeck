@@ -681,4 +681,19 @@
   <data name="Confirm_FilesFound_Other" xml:space="preserve">
     <value>{0} Dateien im Bibliotheksordner gefunden, kein Download nötig</value>
   </data>
+  <data name="Csv_PlaylistFileName" xml:space="preserve">
+    <value>Tapedeck-{0}.csv</value>
+  </data>
+  <data name="Playlists_FromCsv" xml:space="preserve">
+    <value>Aus CSV</value>
+  </data>
+  <data name="Playlists_FromCsvHint" xml:space="preserve">
+    <value>Playlist aus einer CSV-Datei anlegen, z. B. einem Playlist-Export</value>
+  </data>
+  <data name="Prompt_CsvPlaylistTitle" xml:space="preserve">
+    <value>Playlist aus CSV</value>
+  </data>
+  <data name="Notice_CsvNoTracks" xml:space="preserve">
+    <value>Die Datei enthält keine Titel.</value>
+  </data>
 </root>
