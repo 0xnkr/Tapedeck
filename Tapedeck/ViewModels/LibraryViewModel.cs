@@ -29,6 +29,7 @@ public enum TrackFilter
 public partial class LibraryViewModel(
     ITrackRepository repository,
     TrackImportService importer,
+    CsvImportService csvImporter,
     DownloadService downloader,
     ToolSetup toolSetup,
     AppPaths paths,
@@ -229,26 +230,36 @@ public partial class LibraryViewModel(
         }
     }
 
-    private static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
+    public static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
 
     [RelayCommand]
     private async Task ExportCsvAsync()
     {
-        var path = await platform.PickSaveFileAsync(Strings.Csv_ExportTitle, Strings.Csv_DefaultFileName, CsvFilter);
-        if (path is null)
-            return;
+        this.Notice = await this.SaveCsvAsync(repository.ListDisplayAsync, Strings.Csv_DefaultFileName);
+    }
 
-        this.Notice = null;
+    /// <summary>
+    /// Asks where to save and writes the tracks as CSV, in the given order; used for the whole library and for a playlist.
+    /// </summary>
+    /// <param name="loadTracks">Loaded only once the file was chosen, so the export has the latest values.</param>
+    /// <returns>Why the file could not be written, or <c>null</c>.</returns>
+    public async Task<string?> SaveCsvAsync(Func<Task<IReadOnlyList<TrackDisplay>>> loadTracks, string defaultFileName)
+    {
+        var path = await platform.PickSaveFileAsync(Strings.Csv_ExportTitle, defaultFileName, CsvFilter);
+        if (path is null)
+            return null;
+
         try
         {
-            var tracks = await repository.ListDisplayAsync();
+            var tracks = await loadTracks();
             await using (var writer = new StreamWriter(path, append: false, CsvFormat.ENCODING))
                 LibraryCsv.Export(tracks, writer);
             activity.Confirm(string.Format(Strings.Confirm_Exported, tracks.Count));
+            return null;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            this.Notice = string.Format(Strings.Notice_ExportFailed, ex.Message);
+            return string.Format(Strings.Notice_ExportFailed, ex.Message);
         }
     }
 
@@ -310,43 +321,19 @@ public partial class LibraryViewModel(
 
     private async Task<int> ImportTracksAsync(IReadOnlyList<CsvTrack> rows, List<string> errors)
     {
-        var known = (await repository.ListDisplayAsync()).ToDictionary(t => t.VideoId, t => t.Id);
-        var imported = 0;
-        using var progress = activity.Begin(string.Format(Strings.Activity_Importing, 0, rows.Count));
-        for (var i = 0; i < rows.Count; i++)
-        {
-            var row = rows[i];
-            progress.Update(string.Format(Strings.Activity_Importing, i + 1, rows.Count));
-            try
-            {
-                if (!known.TryGetValue(row.VideoId, out var id))
-                {
-                    id = await importer.AddAsync(row.Url);
-                    known[row.VideoId] = id;
-                }
-
-                if (await repository.GetDisplayAsync(id) is { } current)
-                {
-                    var corrections = LibraryCsv.Corrections(row, current);
-                    if (corrections.Fields is { } fields)
-                        await repository.SetUserFieldsAsync(id, fields);
-                    if (corrections.Genres is { } genres)
-                        await repository.SetUserTagsAsync(id, genres);
-                    if (corrections.Rating is { } rating)
-                        await repository.SetRatingAsync(id, rating);
-                }
-                imported++;
-            }
-            catch (Exception ex)
-            {
-                errors.Add(string.Format(Strings.Csv_ErrorLine, row.Line, ex.Message));
-            }
-        }
-
-        return imported;
+        CsvImportResult result;
+        using (var progress = activity.Begin(string.Format(Strings.Activity_Importing, 0, rows.Count)))
+            result = await csvImporter.ImportAsync(rows, new Progress<int>(done =>
+                progress.Update(string.Format(Strings.Activity_Importing, done, rows.Count))));
+        errors.AddRange(result.Errors.Select(Describe));
+        return result.TrackIds.Count;
     }
 
-    private static string Describe(CsvError error)
+    /// <summary>A failed CSV row for the notice, with its line number.</summary>
+    public static string Describe(CsvImportError error) => string.Format(Strings.Csv_ErrorLine, error.Line, error.Message);
+
+    /// <summary>A CSV row that could not be read, with its line number.</summary>
+    public static string Describe(CsvError error)
     {
         var problem = error.Problem switch
         {
@@ -414,6 +401,25 @@ public partial class LibraryViewModel(
         this.all.Clear();
         this.all.AddRange(rows);
         this.OnTracksChanged();
+    }
+
+    /// <summary>
+    /// Takes over existing files and shows the current values of these tracks, e.g. after a playlist's CSV import
+    /// changed corrections of known tracks. New tracks get rows, existing rows stay shared.
+    /// </summary>
+    public async Task RefreshTracksAsync(IReadOnlyList<long> trackIds)
+    {
+        try
+        {
+            await fileFinder.AdoptAsync(trackIds);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // the folder cannot be read; the tracks can still be downloaded
+        }
+        await this.AddNewTracksAsync();
+        foreach (var id in trackIds.Distinct())
+            await this.RefreshRowAsync(id);
     }
 
     /// <summary>The shared row of a track, so other pages show the same status and progress.</summary>

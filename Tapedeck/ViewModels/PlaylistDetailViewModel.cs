@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Csv;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
 using Tapedeck.Resources;
@@ -28,6 +30,7 @@ public partial class PlaylistDetailViewModel(
     long playlistId,
     IPlaylistRepository repository,
     PlaylistImportService importer,
+    CsvImportService csvImporter,
     LibraryViewModel library,
     PlaylistsViewModel playlists,
     ActivityService activity,
@@ -155,6 +158,48 @@ public partial class PlaylistDetailViewModel(
         });
     }
 
+    /// <summary>
+    /// Adds the tracks of a CSV file in file order, like the library's CSV import (corrections, genres, ratings);
+    /// files already in the library folder are taken over. Rows that fail are listed in <see cref="Notice"/>.
+    /// </summary>
+    public async Task ImportCsvAsync(CsvReadResult csv, string name)
+    {
+        var errors = csv.Errors.Select(LibraryViewModel.Describe).ToList();
+        var trackIds = new List<long>();
+        var added = 0;
+        this.Notice = null;
+        this.IsSyncing = true;
+        try
+        {
+            CsvImportResult result;
+            using (var progress = activity.Begin(string.Format(Strings.Activity_Importing, 0, csv.Tracks.Count)))
+                result = await csvImporter.ImportAsync(csv.Tracks, new Progress<int>(done =>
+                    progress.Update(string.Format(Strings.Activity_Importing, done, csv.Tracks.Count))));
+            trackIds.AddRange(result.TrackIds);
+            errors.AddRange(result.Errors.Select(LibraryViewModel.Describe));
+            added = await repository.AddTracksAsync(playlistId, result.TrackIds);
+        }
+        catch (Exception ex)
+        {
+            errors.Add(ex.Message);
+        }
+        finally
+        {
+            this.IsSyncing = false;
+            await library.RefreshTracksAsync(trackIds);
+            await this.ChangedAsync();
+        }
+
+        if (errors.Count > 0)
+        {
+            var shown = string.Join("; ", errors.Take(3)) + (errors.Count > 3 ? " …" : string.Empty);
+            this.Notice = string.Format(Strings.Notice_ImportResult, trackIds.Count, errors.Count, shown);
+        }
+        activity.Confirm(added == 1
+            ? string.Format(Strings.Confirm_PlaylistImported_One, name)
+            : string.Format(Strings.Confirm_PlaylistImported_Other, name, added));
+    }
+
     /// <summary>Downloads the playlist's pending and missing tracks with the library's download logic.</summary>
     [RelayCommand]
     private async Task DownloadAsync()
@@ -165,6 +210,14 @@ public partial class PlaylistDetailViewModel(
             .ToList();
         await library.DownloadTracksAsync(rows);
         await this.LoadAsync();
+    }
+
+    /// <summary>Exports the playlist's tracks in their order as CSV, as <c>Tapedeck-name.csv</c>.</summary>
+    [RelayCommand]
+    private async Task ExportCsvAsync()
+    {
+        this.Notice = await library.SaveCsvAsync(() => repository.GetTracksAsync(playlistId),
+            string.Format(Strings.Csv_PlaylistFileName, FileNaming.Slug(this.Name)));
     }
 
     [RelayCommand]

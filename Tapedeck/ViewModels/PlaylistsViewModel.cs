@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.IO;
 using Tapedeck.Core;
+using Tapedeck.Core.Csv;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
@@ -54,6 +56,10 @@ public partial class PlaylistsViewModel(
 
     public bool IsEmpty => this.Playlists.Count == 0;
 
+    /// <summary>Why a CSV file could not be imported, shown below the header.</summary>
+    [ObservableProperty]
+    public partial string? Notice { get; private set; }
+
     [RelayCommand]
     private async Task LoadAsync()
     {
@@ -101,6 +107,72 @@ public partial class PlaylistsViewModel(
             }));
         if (link is not null && source is not null)
             await this.ImportAsync(source);
+    }
+
+    /// <summary>
+    /// Creates a playlist from a CSV file, e.g. one exported from a playlist page. The name is suggested from the
+    /// file name and can be changed; the tracks are added in file order on the new playlist's page.
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportFromCsvAsync()
+    {
+        var path = await platform.PickOpenFileAsync(Strings.Csv_ImportTitle, LibraryViewModel.CsvFilter);
+        if (path is null)
+            return;
+
+        this.Notice = null;
+        CsvReadResult csv;
+        try
+        {
+            using var reader = new StreamReader(path, detectEncodingFromByteOrderMarks: true);
+            csv = LibraryCsv.Read(reader);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            this.Notice = string.Format(Strings.Notice_ImportResult, 0, 0, ex.Message);
+            return;
+        }
+
+        if (csv.Tracks.Count == 0)
+        {
+            this.Notice = csv.Errors.Count == 0
+                ? Strings.Notice_CsvNoTracks
+                : string.Format(Strings.Notice_ImportResult, 0, csv.Errors.Count,
+                    string.Join("; ", csv.Errors.Take(3).Select(LibraryViewModel.Describe)));
+            return;
+        }
+
+        var name = await dialogs.PromptAsync(new PromptRequest(
+            Strings.Prompt_CsvPlaylistTitle, Strings.Prompt_PlaylistName, Strings.Prompt_Create,
+            await this.FreeNameAsync(SuggestedName(path)),
+            text => this.ValidateNameAsync(text, exceptId: null)));
+        if (name is null)
+            return;
+
+        try
+        {
+            await toolSetup.EnsureAsync();
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_ImportResult, 0, csv.Tracks.Count, ex.Message);
+            return;
+        }
+
+        var id = await repository.CreateAsync(name);
+        await this.ChangedAsync();
+        await this.Open(id).ImportCsvAsync(csv, name);
+    }
+
+    /// <summary>"Tapedeck-road-trip.csv" becomes "Road Trip", the reverse of the playlist export's file name.</summary>
+    private static string SuggestedName(string path)
+    {
+        var prefix = Strings.Csv_PlaylistFileName.Split("{0}")[0];
+        var fileName = Path.GetFileNameWithoutExtension(path);
+        if (fileName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            fileName = fileName[prefix.Length..];
+        var name = FileNaming.NameFromSlug(fileName);
+        return name.Length > 0 ? name : Path.GetFileNameWithoutExtension(path);
     }
 
     /// <summary>Reads the videos of a YouTube playlist; installs the tools first if needed.</summary>
