@@ -12,6 +12,12 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
+    <!-- License texts shown in the settings, offline: the bundled libraries' licenses and Tapedeck's own LICENSE -->
+    <ItemGroup>
+        <EmbeddedResource Include="Licenses\*.txt" LogicalName="Tapedeck.Licenses.%(Filename)%(Extension)" />
+        <EmbeddedResource Include="..\LICENSE" LogicalName="Tapedeck.Licenses.tapedeck.txt" Link="Licenses\LICENSE" />
+    </ItemGroup>
+
     <!-- UI texts: Strings.resx is English, Strings.<culture>.resx the translations.
          Rider and Visual Studio regenerate Strings.Designer.cs (class Tapedeck.Resources.Strings) when Strings.resx is saved. -->
     <ItemGroup>
