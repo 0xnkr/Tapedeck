@@ -892,4 +892,16 @@
     <value>Adds the new videos of the YouTube playlist. Nothing is removed or reordered.</value>
     <comment>Tooltip of Playlist_Sync</comment>
   </data>
+  <data name="Confirm_ImportedWithFiles" xml:space="preserve">
+    <value>{0} tracks imported, {1} files found in the library folder</value>
+    <comment>Activity toast after a CSV import; {0} imported tracks, {1} tracks whose file was already in the library folder</comment>
+  </data>
+  <data name="Confirm_FilesFound_One" xml:space="preserve">
+    <value>1 file found in the library folder, no download needed</value>
+    <comment>Activity toast when a track's file already exists instead of downloading it</comment>
+  </data>
+  <data name="Confirm_FilesFound_Other" xml:space="preserve">
+    <value>{0} files found in the library folder, no download needed</value>
+    <comment>Activity toast when tracks' files already exist; {0} count</comment>
+  </data>
 </root>
