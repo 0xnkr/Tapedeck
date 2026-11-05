@@ -696,4 +696,58 @@
   <data name="Notice_CsvNoTracks" xml:space="preserve">
     <value>Die Datei enthält keine Titel.</value>
   </data>
+  <data name="Credit_Tapedeck" xml:space="preserve">
+    <value>Deine YouTube-Links als Musikbibliothek</value>
+  </data>
+  <data name="Credit_SkiaSharp" xml:space="preserve">
+    <value>Zeichnet die Oberfläche</value>
+  </data>
+  <data name="Credit_Skia" xml:space="preserve">
+    <value>Grafik-Engine hinter SkiaSharp</value>
+  </data>
+  <data name="Credit_HarfBuzzSharp" xml:space="preserve">
+    <value>Verbindet .NET mit HarfBuzz</value>
+  </data>
+  <data name="Credit_HarfBuzz" xml:space="preserve">
+    <value>Setzt den Text</value>
+  </data>
+  <data name="Credit_Angle" xml:space="preserve">
+    <value>OpenGL unter Windows über DirectX</value>
+  </data>
+  <data name="Credit_SQLitePCLRaw" xml:space="preserve">
+    <value>Liefert SQLite für .NET mit</value>
+  </data>
+  <data name="Credit_NewtonsoftJson" xml:space="preserve">
+    <value>Liest JSON für YoutubeDLSharp</value>
+  </data>
+  <data name="Credit_MicroCom" xml:space="preserve">
+    <value>Spricht mit nativen Windows-Schnittstellen</value>
+  </data>
+  <data name="Credit_TmdsDBus" xml:space="preserve">
+    <value>Spricht mit dem Linux-Desktop</value>
+  </data>
+  <data name="Settings_CreditsAlso" xml:space="preserve">
+    <value>Außerdem enthalten</value>
+  </data>
+  <data name="Settings_CreditsAlsoHint" xml:space="preserve">
+    <value>Diese Bibliotheken kommen mit den obigen und stecken ebenfalls in Tapedeck.exe.</value>
+  </data>
+  <data name="Settings_CreditLicense" xml:space="preserve">
+    <value>{0}-Lizenz von {1} anzeigen</value>
+  </data>
+  <data name="License_Title" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="License_Copy" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="License_ReadFailed" xml:space="preserve">
+    <value>Der Lizenztext ließ sich nicht lesen: {0}</value>
+  </data>
+  <data name="Dialog_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Confirm_LicenseCopied" xml:space="preserve">
+    <value>Lizenztext kopiert</value>
+  </data>
 </root>
