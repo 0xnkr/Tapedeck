@@ -672,4 +672,13 @@
   <data name="Playlist_SyncHint" xml:space="preserve">
     <value>Fügt die neuen Videos der YouTube-Playlist hinzu. Nichts wird entfernt oder umsortiert.</value>
   </data>
+  <data name="Confirm_ImportedWithFiles" xml:space="preserve">
+    <value>{0} Titel importiert, {1} Dateien im Bibliotheksordner gefunden</value>
+  </data>
+  <data name="Confirm_FilesFound_One" xml:space="preserve">
+    <value>1 Datei im Bibliotheksordner gefunden, kein Download nötig</value>
+  </data>
+  <data name="Confirm_FilesFound_Other" xml:space="preserve">
+    <value>{0} Dateien im Bibliotheksordner gefunden, kein Download nötig</value>
+  </data>
 </root>

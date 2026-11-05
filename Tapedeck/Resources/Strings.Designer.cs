@@ -229,11 +229,38 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1 file found in the library folder, no download needed.
+        /// </summary>
+        public static string Confirm_FilesFound_One {
+            get {
+                return ResourceManager.GetString("Confirm_FilesFound_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} files found in the library folder, no download needed.
+        /// </summary>
+        public static string Confirm_FilesFound_Other {
+            get {
+                return ResourceManager.GetString("Confirm_FilesFound_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} tracks imported.
         /// </summary>
         public static string Confirm_Imported {
             get {
                 return ResourceManager.GetString("Confirm_Imported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks imported, {1} files found in the library folder.
+        /// </summary>
+        public static string Confirm_ImportedWithFiles {
+            get {
+                return ResourceManager.GetString("Confirm_ImportedWithFiles", resourceCulture);
             }
         }
         
