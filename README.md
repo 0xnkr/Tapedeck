@@ -15,6 +15,10 @@ Paste a link, get a clean, tagged Opus file and a library your phone actually un
 [![License: MIT](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
 [![Changelog](https://img.shields.io/badge/changelog-keep%20a%20changelog-E05735)](CHANGELOG.md)
 
+<br />
+
+<img src="docs/tapedeck-screenshot.png" alt="Tapedeck showing a playlist linked to YouTube, with all 40 tracks downloaded" width="900" />
+
 </div>
 
 ---
