@@ -924,4 +924,76 @@
     <value>The file contains no tracks.</value>
     <comment>Error when a CSV file has no rows</comment>
   </data>
+  <data name="Credit_Tapedeck" xml:space="preserve">
+    <value>Your YouTube links as a music library</value>
+    <comment>Credits: purpose of Tapedeck itself</comment>
+  </data>
+  <data name="Credit_SkiaSharp" xml:space="preserve">
+    <value>Draws the interface</value>
+    <comment>Credits: purpose of SkiaSharp</comment>
+  </data>
+  <data name="Credit_Skia" xml:space="preserve">
+    <value>Graphics engine behind SkiaSharp</value>
+    <comment>Credits: purpose of Skia</comment>
+  </data>
+  <data name="Credit_HarfBuzzSharp" xml:space="preserve">
+    <value>Connects .NET to HarfBuzz</value>
+    <comment>Credits: purpose of HarfBuzzSharp</comment>
+  </data>
+  <data name="Credit_HarfBuzz" xml:space="preserve">
+    <value>Lays out text</value>
+    <comment>Credits: purpose of HarfBuzz</comment>
+  </data>
+  <data name="Credit_Angle" xml:space="preserve">
+    <value>OpenGL on Windows via DirectX</value>
+    <comment>Credits: purpose of ANGLE</comment>
+  </data>
+  <data name="Credit_SQLitePCLRaw" xml:space="preserve">
+    <value>Bundles SQLite for .NET</value>
+    <comment>Credits: purpose of SQLitePCLRaw</comment>
+  </data>
+  <data name="Credit_NewtonsoftJson" xml:space="preserve">
+    <value>Reads JSON for YoutubeDLSharp</value>
+    <comment>Credits: purpose of Newtonsoft.Json</comment>
+  </data>
+  <data name="Credit_MicroCom" xml:space="preserve">
+    <value>Talks to native Windows interfaces</value>
+    <comment>Credits: purpose of MicroCom.Runtime</comment>
+  </data>
+  <data name="Credit_TmdsDBus" xml:space="preserve">
+    <value>Talks to the Linux desktop</value>
+    <comment>Credits: purpose of Tmds.DBus.Protocol</comment>
+  </data>
+  <data name="Settings_CreditsAlso" xml:space="preserve">
+    <value>Also included</value>
+    <comment>Credits: heading of the libraries that come along with the others</comment>
+  </data>
+  <data name="Settings_CreditsAlsoHint" xml:space="preserve">
+    <value>These libraries come along with the ones above and are part of Tapedeck.exe.</value>
+    <comment>Credits: hint below Settings_CreditsAlso</comment>
+  </data>
+  <data name="Settings_CreditLicense" xml:space="preserve">
+    <value>Show the {0} license of {1}</value>
+    <comment>Tooltip of the license pill; {0} license name, {1} project name</comment>
+  </data>
+  <data name="License_Title" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>License dialog title; {0} project name, {1} license name</comment>
+  </data>
+  <data name="License_Copy" xml:space="preserve">
+    <value>Copy</value>
+    <comment>License dialog button</comment>
+  </data>
+  <data name="License_ReadFailed" xml:space="preserve">
+    <value>The license text could not be read: {0}</value>
+    <comment>License dialog error; {0} error message</comment>
+  </data>
+  <data name="Dialog_Close" xml:space="preserve">
+    <value>Close</value>
+    <comment>Button that closes a dialog</comment>
+  </data>
+  <data name="Confirm_LicenseCopied" xml:space="preserve">
+    <value>License text copied</value>
+    <comment>Activity toast</comment>
+  </data>
 </root>

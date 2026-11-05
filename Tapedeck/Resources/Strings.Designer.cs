@@ -274,6 +274,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License text copied.
+        /// </summary>
+        public static string Confirm_LicenseCopied {
+            get {
+                return ResourceManager.GetString("Confirm_LicenseCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to “{0}” deleted.
         /// </summary>
         public static string Confirm_PlaylistDeleted {
@@ -346,6 +355,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OpenGL on Windows via DirectX.
+        /// </summary>
+        public static string Credit_Angle {
+            get {
+                return ResourceManager.GetString("Credit_Angle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cross-platform user interface.
         /// </summary>
         public static string Credit_Avalonia {
@@ -400,11 +418,38 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lays out text.
+        /// </summary>
+        public static string Credit_HarfBuzz {
+            get {
+                return ResourceManager.GetString("Credit_HarfBuzz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connects .NET to HarfBuzz.
+        /// </summary>
+        public static string Credit_HarfBuzzSharp {
+            get {
+                return ResourceManager.GetString("Credit_HarfBuzzSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Typeface of the interface.
         /// </summary>
         public static string Credit_Inter {
             get {
                 return ResourceManager.GetString("Credit_Inter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Talks to native Windows interfaces.
+        /// </summary>
+        public static string Credit_MicroCom {
+            get {
+                return ResourceManager.GetString("Credit_MicroCom", resourceCulture);
             }
         }
         
@@ -418,6 +463,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reads JSON for YoutubeDLSharp.
+        /// </summary>
+        public static string Credit_NewtonsoftJson {
+            get {
+                return ResourceManager.GetString("Credit_NewtonsoftJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stores the library.
         /// </summary>
         public static string Credit_SQLite {
@@ -427,11 +481,56 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bundles SQLite for .NET.
+        /// </summary>
+        public static string Credit_SQLitePCLRaw {
+            get {
+                return ResourceManager.GetString("Credit_SQLitePCLRaw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Graphics engine behind SkiaSharp.
+        /// </summary>
+        public static string Credit_Skia {
+            get {
+                return ResourceManager.GetString("Credit_Skia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draws the interface.
+        /// </summary>
+        public static string Credit_SkiaSharp {
+            get {
+                return ResourceManager.GetString("Credit_SkiaSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Writes tags into the audio files.
         /// </summary>
         public static string Credit_TagLibSharp {
             get {
                 return ResourceManager.GetString("Credit_TagLibSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your YouTube links as a music library.
+        /// </summary>
+        public static string Credit_Tapedeck {
+            get {
+                return ResourceManager.GetString("Credit_Tapedeck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Talks to the Linux desktop.
+        /// </summary>
+        public static string Credit_TmdsDBus {
+            get {
+                return ResourceManager.GetString("Credit_TmdsDBus", resourceCulture);
             }
         }
         
@@ -751,6 +850,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Dialog_Close {
+            get {
+                return ResourceManager.GetString("Dialog_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
         public static string Field_Album {
@@ -1053,6 +1161,33 @@ namespace Tapedeck.Resources {
         public static string Library_TrackList {
             get {
                 return ResourceManager.GetString("Library_TrackList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string License_Copy {
+            get {
+                return ResourceManager.GetString("License_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The license text could not be read: {0}.
+        /// </summary>
+        public static string License_ReadFailed {
+            get {
+                return ResourceManager.GetString("License_ReadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} · {1}.
+        /// </summary>
+        public static string License_Title {
+            get {
+                return ResourceManager.GetString("License_Title", resourceCulture);
             }
         }
         
@@ -1723,6 +1858,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show the {0} license of {1}.
+        /// </summary>
+        public static string Settings_CreditLicense {
+            get {
+                return ResourceManager.GetString("Settings_CreditLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open the website of {0}.
         /// </summary>
         public static string Settings_CreditOpen {
@@ -1737,6 +1881,24 @@ namespace Tapedeck.Resources {
         public static string Settings_Credits {
             get {
                 return ResourceManager.GetString("Settings_Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also included.
+        /// </summary>
+        public static string Settings_CreditsAlso {
+            get {
+                return ResourceManager.GetString("Settings_CreditsAlso", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These libraries come along with the ones above and are part of Tapedeck.exe..
+        /// </summary>
+        public static string Settings_CreditsAlsoHint {
+            get {
+                return ResourceManager.GetString("Settings_CreditsAlsoHint", resourceCulture);
             }
         }
         
