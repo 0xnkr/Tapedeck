@@ -904,4 +904,24 @@
     <value>{0} files found in the library folder, no download needed</value>
     <comment>Activity toast when tracks' files already exist; {0} count</comment>
   </data>
+  <data name="Csv_PlaylistFileName" xml:space="preserve">
+    <value>Tapedeck-{0}.csv</value>
+    <comment>Suggested file name of a playlist CSV export; {0} playlist name in lower case ASCII, e.g. road-trip</comment>
+  </data>
+  <data name="Playlists_FromCsv" xml:space="preserve">
+    <value>From CSV</value>
+    <comment>Playlists page button that creates a playlist from a CSV file</comment>
+  </data>
+  <data name="Playlists_FromCsvHint" xml:space="preserve">
+    <value>Create a playlist from a CSV file, e.g. a playlist export</value>
+    <comment>Tooltip of Playlists_FromCsv</comment>
+  </data>
+  <data name="Prompt_CsvPlaylistTitle" xml:space="preserve">
+    <value>Playlist from CSV</value>
+    <comment>Prompt dialog title when creating a playlist from a CSV file</comment>
+  </data>
+  <data name="Notice_CsvNoTracks" xml:space="preserve">
+    <value>The file contains no tracks.</value>
+    <comment>Error when a CSV file has no rows</comment>
+  </data>
 </root>
