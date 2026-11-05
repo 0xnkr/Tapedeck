@@ -17,6 +17,8 @@ public interface IPlatformService
 {
     Task<string?> GetClipboardTextAsync();
 
+    Task SetClipboardTextAsync(string text);
+
     Task OpenUrlAsync(string url);
 
     Task OpenFolderAsync(string path);
@@ -38,6 +40,12 @@ public sealed class PlatformService : IPlatformService
 
     public async Task<string?> GetClipboardTextAsync() =>
         MainWindow?.Clipboard is { } clipboard ? await clipboard.TryGetTextAsync() : null;
+
+    public async Task SetClipboardTextAsync(string text)
+    {
+        if (MainWindow?.Clipboard is { } clipboard)
+            await clipboard.SetTextAsync(text);
+    }
 
     public async Task OpenUrlAsync(string url)
     {

@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.LicenseDialogView"
+             x:DataType="vm:LicenseDialogViewModel">
+
+    <!-- Scrim over the window, the license text on an island in the middle -->
+    <Panel>
+        <Border Background="{DynamicResource Brush.Bg}" Opacity="0.7" />
+        <controls:Island Classes="large"
+                         Width="640"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
+            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="{StaticResource Space.4}">
+                <StackPanel Spacing="{StaticResource Space.1}">
+                    <TextBlock Classes="title" Text="{Binding Title}" TextWrapping="Wrap" />
+                    <TextBlock Classes="support"
+                               Text="{Binding Copyright}"
+                               Foreground="{DynamicResource Brush.Text2}"
+                               TextWrapping="Wrap"
+                               IsVisible="{Binding Copyright, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </StackPanel>
+
+                <Border Grid.Row="1" Classes="code" MaxHeight="420">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                        <SelectableTextBlock Classes="mono"
+                                             Text="{Binding Text}"
+                                             TextWrapping="Wrap" />
+                    </ScrollViewer>
+                </Border>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="{StaticResource Space.2}" HorizontalAlignment="Right">
+                    <Button Content="{x:Static res:Strings.License_Copy}"
+                            Command="{Binding CopyCommand}" />
+                    <Button Name="CloseButton"
+                            Classes="tonal"
+                            Content="{x:Static res:Strings.Dialog_Close}"
+                            Command="{Binding CloseCommand}"
+                            IsDefault="True" />
+                </StackPanel>
+            </Grid>
+        </controls:Island>
+    </Panel>
+</UserControl>

@@ -59,8 +59,8 @@
         <Setter Property="LetterSpacing" Value="0.3" />
     </Style>
 
-    <!-- File names, paths, video IDs, versions. -->
-    <Style Selector="TextBlock.mono">
+    <!-- File names, paths, video IDs, versions; also selectable text like license texts. -->
+    <Style Selector=":is(TextBlock).mono">
         <Setter Property="FontFamily" Value="{DynamicResource Font.Mono}" />
         <Setter Property="FontSize" Value="13" />
         <Setter Property="LineHeight" Value="18" />
