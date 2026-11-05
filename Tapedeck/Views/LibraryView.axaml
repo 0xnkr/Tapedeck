@@ -59,8 +59,21 @@
                                      IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
                         <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
                                      IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
+                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Suggested}"
+                                     IsVisible="{Binding HasSuggestions}"
+                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{StaticResource Space.1}">
+                        <Button Classes="text"
+                                Content="{x:Static res:Strings.Library_MatchMusicBrainz}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
+                                Command="{Binding MatchMusicBrainzCommand}"
+                                IsVisible="{Binding !IsMatching}" />
+                        <Button Classes="danger"
+                                Content="{x:Static res:Strings.Library_CancelMatching}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
+                                Command="{Binding CancelMatchingCommand}"
+                                IsVisible="{Binding IsMatching}" />
                         <Button Classes="text"
                                 Content="{x:Static res:Strings.Library_DownloadMissing}"
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"

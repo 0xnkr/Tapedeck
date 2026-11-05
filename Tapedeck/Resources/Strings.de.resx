@@ -750,4 +750,100 @@
   <data name="Confirm_LicenseCopied" xml:space="preserve">
     <value>Lizenztext kopiert</value>
   </data>
+  <data name="Library_MatchMusicBrainz" xml:space="preserve">
+    <value>Alle mit MusicBrainz abgleichen</value>
+  </data>
+  <data name="Library_CancelMatching" xml:space="preserve">
+    <value>Abgleich stoppen</value>
+  </data>
+  <data name="Filter_Suggested" xml:space="preserve">
+    <value>Vorschläge</value>
+  </data>
+  <data name="Activity_MatchingMusicBrainz" xml:space="preserve">
+    <value>MusicBrainz {0}/{1} …</value>
+  </data>
+  <data name="Activity_SearchingMusicBrainz" xml:space="preserve">
+    <value>Suche auf MusicBrainz …</value>
+  </data>
+  <data name="Confirm_MatchedMusicBrainz" xml:space="preserve">
+    <value>MusicBrainz: {0} zugeordnet, {1} zu bestätigen, {2} nicht gefunden</value>
+  </data>
+  <data name="Confirm_MbApplied" xml:space="preserve">
+    <value>„{0}“ zugeordnet</value>
+  </data>
+  <data name="Notice_MusicBrainzFailed" xml:space="preserve">
+    <value>MusicBrainz ist nicht erreichbar: {0}</value>
+  </data>
+  <data name="Detail_MusicBrainz" xml:space="preserve">
+    <value>MusicBrainz</value>
+  </data>
+  <data name="Detail_CoverFromMusicBrainz" xml:space="preserve">
+    <value>Quadratisch, aus dem Cover Art Archive</value>
+  </data>
+  <data name="Mb_StateNone" xml:space="preserve">
+    <value>Noch nicht abgeglichen</value>
+  </data>
+  <data name="Mb_StateMatched" xml:space="preserve">
+    <value>Zugeordnet</value>
+  </data>
+  <data name="Mb_StateSuggested" xml:space="preserve">
+    <value>Bitte bestätigen</value>
+  </data>
+  <data name="Mb_StateNoMatch" xml:space="preserve">
+    <value>Nicht gefunden</value>
+  </data>
+  <data name="Mb_StateRejected" xml:space="preserve">
+    <value>Kein Treffer</value>
+  </data>
+  <data name="Mb_HintNone" xml:space="preserve">
+    <value>Ergänzt Album, Jahr, Titelnummer und Genres und bringt ein quadratisches Cover mit.</value>
+  </data>
+  <data name="Mb_HintSuggested" xml:space="preserve">
+    <value>Nicht sicher genug für eine automatische Zuordnung. Ist es einer davon?</value>
+  </data>
+  <data name="Mb_HintNoMatch" xml:space="preserve">
+    <value>MusicBrainz kennt keine passende Aufnahme. Artist oder Titel korrigieren und erneut suchen.</value>
+  </data>
+  <data name="Mb_HintRejected" xml:space="preserve">
+    <value>Keine Zuordnung. Der Abgleich der ganzen Bibliothek überspringt diesen Titel.</value>
+  </data>
+  <data name="Mb_Search" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="Mb_SearchAgain" xml:space="preserve">
+    <value>Erneut suchen</value>
+  </data>
+  <data name="Mb_Apply" xml:space="preserve">
+    <value>Übernehmen</value>
+  </data>
+  <data name="Mb_NoneOfThese" xml:space="preserve">
+    <value>Keiner davon</value>
+  </data>
+  <data name="Mb_Unlink" xml:space="preserve">
+    <value>Zuordnung entfernen</value>
+  </data>
+  <data name="Mb_Open" xml:space="preserve">
+    <value>Auf MusicBrainz öffnen</value>
+  </data>
+  <data name="Mb_TrackNumber" xml:space="preserve">
+    <value>Titel {0}</value>
+  </data>
+  <data name="Mb_Score" xml:space="preserve">
+    <value>{0} % Übereinstimmung</value>
+  </data>
+  <data name="Settings_MusicBrainzHint" xml:space="preserve">
+    <value>Album, Jahr, Genres und quadratische Cover aus der freien Musikdatenbank. Neue Titel werden nach dem Hinzufügen nachgeschlagen, eine Anfrage pro Sekunde.</value>
+  </data>
+  <data name="Settings_MusicBrainzAuto" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="MatchAll_Title" xml:space="preserve">
+    <value>Alle Titel mit MusicBrainz abgleichen?</value>
+  </data>
+  <data name="MatchAll_Message" xml:space="preserve">
+    <value>{0} Titel werden nacheinander im Hintergrund nachgeschlagen, das dauert etwa {1} Min. Bestehende Zuordnungen bleiben, wenn nichts Sicheres gefunden wird, und bekommen Genres und Cover aufgefrischt. Abgelehnte Titel werden übersprungen.</value>
+  </data>
+  <data name="MatchAll_Confirm" xml:space="preserve">
+    <value>Starten</value>
+  </data>
 </root>

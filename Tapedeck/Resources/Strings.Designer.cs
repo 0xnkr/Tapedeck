@@ -103,6 +103,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz {0}/{1} ….
+        /// </summary>
+        public static string Activity_MatchingMusicBrainz {
+            get {
+                return ResourceManager.GetString("Activity_MatchingMusicBrainz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moving files {0}/{1} ….
         /// </summary>
         public static string Activity_MovingLibrary {
@@ -117,6 +126,15 @@ namespace Tapedeck.Resources {
         public static string Activity_ReadingPlaylist {
             get {
                 return ResourceManager.GetString("Activity_ReadingPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching MusicBrainz ….
+        /// </summary>
+        public static string Activity_SearchingMusicBrainz {
+            get {
+                return ResourceManager.GetString("Activity_SearchingMusicBrainz", resourceCulture);
             }
         }
         
@@ -279,6 +297,24 @@ namespace Tapedeck.Resources {
         public static string Confirm_LicenseCopied {
             get {
                 return ResourceManager.GetString("Confirm_LicenseCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz: {0} matched, {1} to confirm, {2} not found.
+        /// </summary>
+        public static string Confirm_MatchedMusicBrainz {
+            get {
+                return ResourceManager.GetString("Confirm_MatchedMusicBrainz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” matched.
+        /// </summary>
+        public static string Confirm_MbApplied {
+            get {
+                return ResourceManager.GetString("Confirm_MbApplied", resourceCulture);
             }
         }
         
@@ -697,6 +733,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Square, from the Cover Art Archive.
+        /// </summary>
+        public static string Detail_CoverFromMusicBrainz {
+            get {
+                return ResourceManager.GetString("Detail_CoverFromMusicBrainz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From thumbnail (16:9).
         /// </summary>
         public static string Detail_CoverFromThumbnail {
@@ -756,6 +801,15 @@ namespace Tapedeck.Resources {
         public static string Detail_MetadataHint {
             get {
                 return ResourceManager.GetString("Detail_MetadataHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz.
+        /// </summary>
+        public static string Detail_MusicBrainz {
+            get {
+                return ResourceManager.GetString("Detail_MusicBrainz", resourceCulture);
             }
         }
         
@@ -958,6 +1012,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suggestions.
+        /// </summary>
+        public static string Filter_Suggested {
+            get {
+                return ResourceManager.GetString("Filter_Suggested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genre.
         /// </summary>
         public static string Genre_Add {
@@ -999,6 +1062,15 @@ namespace Tapedeck.Resources {
         public static string Library_CancelDownloads {
             get {
                 return ResourceManager.GetString("Library_CancelDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop matching.
+        /// </summary>
+        public static string Library_CancelMatching {
+            get {
+                return ResourceManager.GetString("Library_CancelMatching", resourceCulture);
             }
         }
         
@@ -1071,6 +1143,15 @@ namespace Tapedeck.Resources {
         public static string Library_LinkPlaceholder {
             get {
                 return ResourceManager.GetString("Library_LinkPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Match all with MusicBrainz.
+        /// </summary>
+        public static string Library_MatchMusicBrainz {
+            get {
+                return ResourceManager.GetString("Library_MatchMusicBrainz", resourceCulture);
             }
         }
         
@@ -1219,6 +1300,186 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string MatchAll_Confirm {
+            get {
+                return ResourceManager.GetString("MatchAll_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks are looked up one after another in the background, which takes about {1} min. Existing matches stay when nothing certain is found, and get their genres and covers refreshed. Tracks you declined are skipped..
+        /// </summary>
+        public static string MatchAll_Message {
+            get {
+                return ResourceManager.GetString("MatchAll_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Match all tracks with MusicBrainz?.
+        /// </summary>
+        public static string MatchAll_Title {
+            get {
+                return ResourceManager.GetString("MatchAll_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string Mb_Apply {
+            get {
+                return ResourceManager.GetString("Mb_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz knows no fitting recording. Correct artist or title, then search again..
+        /// </summary>
+        public static string Mb_HintNoMatch {
+            get {
+                return ResourceManager.GetString("Mb_HintNoMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fills in album, year, track number and genres and brings a square cover..
+        /// </summary>
+        public static string Mb_HintNone {
+            get {
+                return ResourceManager.GetString("Mb_HintNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No match applied. Matching the whole library skips this track..
+        /// </summary>
+        public static string Mb_HintRejected {
+            get {
+                return ResourceManager.GetString("Mb_HintRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not certain enough to apply on its own. Is it one of these?.
+        /// </summary>
+        public static string Mb_HintSuggested {
+            get {
+                return ResourceManager.GetString("Mb_HintSuggested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of these.
+        /// </summary>
+        public static string Mb_NoneOfThese {
+            get {
+                return ResourceManager.GetString("Mb_NoneOfThese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open on MusicBrainz.
+        /// </summary>
+        public static string Mb_Open {
+            get {
+                return ResourceManager.GetString("Mb_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} % match.
+        /// </summary>
+        public static string Mb_Score {
+            get {
+                return ResourceManager.GetString("Mb_Score", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Mb_Search {
+            get {
+                return ResourceManager.GetString("Mb_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search again.
+        /// </summary>
+        public static string Mb_SearchAgain {
+            get {
+                return ResourceManager.GetString("Mb_SearchAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Matched.
+        /// </summary>
+        public static string Mb_StateMatched {
+            get {
+                return ResourceManager.GetString("Mb_StateMatched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found.
+        /// </summary>
+        public static string Mb_StateNoMatch {
+            get {
+                return ResourceManager.GetString("Mb_StateNoMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not matched yet.
+        /// </summary>
+        public static string Mb_StateNone {
+            get {
+                return ResourceManager.GetString("Mb_StateNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No match.
+        /// </summary>
+        public static string Mb_StateRejected {
+            get {
+                return ResourceManager.GetString("Mb_StateRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm.
+        /// </summary>
+        public static string Mb_StateSuggested {
+            get {
+                return ResourceManager.GetString("Mb_StateSuggested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track {0}.
+        /// </summary>
+        public static string Mb_TrackNumber {
+            get {
+                return ResourceManager.GetString("Mb_TrackNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove match.
+        /// </summary>
+        public static string Mb_Unlink {
+            get {
+                return ResourceManager.GetString("Mb_Unlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The new folder must not be inside the current library..
         /// </summary>
         public static string Move_InsideCurrentFolder {
@@ -1332,6 +1593,15 @@ namespace Tapedeck.Resources {
         public static string Notice_MoveFailed {
             get {
                 return ResourceManager.GetString("Notice_MoveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MusicBrainz could not be reached: {0}.
+        /// </summary>
+        public static string Notice_MusicBrainzFailed {
+            get {
+                return ResourceManager.GetString("Notice_MusicBrainzFailed", resourceCulture);
             }
         }
         
@@ -2007,6 +2277,24 @@ namespace Tapedeck.Resources {
         public static string Settings_Location {
             get {
                 return ResourceManager.GetString("Settings_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically.
+        /// </summary>
+        public static string Settings_MusicBrainzAuto {
+            get {
+                return ResourceManager.GetString("Settings_MusicBrainzAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Album, year, genres and square covers from the free music database. New tracks are looked up after adding them, one request per second..
+        /// </summary>
+        public static string Settings_MusicBrainzHint {
+            get {
+                return ResourceManager.GetString("Settings_MusicBrainzHint", resourceCulture);
             }
         }
         

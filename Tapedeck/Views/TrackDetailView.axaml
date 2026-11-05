@@ -60,7 +60,9 @@
                        IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         </StackPanel>
 
-        <Grid Grid.Row="2" ColumnDefinitions="400,*" ColumnSpacing="{StaticResource Space.3}">
+        <!-- The islands scroll below the fixed header when the window is too low for them -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid ColumnDefinitions="400,*" ColumnSpacing="{StaticResource Space.3}" Margin="0,0,0,4">
 
             <!-- Left: preview and file -->
             <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
@@ -94,12 +96,12 @@
                                     CornerRadius="{StaticResource Radius.Field}"
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
-                                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=224}"
+                                <Image Source="{Binding CoverPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=224}"
                                        Stretch="UniformToFill" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
                                 <TextBlock Classes="support" FontWeight="SemiBold" Text="{x:Static res:Strings.Detail_Cover}" />
-                                <TextBlock FontSize="12" Foreground="{DynamicResource Brush.Text2}" Text="{x:Static res:Strings.Detail_CoverFromThumbnail}" />
+                                <TextBlock FontSize="12" Foreground="{DynamicResource Brush.Text2}" Text="{Binding CoverText}" TextWrapping="Wrap" />
                             </StackPanel>
                             <!-- Choosing a cover comes with v2 -->
                             <Button Grid.Column="2" Classes="tonal" Content="{x:Static res:Strings.Detail_ChangeCover}" IsEnabled="False" />
@@ -158,8 +160,8 @@
                 </controls:Island>
             </Grid>
 
-            <!-- Right: metadata and YouTube facts -->
-            <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
+            <!-- Right: metadata, MusicBrainz match and YouTube facts -->
+            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
                 <controls:Island>
                     <StackPanel Spacing="{StaticResource Space.2}">
                         <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,6">
@@ -193,7 +195,77 @@
                     </StackPanel>
                 </controls:Island>
 
+                <!-- MusicBrainz: the applied match, or the suggestions to confirm -->
                 <controls:Island Grid.Row="1">
+                    <StackPanel Spacing="{StaticResource Space.2}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_MusicBrainz}" />
+                            <TextBlock Grid.Column="1" Classes="fact-label" Text="{Binding MbStateText}" VerticalAlignment="Bottom" />
+                        </Grid>
+
+                        <StackPanel Spacing="2" IsVisible="{Binding IsMbMatched}">
+                            <TextBlock Classes="body-strong" Text="{Binding MbRelease}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" Text="{Binding MbRecording}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+
+                        <TextBlock Classes="support"
+                                   Foreground="{DynamicResource Brush.Text2}"
+                                   TextWrapping="Wrap"
+                                   Text="{Binding MbHint}"
+                                   IsVisible="{Binding MbHint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                        <ItemsControl ItemsSource="{Binding MbCandidates}" IsVisible="{Binding HasMbCandidates}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="{StaticResource Space.1}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MbCandidateViewModel">
+                                    <Border Classes="row">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                            <StackPanel Spacing="2" VerticalAlignment="Center">
+                                                <TextBlock Classes="body-strong" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" Text="{Binding Details}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Classes="tonal"
+                                                    VerticalAlignment="Center"
+                                                    Content="{x:Static res:Strings.Mb_Apply}"
+                                                    Command="{Binding ApplyCommand}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.1}" Margin="-8,0,0,0">
+                            <Button Classes="text"
+                                    Content="{Binding MbSearchText}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Search}"
+                                    Command="{Binding SearchMusicBrainzCommand}" />
+                            <Button Classes="text"
+                                    Content="{x:Static res:Strings.Mb_Open}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
+                                    Command="{Binding OpenMusicBrainzCommand}"
+                                    IsVisible="{Binding IsMbMatched}" />
+                            <Button Classes="danger"
+                                    Content="{x:Static res:Strings.Mb_Unlink}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                    Command="{Binding RejectMusicBrainzCommand}"
+                                    IsVisible="{Binding IsMbMatched}" />
+                            <Button Classes="text"
+                                    Content="{x:Static res:Strings.Mb_NoneOfThese}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                    Command="{Binding RejectMusicBrainzCommand}"
+                                    IsVisible="{Binding IsMbSuggested}" />
+                        </StackPanel>
+                    </StackPanel>
+                </controls:Island>
+
+                <controls:Island Grid.Row="2">
                     <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="16" VerticalAlignment="Top">
                         <TextBlock Grid.ColumnSpan="4" Classes="title" Text="{x:Static res:Strings.Detail_YouTube}" Margin="0,0,0,8" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Classes="fact-label" Text="{x:Static res:Strings.Detail_Channel}" />
@@ -208,5 +280,6 @@
                 </controls:Island>
             </Grid>
         </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>
