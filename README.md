@@ -1,0 +1,129 @@
+<div align="center">
+
+<img src="docs/tapedeck.png" alt="Tapedeck" width="112" height="112" />
+
+# Tapedeck
+
+**Your YouTube links, turned into a real music library.**
+
+Paste a link, get a clean, tagged Opus file and a library your phone actually understands.
+
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dot.net)
+[![Avalonia 12](https://img.shields.io/badge/Avalonia-12-8B44AC)](https://avaloniaui.net)
+[![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64-FFB86B?logo=windows&logoColor=white)](#build-it-yourself)
+[![License: MIT](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
+[![Changelog](https://img.shields.io/badge/changelog-keep%20a%20changelog-E05735)](CHANGELOG.md)
+
+</div>
+
+---
+
+## Why Tapedeck?
+
+Most of the music you love is on YouTube, but a list of browser tabs isn't a library. Tapedeck treats **your list of links as the source of truth** and makes sure every track also exists as a local file with proper tags. Copy the folder to your phone and Poweramp, Musicolet & co. show artists, albums, genres and covers right away.
+
+- **Links first.** Your library is a list of YouTube links. Files can always be downloaded again.
+- **No quality loss.** YouTube already serves Opus, so Tapedeck stores it as is without re-encoding.
+- **Clean tags.** Your corrections win over YouTube's metadata, which wins over the parsed video title. You always see where a value comes from.
+- **Made for Android.** Flat folder with `Artist - Title.opus` names that work on FAT32 and exFAT, plus `.m3u8` playlists that players pick up on their own.
+
+## Features
+
+| | |
+|---|---|
+| 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
+| ⬇️ **Download as Opus** | Live progress, cancel at any time, and missing files are detected and fetched again. |
+| ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
+| 🏷️ **Write real tags** | Title, artist, album, album artist, year, genres, cover art and the YouTube link go straight into the file. Files are renamed to match your corrections. |
+| 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
+| 🔄 **Linked YouTube playlists** | Import a YouTube playlist once and hit **Sync** later to pull in new videos. Nothing is ever removed or reordered behind your back. |
+| 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
+| 🧰 **Zero setup** | yt-dlp, FFmpeg and Deno are downloaded on first use, and yt-dlp updates with one click. |
+
+## Getting started
+
+1. Grab `Tapedeck.exe` from the [releases](https://github.com/nilskruthoff/Tapedeck/releases) or [build it yourself](#build-it-yourself).
+2. Start it. No installer and no .NET runtime needed.
+3. Paste a YouTube link into the link bar and press **Add**.
+4. Hit **Download pending** and watch the vinyl spin. 💿
+
+Your music lands in `Music/Tapedeck` by default, and you can change that in the settings. App data (database, settings, tools, thumbnails) lives in the system's application data folder, `%APPDATA%\Tapedeck` on Windows.
+
+> [!TIP]
+> Moving to a new computer? Export the library as CSV, copy the music folder, then import the CSV on the new machine. Tapedeck finds the existing files and marks them as downloaded.
+
+## Third-party tools and licenses
+
+> [!IMPORTANT]
+> Tapedeck does **not** ship these tools. On first use it downloads them from the official release channels into its app data folder (`tools/`). **By downloading and using Tapedeck you agree to the licenses of these tools.**
+
+| Tool | What it does | License |
+|---|---|---|
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Reads metadata and downloads the audio from YouTube | [Unlicense](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE) |
+| [FFmpeg](https://ffmpeg.org) | Post-processes the downloaded audio (prebuilt static build; the Windows build is GPL-licensed) | [LGPL / GPL](https://ffmpeg.org/legal.html), see [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) |
+| [Deno](https://deno.com) | JavaScript runtime that yt-dlp needs for YouTube | [MIT](https://github.com/denoland/deno/blob/main/LICENSE.md) |
+
+You can check the installed versions and update yt-dlp under **Settings → Tools**.
+
+## Please use it responsibly
+
+Tapedeck is a personal tool for building a library of music you are allowed to keep. Downloading from YouTube may violate [YouTube's Terms of Service](https://www.youtube.com/t/terms) and copyright law where you live. You are responsible for what you download. Support the artists you listen to. 💛
+
+## Build it yourself
+
+You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Any IDE works; the project is set up for JetBrains Rider.
+
+```bash
+git clone https://github.com/nilskruthoff/Tapedeck.git
+cd Tapedeck
+dotnet run --project Tapedeck
+```
+
+Run the tests:
+
+```bash
+dotnet test
+```
+
+Build a single self-contained `Tapedeck.exe` (Windows x64, about 50 MB) into `publish/win-x64/`:
+
+```bash
+dotnet publish Tapedeck -p:PublishProfile=win-x64
+```
+
+The executable bundles the .NET runtime and native libraries. Trimming is off on purpose because Dapper and the dependency injection rely on reflection. For Linux or macOS use `dotnet publish Tapedeck -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true` (or `osx-arm64`); those builds are not tested yet.
+
+Handy command line options for a single run:
+
+```bash
+dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
+```
+
+## Roadmap
+
+- [x] Library, downloads, corrections, tags, ratings
+- [x] Playlists with `.m3u8` export and linked YouTube playlists
+- [x] CSV backup, restore and moving to another computer
+- [ ] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
+- [ ] Genres from [Last.fm](https://www.last.fm)
+- [ ] Installer and auto updates
+- [ ] Smart playlists and filtering the library by playlist
+
+See the [changelog](CHANGELOG.md) for what changed.
+
+## License
+
+Tapedeck is released under the [MIT License](LICENSE). Use it, fork it, ship it.
+
+The published `Tapedeck.exe` bundles a few open source libraries. Their copyright notices and license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and built into the app: click any license under **Settings → Open source** to read it, even offline. The downloaded tools keep their own licenses, see [Third-party tools and licenses](#third-party-tools-and-licenses).
+
+## Credits
+
+Tapedeck stands on the shoulders of these great projects:
+
+- **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** does the heavy lifting with YouTube. ([Unlicense](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE))
+- **[FFmpeg](https://ffmpeg.org)** is the Swiss army knife of audio and video. ([LGPL / GPL](https://ffmpeg.org/legal.html))
+- **[YoutubeDLSharp](https://github.com/Bluegrams/YoutubeDLSharp)** is the C# wrapper that drives yt-dlp and installs the tools. ([BSD-3-Clause](https://github.com/Bluegrams/YoutubeDLSharp/blob/master/LICENSE.txt))
+
+Also built with [Avalonia](https://avaloniaui.net) (MIT), [Deno](https://deno.com) (MIT), [TagLibSharp](https://github.com/mono/taglib-sharp) (LGPL-2.1), [SQLite](https://sqlite.org) (Public Domain), [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) (MIT), [Dapper](https://github.com/DapperLib/Dapper) (Apache-2.0), [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) (MIT), [.NET](https://dot.net) (MIT) and the [Inter](https://rsms.me/inter/) typeface (OFL-1.1). The same list, with every license text, is in the app under **Settings → Open source** and in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
