@@ -21,10 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Track details
 
-- Track detail page with corrections for artist, title, album, album artist and year. Corrections save automatically while you type.
-- Source chips show where each value comes from: your correction, YouTube or the parsed title.
+- Track detail page with corrections for artist, title, album, album artist and year. Corrections save automatically while you type. The page scrolls when the window is too low.
+- Source chips show where each value comes from: your correction, MusicBrainz, YouTube or the parsed title.
 - Genres and a five-star rating.
 - "Write tags" puts title, artist, album, album artist, year, genres, the YouTube link and the cover into the audio file, and renames the file to match corrections.
+
+#### MusicBrainz and covers
+
+- Tracks are matched with [MusicBrainz](https://musicbrainz.org) for album, album artist, release year, track and disc number and genres. New tracks are looked up in the background after adding a link, a playlist or a CSV, which can be turned off in the settings.
+- Square covers from the [Cover Art Archive](https://coverartarchive.org) replace the 16:9 thumbnail in the file.
+- The matching recognizes the song first and picks the release by rules: the studio album before soundtrack, EP, single and compilation, the original before deluxe editions and reissues. Music videos get the album they belong to, live versions, remixes and sped-up uploads are kept apart.
+- Only certain matches are applied on their own. Uncertain ones show up as suggestions on the detail page and under the new "Suggestions" filter, ready to apply or decline.
+- "Match all with MusicBrainz" looks up the whole library again. Existing matches stay when nothing certain is found and get their genres and cover refreshed.
+- Genres come from the album, else the recording, else the artist, since singles rarely have genres of their own.
+- "Write tags" also writes the track and disc number and the MusicBrainz IDs.
 
 #### Playlists
 

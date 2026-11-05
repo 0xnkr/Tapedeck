@@ -13,7 +13,6 @@ Paste a link, get a clean, tagged Opus file and a library your phone actually un
 [![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64-FFB86B?logo=windows&logoColor=white)](#build-it-yourself)
 [![License: MIT](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
-[![Changelog](https://img.shields.io/badge/changelog-keep%20a%20changelog-E05735)](CHANGELOG.md)
 
 <br />
 
@@ -29,7 +28,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 
 - **Links first.** Your library is a list of YouTube links. Files can always be downloaded again.
 - **No quality loss.** YouTube already serves Opus, so Tapedeck stores it as is without re-encoding.
-- **Clean tags.** Your corrections win over YouTube's metadata, which wins over the parsed video title. You always see where a value comes from.
+- **Clean tags.** Your corrections win over [MusicBrainz](https://musicbrainz.org), which wins over YouTube's metadata and the parsed video title. You always see where a value comes from.
 - **Made for Android.** Flat folder with `Artist - Title.opus` names that work on FAT32 and exFAT, plus `.m3u8` playlists that players pick up on their own.
 
 ## Features
@@ -38,8 +37,9 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 |---|---|
 | 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
 | ⬇️ **Download as Opus** | Live progress, cancel at any time, and missing files are detected and fetched again. |
+| 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive. Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
-| 🏷️ **Write real tags** | Title, artist, album, album artist, year, genres, cover art and the YouTube link go straight into the file. Files are renamed to match your corrections. |
+| 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
 | 🔄 **Linked YouTube playlists** | Import a YouTube playlist once and hit **Sync** later to pull in new videos. Nothing is ever removed or reordered behind your back. |
 | 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
@@ -69,6 +69,8 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 | [Deno](https://deno.com) | JavaScript runtime that yt-dlp needs for YouTube | [MIT](https://github.com/denoland/deno/blob/main/LICENSE.md) |
 
 You can check the installed versions and update yt-dlp under **Settings → Tools**.
+
+Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0](https://musicbrainz.org/doc/About/Data_License)) and covers from the [Cover Art Archive](https://coverartarchive.org). Tapedeck asks them at most once per second, as MusicBrainz requests, and you can turn off the automatic lookup under **Settings → Tools**.
 
 ## Please use it responsibly
 
@@ -109,7 +111,7 @@ dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
 - [x] Library, downloads, corrections, tags, ratings
 - [x] Playlists with `.m3u8` export and linked YouTube playlists
 - [x] CSV backup, restore and moving to another computer
-- [ ] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
+- [x] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
 - [ ] Genres from [Last.fm](https://www.last.fm)
 - [ ] Installer and auto updates
 - [ ] Smart playlists and filtering the library by playlist
