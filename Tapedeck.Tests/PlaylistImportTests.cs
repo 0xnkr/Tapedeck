@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
+using Tapedeck.Core.Csv;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
 using Tapedeck.Data;
@@ -13,6 +14,7 @@ public sealed class PlaylistImportTests : IAsyncLifetime
     private TrackRepository tracks = null!;
     private PlaylistRepository playlists = null!;
     private PlaylistImportService importer = null!;
+    private CsvImportService csvImporter = null!;
 
     public async Task InitializeAsync()
     {
@@ -24,8 +26,9 @@ public sealed class PlaylistImportTests : IAsyncLifetime
         this.playlists = new PlaylistRepository(factory);
         // only known videos are imported here, so yt-dlp is never started
         var tools = new ToolService(paths);
-        this.importer = new PlaylistImportService(this.tracks, this.playlists,
-            new TrackImportService(this.tracks, new MetadataService(tools), new ThumbnailService(paths, new HttpClient())));
+        var trackImporter = new TrackImportService(this.tracks, new MetadataService(tools), new ThumbnailService(paths, new HttpClient()));
+        this.importer = new PlaylistImportService(this.tracks, this.playlists, trackImporter);
+        this.csvImporter = new CsvImportService(this.tracks, trackImporter);
     }
 
     public Task DisposeAsync()
@@ -122,5 +125,22 @@ public sealed class PlaylistImportTests : IAsyncLifetime
 
         var again = await this.importer.ImportAsync(list, source);
         Assert.Equal(0, again.Added);
+    }
+
+    [Fact]
+    public async Task Csv_import_keeps_the_file_order_and_applies_corrections()
+    {
+        var a = await this.tracks.AddAsync("aaaaaaaaaaa", VideoId.WatchUrl("aaaaaaaaaaa"));
+        var b = await this.tracks.AddAsync("bbbbbbbbbbb", VideoId.WatchUrl("bbbbbbbbbbb"));
+        CsvTrack Row(int line, string videoId, string? artist = null, int? rating = null) =>
+            new(line, videoId, VideoId.WatchUrl(videoId), artist, null, null, null, null, [], rating);
+
+        var result = await this.csvImporter.ImportAsync([Row(2, "bbbbbbbbbbb", "Fixed Artist", 4), Row(3, "aaaaaaaaaaa")]);
+
+        Assert.Equal([b, a], result.TrackIds);
+        Assert.Empty(result.Errors);
+        var trackB = await this.tracks.GetDisplayAsync(b);
+        Assert.Equal("Fixed Artist", trackB!.Artist);
+        Assert.Equal(4, trackB.Rating);
     }
 }
