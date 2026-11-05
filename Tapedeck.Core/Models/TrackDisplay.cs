@@ -19,6 +19,21 @@ public sealed class TrackDisplay
     /// <summary>Genres from the best available source, separated by <c>;</c>.</summary>
     public string? Genres { get; init; }
     public string? Cover { get; init; }
+    /// <summary><c>thumb</c>, <c>caa</c> or <c>user</c> when a square cover is set; <c>null</c> while the thumbnail serves.</summary>
+    public string? CoverSource { get; init; }
+
+    public int? TrackNo { get; init; }
+    public int? DiscNo { get; init; }
+
+    /// <summary>Database value of <see cref="MbState"/>.</summary>
+    public string MbStatus { get; init; } = "none";
+    public double? MbScore { get; init; }
+    public string? MbRecordingId { get; init; }
+    public string? MbReleaseId { get; init; }
+    public string? MbReleaseGroupId { get; init; }
+    public string? MbArtistId { get; init; }
+
+    public MbMatchState MbState => MbMatchStateExtensions.ParseDb(this.MbStatus);
 
     // Origin of each value above, as stored in the view (see FieldSource)
     public string ArtistSource { get; init; } = "none";

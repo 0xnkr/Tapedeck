@@ -15,6 +15,8 @@ public sealed class AppPaths(string dataDir, string libraryDir)
     public string DatabasePath => Path.Combine(this.DataDir, "tapedeck.db");
     public string ToolsDir => Path.Combine(this.DataDir, "tools");
     public string ThumbsDir => Path.Combine(this.DataDir, "thumbs");
+    /// <summary>Square covers from the Cover Art Archive, one per release.</summary>
+    public string CoversDir => Path.Combine(this.DataDir, "covers");
     public string TempDir => Path.Combine(this.DataDir, "tmp");
 
     /// <summary>The app data folder, which also holds the settings and therefore cannot be configured.</summary>
@@ -35,7 +37,7 @@ public sealed class AppPaths(string dataDir, string libraryDir)
 
     public void EnsureDirectories()
     {
-        foreach (var dir in new[] { this.DataDir, this.LibraryDir, this.ToolsDir, this.ThumbsDir, this.TempDir })
+        foreach (var dir in new[] { this.DataDir, this.LibraryDir, this.ToolsDir, this.ThumbsDir, this.CoversDir, this.TempDir })
             Directory.CreateDirectory(dir);
     }
 

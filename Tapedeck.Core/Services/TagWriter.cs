@@ -24,6 +24,13 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths)
             tag.Album = track.Album;
             tag.Year = (uint)(track.Year ?? 0);
             tag.Genres = [.. track.GenreList];
+            // place on the album and the MusicBrainz ids (as Picard names them), only with a match
+            tag.Track = (uint)(track.TrackNo ?? 0);
+            tag.Disc = (uint)(track.DiscNo ?? 0);
+            tag.MusicBrainzTrackId = track.MbRecordingId;
+            tag.MusicBrainzReleaseId = track.MbReleaseId;
+            tag.MusicBrainzReleaseGroupId = track.MbReleaseGroupId;
+            tag.MusicBrainzArtistId = track.MbArtistId;
             tag.Comment = track.Url;
             tag.Pictures = track.Cover is { } cover && File.Exists(cover)
                 ? [new TagLib.Picture(cover) { Type = TagLib.PictureType.FrontCover }]
