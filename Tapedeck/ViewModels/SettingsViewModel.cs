@@ -37,8 +37,8 @@ public partial class AccentOptionViewModel(string hex, Action<string> select) : 
     private void Select() => select(this.Hex);
 }
 
-/// <summary>One open source project in the credits; opens its website.</summary>
-public partial class CreditViewModel(Credit credit, IPlatformService platform) : ViewModelBase
+/// <summary>One open source project in the credits; opens its website or its license text.</summary>
+public partial class CreditViewModel(Credit credit, IPlatformService platform, Func<Credit, Task> showLicense) : ViewModelBase
 {
     public string Name => credit.Name;
 
@@ -48,8 +48,13 @@ public partial class CreditViewModel(Credit credit, IPlatformService platform) :
 
     public string OpenLabel => string.Format(Strings.Settings_CreditOpen, credit.Name);
 
+    public string LicenseLabel => string.Format(Strings.Settings_CreditLicense, credit.License, credit.Name);
+
     [RelayCommand]
     private Task OpenAsync() => platform.OpenUrlAsync(credit.Url);
+
+    [RelayCommand]
+    private Task ShowLicenseAsync() => showLicense(credit);
 }
 
 /// <summary>Settings page: library folder, language, accent, the bundled tools and the open source credits.</summary>
@@ -63,9 +68,11 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly ActivityService activity;
     private readonly IPlatformService platform;
     private readonly PlaylistSync playlistSync;
+    private readonly DialogService dialogs;
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
-        IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync)
+        IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
+        DialogService dialogs)
     {
         this.store = store;
         this.paths = paths;
@@ -75,9 +82,12 @@ public partial class SettingsViewModel : ViewModelBase
         this.activity = activity;
         this.platform = platform;
         this.playlistSync = playlistSync;
+        this.dialogs = dialogs;
 
         this.Accents = accent.PresetHexes.Select(hex => new AccentOptionViewModel(hex, this.SelectAccent)).ToList();
-        this.Credits = Tapedeck.Credits.ALL.Select(credit => new CreditViewModel(credit, platform)).ToList();
+        this.OwnCredit = this.NewCredit(Tapedeck.Credits.TAPEDECK);
+        this.Credits = Tapedeck.Credits.ALL.Select(this.NewCredit).ToList();
+        this.AlsoIncluded = Tapedeck.Credits.ALSO_INCLUDED.Select(this.NewCredit).ToList();
         this.Language = FromCode(store.Load().Language);
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
@@ -86,7 +96,13 @@ public partial class SettingsViewModel : ViewModelBase
 
     public IReadOnlyList<AccentOptionViewModel> Accents { get; }
 
+    /// <summary>Tapedeck's own license, above the credits.</summary>
+    public CreditViewModel OwnCredit { get; }
+
     public IReadOnlyList<CreditViewModel> Credits { get; }
+
+    /// <summary>Libraries that come along with the credited ones.</summary>
+    public IReadOnlyList<CreditViewModel> AlsoIncluded { get; }
 
     [ObservableProperty]
     public partial LanguageChoice Language { get; set; }
@@ -131,6 +147,11 @@ public partial class SettingsViewModel : ViewModelBase
             return;
         this.SelectAccent(this.CustomAccent);
     }
+
+    private CreditViewModel NewCredit(Credit credit) => new(credit, this.platform, this.ShowLicenseAsync);
+
+    private Task ShowLicenseAsync(Credit credit) =>
+        this.dialogs.ShowLicenseAsync(new LicenseDialogViewModel(credit, this.platform, this.activity));
 
     private void SelectAccent(string hex)
     {

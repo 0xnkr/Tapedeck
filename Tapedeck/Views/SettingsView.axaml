@@ -7,6 +7,39 @@
              x:Class="Tapedeck.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
 
+    <UserControl.Resources>
+        <!-- One project in the credits: the license pill opens its text, the arrow its website -->
+        <DataTemplate x:Key="CreditCard" x:DataType="vm:CreditViewModel">
+            <Border Classes="row">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{StaticResource Space.2}">
+                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Classes="body-strong" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Classes="support" Text="{Binding Purpose}" Foreground="{DynamicResource Brush.Text2}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Classes="link"
+                            VerticalAlignment="Center"
+                            Command="{Binding ShowLicenseCommand}"
+                            ToolTip.Tip="{Binding LicenseLabel}"
+                            AutomationProperties.Name="{Binding LicenseLabel}">
+                        <Border Classes="pill">
+                            <TextBlock Classes="caption" Text="{Binding License}" />
+                        </Border>
+                    </Button>
+                    <Button Grid.Column="2"
+                            Classes="icon"
+                            VerticalAlignment="Center"
+                            Command="{Binding OpenCommand}"
+                            ToolTip.Tip="{Binding OpenLabel}"
+                            AutomationProperties.Name="{Binding OpenLabel}">
+                        <controls:Glyph Data="{StaticResource Icon.ExternalLink}" Width="16" Height="16" />
+                    </Button>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <UserControl.Styles>
         <!-- Island heading with a hint below -->
         <Style Selector="StackPanel.heading">
@@ -193,41 +226,25 @@
                             <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
                                        Text="{x:Static res:Strings.Settings_CreditsHint}" />
                         </StackPanel>
-                        <ItemsControl ItemsSource="{Binding Credits}">
+                        <ContentControl Content="{Binding OwnCredit}" ContentTemplate="{StaticResource CreditCard}" />
+                        <ItemsControl ItemsSource="{Binding Credits}" ItemTemplate="{StaticResource CreditCard}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="vm:CreditViewModel">
-                                    <Button Classes="link"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            VerticalContentAlignment="Stretch"
-                                            Command="{Binding OpenCommand}"
-                                            AutomationProperties.Name="{Binding OpenLabel}">
-                                        <Border Classes="row">
-                                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{StaticResource Space.2}">
-                                                <StackPanel Spacing="2" VerticalAlignment="Center">
-                                                    <TextBlock Classes="body-strong" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Classes="support" Text="{Binding Purpose}" Foreground="{DynamicResource Brush.Text2}"
-                                                               TextWrapping="Wrap" />
-                                                </StackPanel>
-                                                <Border Grid.Column="1" Classes="pill" VerticalAlignment="Center">
-                                                    <TextBlock Classes="caption" Text="{Binding License}" />
-                                                </Border>
-                                                <controls:Glyph Grid.Column="2"
-                                                                Data="{StaticResource Icon.ExternalLink}"
-                                                                Width="16" Height="16"
-                                                                Foreground="{DynamicResource Brush.Text3}"
-                                                                VerticalAlignment="Center" />
-                                            </Grid>
-                                        </Border>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <StackPanel Classes="heading">
+                            <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_CreditsAlso}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Settings_CreditsAlsoHint}" />
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding AlsoIncluded}" ItemTemplate="{StaticResource CreditCard}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                         </ItemsControl>
                     </StackPanel>
                 </controls:Island>
