@@ -27,3 +27,6 @@ _ReSharper*/
 Thumbs.db
 [Dd]esktop.ini
 .DS_Store
+
+# Publish output (Properties/PublishProfiles)
+publish/
