@@ -1,6 +1,7 @@
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Tapedeck.Core;
+using Tapedeck.Core.Csv;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
@@ -36,6 +37,7 @@ public static class AppServices
         services.AddSingleton<TagWriter>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
+        services.AddSingleton<CsvImportService>();
         services.AddSingleton<PlaylistImportService>();
         services.AddSingleton<LibraryMover>();
 
