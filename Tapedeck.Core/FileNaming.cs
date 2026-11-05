@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 namespace Tapedeck.Core;
@@ -9,6 +10,9 @@ namespace Tapedeck.Core;
 public static class FileNaming
 {
     public const int MAX_BASE_LENGTH = 150;
+
+    // slug of a name without a single letter or digit
+    private const string SLUG_FALLBACK = "playlist";
 
     public static string BaseName(string artist, string title)
     {
@@ -49,6 +53,34 @@ public static class FileNaming
             return currentFile;
         return Choose(artist, title, videoId, ext,
             name => !string.Equals(name, currentFile, StringComparison.OrdinalIgnoreCase) && isTaken(name));
+    }
+
+    /// <summary>
+    /// A short ASCII form of a name for file names like <c>Tapedeck-road-trip.csv</c>: lower case, German umlauts
+    /// spelled out, other accents dropped, everything else becomes a single <c>-</c>.
+    /// </summary>
+    public static string Slug(string name)
+    {
+        var spelled = name.ToLowerInvariant()
+            .Replace("ä", "ae").Replace("ö", "oe").Replace("ü", "ue").Replace("ß", "ss")
+            .Normalize(NormalizationForm.FormD);
+        var sb = new StringBuilder(spelled.Length);
+        foreach (var c in spelled)
+        {
+            if (c is >= 'a' and <= 'z' or >= '0' and <= '9')
+                sb.Append(c);
+            else if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark && sb.Length > 0 && sb[^1] != '-')
+                sb.Append('-');
+        }
+        var slug = sb.ToString().TrimEnd('-');
+        return slug.Length > 0 ? slug : SLUG_FALLBACK;
+    }
+
+    /// <summary>A readable name from a slug or file name: <c>road-trip</c> becomes <c>Road Trip</c>.</summary>
+    public static string NameFromSlug(string slug)
+    {
+        var words = slug.Split(['-', '_', ' '], StringSplitOptions.RemoveEmptyEntries);
+        return string.Join(' ', words.Select(w => char.ToUpperInvariant(w[0]) + w[1..]));
     }
 
     public static string Sanitize(string name)

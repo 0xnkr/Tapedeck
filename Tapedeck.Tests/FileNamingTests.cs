@@ -49,4 +49,21 @@ public class FileNamingTests
         Assert.Equal("Artist - Title.opus",
             FileNaming.ChooseForTrack("Artist - Title.m4a", "Artist", "Title", "dQw4w9WgXcQ", "opus", _ => false));
     }
+
+    [Theory]
+    [InlineData("Road Trip", "road-trip")]
+    [InlineData("Sommer Hits 2024!", "sommer-hits-2024")]
+    [InlineData("Größte Übel – Mädchen", "groesste-uebel-maedchen")]
+    [InlineData("Café & Crème", "cafe-creme")]
+    [InlineData("  --Lo-Fi // Beats--  ", "lo-fi-beats")]
+    [InlineData("★★★", "playlist")]
+    public void Slugs_are_short_ascii_names(string name, string expected) => Assert.Equal(expected, FileNaming.Slug(name));
+
+    [Theory]
+    [InlineData("road-trip", "Road Trip")]
+    [InlineData("lo-fi__beats", "Lo Fi Beats")]
+    [InlineData("groesste-hits-2024", "Groesste Hits 2024")]
+    [InlineData("---", "")]
+    public void Slugs_turn_back_into_readable_names(string slug, string expected) =>
+        Assert.Equal(expected, FileNaming.NameFromSlug(slug));
 }
