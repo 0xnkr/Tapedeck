@@ -88,7 +88,9 @@ public partial class SettingsViewModel : ViewModelBase
         this.OwnCredit = this.NewCredit(Tapedeck.Credits.TAPEDECK);
         this.Credits = Tapedeck.Credits.ALL.Select(this.NewCredit).ToList();
         this.AlsoIncluded = Tapedeck.Credits.ALSO_INCLUDED.Select(this.NewCredit).ToList();
-        this.Language = FromCode(store.Load().Language);
+        var settings = store.Load();
+        this.Language = FromCode(settings.Language);
+        this.MusicBrainzAuto = settings.MusicBrainzAuto ?? true;
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -109,6 +111,10 @@ public partial class SettingsViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string CustomAccent { get; set; } = string.Empty;
+
+    /// <summary>Look up new tracks on MusicBrainz after an import.</summary>
+    [ObservableProperty]
+    public partial bool MusicBrainzAuto { get; set; }
 
     [ObservableProperty]
     public partial string LibraryDir { get; private set; }
@@ -139,6 +145,9 @@ public partial class SettingsViewModel : ViewModelBase
 
     partial void OnLanguageChanged(LanguageChoice value) =>
         this.store.Update(s => s with { Language = ToCode(value) });
+
+    partial void OnMusicBrainzAutoChanged(bool value) =>
+        this.store.Update(s => s with { MusicBrainzAuto = value });
 
     [RelayCommand]
     private void ApplyCustomAccent()

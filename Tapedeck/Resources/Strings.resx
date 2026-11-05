@@ -996,4 +996,132 @@
     <value>License text copied</value>
     <comment>Activity toast</comment>
   </data>
+  <data name="Library_MatchMusicBrainz" xml:space="preserve">
+    <value>Match all with MusicBrainz</value>
+    <comment>Bulk action above the table: looks up every track on MusicBrainz one after another</comment>
+  </data>
+  <data name="Library_CancelMatching" xml:space="preserve">
+    <value>Stop matching</value>
+    <comment>Bulk action, shown while the MusicBrainz run is going</comment>
+  </data>
+  <data name="Filter_Suggested" xml:space="preserve">
+    <value>Suggestions</value>
+    <comment>Filter chip: tracks with MusicBrainz suggestions the user should confirm</comment>
+  </data>
+  <data name="Activity_MatchingMusicBrainz" xml:space="preserve">
+    <value>MusicBrainz {0}/{1} …</value>
+    <comment>Activity toast; {0} current track number, {1} tracks in the run</comment>
+  </data>
+  <data name="Activity_SearchingMusicBrainz" xml:space="preserve">
+    <value>Searching MusicBrainz …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Confirm_MatchedMusicBrainz" xml:space="preserve">
+    <value>MusicBrainz: {0} matched, {1} to confirm, {2} not found</value>
+    <comment>Activity toast after a MusicBrainz run; {0}, {1}, {2} track counts</comment>
+  </data>
+  <data name="Confirm_MbApplied" xml:space="preserve">
+    <value>“{0}” matched</value>
+    <comment>Activity toast; {0} track title</comment>
+  </data>
+  <data name="Notice_MusicBrainzFailed" xml:space="preserve">
+    <value>MusicBrainz could not be reached: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Detail_MusicBrainz" xml:space="preserve">
+    <value>MusicBrainz</value>
+    <comment>Island title on the detail page; name of the music database, not translated</comment>
+  </data>
+  <data name="Detail_CoverFromMusicBrainz" xml:space="preserve">
+    <value>Square, from the Cover Art Archive</value>
+    <comment>Where the cover comes from; Cover Art Archive is a name</comment>
+  </data>
+  <data name="Mb_StateNone" xml:space="preserve">
+    <value>Not matched yet</value>
+    <comment>MusicBrainz state, top right of the island</comment>
+  </data>
+  <data name="Mb_StateMatched" xml:space="preserve">
+    <value>Matched</value>
+    <comment>MusicBrainz state, top right of the island</comment>
+  </data>
+  <data name="Mb_StateSuggested" xml:space="preserve">
+    <value>Please confirm</value>
+    <comment>MusicBrainz state, top right of the island</comment>
+  </data>
+  <data name="Mb_StateNoMatch" xml:space="preserve">
+    <value>Not found</value>
+    <comment>MusicBrainz state, top right of the island</comment>
+  </data>
+  <data name="Mb_StateRejected" xml:space="preserve">
+    <value>No match</value>
+    <comment>MusicBrainz state after the user removed the match or declined the suggestions</comment>
+  </data>
+  <data name="Mb_HintNone" xml:space="preserve">
+    <value>Fills in album, year, track number and genres and brings a square cover.</value>
+    <comment>MusicBrainz island, before the first search</comment>
+  </data>
+  <data name="Mb_HintSuggested" xml:space="preserve">
+    <value>Not certain enough to apply on its own. Is it one of these?</value>
+    <comment>MusicBrainz island, above the candidates</comment>
+  </data>
+  <data name="Mb_HintNoMatch" xml:space="preserve">
+    <value>MusicBrainz knows no fitting recording. Correct artist or title, then search again.</value>
+    <comment>MusicBrainz island, nothing found</comment>
+  </data>
+  <data name="Mb_HintRejected" xml:space="preserve">
+    <value>No match applied. Matching the whole library skips this track.</value>
+    <comment>MusicBrainz island, after the user removed the match or declined the suggestions</comment>
+  </data>
+  <data name="Mb_Search" xml:space="preserve">
+    <value>Search</value>
+    <comment>Button: search MusicBrainz for this track</comment>
+  </data>
+  <data name="Mb_SearchAgain" xml:space="preserve">
+    <value>Search again</value>
+    <comment>Button: search MusicBrainz for this track once more</comment>
+  </data>
+  <data name="Mb_Apply" xml:space="preserve">
+    <value>Apply</value>
+    <comment>Button next to a suggested song</comment>
+  </data>
+  <data name="Mb_NoneOfThese" xml:space="preserve">
+    <value>None of these</value>
+    <comment>Button below the suggestions: declines all of them</comment>
+  </data>
+  <data name="Mb_Unlink" xml:space="preserve">
+    <value>Remove match</value>
+    <comment>Button: removes the MusicBrainz values from the track</comment>
+  </data>
+  <data name="Mb_Open" xml:space="preserve">
+    <value>Open on MusicBrainz</value>
+    <comment>Button: opens the matched recording in the browser</comment>
+  </data>
+  <data name="Mb_TrackNumber" xml:space="preserve">
+    <value>Track {0}</value>
+    <comment>Position on the album; {0} track number</comment>
+  </data>
+  <data name="Mb_Score" xml:space="preserve">
+    <value>{0} % match</value>
+    <comment>How well the song matches; {0} percent</comment>
+  </data>
+  <data name="Settings_MusicBrainzHint" xml:space="preserve">
+    <value>Album, year, genres and square covers from the free music database. New tracks are looked up after adding them, one request per second.</value>
+    <comment>Hint below MusicBrainz in the settings</comment>
+  </data>
+  <data name="Settings_MusicBrainzAuto" xml:space="preserve">
+    <value>Automatically</value>
+    <comment>Check box: look up new tracks on MusicBrainz automatically</comment>
+  </data>
+  <data name="MatchAll_Title" xml:space="preserve">
+    <value>Match all tracks with MusicBrainz?</value>
+    <comment>Confirmation dialog title</comment>
+  </data>
+  <data name="MatchAll_Message" xml:space="preserve">
+    <value>{0} tracks are looked up one after another in the background, which takes about {1} min. Existing matches stay when nothing certain is found, and get their genres and covers refreshed. Tracks you declined are skipped.</value>
+    <comment>Confirmation dialog text; {0} track count, {1} estimated minutes</comment>
+  </data>
+  <data name="MatchAll_Confirm" xml:space="preserve">
+    <value>Start</value>
+    <comment>Confirmation dialog button</comment>
+  </data>
 </root>

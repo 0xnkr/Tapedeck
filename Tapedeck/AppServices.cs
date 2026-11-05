@@ -2,6 +2,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Tapedeck.Core;
 using Tapedeck.Core.Csv;
+using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
@@ -40,6 +41,9 @@ public static class AppServices
         services.AddSingleton<CsvImportService>();
         services.AddSingleton<PlaylistImportService>();
         services.AddSingleton<LibraryMover>();
+        services.AddSingleton<MbClient>();
+        services.AddSingleton<CoverArtService>();
+        services.AddSingleton<MbEnrichmentService>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
@@ -50,6 +54,7 @@ public static class AppServices
         services.AddSingleton<LibraryFiles>();
         services.AddSingleton<ExistingFileFinder>();
         services.AddSingleton<PlaylistSync>();
+        services.AddSingleton<MusicBrainzQueue>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<PlaylistsViewModel>();

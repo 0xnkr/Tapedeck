@@ -99,6 +99,10 @@ public partial class TrackRowViewModel : ViewModelBase
     [ObservableProperty]
     public partial string? ThumbPath { get; private set; }
 
+    /// <summary>Whether the track is matched with MusicBrainz or waits for the user to confirm a suggestion.</summary>
+    [ObservableProperty]
+    public partial MbMatchState MbState { get; private set; }
+
     /// <summary>Missing albums show a dash instead of an empty cell.</summary>
     public string AlbumText => this.Album ?? "—";
 
@@ -117,6 +121,7 @@ public partial class TrackRowViewModel : ViewModelBase
         this.Progress = 0;
         this.ThumbPath = track.ThumbPath;
         this.FilePath = track.FilePath;
+        this.MbState = track.MbState;
     }
 
     [RelayCommand]

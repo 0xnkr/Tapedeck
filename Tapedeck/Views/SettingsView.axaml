@@ -214,6 +214,20 @@
                                                Text="{Binding DenoVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
                                 </StackPanel>
                             </Border>
+
+                            <!-- MusicBrainz: a web service, not a bundled tool -->
+                            <Border Classes="row">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="MusicBrainz" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_MusicBrainzHint}" />
+                                    </StackPanel>
+                                    <CheckBox Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              Content="{x:Static res:Strings.Settings_MusicBrainzAuto}"
+                                              IsChecked="{Binding MusicBrainzAuto}" />
+                                </Grid>
+                            </Border>
                         </StackPanel>
                     </controls:Island>
                 </Grid>

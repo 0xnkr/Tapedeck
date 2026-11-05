@@ -23,6 +23,8 @@ public enum TrackFilter
     Done,
     Pending,
     Error,
+    /// <summary>MusicBrainz found candidates the user should confirm.</summary>
+    Suggested,
 }
 
 /// <summary>Library page: add links, list, filter and download tracks.</summary>
@@ -41,13 +43,18 @@ public partial class LibraryViewModel(
     DialogService dialogs,
     PlaylistsViewModel playlists,
     PlaylistSync playlistSync,
+    MusicBrainzQueue musicBrainz,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
+    // a search plus up to three genre lookups at one request per second, with the occasional retry
+    private const double MATCH_SECONDS_PER_TRACK = 4;
+
     private readonly List<TrackRowViewModel> all = [];
     // one per running download, so a single row can be cancelled
     private readonly Dictionary<long, CancellationTokenSource> running = [];
     // the current "download pending" or "download missing" run
     private CancellationTokenSource? batch;
+    private bool listening;
 
     /// <summary>Rows that pass the current filter and search.</summary>
     public ObservableCollection<TrackRowViewModel> Tracks { get; } = [];
@@ -84,6 +91,14 @@ public partial class LibraryViewModel(
     [ObservableProperty]
     public partial TrackRowViewModel? SelectedTrack { get; set; }
 
+    /// <summary>The MusicBrainz run is going; the toolbar offers to stop it.</summary>
+    [ObservableProperty]
+    public partial bool IsMatching { get; private set; }
+
+    /// <summary>Some tracks wait for the user to confirm a MusicBrainz suggestion; shows the filter chip.</summary>
+    [ObservableProperty]
+    public partial bool HasSuggestions { get; private set; }
+
     partial void OnFilterChanged(TrackFilter value) => this.ApplyFilter();
 
     partial void OnSearchTextChanged(string value) => this.ApplyFilter();
@@ -91,6 +106,7 @@ public partial class LibraryViewModel(
     [RelayCommand]
     private async Task LoadAsync()
     {
+        this.ListenToMusicBrainz();
         var tracks = await repository.ListDisplayAsync();
         this.all.Clear();
         this.all.AddRange(tracks.Select((track, index) => this.NewRow(track, index + 1)));
@@ -131,6 +147,7 @@ public partial class LibraryViewModel(
             await this.RefreshRowAsync(id);
             if (this.all.Find(r => r.Id == id) is { } row)
                 activity.Confirm(string.Format(Strings.Confirm_Added, row.Title));
+            musicBrainz.EnqueueImported([id]);
         }
         catch (Exception ex)
         {
@@ -190,6 +207,53 @@ public partial class LibraryViewModel(
         this.batch?.Cancel();
         foreach (var cts in this.running.Values)
             cts.Cancel();
+    }
+
+    /// <summary>
+    /// Looks up every track on MusicBrainz again, one after another in the background. Matches stay when nothing
+    /// certain is found, so their genres and covers get refreshed; tracks the user declined are left alone.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasMatchable))]
+    private async Task MatchMusicBrainzAsync()
+    {
+        var ids = this.all.Where(r => r.MbState != MbMatchState.Rejected).Select(r => r.Id).ToList();
+        var minutes = Math.Max(1, (int)Math.Ceiling(ids.Count * MATCH_SECONDS_PER_TRACK / 60));
+        var answer = await dialogs.ConfirmAsync(new ConfirmRequest(
+            Strings.MatchAll_Title, string.Format(Strings.MatchAll_Message, ids.Count, minutes), Strings.MatchAll_Confirm));
+        if (answer is null)
+            return;
+
+        this.Notice = null;
+        musicBrainz.Enqueue(ids, all: true);
+    }
+
+    private bool HasMatchable() => this.all.Any(r => r.MbState != MbMatchState.Rejected);
+
+    [RelayCommand]
+    private void CancelMatching() => musicBrainz.Cancel();
+
+    /// <summary>Wires the MusicBrainz run to the rows once, on the first load.</summary>
+    private void ListenToMusicBrainz()
+    {
+        if (this.listening)
+            return;
+        this.listening = true;
+
+        musicBrainz.TrackChanged += id => _ = this.OnMatchedAsync(id);
+        musicBrainz.Failed += message => this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, message);
+        musicBrainz.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(MusicBrainzQueue.IsRunning))
+                this.IsMatching = musicBrainz.IsRunning;
+        };
+    }
+
+    private async Task OnMatchedAsync(long id)
+    {
+        // the row is shared with the playlist pages, so they show the new values too
+        await this.RefreshRowAsync(id);
+        if (navigation.Current is TrackDetailViewModel detail && detail.Row.Id == id)
+            await detail.LoadCommand.ExecuteAsync(null);
     }
 
     /// <summary>
@@ -288,7 +352,7 @@ public partial class LibraryViewModel(
         }
 
         var errors = csv.Errors.Select(Describe).ToList();
-        var imported = 0;
+        IReadOnlyList<long> imported = [];
         var found = 0;
         if (csv.Tracks.Count > 0)
         {
@@ -305,28 +369,30 @@ public partial class LibraryViewModel(
         }
 
         await this.LoadAsync();
+        musicBrainz.EnqueueImported(imported);
         if (found > 0)
             playlistSync.Request();
         if (errors.Count == 0)
         {
             activity.Confirm(found > 0
-                ? string.Format(Strings.Confirm_ImportedWithFiles, imported, found)
-                : string.Format(Strings.Confirm_Imported, imported));
+                ? string.Format(Strings.Confirm_ImportedWithFiles, imported.Count, found)
+                : string.Format(Strings.Confirm_Imported, imported.Count));
             return;
         }
 
         var shown = string.Join("; ", errors.Take(3)) + (errors.Count > 3 ? " …" : string.Empty);
-        this.Notice = string.Format(Strings.Notice_ImportResult, imported, errors.Count, shown);
+        this.Notice = string.Format(Strings.Notice_ImportResult, imported.Count, errors.Count, shown);
     }
 
-    private async Task<int> ImportTracksAsync(IReadOnlyList<CsvTrack> rows, List<string> errors)
+    /// <returns>The imported tracks.</returns>
+    private async Task<IReadOnlyList<long>> ImportTracksAsync(IReadOnlyList<CsvTrack> rows, List<string> errors)
     {
         CsvImportResult result;
         using (var progress = activity.Begin(string.Format(Strings.Activity_Importing, 0, rows.Count)))
             result = await csvImporter.ImportAsync(rows, new Progress<int>(done =>
                 progress.Update(string.Format(Strings.Activity_Importing, done, rows.Count))));
         errors.AddRange(result.Errors.Select(Describe));
-        return result.TrackIds.Count;
+        return result.TrackIds;
     }
 
     /// <summary>A failed CSV row for the notice, with its line number.</summary>
@@ -388,7 +454,10 @@ public partial class LibraryViewModel(
         var existing = this.all.ToDictionary(r => r.Id);
         var newIds = (await repository.ListDisplayAsync()).Select(t => t.Id).Where(id => !existing.ContainsKey(id)).ToList();
         if (newIds.Count > 0)
+        {
             await fileFinder.AdoptAsync(newIds);
+            musicBrainz.EnqueueImported(newIds);
+        }
 
         var rows = (await repository.ListDisplayAsync()).Select((track, index) =>
         {
@@ -549,15 +618,18 @@ public partial class LibraryViewModel(
     private void OnTracksChanged()
     {
         this.HasMissing = this.all.Any(r => r.Status == DownloadStatus.Missing);
+        // the chip stays while it is selected, so the user sees the list run empty
+        this.HasSuggestions = this.Filter == TrackFilter.Suggested || this.all.Any(r => r.MbState == MbMatchState.Suggested);
         this.ApplyFilter();
         this.UpdateSummary();
         this.DownloadPendingCommand.NotifyCanExecuteChanged();
+        this.MatchMusicBrainzCommand.NotifyCanExecuteChanged();
     }
 
     private void ApplyFilter()
     {
         var search = this.SearchText.Trim();
-        var visible = this.all.Where(r => this.MatchesFilter(r.Status) && (search.Length == 0 || r.Matches(search)));
+        var visible = this.all.Where(r => this.MatchesFilter(r) && (search.Length == 0 || r.Matches(search)));
 
         var selected = this.SelectedTrack;
         this.Tracks.Clear();
@@ -570,11 +642,12 @@ public partial class LibraryViewModel(
             : Strings.Library_EmptyFiltered;
     }
 
-    private bool MatchesFilter(DownloadStatus status) => this.Filter switch
+    private bool MatchesFilter(TrackRowViewModel row) => this.Filter switch
     {
-        TrackFilter.Done => status == DownloadStatus.Done,
-        TrackFilter.Pending => status is DownloadStatus.Pending or DownloadStatus.Downloading,
-        TrackFilter.Error => status is DownloadStatus.Error or DownloadStatus.Missing,
+        TrackFilter.Done => row.Status == DownloadStatus.Done,
+        TrackFilter.Pending => row.Status is DownloadStatus.Pending or DownloadStatus.Downloading,
+        TrackFilter.Error => row.Status is DownloadStatus.Error or DownloadStatus.Missing,
+        TrackFilter.Suggested => row.MbState == MbMatchState.Suggested,
         _ => true,
     };
 

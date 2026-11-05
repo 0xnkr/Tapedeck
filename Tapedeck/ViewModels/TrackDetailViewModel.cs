@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
+using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Services;
 using Tapedeck.Resources;
 using Tapedeck.Services;
@@ -17,6 +19,11 @@ namespace Tapedeck.ViewModels;
 
 /// <summary>Creates the detail page for a library row; the row's page carries out downloads and file actions.</summary>
 public delegate TrackDetailViewModel TrackDetailFactory(TrackRowViewModel row, ITrackActions actions);
+
+/// <summary>A song MusicBrainz suggests for the track, with the button that applies it.</summary>
+/// <param name="Title">"Alright — Kendrick Lamar"</param>
+/// <param name="Details">"To Pimp a Butterfly · 2015 · 3:39 · 82 %"</param>
+public sealed record MbCandidateViewModel(string Title, string Details, IAsyncRelayCommand ApplyCommand);
 
 /// <summary>
 /// Detail page of a track: corrections are saved shortly after typing stops,
@@ -32,13 +39,17 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly LibraryFiles files;
     private readonly ActivityService activity;
     private readonly NavigationService navigation;
+    private readonly MbEnrichmentService musicBrainz;
+    private readonly IPlatformService platform;
 
     private CancellationTokenSource? pendingSave;
     private string? notes;
     private bool loading;
+    private string? mbRecordingId;
 
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, ITrackRepository repository,
-        TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation)
+        TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation,
+        MbEnrichmentService musicBrainz, IPlatformService platform)
     {
         this.Row = row;
         this.actions = actions;
@@ -47,6 +58,8 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.files = files;
         this.activity = activity;
         this.navigation = navigation;
+        this.musicBrainz = musicBrainz;
+        this.platform = platform;
 
         this.ArtistField = new MetadataFieldViewModel(Strings.Field_Artist, this.ScheduleSave);
         this.TitleField = new MetadataFieldViewModel(Strings.Field_Title, this.ScheduleSave);
@@ -125,11 +138,66 @@ public partial class TrackDetailViewModel : ViewModelBase
     [ObservableProperty]
     public partial string? Notice { get; private set; }
 
+    /// <summary>The square cover from MusicBrainz, otherwise the thumbnail that is embedded instead.</summary>
+    [ObservableProperty]
+    public partial string? CoverPath { get; private set; }
+
+    [ObservableProperty]
+    public partial string CoverText { get; private set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMbMatched), nameof(IsMbSuggested), nameof(MbStateText), nameof(MbHint), nameof(MbSearchText))]
+    public partial MbMatchState MbState { get; private set; }
+
+    public bool IsMbMatched => this.MbState == MbMatchState.Matched;
+
+    public bool IsMbSuggested => this.MbState == MbMatchState.Suggested;
+
+    public string MbStateText => this.MbState switch
+    {
+        MbMatchState.Matched => Strings.Mb_StateMatched,
+        MbMatchState.Suggested => Strings.Mb_StateSuggested,
+        MbMatchState.NoMatch => Strings.Mb_StateNoMatch,
+        MbMatchState.Rejected => Strings.Mb_StateRejected,
+        _ => Strings.Mb_StateNone,
+    };
+
+    /// <summary>What the state means for the user; <c>null</c> for a match, which shows its release instead.</summary>
+    public string? MbHint => this.MbState switch
+    {
+        MbMatchState.Matched => null,
+        MbMatchState.Suggested => Strings.Mb_HintSuggested,
+        MbMatchState.NoMatch => Strings.Mb_HintNoMatch,
+        MbMatchState.Rejected => Strings.Mb_HintRejected,
+        _ => Strings.Mb_HintNone,
+    };
+
+    public string MbSearchText => this.MbState == MbMatchState.None ? Strings.Mb_Search : Strings.Mb_SearchAgain;
+
+    /// <summary>"To Pimp a Butterfly · 2015 · Track 7" of the applied match.</summary>
+    [ObservableProperty]
+    public partial string? MbRelease { get; private set; }
+
+    /// <summary>"Kendrick Lamar — Alright · 97 % match" of the applied match.</summary>
+    [ObservableProperty]
+    public partial string? MbRecording { get; private set; }
+
+    public ObservableCollection<MbCandidateViewModel> MbCandidates { get; } = [];
+
+    [ObservableProperty]
+    public partial bool HasMbCandidates { get; private set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SearchMusicBrainzCommand), nameof(RejectMusicBrainzCommand))]
+    public partial bool IsMbBusy { get; private set; }
+
     [RelayCommand]
     private async Task LoadAsync()
     {
         if (await this.repository.GetDisplayAsync(this.Row.Id) is not { } track)
             return;
+        var raw = await this.repository.GetAsync(this.Row.Id);
+        this.LoadMusicBrainz(track, raw);
 
         this.loading = true;
         this.Title = track.Title;
@@ -204,6 +272,101 @@ public partial class TrackDetailViewModel : ViewModelBase
         await this.LoadAsync();
         await this.actions.RefreshAsync(this.Row);
     }
+
+    /// <summary>Searches MusicBrainz for this track now, also when it was searched or matched before.</summary>
+    [RelayCommand(CanExecute = nameof(IsMbIdle))]
+    private Task SearchMusicBrainzAsync() => this.RunMusicBrainzAsync(async () =>
+    {
+        MbMatchState state;
+        using (this.activity.Begin(Strings.Activity_SearchingMusicBrainz))
+            state = await this.musicBrainz.EnrichAsync(this.Row.Id);
+        if (state == MbMatchState.Matched)
+            this.activity.Confirm(string.Format(Strings.Confirm_MbApplied, this.Title));
+    });
+
+    /// <summary>Removes the match or the suggestions; a bulk run leaves the track alone afterwards.</summary>
+    [RelayCommand(CanExecute = nameof(IsMbIdle))]
+    private Task RejectMusicBrainzAsync() => this.RunMusicBrainzAsync(() => this.musicBrainz.RejectAsync(this.Row.Id));
+
+    [RelayCommand]
+    private Task OpenMusicBrainzAsync() =>
+        this.mbRecordingId is { } id ? this.platform.OpenUrlAsync($"https://musicbrainz.org/recording/{id}") : Task.CompletedTask;
+
+    private bool IsMbIdle() => !this.IsMbBusy;
+
+    private Task ApplyCandidateAsync(MbPick pick) => this.RunMusicBrainzAsync(async () =>
+    {
+        using (this.activity.Begin(Strings.Activity_SearchingMusicBrainz))
+            await this.musicBrainz.ApplyAsync(this.Row.Id, pick);
+        this.activity.Confirm(string.Format(Strings.Confirm_MbApplied, pick.Title));
+    });
+
+    /// <summary>Saves pending edits first, so a correction typed just before searching counts.</summary>
+    private async Task RunMusicBrainzAsync(Func<Task> work)
+    {
+        await this.SaveNowAsync();
+        this.Notice = null;
+        this.IsMbBusy = true;
+        try
+        {
+            await work();
+        }
+        catch (HttpRequestException ex)
+        {
+            this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, ex.Message);
+        }
+        finally
+        {
+            this.IsMbBusy = false;
+        }
+
+        await this.LoadAsync();
+        await this.actions.RefreshAsync(this.Row);
+    }
+
+    private void LoadMusicBrainz(TrackDisplay track, Track? raw)
+    {
+        this.MbState = track.MbState;
+        this.mbRecordingId = track.MbRecordingId;
+        this.CoverPath = track.CoverSource == "caa" ? track.Cover : track.ThumbPath;
+        this.CoverText = track.CoverSource == "caa" ? Strings.Detail_CoverFromMusicBrainz : Strings.Detail_CoverFromThumbnail;
+
+        if (raw is not null && track.MbState == MbMatchState.Matched)
+        {
+            this.MbRelease = JoinParts(raw.MbAlbum, Year(raw.MbReleaseDate),
+                raw.MbTrackNo is { } number ? string.Format(Strings.Mb_TrackNumber, number) : null);
+            this.MbRecording = JoinParts($"{raw.MbArtist} — {raw.MbTitle}",
+                raw.MbScore is { } score ? string.Format(Strings.Mb_Score, Percent(score)) : null);
+        }
+        else
+        {
+            this.MbRelease = null;
+            this.MbRecording = null;
+        }
+
+        this.MbCandidates.Clear();
+        if (track.MbState is MbMatchState.Suggested or MbMatchState.Rejected)
+        {
+            foreach (var pick in MbCandidatesJson.Deserialize(raw?.MbCandidates))
+            {
+                this.MbCandidates.Add(new MbCandidateViewModel(
+                    $"{pick.Title} — {pick.Artist}",
+                    JoinParts(pick.Album, Year(pick.Date), Duration(pick.LengthS), string.Format(Strings.Mb_Score, Percent(pick.Score))),
+                    new AsyncRelayCommand(() => this.ApplyCandidateAsync(pick), this.IsMbIdle)));
+            }
+        }
+        this.HasMbCandidates = this.MbCandidates.Count > 0;
+    }
+
+    private static string JoinParts(params string?[] parts) =>
+        string.Join(" · ", parts.Where(p => !string.IsNullOrEmpty(p)));
+
+    private static string? Year(string? date) => date is { Length: >= 4 } ? date[..4] : null;
+
+    private static int Percent(double score) => (int)Math.Round(score * 100);
+
+    private static string? Duration(int? seconds) =>
+        seconds is { } s ? $"{s / 60}:{s % 60:00}" : null;
 
     [RelayCommand]
     private void StartAddGenre()
