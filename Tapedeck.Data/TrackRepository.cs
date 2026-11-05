@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
+using Tapedeck.Core.MusicBrainz;
 
 namespace Tapedeck.Data;
 
@@ -172,6 +173,85 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
     {
         await using var connection = await connectionFactory.OpenAsync();
         await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {NOW} WHERE id = @id;", new { id });
+    }
+
+    public async Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<long>(
+            "SELECT id FROM tracks WHERE mb_status IN @states ORDER BY added_at, id;",
+            new { states = states.Select(s => s.ToDb()).ToArray() });
+        return rows.AsList();
+    }
+
+    public async Task SaveMbResultAsync(long id, MbMatchState state, MbPick? applied, IReadOnlyList<string> genres,
+        double? score, string? candidatesJson)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        // the shown values change when a match comes or goes, so the file's tags become outdated
+        var wasMatched = await connection.ExecuteScalarAsync<string>(
+            "SELECT mb_status FROM tracks WHERE id = @id;", new { id }, transaction) == MbMatchState.Matched.ToDb();
+        var edited = applied is not null || wasMatched;
+
+        await connection.ExecuteAsync(
+            $"""
+            UPDATE tracks SET
+                mb_status           = @status,
+                mb_recording_id     = @RecordingId,
+                mb_artist           = @Artist,
+                mb_artist_id        = @ArtistId,
+                mb_title            = @Title,
+                mb_album            = @Album,
+                mb_album_artist     = @AlbumArtist,
+                mb_release_id       = @ReleaseId,
+                mb_release_group_id = @ReleaseGroupId,
+                mb_release_date     = @Date,
+                mb_track_no         = @TrackNumber,
+                mb_disc_no          = @DiscNumber,
+                mb_score            = @Score,
+                mb_candidates       = COALESCE(@candidatesJson, mb_candidates),
+                mb_checked_at       = {NOW},
+                edited_at           = CASE WHEN @edited THEN {NOW} ELSE edited_at END
+            WHERE id = @id;
+            """,
+            new
+            {
+                id,
+                status = (applied is null ? state : MbMatchState.Matched).ToDb(),
+                RecordingId = applied?.RecordingId,
+                Artist = applied?.Artist,
+                ArtistId = applied?.ArtistId,
+                Title = applied?.Title,
+                Album = applied?.Album,
+                AlbumArtist = applied?.AlbumArtist,
+                ReleaseId = applied?.ReleaseId,
+                ReleaseGroupId = applied?.ReleaseGroupId,
+                Date = applied?.Date,
+                TrackNumber = applied?.TrackNumber,
+                DiscNumber = applied?.DiscNumber,
+                Score = applied?.Score ?? score,
+                candidatesJson,
+                edited,
+            },
+            transaction);
+
+        await connection.ExecuteAsync(
+            "DELETE FROM track_tags WHERE track_id = @id AND source = @source;",
+            new { id, source = TagSource.Mb.ToDb() }, transaction);
+        if (applied is not null)
+        {
+            foreach (var genre in genres)
+                await InsertTagAsync(connection, transaction, id, genre, TagSource.Mb);
+        }
+
+        // a MusicBrainz cover belongs to the previous release; the caller sets the new one once downloaded
+        await connection.ExecuteAsync(
+            "UPDATE tracks SET cover_path = NULL, cover_source = NULL WHERE id = @id AND cover_source = 'caa';",
+            new { id }, transaction);
+
+        await transaction.CommitAsync();
     }
 
     private static async Task InsertTagAsync(SqliteConnection connection, DbTransaction transaction,

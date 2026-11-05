@@ -25,6 +25,20 @@ public sealed class Track
     public string? MbTitle { get; init; }
     public string? MbAlbum { get; init; }
     public string? MbReleaseDate { get; init; }
+    /// <summary>Database value of <see cref="MbState"/>.</summary>
+    public string MbStatus { get; init; } = "none";
+    public string? MbArtistId { get; init; }
+    public string? MbReleaseId { get; init; }
+    public string? MbReleaseGroupId { get; init; }
+    public string? MbAlbumArtist { get; init; }
+    public int? MbTrackNo { get; init; }
+    public int? MbDiscNo { get; init; }
+    public double? MbScore { get; init; }
+    /// <summary>JSON of the best songs found (<see cref="MusicBrainz.MbCandidatesJson"/>).</summary>
+    public string? MbCandidates { get; init; }
+    public string? MbCheckedAt { get; init; }
+
+    public MbMatchState MbState => MbMatchStateExtensions.ParseDb(this.MbStatus);
 
     public string? UserArtist { get; init; }
     public string? UserTitle { get; init; }

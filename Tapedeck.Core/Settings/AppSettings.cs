@@ -4,4 +4,9 @@ namespace Tapedeck.Core.Settings;
 /// <param name="Language">UI culture name such as <c>en</c> or <c>de</c>; <c>null</c> follows the system.</param>
 /// <param name="Accent">Accent color as hex (<c>#FFB870</c>); <c>null</c> uses the palette.</param>
 /// <param name="LibraryDir">Absolute folder of the music library; <c>null</c> uses <c>Music/Tapedeck</c>.</param>
-public sealed record AppSettings(string? Language = null, string? Accent = null, string? LibraryDir = null);
+/// <param name="MusicBrainzAuto">Look up new tracks on MusicBrainz after an import; <c>null</c> means on.</param>
+public sealed record AppSettings(
+    string? Language = null,
+    string? Accent = null,
+    string? LibraryDir = null,
+    bool? MusicBrainzAuto = null);

@@ -1,4 +1,5 @@
 using Tapedeck.Core.Models;
+using Tapedeck.Core.MusicBrainz;
 
 namespace Tapedeck.Core;
 
@@ -46,4 +47,18 @@ public interface ITrackRepository
 
     /// <summary>Records that the tags in the file now match the displayed values.</summary>
     Task MarkTagsWrittenAsync(long id);
+
+    /// <summary>Tracks in the given MusicBrainz states, oldest first, e.g. the ones never searched.</summary>
+    Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states);
+
+    /// <summary>
+    /// Stores the outcome of a MusicBrainz search in one step.
+    /// With <paramref name="applied"/> its values, release and genres are taken over and the state is
+    /// <see cref="MbMatchState.Matched"/>; without, an earlier match is removed together with its genres and
+    /// its MusicBrainz cover. Either way a change of the shown values marks the file's tags as outdated.
+    /// </summary>
+    /// <param name="score">How well the best song matched; ignored with <paramref name="applied"/>, which has its own.</param>
+    /// <param name="candidatesJson">The best songs found, for confirming a suggestion later; <c>null</c> keeps the stored ones.</param>
+    Task SaveMbResultAsync(long id, MbMatchState state, MbPick? applied, IReadOnlyList<string> genres,
+        double? score, string? candidatesJson);
 }
