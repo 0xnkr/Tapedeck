@@ -36,6 +36,7 @@ public partial class LibraryViewModel(
     ActivityService activity,
     NavigationService navigation,
     LibraryFiles files,
+    ExistingFileFinder fileFinder,
     DialogService dialogs,
     PlaylistsViewModel playlists,
     PlaylistSync playlistSync,
@@ -119,7 +120,11 @@ public partial class LibraryViewModel(
             await toolSetup.EnsureAsync();
             long id;
             using (activity.Begin(Strings.Activity_FetchingInfo))
+            {
                 id = await importer.AddAsync(link);
+                // the file may already be in the library folder, e.g. copied from another computer
+                await fileFinder.AdoptAsync([id]);
+            }
             if (this.NewLink == link)
                 this.NewLink = string.Empty;
             await this.RefreshRowAsync(id);
@@ -207,6 +212,7 @@ public partial class LibraryViewModel(
     /// <summary>Downloads the given rows one by one; "Cancel downloads" stops the rest.</summary>
     public async Task DownloadTracksAsync(IReadOnlyList<TrackRowViewModel> rows)
     {
+        rows = await this.TakeOverFilesAsync(rows);
         using var cts = this.batch = new CancellationTokenSource();
         try
         {
@@ -272,12 +278,14 @@ public partial class LibraryViewModel(
 
         var errors = csv.Errors.Select(Describe).ToList();
         var imported = 0;
+        var found = 0;
         if (csv.Tracks.Count > 0)
         {
             try
             {
                 await toolSetup.EnsureAsync();
                 imported = await this.ImportTracksAsync(csv.Tracks, errors);
+                found = (await fileFinder.AdoptAsync()).Count;
             }
             catch (Exception ex)
             {
@@ -286,9 +294,13 @@ public partial class LibraryViewModel(
         }
 
         await this.LoadAsync();
+        if (found > 0)
+            playlistSync.Request();
         if (errors.Count == 0)
         {
-            activity.Confirm(string.Format(Strings.Confirm_Imported, imported));
+            activity.Confirm(found > 0
+                ? string.Format(Strings.Confirm_ImportedWithFiles, imported, found)
+                : string.Format(Strings.Confirm_Imported, imported));
             return;
         }
 
@@ -349,7 +361,11 @@ public partial class LibraryViewModel(
 
     Task ITrackActions.OpenOnYoutubeAsync(TrackRowViewModel row) => platform.OpenUrlAsync(row.Url);
 
-    Task ITrackActions.DownloadAsync(TrackRowViewModel row) => this.DownloadRowAsync(row);
+    async Task ITrackActions.DownloadAsync(TrackRowViewModel row)
+    {
+        if ((await this.TakeOverFilesAsync([row])).Count > 0)
+            await this.DownloadRowAsync(row);
+    }
 
     Task ITrackActions.ShowInFolderAsync(TrackRowViewModel row) =>
         platform.OpenFolderAsync(row.FilePath is { } file
@@ -383,6 +399,10 @@ public partial class LibraryViewModel(
     public async Task AddNewTracksAsync()
     {
         var existing = this.all.ToDictionary(r => r.Id);
+        var newIds = (await repository.ListDisplayAsync()).Select(t => t.Id).Where(id => !existing.ContainsKey(id)).ToList();
+        if (newIds.Count > 0)
+            await fileFinder.AdoptAsync(newIds);
+
         var rows = (await repository.ListDisplayAsync()).Select((track, index) =>
         {
             if (!existing.TryGetValue(track.Id, out var row))
@@ -440,6 +460,34 @@ public partial class LibraryViewModel(
         // the playlists lose the track, so their counts and .m3u8 files change
         await playlists.ChangedAsync();
         return true;
+    }
+
+    /// <summary>
+    /// Gives rows without a file the matching file from the library folder instead of downloading it twice.
+    /// </summary>
+    /// <returns>The rows that still need a download.</returns>
+    private async Task<IReadOnlyList<TrackRowViewModel>> TakeOverFilesAsync(IReadOnlyList<TrackRowViewModel> rows)
+    {
+        IReadOnlyList<long> adopted;
+        try
+        {
+            adopted = await fileFinder.AdoptAsync(rows.Select(r => r.Id).ToList());
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // the folder cannot be read; downloading still works
+            return rows;
+        }
+        if (adopted.Count == 0)
+            return rows;
+
+        foreach (var id in adopted)
+            await this.RefreshRowAsync(id);
+        playlistSync.Request();
+        activity.Confirm(adopted.Count == 1
+            ? Strings.Confirm_FilesFound_One
+            : string.Format(Strings.Confirm_FilesFound_Other, adopted.Count));
+        return rows.Where(r => !adopted.Contains(r.Id)).ToList();
     }
 
     private async Task DownloadRowAsync(TrackRowViewModel row)

@@ -46,6 +46,7 @@ public static class AppServices
         services.AddSingleton<NavigationService>();
         services.AddSingleton<DialogService>();
         services.AddSingleton<LibraryFiles>();
+        services.AddSingleton<ExistingFileFinder>();
         services.AddSingleton<PlaylistSync>();
 
         services.AddSingleton<LibraryViewModel>();
