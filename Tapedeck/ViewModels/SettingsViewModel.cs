@@ -69,11 +69,13 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly IPlatformService platform;
     private readonly PlaylistSync playlistSync;
     private readonly DialogService dialogs;
+    private readonly PlayerService player;
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
-        DialogService dialogs)
+        DialogService dialogs, PlayerService player)
     {
+        this.player = player;
         this.store = store;
         this.paths = paths;
         this.mover = mover;
@@ -206,6 +208,8 @@ public partial class SettingsViewModel : ViewModelBase
 
         try
         {
+            // the playing file moves too, so it has to be closed first
+            await this.player.StopAsync();
             int moved;
             var oldDir = this.paths.LibraryDir;
             using (var progress = this.activity.Begin(string.Format(Strings.Activity_MovingLibrary, 0, "…")))
