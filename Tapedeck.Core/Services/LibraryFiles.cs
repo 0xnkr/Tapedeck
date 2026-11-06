@@ -36,6 +36,19 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
         return wanted;
     }
 
+    /// <summary>
+    /// Keeps one track of a group of duplicates and removes the others, see <see cref="ITrackRepository.MergeIntoAsync"/>:
+    /// their playlist places and rating go to the kept track, and adding their videos again leads to it.
+    /// </summary>
+    /// <param name="deleteFiles">Also delete the audio files of the removed tracks.</param>
+    public async Task KeepAsync(long keepId, IReadOnlyList<long> duplicateIds, bool deleteFiles)
+    {
+        var others = duplicateIds.Where(id => id != keepId).ToList();
+        await repository.MergeIntoAsync(keepId, others);
+        foreach (var id in others)
+            await this.RemoveAsync(id, deleteFiles);
+    }
+
     /// <summary>Removes a track from the library, its cached thumbnail and, if wanted, its audio file.</summary>
     public async Task RemoveAsync(long trackId, bool deleteFile)
     {

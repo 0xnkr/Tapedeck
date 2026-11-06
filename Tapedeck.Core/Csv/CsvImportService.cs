@@ -19,6 +19,8 @@ public sealed class CsvImportService(ITrackRepository repository, TrackImportSer
         CancellationToken ct = default)
     {
         var known = (await repository.ListDisplayAsync()).ToDictionary(t => t.VideoId, t => t.Id);
+        foreach (var (videoId, trackId) in await repository.ListAliasesAsync())
+            known.TryAdd(videoId, trackId);
         var ids = new List<long>();
         var errors = new List<CsvImportError>();
         for (var i = 0; i < rows.Count; i++)
