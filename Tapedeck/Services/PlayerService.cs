@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 using Silk.NET.Core.Contexts;
 using Silk.NET.OpenAL;
 using Tapedeck.Core.Playback;
+using Tapedeck.Core.Services;
 using Tapedeck.Resources;
 
 namespace Tapedeck.Services;
@@ -18,7 +19,9 @@ namespace Tapedeck.Services;
 /// <param name="FilePath">Absolute path of the audio file.</param>
 /// <param name="Cover">Square cover or thumbnail for the bar; <c>null</c> shows a placeholder.</param>
 /// <param name="Duration">Known length, until the file tells its own.</param>
-public sealed record PlayRequest(long TrackId, string FilePath, string Title, string Artist, string? Cover, TimeSpan Duration);
+/// <param name="LoudnessLufs">Measured loudness, so all tracks play equally loud; <c>null</c> plays the file as it is.</param>
+public sealed record PlayRequest(
+    long TrackId, string FilePath, string Title, string Artist, string? Cover, TimeSpan Duration, double? LoudnessLufs = null);
 
 /// <summary>
 /// Plays one track at a time, for listening in: Opus is decoded by <see cref="OpusPcmReader"/> and streamed
@@ -237,6 +240,10 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
                 this.Post(() => this.Duration = reader.Duration);
 
             var source = al.GenSource();
+            // the same leveling the phone does with the track gain in the tags
+            var gain = LoudnessMeter.PlaybackGain(request.LoudnessLufs);
+            al.SetSourceProperty(source, SourceFloat.MaxGain, Math.Max(gain, 1));
+            al.SetSourceProperty(source, SourceFloat.Gain, gain);
             var buffers = al.GenBuffers(BUFFER_COUNT);
             // sample frames of each queued buffer, to tell the position
             var queued = new Queue<int>();

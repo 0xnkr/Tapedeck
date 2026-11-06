@@ -9,9 +9,11 @@ namespace Tapedeck.Core.Settings;
 /// "Keep this one" for duplicates without asking: <c>true</c> also deletes the copies' files, <c>false</c> keeps them;
 /// <c>null</c> asks every time.
 /// </param>
+/// <param name="LevelPlayback">The app's player plays all tracks equally loud; <c>null</c> means on. The track gain in the files does not depend on it.</param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
     string? LibraryDir = null,
     bool? MusicBrainzAuto = null,
-    bool? KeepDeletesFiles = null);
+    bool? KeepDeletesFiles = null,
+    bool? LevelPlayback = null);
