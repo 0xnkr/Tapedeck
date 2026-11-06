@@ -32,6 +32,9 @@ public interface ITrackActions
     /// <returns><c>true</c> when the track was removed.</returns>
     Task<bool> RemoveAsync(TrackRowViewModel row);
 
+    /// <summary>Asks for confirmation, then keeps this track of its duplicates and removes the others.</summary>
+    Task KeepAsync(TrackRowViewModel row);
+
     void CancelDownload(TrackRowViewModel row);
 
     /// <summary>The playlists offered in the "add to playlist" menu.</summary>
@@ -91,7 +94,7 @@ public partial class TrackRowViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDownloading), nameof(CanPlay), nameof(PlayTooltip))]
-    [NotifyCanExecuteChangedFor(nameof(RemoveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveCommand), nameof(KeepCommand))]
     public partial DownloadStatus Status { get; set; }
 
     public bool IsDownloading => this.Status == DownloadStatus.Downloading;
@@ -130,6 +133,13 @@ public partial class TrackRowViewModel : ViewModelBase
     /// <summary>The file exists and its tags are older than the shown values.</summary>
     public bool TagsStale { get; private set; }
 
+    /// <summary>The MusicBrainz recording, which tells duplicates apart from songs of the same name.</summary>
+    public string? MbRecordingId { get; private set; }
+
+    /// <summary>The same song is in the library from another video; the menu offers to keep this one.</summary>
+    [ObservableProperty]
+    public partial bool IsDuplicate { get; set; }
+
     /// <summary>Missing albums show a dash instead of an empty cell.</summary>
     public string AlbumText => this.Album ?? "—";
 
@@ -154,6 +164,7 @@ public partial class TrackRowViewModel : ViewModelBase
         this.OnPropertyChanged(nameof(this.PlayTooltip));
         this.MbState = track.MbState;
         this.TagsStale = track.TagsStale;
+        this.MbRecordingId = track.MbRecordingId;
     }
 
     [RelayCommand]
@@ -176,6 +187,9 @@ public partial class TrackRowViewModel : ViewModelBase
     private Task RemoveAsync() => this.actions.RemoveAsync(this);
 
     private bool CanRemove() => !this.IsDownloading;
+
+    [RelayCommand(CanExecute = nameof(CanRemove))]
+    private Task KeepAsync() => this.actions.KeepAsync(this);
 
     [RelayCommand]
     private void CancelDownload() => this.actions.CancelDownload(this);

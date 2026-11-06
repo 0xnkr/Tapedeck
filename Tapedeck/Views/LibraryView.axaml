@@ -105,6 +105,10 @@
                                          ToolTip.Tip="{x:Static res:Strings.Filter_SuggestedHint}"
                                          IsVisible="{Binding HasSuggestions}"
                                          IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Duplicates}"
+                                         ToolTip.Tip="{x:Static res:Strings.Filter_DuplicatesHint}"
+                                         IsVisible="{Binding HasDuplicates}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Duplicates}}" />
                         </WrapPanel>
                     </DockPanel>
                 </DockPanel>

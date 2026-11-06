@@ -11,6 +11,7 @@ using Tapedeck.Core;
 using Tapedeck.Core.Csv;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
+using Tapedeck.Core.Settings;
 using Tapedeck.Resources;
 using Tapedeck.Services;
 
@@ -25,6 +26,8 @@ public enum TrackFilter
     Error,
     /// <summary>MusicBrainz found candidates the user should confirm.</summary>
     Suggested,
+    /// <summary>The same song from several videos, shown next to each other.</summary>
+    Duplicates,
 }
 
 /// <summary>Library page: add links, list, filter and download tracks.</summary>
@@ -47,6 +50,7 @@ public partial class LibraryViewModel(
     TagWriter tagWriter,
     PlayerService player,
     LoudnessQueue loudness,
+    SettingsStore settings,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     // a search plus up to three genre lookups at one request per second, with the occasional retry
@@ -57,6 +61,8 @@ public partial class LibraryViewModel(
     private readonly Dictionary<long, CancellationTokenSource> running = [];
     // the current "download pending" or "download missing" run
     private CancellationTokenSource? batch;
+    // each duplicate's group (all its copies, itself included), and the group's place for sorting
+    private Dictionary<long, (IReadOnlyList<long> Group, int Index)> duplicates = [];
     private bool listening;
 
     /// <summary>Rows that pass the current filter and search.</summary>
@@ -111,6 +117,10 @@ public partial class LibraryViewModel(
     /// <summary>Some tracks wait for the user to confirm a MusicBrainz suggestion; shows the filter chip.</summary>
     [ObservableProperty]
     public partial bool HasSuggestions { get; private set; }
+
+    /// <summary>Some songs are in the library more than once; shows the filter chip.</summary>
+    [ObservableProperty]
+    public partial bool HasDuplicates { get; private set; }
 
     partial void OnFilterChanged(TrackFilter value) => this.ApplyFilter();
 
@@ -660,6 +670,79 @@ public partial class LibraryViewModel(
         return true;
     }
 
+    async Task ITrackActions.KeepAsync(TrackRowViewModel row)
+    {
+        if (!this.duplicates.TryGetValue(row.Id, out var duplicate))
+            return;
+        var others = this.all.Where(r => r != row && duplicate.Group.Contains(r.Id)).ToList();
+        if (others.Any(r => r.IsDownloading))
+        {
+            this.Notice = string.Format(Strings.Notice_KeepWhileDownloading, row.Title);
+            return;
+        }
+
+        // "don't ask again" remembers the file choice along with it
+        var answer = settings.Load().KeepDeletesFiles is { } remembered
+            ? new ConfirmResult(remembered)
+            : await dialogs.ConfirmAsync(new ConfirmRequest(
+                string.Format(Strings.Keep_Title, row.Title),
+                others.Count == 1 ? Strings.Keep_Message_One : string.Format(Strings.Keep_Message_Other, others.Count),
+                Strings.Keep_Confirm,
+                // shown even without files, so a remembered answer always says what the user chose
+                OptionText: Strings.Keep_DeleteFiles,
+                OptionDefault: true,
+                IsDestructive: true,
+                OfferDontAsk: true));
+        if (answer is null)
+            return;
+        if (answer.DontAskAgain)
+            settings.Update(s => s with { KeepDeletesFiles = answer.Option });
+
+        this.Notice = null;
+        try
+        {
+            foreach (var other in others)
+                await player.StopIfLoadedAsync(other.Id);
+            await files.KeepAsync(row.Id, duplicate.Group, deleteFiles: answer.Option);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            this.Notice = string.Format(Strings.Notice_KeepFailed, row.Title, ex.Message);
+            // some copies may be gone already
+            await this.LoadAsync();
+            return;
+        }
+
+        // a removed copy's detail page has nothing left to show
+        if (navigation.Current is TrackDetailViewModel detail && others.Contains(detail.Row))
+            navigation.Back();
+
+        foreach (var other in others)
+            this.all.Remove(other);
+        for (var i = 0; i < this.all.Count; i++)
+            this.all[i].Number = i + 1;
+        // the kept track may have taken over a rating
+        if (await repository.GetDisplayAsync(row.Id) is { } track)
+            row.Update(track, files.StatusOf(track));
+        this.OnTracksChanged();
+        activity.Confirm(string.Format(Strings.Confirm_Kept, row.Title, others.Count));
+        // the playlists got the kept track in place of the copies
+        await playlists.ChangedAsync();
+    }
+
+    /// <summary>Marks the rows whose song is in the library more than once.</summary>
+    private void FindDuplicates()
+    {
+        var groups = DuplicateFinder.Groups(this.all.Select(r => new DuplicateFinder.Song(r.Id, r.Artist, r.Title, r.MbRecordingId)));
+        this.duplicates = groups
+            .SelectMany((group, index) => group.Select(id => (id, group, index)))
+            .ToDictionary(e => e.id, e => (e.group, e.index));
+        foreach (var row in this.all)
+            row.IsDuplicate = this.duplicates.ContainsKey(row.Id);
+        // the chip stays while it is selected, so the user sees the list run empty
+        this.HasDuplicates = this.Filter == TrackFilter.Duplicates || this.duplicates.Count > 0;
+    }
+
     /// <summary>
     /// Gives rows without a file the matching file from the library folder instead of downloading it twice.
     /// </summary>
@@ -748,6 +831,7 @@ public partial class LibraryViewModel(
         this.MarkPlaying();
         // the chip stays while it is selected, so the user sees the list run empty
         this.HasSuggestions = this.Filter == TrackFilter.Suggested || this.all.Any(r => r.MbState == MbMatchState.Suggested);
+        this.FindDuplicates();
         this.ApplyFilter();
         this.UpdateSummary();
         this.DownloadPendingCommand.NotifyCanExecuteChanged();
@@ -762,6 +846,9 @@ public partial class LibraryViewModel(
     {
         var search = this.SearchText.Trim();
         var visible = this.all.Where(r => this.MatchesFilter(r) && (search.Length == 0 || r.Matches(search)));
+        // the copies of a song next to each other, so the user can compare them
+        if (this.Filter == TrackFilter.Duplicates)
+            visible = visible.OrderBy(r => this.duplicates[r.Id].Index).ThenBy(r => r.Number);
 
         var selected = this.SelectedTrack;
         this.Tracks.Clear();
@@ -780,6 +867,7 @@ public partial class LibraryViewModel(
         TrackFilter.Pending => row.Status is DownloadStatus.Pending or DownloadStatus.Downloading,
         TrackFilter.Error => row.Status is DownloadStatus.Error or DownloadStatus.Missing,
         TrackFilter.Suggested => row.MbState == MbMatchState.Suggested,
+        TrackFilter.Duplicates => this.duplicates.ContainsKey(row.Id),
         _ => true,
     };
 

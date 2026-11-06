@@ -80,6 +80,9 @@
                     <MenuItem Header="{x:Static res:Strings.Track_OpenOnYoutube}"
                               Command="{Binding OpenOnYoutubeCommand}" />
                     <Separator />
+                    <MenuItem Header="{x:Static res:Strings.Track_Keep}"
+                              Command="{Binding KeepCommand}"
+                              IsVisible="{Binding IsDuplicate}" />
                     <MenuItem Header="{x:Static res:Strings.Track_Remove}"
                               Command="{Binding RemoveCommand}" />
                 </MenuFlyout>
