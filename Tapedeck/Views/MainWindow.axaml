@@ -51,7 +51,73 @@
                 </StackPanel>
             </DockPanel>
 
-            <Panel Grid.Column="1" Margin="0,4,16,16">
+            <DockPanel Grid.Column="1" Margin="0,4,16,16">
+
+            <!-- Player bar below the page, so it never covers a table or the toast -->
+            <controls:Island DockPanel.Dock="Bottom"
+                             Margin="0,12,0,0"
+                             Padding="10"
+                             IsVisible="{Binding Player.HasTrack}">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnSpacing="{StaticResource Space.3}">
+                    <Button Classes="link"
+                            Command="{Binding OpenPlayingCommand}"
+                            ToolTip.Tip="{x:Static res:Strings.Player_OpenDetails}"
+                            AutomationProperties.Name="{x:Static res:Strings.Player_OpenDetails}">
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.3}">
+                            <Border Width="40" Height="40"
+                                    CornerRadius="{StaticResource Radius.Thumb}"
+                                    Background="{DynamicResource Brush.Surface3}"
+                                    ClipToBounds="True">
+                                <Image Source="{Binding Player.Cover, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=80}"
+                                       Stretch="UniformToFill" />
+                            </Border>
+                            <StackPanel Spacing="2" VerticalAlignment="Center" MaxWidth="260">
+                                <TextBlock Classes="body-strong" Text="{Binding Player.Title}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Classes="support" Text="{Binding Player.Artist}" Foreground="{DynamicResource Brush.Text2}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <Panel Grid.Column="1" VerticalAlignment="Center">
+                        <Button Classes="icon"
+                                Command="{Binding Player.TogglePauseCommand}"
+                                ToolTip.Tip="{x:Static res:Strings.Player_Pause}"
+                                AutomationProperties.Name="{x:Static res:Strings.Player_Pause}"
+                                IsVisible="{Binding Player.IsPlaying}">
+                            <controls:Glyph Data="{StaticResource Icon.Pause}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                        </Button>
+                        <Button Classes="icon"
+                                Command="{Binding Player.TogglePauseCommand}"
+                                ToolTip.Tip="{x:Static res:Strings.Player_Play}"
+                                AutomationProperties.Name="{x:Static res:Strings.Player_Play}"
+                                IsVisible="{Binding !Player.IsPlaying}">
+                            <controls:Glyph Data="{StaticResource Icon.Play}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                        </Button>
+                    </Panel>
+
+                    <TextBlock Grid.Column="2" Classes="support tabular" Text="{Binding Player.PositionText}"
+                               Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center" />
+                    <Slider Grid.Column="3"
+                            Minimum="0"
+                            Maximum="{Binding Player.DurationSeconds}"
+                            Value="{Binding Player.PositionSeconds}"
+                            VerticalAlignment="Center"
+                            ToolTip.Tip="{x:Static res:Strings.Player_Seek}"
+                            AutomationProperties.Name="{x:Static res:Strings.Player_Seek}" />
+                    <TextBlock Grid.Column="4" Classes="support tabular" Text="{Binding Player.DurationText}"
+                               Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center" />
+                    <Button Grid.Column="5"
+                            Classes="icon"
+                            VerticalAlignment="Center"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                            Command="{Binding Player.StopCommand}"
+                            ToolTip.Tip="{x:Static res:Strings.Player_Close}"
+                            AutomationProperties.Name="{x:Static res:Strings.Player_Close}" />
+                </Grid>
+            </controls:Island>
+
+            <Panel>
                 <ContentControl Content="{Binding Navigation.Current}" />
 
                 <!-- Activity toast: spinning record while busy, resting record for the confirmation -->
@@ -71,6 +137,7 @@
                     </StackPanel>
                 </controls:Island>
             </Panel>
+            </DockPanel>
         </Grid>
 
         <!-- Confirmation dialog over everything below the title bar -->

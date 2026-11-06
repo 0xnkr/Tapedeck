@@ -17,8 +17,9 @@ public enum AppPage
 public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel(LibraryViewModel library, PlaylistsViewModel playlists, SettingsViewModel settings,
-        NavigationService navigation, ActivityService activity, DialogService dialogs)
+        NavigationService navigation, ActivityService activity, DialogService dialogs, PlayerService player)
     {
+        this.Player = player;
         this.Playlists = playlists;
         this.Dialogs = dialogs;
         this.Library = library;
@@ -39,6 +40,20 @@ public partial class MainViewModel : ViewModelBase
     public ActivityService Activity { get; }
 
     public DialogService Dialogs { get; }
+
+    /// <summary>The track that plays, for the player bar.</summary>
+    public PlayerService Player { get; }
+
+    /// <summary>The player bar's title opens the playing track's details.</summary>
+    [RelayCommand]
+    private void OpenPlaying()
+    {
+        if (this.Player.CurrentTrackId is { } id && this.Library.RowFor(id) is { } row)
+            row.OpenDetailsCommand.Execute(null);
+    }
+
+    /// <summary>Space outside of text fields.</summary>
+    public void TogglePlayback() => this.Player.TogglePauseCommand.Execute(null);
 
     [ObservableProperty]
     public partial AppPage CurrentPage { get; private set; } = AppPage.Library;
