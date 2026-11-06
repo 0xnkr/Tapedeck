@@ -858,4 +858,34 @@
   <data name="Notice_WriteAllTagsFailed" xml:space="preserve">
     <value>Tags für {0} Titel geschrieben, {1} fehlgeschlagen: {2}</value>
   </data>
+  <data name="Mb_About" xml:space="preserve">
+    <value>Freie Musikdatenbank. Liefert Album, Jahr, Genres und Cover, die bei YouTube meist fehlen.</value>
+  </data>
+  <data name="Library_MatchMusicBrainzHint" xml:space="preserve">
+    <value>Sucht für jeden Titel Album, Jahr, Genres und Cover auf MusicBrainz. Läuft im Hintergrund, du kannst weiterarbeiten.</value>
+  </data>
+  <data name="Library_CancelMatchingHint" xml:space="preserve">
+    <value>Hält die Suche an. Bisher Gefundenes bleibt erhalten.</value>
+  </data>
+  <data name="Library_WriteAllTagsHint" xml:space="preserve">
+    <value>Speichert Titel, Album, Genres und Cover in die Musikdateien, damit dein Handy sie anzeigt.</value>
+  </data>
+  <data name="Filter_SuggestedHint" xml:space="preserve">
+    <value>Titel, bei denen MusicBrainz unsicher war. Öffne einen und wähle den richtigen Treffer.</value>
+  </data>
+  <data name="Mb_SearchHint" xml:space="preserve">
+    <value>Sucht diesen Titel auf MusicBrainz.</value>
+  </data>
+  <data name="Mb_ApplyHint" xml:space="preserve">
+    <value>Übernimmt Album, Jahr, Genres und Cover dieses Treffers.</value>
+  </data>
+  <data name="Mb_UnlinkHint" xml:space="preserve">
+    <value>Entfernt die Daten von MusicBrainz. Der Titel zeigt wieder die Angaben von YouTube.</value>
+  </data>
+  <data name="Mb_NoneOfTheseHint" xml:space="preserve">
+    <value>Keiner passt? Dann behält der Titel die Angaben von YouTube.</value>
+  </data>
+  <data name="Settings_MusicBrainzAutoHint" xml:space="preserve">
+    <value>Sucht neue Titel gleich nach dem Hinzufügen auf MusicBrainz.</value>
+  </data>
 </root>
