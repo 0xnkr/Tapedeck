@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Track details
 
 - Track detail page with corrections for artist, title, album, album artist and year. Corrections save automatically while you type. The page scrolls when the window is too low.
+- Go to the previous or next track right on the detail page, with the arrow buttons next to "12 / 144" or the arrow keys. It follows the list you came from: the library as filtered and searched, or a playlist in its order.
+- Going back from the details keeps your place in the list and shows the track you looked at last.
 - Source chips show where each value comes from: your correction, MusicBrainz, YouTube or the parsed title.
 - Genres and a five-star rating.
 - "Write tags" puts title, artist, album, album artist, year, genres, the YouTube link and the cover into the audio file, and renames the file to match corrections.

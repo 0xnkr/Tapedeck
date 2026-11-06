@@ -1,5 +1,7 @@
 using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
@@ -23,6 +25,14 @@ public partial class PlaylistDetailView : UserControl
         this.EntryList.AddHandler(PointerPressedEvent, this.OnPointerPressed, RoutingStrategies.Tunnel);
         this.EntryList.AddHandler(DragDrop.DragOverEvent, this.OnDragOver);
         this.EntryList.AddHandler(DragDrop.DropEvent, this.OnDrop);
+    }
+
+    /// <summary>Back from the details: the track last shown there is scrolled into view.</summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        if (this.DataContext is PlaylistDetailViewModel { SelectedEntry: { } selected })
+            Dispatcher.UIThread.Post(() => this.EntryList.ScrollIntoView(selected), DispatcherPriority.Loaded);
     }
 
     private async void OnPointerPressed(object? sender, PointerPressedEventArgs e)

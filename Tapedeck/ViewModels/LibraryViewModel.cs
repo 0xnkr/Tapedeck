@@ -493,7 +493,18 @@ public partial class LibraryViewModel(
             ? Path.GetDirectoryName(paths.ToLibraryPath(file)) ?? paths.LibraryDir
             : paths.LibraryDir);
 
-    void ITrackActions.OpenDetails(TrackRowViewModel row) => navigation.Open(createDetail(row, this));
+    /// <summary>
+    /// Opens the details with the list they were opened from: a playlist in its order, else the library as filtered
+    /// and searched right now. The arrows on the detail page go through that list.
+    /// </summary>
+    void ITrackActions.OpenDetails(TrackRowViewModel row)
+    {
+        var sequence = navigation.Current is PlaylistDetailViewModel playlist
+            ? new TrackSequence(playlist.Entries.Select(e => e.Row).ToList(), playlist.SelectRow)
+            : new TrackSequence(this.Tracks.ToList(), r => this.SelectedTrack = r);
+        sequence.Select(row);
+        navigation.Open(createDetail(row, this, sequence));
+    }
 
     async Task ITrackActions.RefreshAsync(TrackRowViewModel row)
     {

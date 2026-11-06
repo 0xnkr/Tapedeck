@@ -127,7 +127,8 @@
                 </library:TrackColumnsGrid>
 
                 <Panel>
-                    <ListBox Theme="{StaticResource PlainList}"
+                    <ListBox Name="TrackList"
+                             Theme="{StaticResource PlainList}"
                              ItemContainerTheme="{StaticResource TableRow}"
                              ItemsSource="{Binding Tracks}"
                              SelectedItem="{Binding SelectedTrack}"
