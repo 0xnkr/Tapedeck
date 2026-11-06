@@ -377,8 +377,13 @@ public partial class TrackDetailViewModel : ViewModelBase
     {
         this.MbState = track.MbState;
         this.mbRecordingId = track.MbRecordingId;
-        this.CoverPath = track.CoverSource == "caa" ? track.Cover : track.ThumbPath;
-        this.CoverText = track.CoverSource == "caa" ? Strings.Detail_CoverFromMusicBrainz : Strings.Detail_CoverFromThumbnail;
+        this.CoverPath = track.Cover;
+        this.CoverText = track.CoverSource switch
+        {
+            "caa" => Strings.Detail_CoverFromMusicBrainz,
+            "thumb" => Strings.Detail_CoverCutFromThumbnail,
+            _ => Strings.Detail_CoverFromThumbnail,
+        };
 
         if (raw is not null && track.MbState == MbMatchState.Matched)
         {

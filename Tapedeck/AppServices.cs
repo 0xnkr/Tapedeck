@@ -37,6 +37,7 @@ public static class AppServices
         services.AddSingleton<ThumbnailService>();
         services.AddSingleton<TagWriter>();
         services.AddSingleton<LoudnessMeter>();
+        services.AddSingleton<ThumbnailCoverService>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
         services.AddSingleton<CsvImportService>();
@@ -58,6 +59,7 @@ public static class AppServices
         services.AddSingleton<MusicBrainzQueue>();
         services.AddSingleton<PlayerService>();
         services.AddSingleton<LoudnessQueue>();
+        services.AddSingleton<CoverQueue>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<PlaylistsViewModel>();
