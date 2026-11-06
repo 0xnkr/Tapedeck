@@ -116,6 +116,7 @@ dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
 - [ ] Genres from [Last.fm](https://www.last.fm)
 - [ ] Installer and auto updates
 - [x] Smart playlists
+- [ ] Auto playlists
 - [ ] Filtering the library by playlist
 
 See the [changelog](CHANGELOG.md) for what changed.
