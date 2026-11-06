@@ -7,7 +7,12 @@ namespace Tapedeck.Core.Services;
 /// Downloads a track as Opus into the flat library: first into the temp folder under its video ID,
 /// then renamed to <c>Artist - Title.opus</c> and tagged.
 /// </summary>
-public sealed class DownloadService(ITrackRepository repository, ToolService tools, TagWriter tagWriter, AppPaths paths)
+public sealed class DownloadService(
+    ITrackRepository repository,
+    ToolService tools,
+    TagWriter tagWriter,
+    LoudnessMeter loudness,
+    AppPaths paths)
 {
     public const string FORMAT = "opus";
 
@@ -48,6 +53,7 @@ public sealed class DownloadService(ITrackRepository repository, ToolService too
                 File.Delete(paths.ToLibraryPath(oldFile));
 
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, FORMAT);
+            await this.MeasureLoudnessAsync(trackId, fileName, ct);
             await tagWriter.WriteTagsAsync(trackId);
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Done);
         }
@@ -64,6 +70,22 @@ public sealed class DownloadService(ITrackRepository repository, ToolService too
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Error, errorMsg: ex.Message);
             this.CleanTemp(track.VideoId);
             throw;
+        }
+    }
+
+    /// <summary>
+    /// Measures the new file, so its track gain goes into the tags right away. A failed measurement does not
+    /// fail the download: the track then simply has no gain, like before.
+    /// </summary>
+    private async Task MeasureLoudnessAsync(long trackId, string fileName, CancellationToken ct)
+    {
+        try
+        {
+            await repository.SetLoudnessAsync(trackId, await loudness.MeasureAsync(paths.ToLibraryPath(fileName), ct));
+        }
+        catch (InvalidOperationException)
+        {
+            // the background measurement (LoudnessQueue in the app) tries it again later
         }
     }
 
