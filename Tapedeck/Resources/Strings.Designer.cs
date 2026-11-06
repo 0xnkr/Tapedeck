@@ -310,6 +310,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kept “{0}”, {1} removed.
+        /// </summary>
+        public static string Confirm_Kept {
+            get {
+                return ResourceManager.GetString("Confirm_Kept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} files moved.
         /// </summary>
         public static string Confirm_LibraryMoved {
@@ -1039,6 +1048,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don't ask again.
+        /// </summary>
+        public static string Dialog_DontAskAgain {
+            get {
+                return ResourceManager.GetString("Dialog_DontAskAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
         public static string Field_Album {
@@ -1120,6 +1138,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicates.
+        /// </summary>
+        public static string Filter_Duplicates {
+            get {
+                return ResourceManager.GetString("Filter_Duplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The same song from several videos, e.g. the music video and the Topic upload. Keep one with “Keep this one” in the row menu..
+        /// </summary>
+        public static string Filter_DuplicatesHint {
+            get {
+                return ResourceManager.GetString("Filter_DuplicatesHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed.
         /// </summary>
         public static string Filter_Error {
@@ -1179,6 +1215,51 @@ namespace Tapedeck.Resources {
         public static string Genre_Remove {
             get {
                 return ResourceManager.GetString("Genre_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep this one.
+        /// </summary>
+        public static string Keep_Confirm {
+            get {
+                return ResourceManager.GetString("Keep_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also delete their files.
+        /// </summary>
+        public static string Keep_DeleteFiles {
+            get {
+                return ResourceManager.GetString("Keep_DeleteFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The other copy is removed from the library. Its playlist places and its rating go to this one, and syncing a YouTube playlist will not bring it back..
+        /// </summary>
+        public static string Keep_Message_One {
+            get {
+                return ResourceManager.GetString("Keep_Message_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} other copies are removed from the library. Their playlist places and their rating go to this one, and syncing a YouTube playlist will not bring them back..
+        /// </summary>
+        public static string Keep_Message_Other {
+            get {
+                return ResourceManager.GetString("Keep_Message_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep this version of “{0}”?.
+        /// </summary>
+        public static string Keep_Title {
+            get {
+                return ResourceManager.GetString("Keep_Title", resourceCulture);
             }
         }
         
@@ -1800,6 +1881,24 @@ namespace Tapedeck.Resources {
         public static string Notice_ImportResult {
             get {
                 return ResourceManager.GetString("Notice_ImportResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not remove the copies of “{0}”: {1}.
+        /// </summary>
+        public static string Notice_KeepFailed {
+            get {
+                return ResourceManager.GetString("Notice_KeepFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A copy of “{0}” is downloading. Cancel the download first..
+        /// </summary>
+        public static string Notice_KeepWhileDownloading {
+            get {
+                return ResourceManager.GetString("Notice_KeepWhileDownloading", resourceCulture);
             }
         }
         
@@ -2475,6 +2574,24 @@ namespace Tapedeck.Resources {
         public static string Settings_Appearance {
             get {
                 return ResourceManager.GetString("Settings_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ask before removing duplicates.
+        /// </summary>
+        public static string Settings_AskBeforeKeep {
+            get {
+                return ResourceManager.GetString("Settings_AskBeforeKeep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off after “Don't ask again”. Without asking, “Keep this one” does what you chose last..
+        /// </summary>
+        public static string Settings_AskBeforeKeepHint {
+            get {
+                return ResourceManager.GetString("Settings_AskBeforeKeepHint", resourceCulture);
             }
         }
         
@@ -3312,6 +3429,15 @@ namespace Tapedeck.Resources {
         public static string Track_Download {
             get {
                 return ResourceManager.GetString("Track_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep this one.
+        /// </summary>
+        public static string Track_Keep {
+            get {
+                return ResourceManager.GetString("Track_Keep", resourceCulture);
             }
         }
         

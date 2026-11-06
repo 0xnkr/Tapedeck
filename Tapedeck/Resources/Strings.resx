@@ -1492,4 +1492,60 @@
     <value>Loudness measured for {0} tracks. “Write tags” takes it to the files.</value>
     <comment>Activity toast after the background loudness measurement; {0} track count; “Write tags” is the bulk action Library_WriteAllTags</comment>
   </data>
+  <data name="Filter_Duplicates" xml:space="preserve">
+    <value>Duplicates</value>
+    <comment>Filter chip: songs that are in the library more than once, from different videos</comment>
+  </data>
+  <data name="Filter_DuplicatesHint" xml:space="preserve">
+    <value>The same song from several videos, e.g. the music video and the Topic upload. Keep one with “Keep this one” in the row menu.</value>
+    <comment>Tooltip of Filter_Duplicates; “Keep this one” is Track_Keep</comment>
+  </data>
+  <data name="Track_Keep" xml:space="preserve">
+    <value>Keep this one</value>
+    <comment>Row menu of a duplicate: keeps this track and removes its other copies</comment>
+  </data>
+  <data name="Keep_Title" xml:space="preserve">
+    <value>Keep this version of “{0}”?</value>
+    <comment>Title of the confirmation; {0} track title</comment>
+  </data>
+  <data name="Keep_Message_One" xml:space="preserve">
+    <value>The other copy is removed from the library. Its playlist places and its rating go to this one, and syncing a YouTube playlist will not bring it back.</value>
+    <comment>Confirmation text with one other copy</comment>
+  </data>
+  <data name="Keep_Message_Other" xml:space="preserve">
+    <value>The {0} other copies are removed from the library. Their playlist places and their rating go to this one, and syncing a YouTube playlist will not bring them back.</value>
+    <comment>Confirmation text; {0} number of other copies (2 or more)</comment>
+  </data>
+  <data name="Keep_Confirm" xml:space="preserve">
+    <value>Keep this one</value>
+    <comment>Confirm button of Keep_Title</comment>
+  </data>
+  <data name="Keep_DeleteFiles" xml:space="preserve">
+    <value>Also delete their files</value>
+    <comment>Checkbox in the confirmation: delete the audio files of the removed copies</comment>
+  </data>
+  <data name="Confirm_Kept" xml:space="preserve">
+    <value>Kept “{0}”, {1} removed</value>
+    <comment>Activity toast; {0} track title, {1} number of removed copies</comment>
+  </data>
+  <data name="Notice_KeepFailed" xml:space="preserve">
+    <value>Could not remove the copies of “{0}”: {1}</value>
+    <comment>Error line; {0} track title, {1} error message</comment>
+  </data>
+  <data name="Notice_KeepWhileDownloading" xml:space="preserve">
+    <value>A copy of “{0}” is downloading. Cancel the download first.</value>
+    <comment>Error line; {0} track title</comment>
+  </data>
+  <data name="Dialog_DontAskAgain" xml:space="preserve">
+    <value>Don't ask again</value>
+    <comment>Check box in a confirmation: give the same answer from now on without asking; can be undone in the settings</comment>
+  </data>
+  <data name="Settings_AskBeforeKeep" xml:space="preserve">
+    <value>Ask before removing duplicates</value>
+    <comment>Settings row: whether “Keep this one” shows its confirmation</comment>
+  </data>
+  <data name="Settings_AskBeforeKeepHint" xml:space="preserve">
+    <value>Off after “Don't ask again”. Without asking, “Keep this one” does what you chose last.</value>
+    <comment>Hint below Settings_AskBeforeKeep; “Don't ask again” is Dialog_DontAskAgain, “Keep this one” is Track_Keep</comment>
+  </data>
 </root>
