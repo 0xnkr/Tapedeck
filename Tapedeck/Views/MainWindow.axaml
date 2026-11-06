@@ -68,7 +68,7 @@
                                     CornerRadius="{StaticResource Radius.Thumb}"
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
-                                <Image Source="{Binding Player.Cover, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=80}"
+                                <Image controls:ImageLoader.DecodeWidth="80" controls:ImageLoader.Path="{Binding Player.Cover}"
                                        Stretch="UniformToFill" />
                             </Border>
                             <StackPanel Spacing="2" VerticalAlignment="Center" MaxWidth="260">

@@ -3,7 +3,6 @@
              xmlns:res="using:Tapedeck.Resources"
              xmlns:vm="using:Tapedeck.ViewModels"
              xmlns:controls="using:Tapedeck.Controls"
-             xmlns:converters="using:Tapedeck.Converters"
              xmlns:detail="using:Tapedeck.Views.Detail"
              x:Class="Tapedeck.Views.TrackDetailView"
              x:DataType="vm:TrackDetailViewModel">
@@ -98,7 +97,7 @@
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
                                 <Panel>
-                                    <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=752}"
+                                    <Image controls:ImageLoader.DecodeWidth="752" controls:ImageLoader.Path="{Binding ThumbPath}"
                                            Stretch="UniformToFill" />
                                     <Border Width="56" Height="56"
                                             CornerRadius="{StaticResource Radius.Pill}"
@@ -122,7 +121,7 @@
                                     CornerRadius="{StaticResource Radius.Field}"
                                     Background="{DynamicResource Brush.Surface3}"
                                     ClipToBounds="True">
-                                <Image Source="{Binding CoverPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}, ConverterParameter=224}"
+                                <Image controls:ImageLoader.DecodeWidth="224" controls:ImageLoader.Path="{Binding CoverPath}"
                                        Stretch="UniformToFill" />
                             </Border>
                             <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
