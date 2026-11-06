@@ -5,6 +5,7 @@
              xmlns:controls="using:Tapedeck.Controls"
              xmlns:converters="using:Tapedeck.Converters"
              xmlns:views="using:Tapedeck.Views"
+             xmlns:library="using:Tapedeck.Views.Library"
              x:Class="Tapedeck.Views.PlaylistDetailView"
              x:DataType="vm:PlaylistDetailViewModel">
 
@@ -102,14 +103,7 @@
                                                Foreground="{DynamicResource Brush.Text3}"
                                                HorizontalAlignment="Right"
                                                VerticalAlignment="Center" />
-                                    <Border Grid.Column="2"
-                                            Width="72" Height="40"
-                                            CornerRadius="{StaticResource Radius.Thumb}"
-                                            Background="{DynamicResource Brush.Surface3}"
-                                            ClipToBounds="True">
-                                        <Image Source="{Binding Row.ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}}"
-                                               Stretch="UniformToFill" />
-                                    </Border>
+                                    <library:CoverButton Grid.Column="2" Width="72" Height="40" DataContext="{Binding Row}" />
                                     <StackPanel Grid.Column="3" Spacing="2" VerticalAlignment="Center">
                                         <Button Classes="link" Command="{Binding Row.OpenDetailsCommand}">
                                             <TextBlock Classes="body-strong" Text="{Binding Row.Title}" TextTrimming="CharacterEllipsis" />
