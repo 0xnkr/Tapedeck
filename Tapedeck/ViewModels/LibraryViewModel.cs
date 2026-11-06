@@ -45,6 +45,7 @@ public partial class LibraryViewModel(
     PlaylistSync playlistSync,
     MusicBrainzQueue musicBrainz,
     TagWriter tagWriter,
+    PlayerService player,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     // a search plus up to three genre lookups at one request per second, with the occasional retry
@@ -117,7 +118,7 @@ public partial class LibraryViewModel(
     [RelayCommand]
     private async Task LoadAsync()
     {
-        this.ListenToMusicBrainz();
+        this.Listen();
         var tracks = await repository.ListDisplayAsync();
         this.all.Clear();
         this.all.AddRange(tracks.Select((track, index) => this.NewRow(track, index + 1)));
@@ -267,6 +268,8 @@ public partial class LibraryViewModel(
                     continue;
                 try
                 {
+                    // a playing file is open, so it could neither be renamed nor written
+                    await player.StopIfLoadedAsync(row.Id);
                     // the file name follows corrected artist and title, then the tags go in
                     if (await files.RenameToMatchAsync(row.Id) is not null)
                         renamed++;
@@ -300,12 +303,19 @@ public partial class LibraryViewModel(
     /// <summary>Only files that are there can take tags; a missing file has to be downloaded first.</summary>
     private static bool IsTagWritable(TrackRowViewModel row) => row.TagsStale && row.Status == DownloadStatus.Done;
 
-    /// <summary>Wires the MusicBrainz run to the rows once, on the first load.</summary>
-    private void ListenToMusicBrainz()
+    /// <summary>Wires the MusicBrainz run and the player to the rows once, on the first load.</summary>
+    private void Listen()
     {
         if (this.listening)
             return;
         this.listening = true;
+
+        player.Failed += message => this.Notice = message;
+        player.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(PlayerService.CurrentTrackId) or nameof(PlayerService.IsPlaying))
+                this.MarkPlaying();
+        };
 
         musicBrainz.TrackChanged += id => _ = this.OnMatchedAsync(id);
         musicBrainz.Failed += message => this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, message);
@@ -482,6 +492,26 @@ public partial class LibraryViewModel(
 
     Task ITrackActions.OpenOnYoutubeAsync(TrackRowViewModel row) => platform.OpenUrlAsync(row.Url);
 
+    Task ITrackActions.TogglePlayAsync(TrackRowViewModel row)
+    {
+        if (!row.CanPlay)
+            return Task.CompletedTask;
+        this.Notice = null;
+        return player.ToggleAsync(new PlayRequest(row.Id, paths.ToLibraryPath(row.FilePath!), row.Title, row.Artist,
+            row.CoverPath, TimeSpan.FromSeconds(row.DurationS ?? 0)));
+    }
+
+    /// <summary>Shows on every row whether it is the loaded track and whether it plays.</summary>
+    private void MarkPlaying()
+    {
+        foreach (var row in this.all)
+        {
+            var loaded = player.CurrentTrackId == row.Id;
+            row.IsLoaded = loaded;
+            row.IsPlaying = loaded && player.IsPlaying;
+        }
+    }
+
     async Task ITrackActions.DownloadAsync(TrackRowViewModel row)
     {
         if ((await this.TakeOverFilesAsync([row])).Count > 0)
@@ -594,6 +624,7 @@ public partial class LibraryViewModel(
         this.Notice = null;
         try
         {
+            await player.StopIfLoadedAsync(row.Id);
             await files.RemoveAsync(row.Id, deleteFile: answer.Option);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -650,6 +681,8 @@ public partial class LibraryViewModel(
             return;
 
         this.Notice = null;
+        // the new download replaces the file that may be playing
+        await player.StopIfLoadedAsync(row.Id);
         row.Status = DownloadStatus.Downloading;
         row.Progress = 0;
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(this.batch?.Token ?? CancellationToken.None);
@@ -698,6 +731,8 @@ public partial class LibraryViewModel(
     {
         this.HasMissing = this.all.Any(r => r.Status == DownloadStatus.Missing);
         this.StaleTagsCount = this.all.Count(IsTagWritable);
+        // rows built anew (reload, import) learn whether they are the playing track
+        this.MarkPlaying();
         // the chip stays while it is selected, so the user sees the list run empty
         this.HasSuggestions = this.Filter == TrackFilter.Suggested || this.all.Any(r => r.MbState == MbMatchState.Suggested);
         this.ApplyFilter();
