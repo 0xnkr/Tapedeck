@@ -47,6 +47,14 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
 | 🧰 **Zero setup** | yt-dlp, FFmpeg and Deno are downloaded on first use, and yt-dlp updates with one click. |
 
+<div align="center">
+
+<img src="docs/tapedeck-song-details.png" alt="Track details of Till I Collapse: metadata matched with MusicBrainz, square cover from the Cover Art Archive, and the player bar playing the track" width="900" />
+
+<sub>Every value shows where it comes from. Here MusicBrainz found the album, year, track number and genres, the Cover Art Archive the square cover, and the player bar plays the file.</sub>
+
+</div>
+
 ## Getting started
 
 1. Grab `Tapedeck.exe` from the [releases](https://github.com/nilskruthoff/Tapedeck/releases) or [build it yourself](#build-it-yourself).
