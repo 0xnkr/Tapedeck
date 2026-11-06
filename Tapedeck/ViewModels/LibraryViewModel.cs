@@ -693,6 +693,8 @@ public partial class LibraryViewModel(
         this.UpdateSummary();
         this.DownloadPendingCommand.NotifyCanExecuteChanged();
         this.MatchMusicBrainzCommand.NotifyCanExecuteChanged();
+        // smart playlists pick their tracks from the shown values, so their .m3u8 may change with any track
+        playlistSync.Request();
     }
 
     private void ApplyFilter()

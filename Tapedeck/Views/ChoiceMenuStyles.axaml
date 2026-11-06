@@ -1,0 +1,15 @@
+<!--
+    Choice menus of the smart playlist editor (field, operator, order): a button whose MenuFlyout lists MenuChoice
+    entries. The generated menu items take header and command from them. Mark the flyout with
+    FlyoutPresenterClasses="choice-menu".
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Tapedeck.ViewModels">
+
+    <Style Selector="MenuFlyoutPresenter.choice-menu > MenuItem" x:DataType="vm:MenuChoice">
+        <Setter Property="Header" Value="{Binding Header}" />
+        <Setter Property="Command" Value="{Binding Command}" />
+    </Style>
+
+</Styles>

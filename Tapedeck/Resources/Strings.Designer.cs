@@ -382,6 +382,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to “{0}” saved.
+        /// </summary>
+        public static string Confirm_SmartSaved {
+            get {
+                return ResourceManager.GetString("Confirm_SmartSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tags written to “{0}”.
         /// </summary>
         public static string Confirm_TagsWritten {
@@ -1831,6 +1840,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit rules.
+        /// </summary>
+        public static string Playlist_EditRules {
+            get {
+                return ResourceManager.GetString("Playlist_EditRules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change which tracks this playlist picks from your library..
+        /// </summary>
+        public static string Playlist_EditRulesHint {
+            get {
+                return ResourceManager.GetString("Playlist_EditRulesHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This playlist is empty. Add tracks with “Add to playlist” in the library..
         /// </summary>
         public static string Playlist_Empty {
@@ -1872,6 +1899,24 @@ namespace Tapedeck.Resources {
         public static string Playlist_Rename {
             get {
                 return ResourceManager.GetString("Playlist_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} · smart.
+        /// </summary>
+        public static string Playlist_Smart {
+            get {
+                return ResourceManager.GetString("Playlist_Smart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No track fits the rules yet. Change the rules or add more music..
+        /// </summary>
+        public static string Playlist_SmartEmpty {
+            get {
+                return ResourceManager.GetString("Playlist_SmartEmpty", resourceCulture);
             }
         }
         
@@ -1971,6 +2016,24 @@ namespace Tapedeck.Resources {
         public static string Playlists_New {
             get {
                 return ResourceManager.GetString("Playlists_New", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Smart playlist.
+        /// </summary>
+        public static string Playlists_NewSmart {
+            get {
+                return ResourceManager.GetString("Playlists_NewSmart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A playlist that fills itself, e.g. all trap songs from 2014. It stays up to date when your library changes..
+        /// </summary>
+        public static string Playlists_NewSmartHint {
+            get {
+                return ResourceManager.GetString("Playlists_NewSmartHint", resourceCulture);
             }
         }
         
@@ -2448,6 +2511,456 @@ namespace Tapedeck.Resources {
         public static string Settings_ToolsHint {
             get {
                 return ResourceManager.GetString("Settings_ToolsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule.
+        /// </summary>
+        public static string Smart_AddRule {
+            get {
+                return ResourceManager.GetString("Smart_AddRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds another rule..
+        /// </summary>
+        public static string Smart_AddRuleHint {
+            get {
+                return ResourceManager.GetString("Smart_AddRuleHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit smart playlist.
+        /// </summary>
+        public static string Smart_EditTitle {
+            get {
+                return ResourceManager.GetString("Smart_EditTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Added.
+        /// </summary>
+        public static string Smart_FieldAdded {
+            get {
+                return ResourceManager.GetString("Smart_FieldAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genre.
+        /// </summary>
+        public static string Smart_FieldGenre {
+            get {
+                return ResourceManager.GetString("Smart_FieldGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick what the rule looks at..
+        /// </summary>
+        public static string Smart_FieldHint {
+            get {
+                return ResourceManager.GetString("Smart_FieldHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At most.
+        /// </summary>
+        public static string Smart_Limit {
+            get {
+                return ResourceManager.GetString("Smart_Limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keeps only the first tracks in this order, e.g. 50. Leave it empty for all..
+        /// </summary>
+        public static string Smart_LimitHint {
+            get {
+                return ResourceManager.GetString("Smart_LimitHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is not a number of tracks..
+        /// </summary>
+        public static string Smart_LimitInvalid {
+            get {
+                return ResourceManager.GetString("Smart_LimitInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to all.
+        /// </summary>
+        public static string Smart_LimitPlaceholder {
+            get {
+                return ResourceManager.GetString("Smart_LimitPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tracks.
+        /// </summary>
+        public static string Smart_LimitSuffix {
+            get {
+                return ResourceManager.GetString("Smart_LimitSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All rules.
+        /// </summary>
+        public static string Smart_MatchAll {
+            get {
+                return ResourceManager.GetString("Smart_MatchAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A track has to fit every rule..
+        /// </summary>
+        public static string Smart_MatchAllHint {
+            get {
+                return ResourceManager.GetString("Smart_MatchAllHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One is enough.
+        /// </summary>
+        public static string Smart_MatchAny {
+            get {
+                return ResourceManager.GetString("Smart_MatchAny", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A track only has to fit one of the rules..
+        /// </summary>
+        public static string Smart_MatchAnyHint {
+            get {
+                return ResourceManager.GetString("Smart_MatchAnyHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Smart_Name {
+            get {
+                return ResourceManager.GetString("Smart_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. Trap 2014.
+        /// </summary>
+        public static string Smart_NamePlaceholder {
+            get {
+                return ResourceManager.GetString("Smart_NamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New smart playlist.
+        /// </summary>
+        public static string Smart_NewTitle {
+            get {
+                return ResourceManager.GetString("Smart_NewTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No rules: the playlist takes every track of your library..
+        /// </summary>
+        public static string Smart_NoRulesHint {
+            get {
+                return ResourceManager.GetString("Smart_NoRulesHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at least.
+        /// </summary>
+        public static string Smart_OpAtLeast {
+            get {
+                return ResourceManager.GetString("Smart_OpAtLeast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at most.
+        /// </summary>
+        public static string Smart_OpAtMost {
+            get {
+                return ResourceManager.GetString("Smart_OpAtMost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to contains.
+        /// </summary>
+        public static string Smart_OpContains {
+            get {
+                return ResourceManager.GetString("Smart_OpContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is.
+        /// </summary>
+        public static string Smart_OpIs {
+            get {
+                return ResourceManager.GetString("Smart_OpIs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to is not.
+        /// </summary>
+        public static string Smart_OpIsNot {
+            get {
+                return ResourceManager.GetString("Smart_OpIsNot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to doesn't contain.
+        /// </summary>
+        public static string Smart_OpNotContains {
+            get {
+                return ResourceManager.GetString("Smart_OpNotContains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to in the last … days.
+        /// </summary>
+        public static string Smart_OpWithinDays {
+            get {
+                return ResourceManager.GetString("Smart_OpWithinDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick how the value is compared..
+        /// </summary>
+        public static string Smart_OperatorHint {
+            get {
+                return ResourceManager.GetString("Smart_OperatorHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order.
+        /// </summary>
+        public static string Smart_Order {
+            get {
+                return ResourceManager.GetString("Smart_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pick the order of the tracks in the playlist..
+        /// </summary>
+        public static string Smart_OrderHint {
+            get {
+                return ResourceManager.GetString("Smart_OrderHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. 30.
+        /// </summary>
+        public static string Smart_PlaceholderDays {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. Trap.
+        /// </summary>
+        public static string Smart_PlaceholderGenre {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 to 5.
+        /// </summary>
+        public static string Smart_PlaceholderRating {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string Smart_PlaceholderText {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. 2014.
+        /// </summary>
+        public static string Smart_PlaceholderYear {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        public static string Smart_Preview {
+            get {
+                return ResourceManager.GetString("Smart_Preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 track fits.
+        /// </summary>
+        public static string Smart_PreviewCount_One {
+            get {
+                return ResourceManager.GetString("Smart_PreviewCount_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks fit.
+        /// </summary>
+        public static string Smart_PreviewCount_Other {
+            get {
+                return ResourceManager.GetString("Smart_PreviewCount_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to … and {0} more.
+        /// </summary>
+        public static string Smart_PreviewMore {
+            get {
+                return ResourceManager.GetString("Smart_PreviewMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove rule.
+        /// </summary>
+        public static string Smart_RemoveRule {
+            get {
+                return ResourceManager.GetString("Smart_RemoveRule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule {0} has no value yet..
+        /// </summary>
+        public static string Smart_RuleEmpty {
+            get {
+                return ResourceManager.GetString("Smart_RuleEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rule {0}: “{1}” is not a number..
+        /// </summary>
+        public static string Smart_RuleNotNumber {
+            get {
+                return ResourceManager.GetString("Smart_RuleNotNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rules.
+        /// </summary>
+        public static string Smart_Rules {
+            get {
+                return ResourceManager.GetString("Smart_Rules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Smart_Save {
+            get {
+                return ResourceManager.GetString("Smart_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By album.
+        /// </summary>
+        public static string Smart_SortAlbum {
+            get {
+                return ResourceManager.GetString("Smart_SortAlbum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By artist.
+        /// </summary>
+        public static string Smart_SortArtist {
+            get {
+                return ResourceManager.GetString("Smart_SortArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Newest first.
+        /// </summary>
+        public static string Smart_SortNewest {
+            get {
+                return ResourceManager.GetString("Smart_SortNewest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By rating, best first.
+        /// </summary>
+        public static string Smart_SortRating {
+            get {
+                return ResourceManager.GetString("Smart_SortRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By year, newest first.
+        /// </summary>
+        public static string Smart_SortYear {
+            get {
+                return ResourceManager.GetString("Smart_SortYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fills itself from your library and stays up to date. Your phone gets it as a normal playlist..
+        /// </summary>
+        public static string Smart_Subtitle {
+            get {
+                return ResourceManager.GetString("Smart_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string Smart_Value {
+            get {
+                return ResourceManager.GetString("Smart_Value", resourceCulture);
             }
         }
         

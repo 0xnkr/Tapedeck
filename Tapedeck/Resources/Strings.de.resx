@@ -888,4 +888,175 @@
   <data name="Settings_MusicBrainzAutoHint" xml:space="preserve">
     <value>Sucht neue Titel gleich nach dem Hinzufügen auf MusicBrainz.</value>
   </data>
+  <data name="Playlists_NewSmart" xml:space="preserve">
+    <value>Smarte Playlist</value>
+  </data>
+  <data name="Playlists_NewSmartHint" xml:space="preserve">
+    <value>Eine Playlist, die sich selbst füllt, z. B. alle Trap-Songs von 2014. Sie bleibt aktuell, wenn sich deine Bibliothek ändert.</value>
+  </data>
+  <data name="Playlist_EditRules" xml:space="preserve">
+    <value>Regeln bearbeiten</value>
+  </data>
+  <data name="Playlist_EditRulesHint" xml:space="preserve">
+    <value>Ändern, welche Titel diese Playlist aus deiner Bibliothek nimmt.</value>
+  </data>
+  <data name="Playlist_Smart" xml:space="preserve">
+    <value>{0} · smart</value>
+  </data>
+  <data name="Playlist_SmartEmpty" xml:space="preserve">
+    <value>Noch passt kein Titel zu den Regeln. Ändere die Regeln oder füge mehr Musik hinzu.</value>
+  </data>
+  <data name="Confirm_SmartSaved" xml:space="preserve">
+    <value>„{0}“ gespeichert</value>
+  </data>
+  <data name="Smart_NewTitle" xml:space="preserve">
+    <value>Neue smarte Playlist</value>
+  </data>
+  <data name="Smart_EditTitle" xml:space="preserve">
+    <value>Smarte Playlist bearbeiten</value>
+  </data>
+  <data name="Smart_Subtitle" xml:space="preserve">
+    <value>Füllt sich selbst aus deiner Bibliothek und bleibt aktuell. Aufs Handy kommt sie als normale Playlist.</value>
+  </data>
+  <data name="Smart_Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Smart_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Smart_NamePlaceholder" xml:space="preserve">
+    <value>z. B. Trap 2014</value>
+  </data>
+  <data name="Smart_Rules" xml:space="preserve">
+    <value>Regeln</value>
+  </data>
+  <data name="Smart_MatchAll" xml:space="preserve">
+    <value>Alle Regeln</value>
+  </data>
+  <data name="Smart_MatchAllHint" xml:space="preserve">
+    <value>Ein Titel muss zu jeder Regel passen.</value>
+  </data>
+  <data name="Smart_MatchAny" xml:space="preserve">
+    <value>Eine reicht</value>
+  </data>
+  <data name="Smart_MatchAnyHint" xml:space="preserve">
+    <value>Ein Titel muss nur zu einer der Regeln passen.</value>
+  </data>
+  <data name="Smart_FieldHint" xml:space="preserve">
+    <value>Wähle, worauf die Regel schaut.</value>
+  </data>
+  <data name="Smart_OperatorHint" xml:space="preserve">
+    <value>Wähle, wie der Wert verglichen wird.</value>
+  </data>
+  <data name="Smart_Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="Smart_RemoveRule" xml:space="preserve">
+    <value>Regel entfernen</value>
+  </data>
+  <data name="Smart_AddRule" xml:space="preserve">
+    <value>Regel</value>
+  </data>
+  <data name="Smart_AddRuleHint" xml:space="preserve">
+    <value>Fügt eine weitere Regel hinzu.</value>
+  </data>
+  <data name="Smart_NoRulesHint" xml:space="preserve">
+    <value>Keine Regeln: Die Playlist nimmt alle Titel deiner Bibliothek.</value>
+  </data>
+  <data name="Smart_Order" xml:space="preserve">
+    <value>Reihenfolge</value>
+  </data>
+  <data name="Smart_OrderHint" xml:space="preserve">
+    <value>Wähle, in welcher Reihenfolge die Titel in der Playlist stehen.</value>
+  </data>
+  <data name="Smart_Limit" xml:space="preserve">
+    <value>Höchstens</value>
+  </data>
+  <data name="Smart_LimitPlaceholder" xml:space="preserve">
+    <value>alle</value>
+  </data>
+  <data name="Smart_LimitHint" xml:space="preserve">
+    <value>Behält nur die ersten Titel in dieser Reihenfolge, z. B. 50. Leer lassen für alle.</value>
+  </data>
+  <data name="Smart_LimitSuffix" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Smart_Preview" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Smart_PreviewCount_One" xml:space="preserve">
+    <value>1 Titel passt</value>
+  </data>
+  <data name="Smart_PreviewCount_Other" xml:space="preserve">
+    <value>{0} Titel passen</value>
+  </data>
+  <data name="Smart_PreviewMore" xml:space="preserve">
+    <value>… und {0} weitere</value>
+  </data>
+  <data name="Smart_RuleEmpty" xml:space="preserve">
+    <value>Regel {0} hat noch keinen Wert.</value>
+  </data>
+  <data name="Smart_RuleNotNumber" xml:space="preserve">
+    <value>Regel {0}: „{1}“ ist keine Zahl.</value>
+  </data>
+  <data name="Smart_LimitInvalid" xml:space="preserve">
+    <value>„{0}“ ist keine gültige Anzahl.</value>
+  </data>
+  <data name="Smart_FieldGenre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Smart_FieldAdded" xml:space="preserve">
+    <value>Hinzugefügt</value>
+  </data>
+  <data name="Smart_OpContains" xml:space="preserve">
+    <value>enthält</value>
+  </data>
+  <data name="Smart_OpNotContains" xml:space="preserve">
+    <value>enthält nicht</value>
+  </data>
+  <data name="Smart_OpIs" xml:space="preserve">
+    <value>ist</value>
+  </data>
+  <data name="Smart_OpIsNot" xml:space="preserve">
+    <value>ist nicht</value>
+  </data>
+  <data name="Smart_OpAtLeast" xml:space="preserve">
+    <value>mindestens</value>
+  </data>
+  <data name="Smart_OpAtMost" xml:space="preserve">
+    <value>höchstens</value>
+  </data>
+  <data name="Smart_OpWithinDays" xml:space="preserve">
+    <value>in den letzten … Tagen</value>
+  </data>
+  <data name="Smart_SortNewest" xml:space="preserve">
+    <value>Neueste zuerst</value>
+  </data>
+  <data name="Smart_SortArtist" xml:space="preserve">
+    <value>Nach Artist</value>
+  </data>
+  <data name="Smart_SortAlbum" xml:space="preserve">
+    <value>Nach Album</value>
+  </data>
+  <data name="Smart_SortYear" xml:space="preserve">
+    <value>Nach Jahr, neueste zuerst</value>
+  </data>
+  <data name="Smart_SortRating" xml:space="preserve">
+    <value>Nach Bewertung, beste zuerst</value>
+  </data>
+  <data name="Smart_PlaceholderYear" xml:space="preserve">
+    <value>z. B. 2014</value>
+  </data>
+  <data name="Smart_PlaceholderRating" xml:space="preserve">
+    <value>1 bis 5</value>
+  </data>
+  <data name="Smart_PlaceholderDays" xml:space="preserve">
+    <value>z. B. 30</value>
+  </data>
+  <data name="Smart_PlaceholderGenre" xml:space="preserve">
+    <value>z. B. Trap</value>
+  </data>
+  <data name="Smart_PlaceholderText" xml:space="preserve">
+    <value>Text</value>
+  </data>
 </root>

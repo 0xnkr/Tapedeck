@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -155,7 +156,8 @@ public partial class TrackRowViewModel : ViewModelBase
         this.PlaylistMenu.Clear();
         this.PlaylistMenu.Add(new PlaylistMenuEntry(Strings.Track_NewPlaylist,
             new AsyncRelayCommand(() => this.actions.AddToNewPlaylistAsync(this))));
-        foreach (var playlist in this.actions.Playlists)
+        // smart playlists pick their tracks themselves
+        foreach (var playlist in this.actions.Playlists.Where(p => !p.IsSmart))
         {
             this.PlaylistMenu.Add(new PlaylistMenuEntry(playlist.Name,
                 new AsyncRelayCommand(() => this.actions.AddToPlaylistAsync(this, playlist.Id))));

@@ -57,6 +57,16 @@ public partial class PlaylistDetailViewModel(
     [NotifyCanExecuteChangedFor(nameof(SyncCommand))]
     public partial bool IsLinked { get; private set; }
 
+    /// <summary>Fills itself by rules: no reordering, removing or renaming here, "Edit rules" instead.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsEditable), nameof(EmptyText))]
+    public partial bool IsSmart { get; private set; }
+
+    /// <summary>Tracks can be reordered and removed by hand.</summary>
+    public bool IsEditable => !this.IsSmart;
+
+    public string EmptyText => this.IsSmart ? Strings.Playlist_SmartEmpty : Strings.Playlist_Empty;
+
     /// <summary>Videos that could not be added during the last import or sync.</summary>
     [ObservableProperty]
     public partial string? Notice { get; private set; }
@@ -83,11 +93,12 @@ public partial class PlaylistDetailViewModel(
         this.Name = playlist.Name;
         this.sourceUrl = playlist.SourceUrl;
         this.IsLinked = playlist.SourceUrl is not null;
+        this.IsSmart = playlist.IsSmart;
         this.Entries.Clear();
         for (var i = 0; i < rows.Count; i++)
             this.Entries.Add(new PlaylistEntryViewModel(i, rows[i]));
         this.SelectedEntry = this.Entries.FirstOrDefault(e => e.Row.Id == selectedTrack);
-        this.Summary = PlaylistsViewModel.SummaryOf(rows.Count, rows.Count(r => r.Status == DownloadStatus.Done), this.IsLinked);
+        this.Summary = PlaylistsViewModel.SummaryOf(rows.Count, rows.Count(r => r.Status == DownloadStatus.Done), this.IsLinked, this.IsSmart);
         this.OnPropertyChanged(nameof(this.IsEmpty));
     }
 
@@ -228,6 +239,9 @@ public partial class PlaylistDetailViewModel(
     }
 
     [RelayCommand]
+    private void EditRules() => playlists.OpenSmartEditor(playlistId);
+
+    [RelayCommand]
     private async Task DeleteAsync()
     {
         if (await playlists.DeleteWithConfirmAsync(playlistId, this.Name))
@@ -237,6 +251,8 @@ public partial class PlaylistDetailViewModel(
     [RelayCommand]
     private async Task RemoveTrackAsync(PlaylistEntryViewModel entry)
     {
+        if (this.IsSmart)
+            return;
         await repository.RemoveTrackAsync(playlistId, entry.Row.Id);
         await this.ChangedAsync();
     }
@@ -244,7 +260,7 @@ public partial class PlaylistDetailViewModel(
     /// <summary>Moves a track to another place (drag and drop or Alt+Up/Down).</summary>
     public async Task MoveAsync(PlaylistEntryViewModel entry, int newIndex)
     {
-        if (newIndex == entry.Position || newIndex < 0 || newIndex >= this.Entries.Count)
+        if (this.IsSmart || newIndex == entry.Position || newIndex < 0 || newIndex >= this.Entries.Count)
             return;
         await repository.MoveTrackAsync(playlistId, entry.Row.Id, newIndex);
         this.SelectedEntry = entry;

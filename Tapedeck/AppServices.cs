@@ -61,6 +61,8 @@ public static class AppServices
         // resolved on use: the playlist page needs the library and the playlists view models
         services.AddSingleton<PlaylistDetailFactory>(sp =>
             id => ActivatorUtilities.CreateInstance<PlaylistDetailViewModel>(sp, id));
+        services.AddSingleton<SmartPlaylistEditorFactory>(sp =>
+            id => ActivatorUtilities.CreateInstance<SmartPlaylistEditorViewModel>(sp, id));
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<TrackDetailFactory>(sp => (row, actions) =>

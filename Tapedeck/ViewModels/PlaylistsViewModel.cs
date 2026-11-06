@@ -27,7 +27,10 @@ public partial class PlaylistItemViewModel(Playlist playlist, int downloaded, Ac
     public string Name { get; } = playlist.Name;
 
     /// <summary>"20 tracks · 18 downloaded"; missing files do not count as downloaded.</summary>
-    public string Summary { get; } = PlaylistsViewModel.SummaryOf(playlist.TrackCount, downloaded, playlist.SourceUrl is not null);
+    public string Summary { get; } = PlaylistsViewModel.SummaryOf(playlist.TrackCount, downloaded, playlist.SourceUrl is not null, playlist.IsSmart);
+
+    /// <summary>Fills itself by rules; it is left out of the "add to playlist" menus.</summary>
+    public bool IsSmart { get; } = playlist.IsSmart;
 
     public string OpenLabel => string.Format(Strings.Playlists_Open, this.Name);
 
@@ -49,7 +52,8 @@ public partial class PlaylistsViewModel(
     ToolSetup toolSetup,
     MetadataService metadata,
     IPlatformService platform,
-    PlaylistDetailFactory createDetail) : ViewModelBase
+    PlaylistDetailFactory createDetail,
+    SmartPlaylistEditorFactory createSmartEditor) : ViewModelBase
 {
     /// <summary>All playlists by name; shared with the "add to playlist" menus.</summary>
     public ObservableCollection<PlaylistItemViewModel> Playlists { get; } = [];
@@ -79,6 +83,41 @@ public partial class PlaylistsViewModel(
 
     [RelayCommand]
     private Task CreateAsync() => this.CreateWithPromptAsync();
+
+    /// <summary>Opens the editor for a new smart playlist; it is created when the editor saves.</summary>
+    [RelayCommand]
+    private void CreateSmart() => this.OpenSmartEditor(0);
+
+    /// <summary>Opens the rules of a smart playlist, or an empty editor for <c>0</c>.</summary>
+    public void OpenSmartEditor(long playlistId)
+    {
+        var editor = createSmartEditor(playlistId);
+        navigation.Open(editor);
+        editor.LoadCommand.Execute(null);
+    }
+
+    /// <summary>Creates a smart playlist (<paramref name="id"/> <c>null</c>) or changes name and rules of one.</summary>
+    /// <returns>The playlist's id, or why the name cannot be used.</returns>
+    public async Task<(long Id, string? Error)> SaveSmartAsync(long? id, string name, SmartRules rules)
+    {
+        if (await this.ValidateNameAsync(name, exceptId: id) is { } error)
+            return (0, error);
+
+        long saved;
+        if (id is { } existing)
+        {
+            await repository.UpdateSmartAsync(existing, name, rules);
+            saved = existing;
+        }
+        else
+        {
+            saved = await repository.CreateSmartAsync(name, rules);
+        }
+
+        await this.ChangedAsync();
+        activity.Confirm(string.Format(Strings.Confirm_SmartSaved, name));
+        return (saved, null);
+    }
 
     /// <summary>Asks for the link of a YouTube playlist; the dialog stays open with the reason until it can be read.</summary>
     [RelayCommand]
@@ -256,12 +295,17 @@ public partial class PlaylistsViewModel(
         sync.Request();
     }
 
-    public static string SummaryOf(int trackCount, int doneCount, bool isLinked)
+    public static string SummaryOf(int trackCount, int doneCount, bool isLinked, bool isSmart)
     {
         var count = string.Format(trackCount == 1 ? Strings.Library_TrackCount_One : Strings.Library_TrackCount_Other, trackCount);
         var summary = string.Format(Strings.Library_Summary, count, doneCount);
+        if (isSmart)
+            return string.Format(Strings.Playlist_Smart, summary);
         return isLinked ? string.Format(Strings.Playlist_Linked, summary) : summary;
     }
+
+    /// <summary>Shows the page of a playlist, e.g. right after the smart playlist editor created it.</summary>
+    public void OpenPlaylist(long id) => this.Open(id);
 
     private void OpenPlaylist(PlaylistItemViewModel playlist) => this.Open(playlist.Id);
 

@@ -1,0 +1,186 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             xmlns:playlists="using:Tapedeck.Core.Playlists"
+             x:Class="Tapedeck.Views.SmartPlaylistEditorView"
+             x:DataType="vm:SmartPlaylistEditorViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <controls:PageHeader Title="{Binding Title}"
+                             Subtitle="{x:Static res:Strings.Smart_Subtitle}"
+                             BackCommand="{Binding CancelCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Dialog_Cancel}"
+                        Command="{Binding CancelCommand}" />
+                <Button Classes="primary lg"
+                        Content="{x:Static res:Strings.Smart_Save}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Check}"
+                        Command="{Binding SaveCommand}" />
+            </StackPanel>
+        </controls:PageHeader>
+
+        <TextBlock Grid.Row="1"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="22,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid ColumnDefinitions="*,360" ColumnSpacing="{StaticResource Space.3}" Margin="0,0,0,4">
+
+                <!-- Left: name, rules, order and limit -->
+                <controls:Island VerticalAlignment="Top">
+                    <StackPanel Spacing="{StaticResource Space.4}">
+
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" Text="{x:Static res:Strings.Smart_Name}" />
+                            <TextBox Text="{Binding Name}"
+                                     PlaceholderText="{x:Static res:Strings.Smart_NamePlaceholder}"
+                                     MinHeight="{StaticResource Control.Lg}"
+                                     VerticalContentAlignment="Center"
+                                     AutomationProperties.Name="{x:Static res:Strings.Smart_Name}">
+                                <TextBox.KeyBindings>
+                                    <KeyBinding Gesture="Enter" Command="{Binding SaveCommand}" />
+                                </TextBox.KeyBindings>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Classes="title" Text="{x:Static res:Strings.Smart_Rules}" VerticalAlignment="Center" />
+                                <Border Grid.Column="1" Classes="segmented" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Theme="{StaticResource Segment}" GroupName="SmartMatch"
+                                                     Content="{x:Static res:Strings.Smart_MatchAll}"
+                                                     ToolTip.Tip="{x:Static res:Strings.Smart_MatchAllHint}"
+                                                     IsChecked="{Binding Match, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static playlists:SmartMatch.All}}" />
+                                        <RadioButton Theme="{StaticResource Segment}" GroupName="SmartMatch"
+                                                     Content="{x:Static res:Strings.Smart_MatchAny}"
+                                                     ToolTip.Tip="{x:Static res:Strings.Smart_MatchAnyHint}"
+                                                     IsChecked="{Binding Match, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static playlists:SmartMatch.Any}}" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- One line per rule: field, operator, value -->
+                            <ItemsControl ItemsSource="{Binding Rules}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="{StaticResource Space.2}" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:SmartRuleViewModel">
+                                        <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                            <Button Classes="tonal"
+                                                    Content="{Binding FieldText}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Smart_FieldHint}">
+                                                <Button.Flyout>
+                                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                                FlyoutPresenterClasses="choice-menu"
+                                                                ItemsSource="{Binding FieldChoices}" />
+                                                </Button.Flyout>
+                                            </Button>
+                                            <Button Grid.Column="1"
+                                                    Classes="tonal"
+                                                    Content="{Binding OperatorText}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Smart_OperatorHint}">
+                                                <Button.Flyout>
+                                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                                FlyoutPresenterClasses="choice-menu"
+                                                                ItemsSource="{Binding OperatorChoices}" />
+                                                </Button.Flyout>
+                                            </Button>
+                                            <TextBox Grid.Column="2"
+                                                     Text="{Binding Value}"
+                                                     PlaceholderText="{Binding ValuePlaceholder}"
+                                                     VerticalContentAlignment="Center"
+                                                     AutomationProperties.Name="{x:Static res:Strings.Smart_Value}" />
+                                            <Button Grid.Column="3"
+                                                    Classes="icon"
+                                                    VerticalAlignment="Center"
+                                                    controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                                    Command="{Binding RemoveCommand}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Smart_RemoveRule}"
+                                                    AutomationProperties.Name="{x:Static res:Strings.Smart_RemoveRule}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Button Classes="dashed"
+                                    HorizontalAlignment="Left"
+                                    Content="{x:Static res:Strings.Smart_AddRule}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                                    ToolTip.Tip="{x:Static res:Strings.Smart_AddRuleHint}"
+                                    Command="{Binding AddRuleCommand}" />
+                            <TextBlock Classes="support"
+                                       Foreground="{DynamicResource Brush.Text2}"
+                                       TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Smart_NoRulesHint}"
+                                       IsVisible="{Binding HasNoRules}" />
+                        </StackPanel>
+
+                        <!-- Order and limit -->
+                        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="{StaticResource Space.2}">
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}"
+                                       Text="{x:Static res:Strings.Smart_Order}" VerticalAlignment="Center" />
+                            <Button Grid.Column="1"
+                                    Classes="tonal"
+                                    Content="{Binding SortText}"
+                                    ToolTip.Tip="{x:Static res:Strings.Smart_OrderHint}">
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                                FlyoutPresenterClasses="choice-menu"
+                                                ItemsSource="{Binding SortChoices}" />
+                                </Button.Flyout>
+                            </Button>
+                            <TextBlock Grid.Column="3" Classes="support" Foreground="{DynamicResource Brush.Text2}"
+                                       Text="{x:Static res:Strings.Smart_Limit}" VerticalAlignment="Center" />
+                            <TextBox Grid.Column="4"
+                                     Width="96"
+                                     Text="{Binding LimitText}"
+                                     PlaceholderText="{x:Static res:Strings.Smart_LimitPlaceholder}"
+                                     VerticalContentAlignment="Center"
+                                     ToolTip.Tip="{x:Static res:Strings.Smart_LimitHint}"
+                                     AutomationProperties.Name="{x:Static res:Strings.Smart_Limit}" />
+                            <TextBlock Grid.Column="5" Classes="support" Foreground="{DynamicResource Brush.Text2}"
+                                       Text="{x:Static res:Strings.Smart_LimitSuffix}" VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </controls:Island>
+
+                <!-- Right: what the rules pick right now -->
+                <controls:Island Grid.Column="1" VerticalAlignment="Top">
+                    <StackPanel Spacing="{StaticResource Space.2}">
+                        <TextBlock Classes="title" Text="{x:Static res:Strings.Smart_Preview}" />
+                        <TextBlock Classes="body-strong" Text="{Binding PreviewCount}" />
+                        <ItemsControl ItemsSource="{Binding PreviewTracks}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="4" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <TextBlock Classes="support" Text="{Binding}" TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Classes="support"
+                                   Foreground="{DynamicResource Brush.Text3}"
+                                   Text="{Binding PreviewMore}"
+                                   IsVisible="{Binding PreviewMore, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                    </StackPanel>
+                </controls:Island>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
