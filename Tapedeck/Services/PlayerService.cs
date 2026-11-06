@@ -33,6 +33,13 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
     private const int BLOCK_SAMPLES = OpusPcmReader.SAMPLE_RATE / 4 * OpusPcmReader.CHANNELS;
     private static readonly TimeSpan TICK = TimeSpan.FromMilliseconds(30);
     private static readonly TimeSpan POSITION_INTERVAL = TimeSpan.FromMilliseconds(250);
+    // asking for the default device enumerates all devices, so not on every tick
+    private static readonly TimeSpan DEVICE_CHECK_INTERVAL = TimeSpan.FromSeconds(2);
+
+    // ALC constants Silk.NET has no names for
+    private const int ALC_DEFAULT_ALL_DEVICES_SPECIFIER = 0x1012;
+    private const int ALC_ALL_DEVICES_SPECIFIER = 0x1013;
+    private const int ALC_CONNECTED = 0x313;
 
     // property changes are raised on the UI thread the service was created on
     private readonly SynchronizationContext? ui = SynchronizationContext.Current;
@@ -43,6 +50,8 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
     private ALContext? alc;
     private unsafe Device* device;
     private unsafe Context* context;
+    // alcReopenDeviceSOFT (ALC_SOFT_reopen_device); null when OpenAL has no such function
+    private unsafe delegate* unmanaged[Cdecl]<Device*, byte*, int*, byte> reopenDevice;
 
     private CancellationTokenSource? run;
     private Task? loop;
@@ -218,6 +227,9 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
             return;
         }
 
+        // a Bluetooth speaker connected since the device was opened is the default output now
+        this.FollowDefaultDevice();
+
         var al = this.al!;
         using (reader)
         {
@@ -232,6 +244,7 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
             long playedFrames = 0;
             var paused = false;
             var lastPosition = DateTime.MinValue;
+            var lastDeviceCheck = DateTime.UtcNow;
             var finished = false;
 
             try
@@ -304,6 +317,13 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
                                 this.Position = position;
                         });
                         lastPosition = DateTime.UtcNow;
+                    }
+
+                    // the output may change while playing, e.g. when the speaker connects or goes away
+                    if (DateTime.UtcNow - lastDeviceCheck >= DEVICE_CHECK_INTERVAL)
+                    {
+                        this.FollowDefaultDevice();
+                        lastDeviceCheck = DateTime.UtcNow;
                     }
 
                     Thread.Sleep(TICK);
@@ -385,11 +405,41 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
                 throw new InvalidOperationException(Strings.Player_NoDeviceFound);
             var context = alc.CreateContext(device, null);
             alc.MakeContextCurrent(context);
+            if (alc.IsExtensionPresent(device, "ALC_SOFT_reopen_device"))
+                this.reopenDevice = (delegate* unmanaged[Cdecl]<Device*, byte*, int*, byte>)alc.GetProcAddress(device, "alcReopenDeviceSOFT");
 
             this.alc = alc;
             this.device = device;
             this.context = context;
             this.al = al;
+        }
+    }
+
+    /// <summary>
+    /// Moves playback to the system's default output when that is another device than the open one, or when the
+    /// open one was disconnected. Without this the player keeps the device it opened at startup: a Bluetooth
+    /// speaker connected later stays silent while other apps play on it. Reopening keeps the source and its
+    /// queued buffers, so a playing track just carries on on the new device.
+    /// </summary>
+    private unsafe void FollowDefaultDevice()
+    {
+        lock (this.openAl)
+        {
+            if (this.alc is not { } alc || this.device == null || this.reopenDevice == null)
+                return;
+
+            // OpenAL Soft answers the default from the device list it built first; asking for the whole list
+            // enumerates the devices again (a few milliseconds), so the default is the current one
+            alc.GetContextProperty((Device*)null, (GetContextString)ALC_ALL_DEVICES_SPECIFIER);
+            var wanted = alc.GetContextProperty((Device*)null, (GetContextString)ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
+            var current = alc.GetContextProperty(this.device, (GetContextString)ALC_ALL_DEVICES_SPECIFIER);
+            var connected = 1;
+            alc.GetContextProperty(this.device, (GetContextInteger)ALC_CONNECTED, 1, &connected);
+            if (connected != 0 && (string.IsNullOrEmpty(wanted) || wanted == current))
+                return;
+
+            // null opens the default device; on failure the old one stays
+            this.reopenDevice(this.device, null, null);
         }
     }
 
