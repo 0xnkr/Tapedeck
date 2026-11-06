@@ -148,6 +148,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Writing tags {0}/{1} ….
+        /// </summary>
+        public static string Activity_WritingAllTags {
+            get {
+                return ResourceManager.GetString("Activity_WritingAllTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Writing tags ….
         /// </summary>
         public static string Activity_WritingTags {
@@ -216,6 +225,15 @@ namespace Tapedeck.Resources {
         public static string Confirm_AddedToPlaylist {
             get {
                 return ResourceManager.GetString("Confirm_AddedToPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags written for {0} tracks, {1} files renamed.
+        /// </summary>
+        public static string Confirm_AllTagsWritten {
+            get {
+                return ResourceManager.GetString("Confirm_AllTagsWritten", resourceCulture);
             }
         }
         
@@ -1246,6 +1264,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Write tags ({0}).
+        /// </summary>
+        public static string Library_WriteAllTags {
+            get {
+                return ResourceManager.GetString("Library_WriteAllTags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         public static string License_Copy {
@@ -1656,6 +1683,15 @@ namespace Tapedeck.Resources {
         public static string Notice_UpdateFailed {
             get {
                 return ResourceManager.GetString("Notice_UpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags written for {0} tracks, {1} failed: {2}.
+        /// </summary>
+        public static string Notice_WriteAllTagsFailed {
+            get {
+                return ResourceManager.GetString("Notice_WriteAllTagsFailed", resourceCulture);
             }
         }
         

@@ -65,6 +65,11 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{StaticResource Space.1}">
                         <Button Classes="text"
+                                Content="{Binding WriteAllTagsText}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
+                                Command="{Binding WriteAllTagsCommand}"
+                                IsVisible="{Binding HasStaleTags}" />
+                        <Button Classes="text"
                                 Content="{x:Static res:Strings.Library_MatchMusicBrainz}"
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
                                 Command="{Binding MatchMusicBrainzCommand}"

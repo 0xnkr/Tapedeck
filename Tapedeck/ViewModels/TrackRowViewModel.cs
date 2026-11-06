@@ -103,6 +103,9 @@ public partial class TrackRowViewModel : ViewModelBase
     [ObservableProperty]
     public partial MbMatchState MbState { get; private set; }
 
+    /// <summary>The file exists and its tags are older than the shown values.</summary>
+    public bool TagsStale { get; private set; }
+
     /// <summary>Missing albums show a dash instead of an empty cell.</summary>
     public string AlbumText => this.Album ?? "—";
 
@@ -122,6 +125,7 @@ public partial class TrackRowViewModel : ViewModelBase
         this.ThumbPath = track.ThumbPath;
         this.FilePath = track.FilePath;
         this.MbState = track.MbState;
+        this.TagsStale = track.TagsStale;
     }
 
     [RelayCommand]
