@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tracks are matched with [MusicBrainz](https://musicbrainz.org) for album, album artist, release year, track and disc number and genres. New tracks are looked up in the background after adding a link, a playlist or a CSV, which can be turned off in the settings.
 - Square covers from the [Cover Art Archive](https://coverartarchive.org) replace the 16:9 thumbnail in the file.
+- Tracks without such a cover get a square one cut from the middle of their YouTube thumbnail, which for Topic uploads is the album cover. A Cover Art Archive cover found later replaces it.
 - The matching recognizes the song first and picks the release by rules: the studio album before soundtrack, EP, single and compilation, the original before deluxe editions and reissues. Music videos get the album they belong to, live versions, remixes and sped-up uploads are kept apart.
 - Only certain matches are applied on their own. Uncertain ones show up as suggestions on the detail page and under the new "Suggestions" filter, ready to apply or decline.
 - "Match all with MusicBrainz" looks up the whole library again. Existing matches stay when nothing certain is found and get their genres and cover refreshed.
@@ -48,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Every download is measured once with FFmpeg's EBU R 128 filter. "Write tags" puts the result into the file as the Opus track gain `R128_TRACK_GAIN`, so players on the phone play loud music videos and quiet Topic uploads equally loud.
 - Tracks downloaded earlier, and files taken over from the library folder, are measured in the background. Afterwards "Write tags (N)" takes the gain to their files.
+- The built-in player levels tracks the same way, so a loud music video and a quiet upload play equally loud in the app too. This can be switched off in the settings.
 
 #### Listening
 
@@ -77,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tool overview with versions and a one-click yt-dlp update.
 - yt-dlp, FFmpeg and Deno are downloaded automatically on first use.
 - Custom window chrome, a spinning vinyl toast for running work, and a design system with a switchable accent color.
+- Lists and pages glide smoothly with the mouse wheel. Thumbnails and covers load in the background, so long libraries scroll without stutter.
 - Open source credits in the settings. Each license opens its full text in the app, offline, and the libraries bundled along with the others are listed too.
 - MIT license, plus third-party notices for everything bundled into `Tapedeck.exe`.
 - Publish profile for a single self-contained `Tapedeck.exe` on Windows x64.
