@@ -58,6 +58,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cutting square covers {0}/{1} ….
+        /// </summary>
+        public static string Activity_CuttingCovers {
+            get {
+                return ResourceManager.GetString("Activity_CuttingCovers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading “{0}” ….
         /// </summary>
         public static string Activity_Downloading {
@@ -252,6 +261,15 @@ namespace Tapedeck.Resources {
         public static string Confirm_AlreadyInPlaylist {
             get {
                 return ResourceManager.GetString("Confirm_AlreadyInPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Square covers for {0} tracks. “Write tags” takes them to the files..
+        /// </summary>
+        public static string Confirm_CoversCut {
+            get {
+                return ResourceManager.GetString("Confirm_CoversCut", resourceCulture);
             }
         }
         
@@ -819,6 +837,15 @@ namespace Tapedeck.Resources {
         public static string Detail_Cover {
             get {
                 return ResourceManager.GetString("Detail_Cover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Square, cut from the YouTube thumbnail.
+        /// </summary>
+        public static string Detail_CoverCutFromThumbnail {
+            get {
+                return ResourceManager.GetString("Detail_CoverCutFromThumbnail", resourceCulture);
             }
         }
         
@@ -2736,6 +2763,24 @@ namespace Tapedeck.Resources {
         public static string Settings_LanguageSystem {
             get {
                 return ResourceManager.GetString("Settings_LanguageSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Level the volume when playing.
+        /// </summary>
+        public static string Settings_LevelPlayback {
+            get {
+                return ResourceManager.GetString("Settings_LevelPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loud and quiet tracks play equally loud in Tapedeck, from the next track on. The files get their volume level through “Write tags” either way..
+        /// </summary>
+        public static string Settings_LevelPlaybackHint {
+            get {
+                return ResourceManager.GetString("Settings_LevelPlaybackHint", resourceCulture);
             }
         }
         

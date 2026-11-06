@@ -1548,4 +1548,24 @@
     <value>Off after “Don't ask again”. Without asking, “Keep this one” does what you chose last.</value>
     <comment>Hint below Settings_AskBeforeKeep; “Don't ask again” is Dialog_DontAskAgain, “Keep this one” is Track_Keep</comment>
   </data>
+  <data name="Activity_CuttingCovers" xml:space="preserve">
+    <value>Cutting square covers {0}/{1} …</value>
+    <comment>Activity toast while square covers are cut from YouTube thumbnails in the background; {0} done, {1} total</comment>
+  </data>
+  <data name="Confirm_CoversCut" xml:space="preserve">
+    <value>Square covers for {0} tracks. “Write tags” takes them to the files.</value>
+    <comment>Activity toast after cutting covers; {0} track count; “Write tags” is the bulk action Library_WriteAllTags</comment>
+  </data>
+  <data name="Detail_CoverCutFromThumbnail" xml:space="preserve">
+    <value>Square, cut from the YouTube thumbnail</value>
+    <comment>Where the cover comes from: the middle of the 16:9 video thumbnail</comment>
+  </data>
+  <data name="Settings_LevelPlayback" xml:space="preserve">
+    <value>Level the volume when playing</value>
+    <comment>Settings row: the app's player plays all tracks equally loud using the measured loudness</comment>
+  </data>
+  <data name="Settings_LevelPlaybackHint" xml:space="preserve">
+    <value>Loud and quiet tracks play equally loud in Tapedeck, from the next track on. The files get their volume level through “Write tags” either way.</value>
+    <comment>Hint below Settings_LevelPlayback; “Write tags” is Library_WriteAllTags</comment>
+  </data>
 </root>
