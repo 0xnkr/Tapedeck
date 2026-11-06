@@ -1,9 +1,15 @@
 <!-- Style root of the Tapedeck theme: typography and styles on top of Fluent's templates. -->
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Tapedeck.Controls">
     <StyleInclude Source="avares://Tapedeck/Theme/Tokens/Typography.axaml" />
     <StyleInclude Source="avares://Tapedeck/Theme/Controls/Inputs.axaml" />
     <StyleInclude Source="avares://Tapedeck/Theme/Controls/RatingStyles.axaml" />
+
+    <!-- Mouse wheel notches glide instead of jumping, in every list and page -->
+    <Style Selector="ScrollViewer">
+        <Setter Property="controls:SmoothScroll.IsEnabled" Value="True" />
+    </Style>
 
     <!-- Code line on an island: file names, paths -->
     <Style Selector="Border.code">
