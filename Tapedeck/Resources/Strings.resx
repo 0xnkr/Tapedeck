@@ -1153,7 +1153,7 @@
     <comment>Tooltip of Library_CancelMatching</comment>
   </data>
   <data name="Library_WriteAllTagsHint" xml:space="preserve">
-    <value>Saves title, album, genres and cover into the music files, so your phone shows them.</value>
+    <value>Saves title, album, genres, cover and the volume level into the music files, so your phone shows them and plays all tracks equally loud.</value>
     <comment>Tooltip of Library_WriteAllTags</comment>
   </data>
   <data name="Filter_SuggestedHint" xml:space="preserve">
@@ -1483,5 +1483,13 @@
   <data name="Detail_NextHint" xml:space="preserve">
     <value>Next track of the list you came from (arrow key right).</value>
     <comment>Tooltip of the right arrow button</comment>
+  </data>
+  <data name="Activity_MeasuringLoudness" xml:space="preserve">
+    <value>Measuring loudness {0}/{1} …</value>
+    <comment>Activity toast while the loudness of downloaded files is measured in the background; {0} done, {1} total</comment>
+  </data>
+  <data name="Confirm_LoudnessMeasured" xml:space="preserve">
+    <value>Loudness measured for {0} tracks. “Write tags” takes it to the files.</value>
+    <comment>Activity toast after the background loudness measurement; {0} track count; “Write tags” is the bulk action Library_WriteAllTags</comment>
   </data>
 </root>
