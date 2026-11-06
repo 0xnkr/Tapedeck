@@ -19,6 +19,9 @@
                 <CheckBox Content="{Binding Request.OptionText}"
                           IsChecked="{Binding Option}"
                           IsVisible="{Binding HasOption}" />
+                <CheckBox Content="{x:Static res:Strings.Dialog_DontAskAgain}"
+                          IsChecked="{Binding DontAskAgain}"
+                          IsVisible="{Binding Request.OfferDontAsk}" />
                 <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}" HorizontalAlignment="Right">
                     <Button Content="{x:Static res:Strings.Dialog_Cancel}"
                             Command="{Binding CancelCommand}" />

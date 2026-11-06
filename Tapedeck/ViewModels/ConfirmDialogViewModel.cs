@@ -4,17 +4,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Tapedeck.ViewModels;
 
-/// <summary>What a confirmation asks; <see cref="OptionText"/> adds a check box, e.g. "also delete the file".</summary>
+/// <summary>
+/// What a confirmation asks; <see cref="OptionText"/> adds a check box, e.g. "also delete the file", and
+/// <see cref="OfferDontAsk"/> one for not asking again, which the caller has to remember.
+/// </summary>
 public sealed record ConfirmRequest(
     string Title,
     string Message,
     string ConfirmText,
     string? OptionText = null,
     bool OptionDefault = false,
-    bool IsDestructive = false);
+    bool IsDestructive = false,
+    bool OfferDontAsk = false);
 
 /// <summary>The answer to a confirmed dialog; <see cref="Option"/> is the state of the check box.</summary>
-public sealed record ConfirmResult(bool Option);
+/// <param name="DontAskAgain">The user wants the same answer from now on without the dialog.</param>
+public sealed record ConfirmResult(bool Option, bool DontAskAgain = false);
 
 /// <summary>A dialog shown as overlay in the main window; Escape cancels it.</summary>
 public interface IDialog
@@ -34,11 +39,14 @@ public partial class ConfirmDialogViewModel(ConfirmRequest request) : ViewModelB
     [ObservableProperty]
     public partial bool Option { get; set; } = request.OptionDefault;
 
+    [ObservableProperty]
+    public partial bool DontAskAgain { get; set; }
+
     /// <summary>Completes with the result, or <c>null</c> when cancelled.</summary>
     public Task<ConfirmResult?> Answer => this.answer.Task;
 
     [RelayCommand]
-    private void Confirm() => this.answer.TrySetResult(new ConfirmResult(this.Option));
+    private void Confirm() => this.answer.TrySetResult(new ConfirmResult(this.Option, this.DontAskAgain));
 
     [RelayCommand]
     private void Cancel() => this.answer.TrySetResult(null);
