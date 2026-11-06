@@ -48,6 +48,18 @@ public interface ITrackRepository
     /// <summary>Records that the tags in the file now match the displayed values.</summary>
     Task MarkTagsWrittenAsync(long id);
 
+    /// <summary>Integrated loudness of the track's file in LUFS; <c>null</c> when not measured yet.</summary>
+    Task<double?> GetLoudnessAsync(long id);
+
+    /// <summary>
+    /// Stores the measured loudness of the track's file. A changed value marks the file's tags as outdated,
+    /// because the track gain goes into the file.
+    /// </summary>
+    Task SetLoudnessAsync(long id, double lufs);
+
+    /// <summary>Downloaded tracks whose file was never measured, oldest first.</summary>
+    Task<IReadOnlyList<long>> ListWithoutLoudnessAsync();
+
     /// <summary>Tracks in the given MusicBrainz states, oldest first, e.g. the ones never searched.</summary>
     Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states);
 
