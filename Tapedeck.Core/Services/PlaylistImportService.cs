@@ -23,8 +23,17 @@ public sealed class PlaylistImportService(ITrackRepository tracks, IPlaylistRepo
     public async Task<PlaylistImportResult> ImportAsync(long playlistId, YtPlaylist source,
         IProgress<(int Done, int Total)>? progress = null, CancellationToken ct = default)
     {
-        var inPlaylist = (await playlists.GetTracksAsync(playlistId)).Select(t => t.VideoId).ToHashSet(StringComparer.Ordinal);
+        var current = await playlists.GetTracksAsync(playlistId);
+        var inPlaylist = current.Select(t => t.VideoId).ToHashSet(StringComparer.Ordinal);
         var known = (await tracks.ListDisplayAsync()).ToDictionary(t => t.VideoId, t => t.Id, StringComparer.Ordinal);
+        // a duplicate merged away stays away: its video counts as the kept track
+        var currentIds = current.Select(t => t.Id).ToHashSet();
+        foreach (var (videoId, trackId) in await tracks.ListAliasesAsync())
+        {
+            known.TryAdd(videoId, trackId);
+            if (currentIds.Contains(trackId))
+                inPlaylist.Add(videoId);
+        }
         var missing = source.Entries.Where(e => !inPlaylist.Contains(e.VideoId)).ToList();
 
         // indexed by position, so the playlist keeps the YouTube order although fetches finish in any order
