@@ -60,6 +60,20 @@ public interface ITrackRepository
     /// <summary>Downloaded tracks whose file was never measured, oldest first.</summary>
     Task<IReadOnlyList<long>> ListWithoutLoudnessAsync();
 
+    /// <summary>The track a merged duplicate's video now belongs to; <c>null</c> when the video is no alias.</summary>
+    Task<long?> GetAliasTargetAsync(string videoId);
+
+    /// <summary>Videos of merged duplicates and the tracks they belong to now.</summary>
+    Task<IReadOnlyDictionary<string, long>> ListAliasesAsync();
+
+    /// <summary>
+    /// Makes <paramref name="mergedIds"/> part of <paramref name="keepId"/>, in one step: their videos become aliases
+    /// of the kept track, their playlist places go to it (or are dropped where it is in the playlist already), and
+    /// their best rating is taken over when the kept track has none. The merged tracks themselves stay; removing
+    /// them with their files is up to the caller.
+    /// </summary>
+    Task MergeIntoAsync(long keepId, IReadOnlyList<long> mergedIds);
+
     /// <summary>Tracks in the given MusicBrainz states, oldest first, e.g. the ones never searched.</summary>
     Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states);
 
