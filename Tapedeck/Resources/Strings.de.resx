@@ -1164,4 +1164,19 @@
   <data name="Settings_AskBeforeKeepHint" xml:space="preserve">
     <value>Aus nach „Nicht mehr fragen“. Ohne Nachfrage macht „Diesen behalten“, was du zuletzt gewählt hast.</value>
   </data>
+  <data name="Activity_CuttingCovers" xml:space="preserve">
+    <value>Schneide quadratische Cover {0}/{1} …</value>
+  </data>
+  <data name="Confirm_CoversCut" xml:space="preserve">
+    <value>Quadratische Cover für {0} Titel. „Tags schreiben“ überträgt sie in die Dateien.</value>
+  </data>
+  <data name="Detail_CoverCutFromThumbnail" xml:space="preserve">
+    <value>Quadratisch, aus dem YouTube-Thumbnail geschnitten</value>
+  </data>
+  <data name="Settings_LevelPlayback" xml:space="preserve">
+    <value>Lautstärke beim Abspielen angleichen</value>
+  </data>
+  <data name="Settings_LevelPlaybackHint" xml:space="preserve">
+    <value>Laute und leise Titel spielen in Tapedeck gleich laut, ab dem nächsten Titel. Die Dateien bekommen den Ausgleich unabhängig davon über „Tags schreiben“.</value>
+  </data>
 </root>
