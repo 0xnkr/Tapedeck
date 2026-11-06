@@ -46,6 +46,7 @@ public partial class LibraryViewModel(
     MusicBrainzQueue musicBrainz,
     TagWriter tagWriter,
     PlayerService player,
+    LoudnessQueue loudness,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     // a search plus up to three genre lookups at one request per second, with the occasional retry
@@ -318,6 +319,7 @@ public partial class LibraryViewModel(
         };
 
         musicBrainz.TrackChanged += id => _ = this.OnMatchedAsync(id);
+        loudness.Measured += ids => _ = this.OnLoudnessMeasuredAsync(ids);
         musicBrainz.Failed += message => this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, message);
         musicBrainz.PropertyChanged += (_, e) =>
         {
@@ -332,6 +334,17 @@ public partial class LibraryViewModel(
         await this.RefreshRowAsync(id);
         if (navigation.Current is TrackDetailViewModel detail && detail.Row.Id == id)
             await detail.LoadCommand.ExecuteAsync(null);
+    }
+
+    /// <summary>New loudness values make the tags outdated; the rows learn it quietly, the table updates once.</summary>
+    private async Task OnLoudnessMeasuredAsync(IReadOnlyList<long> ids)
+    {
+        foreach (var id in ids)
+        {
+            if (this.all.Find(r => r.Id == id) is { } row && await repository.GetDisplayAsync(id) is { } track)
+                row.Update(track, files.StatusOf(track));
+        }
+        this.OnTracksChanged();
     }
 
     /// <summary>
@@ -741,6 +754,8 @@ public partial class LibraryViewModel(
         this.MatchMusicBrainzCommand.NotifyCanExecuteChanged();
         // smart playlists pick their tracks from the shown values, so their .m3u8 may change with any track
         playlistSync.Request();
+        // downloads measure themselves; older and adopted files get their value in the background
+        loudness.EnqueueMissing();
     }
 
     private void ApplyFilter()

@@ -57,6 +57,7 @@ public static class AppServices
         services.AddSingleton<PlaylistSync>();
         services.AddSingleton<MusicBrainzQueue>();
         services.AddSingleton<PlayerService>();
+        services.AddSingleton<LoudnessQueue>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<PlaylistsViewModel>();
