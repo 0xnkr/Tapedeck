@@ -47,6 +47,7 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly NavigationService navigation;
     private readonly MbEnrichmentService musicBrainz;
     private readonly IPlatformService platform;
+    private readonly PlayerService player;
     private readonly TrackSequence sequence;
     private readonly TrackDetailFactory createDetail;
 
@@ -58,8 +59,12 @@ public partial class TrackDetailViewModel : ViewModelBase
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, TrackSequence sequence, TrackDetailFactory createDetail,
         ITrackRepository repository,
         TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation,
-        MbEnrichmentService musicBrainz, IPlatformService platform)
+        MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player)
     {
+        this.player = player;
+        this.sequence = sequence;
+        this.createDetail = createDetail;
+        this.Index = sequence.Rows.ToList().IndexOf(row);
         this.Row = row;
         this.actions = actions;
         this.repository = repository;
@@ -69,9 +74,6 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.navigation = navigation;
         this.musicBrainz = musicBrainz;
         this.platform = platform;
-        this.sequence = sequence;
-        this.createDetail = createDetail;
-        this.Index = sequence.Rows.ToList().IndexOf(row);
 
         this.ArtistField = new MetadataFieldViewModel(Strings.Field_Artist, this.ScheduleSave);
         this.TitleField = new MetadataFieldViewModel(Strings.Field_Title, this.ScheduleSave);
@@ -279,6 +281,7 @@ public partial class TrackDetailViewModel : ViewModelBase
     [RelayCommand]
     private Task OpenOnYoutubeAsync() => this.actions.OpenOnYoutubeAsync(this.Row);
 
+
     [RelayCommand]
     private Task ShowInFolderAsync() => this.actions.ShowInFolderAsync(this.Row);
 
@@ -300,6 +303,8 @@ public partial class TrackDetailViewModel : ViewModelBase
             string? renamed;
             using (this.activity.Begin(Strings.Activity_WritingTags))
             {
+                // a playing file is open, so it could neither be renamed nor written
+                await this.player.StopIfLoadedAsync(this.Row.Id);
                 // the file name follows corrected artist and title, then the tags go in
                 renamed = await this.files.RenameToMatchAsync(this.Row.Id);
                 await this.tagWriter.WriteTagsAsync(this.Row.Id);

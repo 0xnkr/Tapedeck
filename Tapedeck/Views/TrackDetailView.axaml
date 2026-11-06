@@ -86,11 +86,13 @@
             <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
                 <controls:Island Padding="12" AutomationProperties.Name="{x:Static res:Strings.Detail_Preview}">
                     <StackPanel Spacing="{StaticResource Space.3}">
+                        <!-- Plays the downloaded file, like the covers in the tables; YouTube is in the header -->
                         <Button Classes="link"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Stretch"
-                                Command="{Binding OpenOnYoutubeCommand}"
-                                AutomationProperties.Name="{x:Static res:Strings.Track_OpenOnYoutube}">
+                                Command="{Binding Row.TogglePlayCommand}"
+                                ToolTip.Tip="{Binding Row.PlayTooltip}"
+                                AutomationProperties.Name="{Binding Row.PlayTooltip}">
                             <Border Height="211"
                                     CornerRadius="{StaticResource Radius.Field}"
                                     Background="{DynamicResource Brush.Surface3}"
@@ -105,7 +107,13 @@
                                     <controls:Glyph Data="{StaticResource Icon.Play}"
                                                     IsFilled="True" StrokeThickness="0"
                                                     Width="24" Height="24"
-                                                    Foreground="{DynamicResource Brush.Text}" />
+                                                    Foreground="{DynamicResource Brush.Text}"
+                                                    IsVisible="{Binding !Row.IsPlaying}" />
+                                    <controls:Glyph Data="{StaticResource Icon.Pause}"
+                                                    IsFilled="True" StrokeThickness="0"
+                                                    Width="24" Height="24"
+                                                    Foreground="{DynamicResource Brush.Accent}"
+                                                    IsVisible="{Binding Row.IsPlaying}" />
                                 </Panel>
                             </Border>
                         </Button>
