@@ -445,6 +445,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Decodes the Opus files for listening in.
+        /// </summary>
+        public static string Credit_Concentus {
+            get {
+                return ResourceManager.GetString("Credit_Concentus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reads the Ogg container of the Opus files.
+        /// </summary>
+        public static string Credit_ConcentusOggFile {
+            get {
+                return ResourceManager.GetString("Credit_ConcentusOggFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maps SQL results to objects.
         /// </summary>
         public static string Credit_Dapper {
@@ -535,6 +553,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plays the sound on every platform.
+        /// </summary>
+        public static string Credit_OpenAlSoft {
+            get {
+                return ResourceManager.GetString("Credit_OpenAlSoft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stores the library.
         /// </summary>
         public static string Credit_SQLite {
@@ -549,6 +576,15 @@ namespace Tapedeck.Resources {
         public static string Credit_SQLitePCLRaw {
             get {
                 return ResourceManager.GetString("Credit_SQLitePCLRaw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connects .NET with OpenAL.
+        /// </summary>
+        public static string Credit_SilkNet {
+            get {
+                return ResourceManager.GetString("Credit_SilkNet", resourceCulture);
             }
         }
         
@@ -1836,6 +1872,96 @@ namespace Tapedeck.Resources {
         public static string Notice_WriteTagsFailed {
             get {
                 return ResourceManager.GetString("Notice_WriteTagsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop and close the player.
+        /// </summary>
+        public static string Player_Close {
+            get {
+                return ResourceManager.GetString("Player_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No sound output available: {0}.
+        /// </summary>
+        public static string Player_NoDevice {
+            get {
+                return ResourceManager.GetString("Player_NoDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no audio device found.
+        /// </summary>
+        public static string Player_NoDeviceFound {
+            get {
+                return ResourceManager.GetString("Player_NoDeviceFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download the track first to listen to it..
+        /// </summary>
+        public static string Player_NotDownloaded {
+            get {
+                return ResourceManager.GetString("Player_NotDownloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the track's details.
+        /// </summary>
+        public static string Player_OpenDetails {
+            get {
+                return ResourceManager.GetString("Player_OpenDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string Player_Pause {
+            get {
+                return ResourceManager.GetString("Player_Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play.
+        /// </summary>
+        public static string Player_Play {
+            get {
+                return ResourceManager.GetString("Player_Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play this track. Click again to pause..
+        /// </summary>
+        public static string Player_PlayHint {
+            get {
+                return ResourceManager.GetString("Player_PlayHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag or click to jump to a spot in the track..
+        /// </summary>
+        public static string Player_Seek {
+            get {
+                return ResourceManager.GetString("Player_Seek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file cannot be played: {0}.
+        /// </summary>
+        public static string Player_Unreadable {
+            get {
+                return ResourceManager.GetString("Player_Unreadable", resourceCulture);
             }
         }
         
