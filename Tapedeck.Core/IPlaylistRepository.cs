@@ -1,4 +1,5 @@
 using Tapedeck.Core.Models;
+using Tapedeck.Core.Playlists;
 
 namespace Tapedeck.Core;
 
@@ -19,15 +20,21 @@ public interface IPlaylistRepository
     /// <returns>The new playlist's id.</returns>
     Task<long> CreateAsync(string name, string? sourceUrl = null);
 
+    /// <returns>The new smart playlist's id.</returns>
+    Task<long> CreateSmartAsync(string name, SmartRules rules);
+
+    /// <summary>Changes name and rules of a smart playlist.</summary>
+    Task UpdateSmartAsync(long id, string name, SmartRules rules);
+
     Task RenameAsync(long id, string name);
 
     /// <summary>Deletes the playlist; its tracks stay in the library.</summary>
     Task DeleteAsync(long id);
 
-    /// <summary>The playlist's tracks in their order.</summary>
+    /// <summary>The playlist's tracks in their order; for a smart playlist picked from the library by its rules.</summary>
     Task<IReadOnlyList<TrackDisplay>> GetTracksAsync(long playlistId);
 
-    /// <summary>Appends tracks at the end; tracks already in the playlist are skipped.</summary>
+    /// <summary>Appends tracks at the end; tracks already in the playlist are skipped. A smart playlist takes none.</summary>
     /// <returns>Number of tracks actually added.</returns>
     Task<int> AddTracksAsync(long playlistId, IReadOnlyList<long> trackIds);
 
