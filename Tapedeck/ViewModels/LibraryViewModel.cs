@@ -515,13 +515,15 @@ public partial class LibraryViewModel(
 
     Task ITrackActions.OpenOnYoutubeAsync(TrackRowViewModel row) => platform.OpenUrlAsync(row.Url);
 
-    Task ITrackActions.TogglePlayAsync(TrackRowViewModel row)
+    async Task ITrackActions.TogglePlayAsync(TrackRowViewModel row)
     {
         if (!row.CanPlay)
-            return Task.CompletedTask;
+            return;
         this.Notice = null;
-        return player.ToggleAsync(new PlayRequest(row.Id, paths.ToLibraryPath(row.FilePath!), row.Title, row.Artist,
-            row.CoverPath, TimeSpan.FromSeconds(row.DurationS ?? 0)));
+        // without leveling the file plays as it is
+        var loudness = settings.Load().LevelPlayback ?? true ? await repository.GetLoudnessAsync(row.Id) : null;
+        await player.ToggleAsync(new PlayRequest(row.Id, paths.ToLibraryPath(row.FilePath!), row.Title, row.Artist,
+            row.CoverPath, TimeSpan.FromSeconds(row.DurationS ?? 0), loudness));
     }
 
     /// <summary>Shows on every row whether it is the loaded track and whether it plays.</summary>
