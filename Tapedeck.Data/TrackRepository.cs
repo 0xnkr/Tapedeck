@@ -175,6 +175,37 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {NOW} WHERE id = @id;", new { id });
     }
 
+    public async Task<double?> GetLoudnessAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        return await connection.ExecuteScalarAsync<double?>("SELECT loudness_lufs FROM tracks WHERE id = @id;", new { id });
+    }
+
+    public async Task SetLoudnessAsync(long id, double lufs)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync(
+            $"""
+            UPDATE tracks SET
+                edited_at     = CASE WHEN loudness_lufs IS @lufs THEN edited_at ELSE {NOW} END,
+                loudness_lufs = @lufs
+            WHERE id = @id;
+            """,
+            new { id, lufs });
+    }
+
+    public async Task<IReadOnlyList<long>> ListWithoutLoudnessAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<long>(
+            """
+            SELECT id FROM tracks
+            WHERE status = 'done' AND file_path IS NOT NULL AND loudness_lufs IS NULL
+            ORDER BY added_at, id;
+            """);
+        return rows.AsList();
+    }
+
     public async Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states)
     {
         await using var connection = await connectionFactory.OpenAsync();
