@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Fixtures\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Fixtures\**\*.json;Fixtures\**\*.opus" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
