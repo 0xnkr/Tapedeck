@@ -45,6 +45,8 @@
 
     <!-- Filled -->
     <StreamGeometry x:Key="Icon.Play">M8,5.5 v13 l11,-6.5 Z</StreamGeometry>
+    <!-- Two bars, filled like Icon.Play -->
+    <StreamGeometry x:Key="Icon.Pause">M7,5.5 H10.5 V18.5 H7 Z M13.5,5.5 H17 V18.5 H13.5 Z</StreamGeometry>
     <StreamGeometry x:Key="Icon.More">M10.4,5.5 A1.6,1.6 0 1 0 13.6,5.5 A1.6,1.6 0 1 0 10.4,5.5 Z M10.4,12 A1.6,1.6 0 1 0 13.6,12 A1.6,1.6 0 1 0 10.4,12 Z M10.4,18.5 A1.6,1.6 0 1 0 13.6,18.5 A1.6,1.6 0 1 0 10.4,18.5 Z</StreamGeometry>
     <!-- Drag handle: two columns of three dots -->
     <StreamGeometry x:Key="Icon.Grip">M7.6,6 A1.4,1.4 0 1 0 10.4,6 A1.4,1.4 0 1 0 7.6,6 Z M13.6,6 A1.4,1.4 0 1 0 16.4,6 A1.4,1.4 0 1 0 13.6,6 Z M7.6,12 A1.4,1.4 0 1 0 10.4,12 A1.4,1.4 0 1 0 7.6,12 Z M13.6,12 A1.4,1.4 0 1 0 16.4,12 A1.4,1.4 0 1 0 13.6,12 Z M7.6,18 A1.4,1.4 0 1 0 10.4,18 A1.4,1.4 0 1 0 7.6,18 Z M13.6,18 A1.4,1.4 0 1 0 16.4,18 A1.4,1.4 0 1 0 13.6,18 Z</StreamGeometry>
