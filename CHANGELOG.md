@@ -80,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open source credits in the settings. Each license opens its full text in the app, offline, and the libraries bundled along with the others are listed too.
 - MIT license, plus third-party notices for everything bundled into `Tapedeck.exe`.
 - Publish profile for a single self-contained `Tapedeck.exe` on Windows x64.
+- GitHub Actions run the tests on every push and publish `Tapedeck.exe` with its SHA-256 checksum as a GitHub release for every version tag, with the matching changelog section as release notes.
 
 ### Fixed
 

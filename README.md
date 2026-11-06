@@ -8,6 +8,7 @@
 
 Paste a link, get a clean, tagged Opus file and a library your phone actually understands.
 
+[![CI](https://github.com/nilskruthoff/Tapedeck/actions/workflows/ci.yml/badge.svg)](https://github.com/nilskruthoff/Tapedeck/actions/workflows/ci.yml)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dot.net)
 [![Avalonia 12](https://img.shields.io/badge/Avalonia-12-8B44AC)](https://avaloniaui.net)
 [![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
@@ -111,6 +112,8 @@ dotnet publish Tapedeck -p:PublishProfile=win-x64
 ```
 
 The executable bundles the .NET runtime and native libraries. Trimming is off on purpose because Dapper and the dependency injection rely on reflection. For Linux or macOS use `dotnet publish Tapedeck -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true` (or `osx-arm64`); those builds are not tested yet.
+
+Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/nilskruthoff/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging.
 
 Handy command line options for a single run:
 
