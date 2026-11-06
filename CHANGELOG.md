@@ -39,6 +39,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Genres come from the album, else the recording, else the artist, since singles rarely have genres of their own.
 - "Write tags" also writes the track and disc number and the MusicBrainz IDs.
 
+#### Listening
+
+- Click the cover of a downloaded track to play it, click again to pause. Works in the library, on playlist pages and on the track's detail page; one track plays at a time.
+- A player bar below the page shows cover, title, progress and length, with pause, a slider to jump anywhere and a close button. <kbd>Space</kbd> pauses and resumes.
+- Playback stops on its own before a file is tagged, renamed, downloaded again, removed or moved, so the file is never locked.
+- Opus is decoded with Concentus and played through OpenAL Soft, on Windows, Linux and macOS without installing anything.
+
 #### Playlists
 
 - Create, rename and delete playlists.
