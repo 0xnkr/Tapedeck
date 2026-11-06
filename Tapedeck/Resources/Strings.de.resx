@@ -846,4 +846,16 @@
   <data name="MatchAll_Confirm" xml:space="preserve">
     <value>Starten</value>
   </data>
+  <data name="Library_WriteAllTags" xml:space="preserve">
+    <value>Tags schreiben ({0})</value>
+  </data>
+  <data name="Activity_WritingAllTags" xml:space="preserve">
+    <value>Schreibe Tags {0}/{1} …</value>
+  </data>
+  <data name="Confirm_AllTagsWritten" xml:space="preserve">
+    <value>Tags für {0} Titel geschrieben, {1} Dateien umbenannt</value>
+  </data>
+  <data name="Notice_WriteAllTagsFailed" xml:space="preserve">
+    <value>Tags für {0} Titel geschrieben, {1} fehlgeschlagen: {2}</value>
+  </data>
 </root>

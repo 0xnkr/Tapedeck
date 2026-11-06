@@ -44,6 +44,7 @@ public partial class LibraryViewModel(
     PlaylistsViewModel playlists,
     PlaylistSync playlistSync,
     MusicBrainzQueue musicBrainz,
+    TagWriter tagWriter,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
     // a search plus up to three genre lookups at one request per second, with the occasional retry
@@ -94,6 +95,16 @@ public partial class LibraryViewModel(
     /// <summary>The MusicBrainz run is going; the toolbar offers to stop it.</summary>
     [ObservableProperty]
     public partial bool IsMatching { get; private set; }
+
+    /// <summary>Downloaded tracks whose file tags are older than the shown values; shows the bulk action.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasStaleTags), nameof(WriteAllTagsText))]
+    [NotifyCanExecuteChangedFor(nameof(WriteAllTagsCommand))]
+    public partial int StaleTagsCount { get; private set; }
+
+    public bool HasStaleTags => this.StaleTagsCount > 0;
+
+    public string WriteAllTagsText => string.Format(Strings.Library_WriteAllTags, this.StaleTagsCount);
 
     /// <summary>Some tracks wait for the user to confirm a MusicBrainz suggestion; shows the filter chip.</summary>
     [ObservableProperty]
@@ -231,6 +242,63 @@ public partial class LibraryViewModel(
 
     [RelayCommand]
     private void CancelMatching() => musicBrainz.Cancel();
+
+    /// <summary>
+    /// Writes the outdated tags of all downloaded tracks, one after another, and renames their files to match,
+    /// as "Write tags" on the detail page does. A file that fails does not stop the others.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasStaleTags))]
+    private async Task WriteAllTagsAsync()
+    {
+        var rows = this.all.Where(IsTagWritable).ToList();
+        this.Notice = null;
+        var written = 0;
+        var renamed = 0;
+        var failed = new List<string>();
+
+        using (var progress = activity.Begin(string.Format(Strings.Activity_WritingAllTags, 0, rows.Count)))
+        {
+            for (var i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                progress.Update(string.Format(Strings.Activity_WritingAllTags, i + 1, rows.Count));
+                // a download may have started meanwhile; it writes its own file
+                if (row.IsDownloading)
+                    continue;
+                try
+                {
+                    // the file name follows corrected artist and title, then the tags go in
+                    if (await files.RenameToMatchAsync(row.Id) is not null)
+                        renamed++;
+                    await tagWriter.WriteTagsAsync(row.Id);
+                    written++;
+                }
+                catch (Exception ex)
+                {
+                    failed.Add($"{row.Title}: {ex.Message}");
+                }
+
+                // update the row quietly; the table is rebuilt once at the end
+                if (await repository.GetDisplayAsync(row.Id) is { } track)
+                    row.Update(track, files.StatusOf(track));
+            }
+        }
+
+        this.OnTracksChanged();
+        if (renamed > 0)
+            playlistSync.Request();
+
+        if (failed.Count == 0)
+        {
+            activity.Confirm(string.Format(Strings.Confirm_AllTagsWritten, written, renamed));
+            return;
+        }
+        var shown = string.Join("; ", failed.Take(3)) + (failed.Count > 3 ? " …" : string.Empty);
+        this.Notice = string.Format(Strings.Notice_WriteAllTagsFailed, written, failed.Count, shown);
+    }
+
+    /// <summary>Only files that are there can take tags; a missing file has to be downloaded first.</summary>
+    private static bool IsTagWritable(TrackRowViewModel row) => row.TagsStale && row.Status == DownloadStatus.Done;
 
     /// <summary>Wires the MusicBrainz run to the rows once, on the first load.</summary>
     private void ListenToMusicBrainz()
@@ -618,6 +686,7 @@ public partial class LibraryViewModel(
     private void OnTracksChanged()
     {
         this.HasMissing = this.all.Any(r => r.Status == DownloadStatus.Missing);
+        this.StaleTagsCount = this.all.Count(IsTagWritable);
         // the chip stays while it is selected, so the user sees the list run empty
         this.HasSuggestions = this.Filter == TrackFilter.Suggested || this.all.Any(r => r.MbState == MbMatchState.Suggested);
         this.ApplyFilter();

@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Source chips show where each value comes from: your correction, MusicBrainz, YouTube or the parsed title.
 - Genres and a five-star rating.
 - "Write tags" puts title, artist, album, album artist, year, genres, the YouTube link and the cover into the audio file, and renames the file to match corrections.
+- "Write tags (N)" above the library does the same for every downloaded track whose tags are outdated, for example after matching with MusicBrainz. A file that fails does not stop the others.
 
 #### MusicBrainz and covers
 

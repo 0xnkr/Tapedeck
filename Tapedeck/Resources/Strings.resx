@@ -1124,4 +1124,20 @@
     <value>Start</value>
     <comment>Confirmation dialog button</comment>
   </data>
+  <data name="Library_WriteAllTags" xml:space="preserve">
+    <value>Write tags ({0})</value>
+    <comment>Bulk action above the table: writes the outdated tags of all downloaded tracks into their files; {0} track count</comment>
+  </data>
+  <data name="Activity_WritingAllTags" xml:space="preserve">
+    <value>Writing tags {0}/{1} …</value>
+    <comment>Activity toast; {0} current track number, {1} tracks to write</comment>
+  </data>
+  <data name="Confirm_AllTagsWritten" xml:space="preserve">
+    <value>Tags written for {0} tracks, {1} files renamed</value>
+    <comment>Activity toast; {0} track count, {1} renamed file count</comment>
+  </data>
+  <data name="Notice_WriteAllTagsFailed" xml:space="preserve">
+    <value>Tags written for {0} tracks, {1} failed: {2}</value>
+    <comment>Error line; {0} written track count, {1} failed track count, {2} first errors</comment>
+  </data>
 </root>
