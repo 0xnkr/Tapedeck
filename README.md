@@ -41,6 +41,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
+| ✨ **Smart playlists** | Playlists that fill themselves from rules, like "genre contains Trap and year 2012 to 2016" or "the 50 newest tracks". They stay up to date as your library changes and land on your phone as normal `.m3u8` playlists. |
 | 🔄 **Linked YouTube playlists** | Import a YouTube playlist once and hit **Sync** later to pull in new videos. Nothing is ever removed or reordered behind your back. |
 | 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
 | 🧰 **Zero setup** | yt-dlp, FFmpeg and Deno are downloaded on first use, and yt-dlp updates with one click. |
@@ -114,7 +115,8 @@ dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
 - [x] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
 - [ ] Genres from [Last.fm](https://www.last.fm)
 - [ ] Installer and auto updates
-- [ ] Smart playlists and filtering the library by playlist
+- [x] Smart playlists
+- [ ] Filtering the library by playlist
 
 See the [changelog](CHANGELOG.md) for what changed.
 
