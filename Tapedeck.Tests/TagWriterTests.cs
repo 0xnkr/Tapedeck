@@ -72,4 +72,28 @@ public sealed class TagWriterTests : IAsyncLifetime
         Assert.True(string.IsNullOrEmpty(file.Tag.MusicBrainzTrackId));
         Assert.Equal(0u, file.Tag.Track);
     }
+
+    [Fact]
+    public async Task Writes_the_track_gain_and_removes_it_without_a_measurement()
+    {
+        var id = await this.AddWithFileAsync();
+        await this.repo.SetLoudnessAsync(id, -8);
+
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Equal(["-3840"], this.GainField());
+
+        // a silent file has nothing to level out
+        await this.repo.SetLoudnessAsync(id, -70);
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Empty(this.GainField());
+    }
+
+    private string[] GainField()
+    {
+        using var file = TagLib.File.Create(Path.Combine(this.dir, "song.opus"));
+        var xiph = (TagLib.Ogg.XiphComment)file.GetTag(TagLib.TagTypes.Xiph);
+        return xiph.GetField(TagWriter.TRACK_GAIN_FIELD);
+    }
 }
