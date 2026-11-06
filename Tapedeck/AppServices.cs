@@ -36,6 +36,7 @@ public static class AppServices
         services.AddSingleton<MetadataService>();
         services.AddSingleton<ThumbnailService>();
         services.AddSingleton<TagWriter>();
+        services.AddSingleton<LoudnessMeter>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
         services.AddSingleton<CsvImportService>();
