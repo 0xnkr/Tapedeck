@@ -18,6 +18,9 @@ public interface ITrackActions
 
     Task OpenOnYoutubeAsync(TrackRowViewModel row);
 
+    /// <summary>Plays the track's file, or pauses it when it is playing; does nothing without a file.</summary>
+    Task TogglePlayAsync(TrackRowViewModel row);
+
     Task ShowInFolderAsync(TrackRowViewModel row);
 
     void OpenDetails(TrackRowViewModel row);
@@ -87,7 +90,7 @@ public partial class TrackRowViewModel : ViewModelBase
     public partial int? Rating { get; private set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsDownloading))]
+    [NotifyPropertyChangedFor(nameof(IsDownloading), nameof(CanPlay), nameof(PlayTooltip))]
     [NotifyCanExecuteChangedFor(nameof(RemoveCommand))]
     public partial DownloadStatus Status { get; set; }
 
@@ -99,6 +102,26 @@ public partial class TrackRowViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string? ThumbPath { get; private set; }
+
+    /// <summary>Square cover from MusicBrainz, else the thumbnail; shown in the player bar.</summary>
+    public string? CoverPath { get; private set; }
+
+    public int? DurationS { get; private set; }
+
+    /// <summary>The file is there, so the cover plays it.</summary>
+    public bool CanPlay => this.FilePath is not null && this.Status == DownloadStatus.Done;
+
+    /// <summary>Loaded in the player, playing or paused; the cover keeps its play mark visible.</summary>
+    [ObservableProperty]
+    public partial bool IsLoaded { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PlayTooltip))]
+    public partial bool IsPlaying { get; set; }
+
+    public string PlayTooltip => !this.CanPlay ? Strings.Player_NotDownloaded
+        : this.IsPlaying ? Strings.Player_Pause
+        : Strings.Player_PlayHint;
 
     /// <summary>Whether the track is matched with MusicBrainz or waits for the user to confirm a suggestion.</summary>
     [ObservableProperty]
@@ -125,6 +148,10 @@ public partial class TrackRowViewModel : ViewModelBase
         this.Progress = 0;
         this.ThumbPath = track.ThumbPath;
         this.FilePath = track.FilePath;
+        this.CoverPath = track.Cover;
+        this.DurationS = track.DurationS;
+        this.OnPropertyChanged(nameof(this.CanPlay));
+        this.OnPropertyChanged(nameof(this.PlayTooltip));
         this.MbState = track.MbState;
         this.TagsStale = track.TagsStale;
     }
@@ -134,6 +161,9 @@ public partial class TrackRowViewModel : ViewModelBase
 
     [RelayCommand]
     private Task OpenOnYoutubeAsync() => this.actions.OpenOnYoutubeAsync(this);
+
+    [RelayCommand]
+    private Task TogglePlayAsync() => this.actions.TogglePlayAsync(this);
 
     [RelayCommand]
     private Task ShowInFolderAsync() => this.actions.ShowInFolderAsync(this);
