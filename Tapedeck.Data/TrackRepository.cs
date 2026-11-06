@@ -206,6 +206,70 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         return rows.AsList();
     }
 
+    public async Task<long?> GetAliasTargetAsync(string videoId)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        return await connection.ExecuteScalarAsync<long?>(
+            "SELECT track_id FROM track_aliases WHERE video_id = @videoId;", new { videoId });
+    }
+
+    public async Task<IReadOnlyDictionary<string, long>> ListAliasesAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(string VideoId, long TrackId)>("SELECT video_id, track_id FROM track_aliases;");
+        return rows.ToDictionary(r => r.VideoId, r => r.TrackId, StringComparer.Ordinal);
+    }
+
+    public async Task MergeIntoAsync(long keepId, IReadOnlyList<long> mergedIds)
+    {
+        var merged = mergedIds.Where(id => id != keepId).Distinct().ToArray();
+        if (merged.Length == 0)
+            return;
+
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        // their videos and the videos merged into them earlier now lead to the kept track
+        await connection.ExecuteAsync(
+            """
+            INSERT INTO track_aliases (video_id, track_id)
+            SELECT video_id, @keepId FROM tracks WHERE id IN @merged
+            ON CONFLICT (video_id) DO UPDATE SET track_id = excluded.track_id;
+            UPDATE track_aliases SET track_id = @keepId WHERE track_id IN @merged;
+            """,
+            new { keepId, merged }, transaction);
+
+        // one by one: two merged tracks in the same playlist must not both become the kept one
+        foreach (var mergedId in merged)
+        {
+            await connection.ExecuteAsync(
+                """
+                DELETE FROM playlist_tracks
+                 WHERE track_id = @mergedId
+                   AND playlist_id IN (SELECT playlist_id FROM playlist_tracks WHERE track_id = @keepId);
+                UPDATE playlist_tracks SET track_id = @keepId WHERE track_id = @mergedId;
+                """,
+                new { keepId, mergedId }, transaction);
+        }
+        // dropped places leave gaps; positions stay 0..n-1
+        await connection.ExecuteAsync(
+            """
+            UPDATE playlist_tracks
+               SET position = (SELECT COUNT(*) FROM playlist_tracks o
+                                WHERE o.playlist_id = playlist_tracks.playlist_id AND o.position < playlist_tracks.position);
+            """,
+            transaction: transaction);
+
+        await connection.ExecuteAsync(
+            """
+            UPDATE tracks SET rating = (SELECT MAX(rating) FROM tracks WHERE id IN @merged)
+             WHERE id = @keepId AND rating IS NULL;
+            """,
+            new { keepId, merged }, transaction);
+
+        await transaction.CommitAsync();
+    }
+
     public async Task<IReadOnlyList<long>> ListByMbStateAsync(params MbMatchState[] states)
     {
         await using var connection = await connectionFactory.OpenAsync();
