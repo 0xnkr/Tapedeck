@@ -39,6 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Genres come from the album, else the recording, else the artist, since singles rarely have genres of their own.
 - "Write tags" also writes the track and disc number and the MusicBrainz IDs.
 
+#### Duplicates
+
+- The new "Duplicates" filter shows songs that are in the library more than once, for example as the music video and the Topic upload, next to each other. Tracks matched with MusicBrainz count as the same song only when they are the same recording.
+- "Keep this one" in the row menu removes the other copies, optionally with their files. Their playlist places and rating go to the kept track, and syncing a YouTube playlist does not bring them back.
+
 #### Even volume
 
 - Every download is measured once with FFmpeg's EBU R 128 filter. "Write tags" puts the result into the file as the Opus track gain `R128_TRACK_GAIN`, so players on the phone play loud music videos and quiet Topic uploads equally loud.
