@@ -50,6 +50,7 @@ public partial class LibraryViewModel(
     TagWriter tagWriter,
     PlayerService player,
     LoudnessQueue loudness,
+    CoverQueue covers,
     SettingsStore settings,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
@@ -329,7 +330,8 @@ public partial class LibraryViewModel(
         };
 
         musicBrainz.TrackChanged += id => _ = this.OnMatchedAsync(id);
-        loudness.Measured += ids => _ = this.OnLoudnessMeasuredAsync(ids);
+        loudness.Measured += ids => _ = this.RefreshRowsQuietlyAsync(ids);
+        covers.Covered += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         musicBrainz.Failed += message => this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, message);
         musicBrainz.PropertyChanged += (_, e) =>
         {
@@ -346,8 +348,11 @@ public partial class LibraryViewModel(
             await detail.LoadCommand.ExecuteAsync(null);
     }
 
-    /// <summary>New loudness values make the tags outdated; the rows learn it quietly, the table updates once.</summary>
-    private async Task OnLoudnessMeasuredAsync(IReadOnlyList<long> ids)
+    /// <summary>
+    /// New loudness values and covers from the background make the tags outdated; the rows learn it quietly,
+    /// the table updates once.
+    /// </summary>
+    private async Task RefreshRowsQuietlyAsync(IReadOnlyList<long> ids)
     {
         foreach (var id in ids)
         {
@@ -842,6 +847,8 @@ public partial class LibraryViewModel(
         playlistSync.Request();
         // downloads measure themselves; older and adopted files get their value in the background
         loudness.EnqueueMissing();
+        // tracks without a Cover Art Archive cover get one cut from their thumbnail
+        covers.EnqueueMissing();
     }
 
     private void ApplyFilter()
