@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-07
+
 ### Added
 
 #### Library
@@ -88,3 +90,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
+
+[Unreleased]: https://github.com/nilskruthoff/Tapedeck/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/nilskruthoff/Tapedeck/releases/tag/v1.0.0
