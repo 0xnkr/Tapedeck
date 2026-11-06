@@ -13,6 +13,16 @@
         <controls:PageHeader Title="{x:Static res:Strings.Library_Title}" Subtitle="{Binding Summary}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
                 <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Library_MatchMusicBrainz}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
+                        Command="{Binding MatchMusicBrainzCommand}"
+                        IsVisible="{Binding !IsMatching}" />
+                <Button Classes="danger lg"
+                        Content="{x:Static res:Strings.Library_CancelMatching}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
+                        Command="{Binding CancelMatchingCommand}"
+                        IsVisible="{Binding IsMatching}" />
+                <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Library_ExportCsv}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Upload}"
                         Command="{Binding ExportCsvCommand}" />
@@ -36,49 +46,16 @@
         <controls:Island Grid.Row="3" Classes="table">
             <DockPanel>
 
-                <!-- Toolbar: search, filter chips, bulk action -->
-                <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="4,4,4,8">
-                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
-                        <TextBox Classes="search"
-                                 Width="260"
-                                 Text="{Binding SearchText}"
-                                 PlaceholderText="{x:Static res:Strings.Library_Search}"
-                                 AutomationProperties.Name="{x:Static res:Strings.Library_Search}">
-                            <TextBox.InnerLeftContent>
-                                <controls:Glyph Data="{StaticResource Icon.Search}"
-                                                Width="18" Height="18"
-                                                Margin="16,0,0,0"
-                                                Foreground="{DynamicResource Brush.Text3}" />
-                            </TextBox.InnerLeftContent>
-                        </TextBox>
-                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_All}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
-                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Done}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
-                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Pending}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
-                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
-                        <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Suggested}"
-                                     IsVisible="{Binding HasSuggestions}"
-                                     IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="{StaticResource Space.1}">
+                <!-- Toolbar: search, filter chips, bulk actions. The actions stay on the right,
+                     the chips wrap into a second line when the window is narrow, so nothing overlaps -->
+                <DockPanel DockPanel.Dock="Top" Margin="4,4,4,8">
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="{StaticResource Space.1}"
+                                VerticalAlignment="Top" Margin="8,0,0,0">
                         <Button Classes="text"
                                 Content="{Binding WriteAllTagsText}"
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
                                 Command="{Binding WriteAllTagsCommand}"
                                 IsVisible="{Binding HasStaleTags}" />
-                        <Button Classes="text"
-                                Content="{x:Static res:Strings.Library_MatchMusicBrainz}"
-                                controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
-                                Command="{Binding MatchMusicBrainzCommand}"
-                                IsVisible="{Binding !IsMatching}" />
-                        <Button Classes="danger"
-                                Content="{x:Static res:Strings.Library_CancelMatching}"
-                                controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
-                                Command="{Binding CancelMatchingCommand}"
-                                IsVisible="{Binding IsMatching}" />
                         <Button Classes="text"
                                 Content="{x:Static res:Strings.Library_DownloadMissing}"
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
@@ -95,7 +72,37 @@
                                 Command="{Binding CancelDownloadsCommand}"
                                 IsVisible="{Binding IsDownloading}" />
                     </StackPanel>
-                </Grid>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Left"
+                                 Classes="search"
+                                 VerticalAlignment="Top"
+                                 Width="260"
+                                 Text="{Binding SearchText}"
+                                 PlaceholderText="{x:Static res:Strings.Library_Search}"
+                                 AutomationProperties.Name="{x:Static res:Strings.Library_Search}">
+                            <TextBox.InnerLeftContent>
+                                <controls:Glyph Data="{StaticResource Icon.Search}"
+                                                Width="18" Height="18"
+                                                Margin="16,0,0,0"
+                                                Foreground="{DynamicResource Brush.Text3}" />
+                            </TextBox.InnerLeftContent>
+                        </TextBox>
+                        <WrapPanel ItemSpacing="{StaticResource Space.2}" LineSpacing="{StaticResource Space.2}"
+                                   Margin="8,0,0,0" VerticalAlignment="Center">
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_All}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Done}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Pending}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
+                            <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Suggested}"
+                                         IsVisible="{Binding HasSuggestions}"
+                                         IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
+                        </WrapPanel>
+                    </DockPanel>
+                </DockPanel>
 
                 <!-- Column headers -->
                 <library:TrackColumnsGrid DockPanel.Dock="Top" Height="36" Margin="12,0">
