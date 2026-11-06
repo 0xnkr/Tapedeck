@@ -27,11 +27,17 @@ Tapedeck is licensed under the [MIT License](LICENSE). The published `Tapedeck.e
 | [YoutubeDLSharp](https://github.com/Bluegrams/YoutubeDLSharp) | 1.2.0 | [BSD-3-Clause](#youtubedlsharp) | Copyright (c) 2020-2024, Bluegrams |
 | [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) | 13.0.3 | [MIT](#mit-license) | Copyright (c) 2007 James Newton-King |
 | [TagLibSharp](https://github.com/mono/taglib-sharp) | 2.3.0 | [LGPL-2.1-only](#gnu-lesser-general-public-license-21) | Copyright (c) 2006-2007 Brian Nickel, Copyright (c) 2009-2020 other contributors |
+| [Concentus](https://github.com/lostromb/concentus) | 2.2.2 | [BSD-3-Clause](#concentus) | © Xiph.Org Foundation, Skype Limited, CSIRO, Microsoft Corp., Logan Stromberg |
+| [Concentus.OggFile](https://github.com/lostromb/concentus.oggfile) | 1.0.7 | [MIT](#mit-license) | Copyright © Logan Stromberg, Andrew Ward |
+| [Silk.NET (Silk.NET.OpenAL, Silk.NET.Core)](https://github.com/dotnet/Silk.NET) | 2.23.0 | [MIT](#mit-license) | © .NET Foundation and Contributors |
+| [OpenAL Soft (Silk.NET.OpenAL.Soft.Native, `soft_oal.dll`)](https://openal-soft.org) | 1.23.1 | [LGPL-2.0-or-later](#gnu-lesser-general-public-license-21) | Copyright (C) 1999-2000 Loki Software, OpenAL Soft authors |
 | [.NET runtime](https://github.com/dotnet/runtime) | 10 | [MIT](#mit-license) | © .NET Foundation and Contributors |
 
 The native `libSkiaSharp` library also contains further open source libraries (such as FreeType, libpng, libjpeg-turbo, libwebp, Expat, ICU and zlib). Their notices are listed in [SkiaSharp's dependency notices](https://github.com/mono/SkiaSharp/blob/main/External-Dependency-Info.txt). The .NET runtime's own third-party notices are in [dotnet/runtime](https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT).
 
 **TagLibSharp** is used as an unmodified library under the LGPL 2.1. Because Tapedeck is open source, you can rebuild it with a modified version of TagLibSharp at any time.
+
+**OpenAL Soft** is licensed under the LGPL 2.0 or any later version; Tapedeck uses it under the LGPL 2.1. It is an unmodified native library (`soft_oal.dll`) that Tapedeck loads at runtime, and its source code is available at [github.com/kcat/openal-soft](https://github.com/kcat/openal-soft). You can replace it with your own build of OpenAL Soft.
 
 ## License texts
 
@@ -210,6 +216,41 @@ modification, are permitted provided that the following conditions are met:
 * Neither the name of the copyright holder nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+### Concentus
+
+```text
+Copyright (c) by various holding parties, including (but not limited to): 
+Skype Limited, Xiph.Org Foundation, CSIRO, Microsoft Corporation,
+Jean-Marc Valin, Gregory Maxwell, Mark Borgerding, Timothy B. Terriberry,
+Logan Stromberg. All rights are reserved by their respective holders.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of Internet Society, IETF or IETF Trust, nor the
+   names of specific contributors, may be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
