@@ -9,4 +9,10 @@ public sealed class Playlist
 
     /// <summary>The linked YouTube playlist (<c>playlist?list=…</c>), or <c>null</c> for a playlist made in the app.</summary>
     public string? SourceUrl { get; init; }
+
+    /// <summary>JSON of <see cref="Playlists.SmartRules"/> for a smart playlist, <c>null</c> for a normal one.</summary>
+    public string? Rules { get; init; }
+
+    /// <summary>Fills itself from the library by its rules; tracks cannot be added, removed or moved by hand.</summary>
+    public bool IsSmart => this.Rules is not null;
 }

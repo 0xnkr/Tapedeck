@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
+using Tapedeck.Core.Playlists;
 
 namespace Tapedeck.Data;
 
@@ -14,6 +15,7 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
         SELECT p.id,
                p.name,
                p.source_url,
+               p.rules,
                COUNT(pt.track_id) AS track_count
           FROM playlists p
           LEFT JOIN playlist_tracks pt ON pt.playlist_id = p.id
@@ -24,14 +26,15 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
         await using var connection = await connectionFactory.OpenAsync();
         var rows = await connection.QueryAsync<Playlist>(
             $"{SELECT_PLAYLISTS} GROUP BY p.id ORDER BY p.name COLLATE NOCASE;");
-        return rows.AsList();
+        return await WithSmartCountsAsync(connection, rows.AsList());
     }
 
     public async Task<Playlist?> GetAsync(long id)
     {
         await using var connection = await connectionFactory.OpenAsync();
-        return await connection.QuerySingleOrDefaultAsync<Playlist>(
+        var playlist = await connection.QuerySingleOrDefaultAsync<Playlist>(
             $"{SELECT_PLAYLISTS} WHERE p.id = @id GROUP BY p.id;", new { id });
+        return playlist is null ? null : (await WithSmartCountsAsync(connection, [playlist]))[0];
     }
 
     public async Task<bool> NameExistsAsync(string name, long? exceptId = null)
@@ -56,6 +59,21 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
             "INSERT INTO playlists (name, source_url) VALUES (@name, @sourceUrl) RETURNING id;", new { name, sourceUrl });
     }
 
+    public async Task<long> CreateSmartAsync(string name, SmartRules rules)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        return await connection.ExecuteScalarAsync<long>(
+            "INSERT INTO playlists (name, rules) VALUES (@name, @rules) RETURNING id;", new { name, rules = rules.ToJson() });
+    }
+
+    public async Task UpdateSmartAsync(long id, string name, SmartRules rules)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync(
+            $"UPDATE playlists SET name = @name, rules = @rules, updated_at = {NOW} WHERE id = @id AND rules IS NOT NULL;",
+            new { id, name, rules = rules.ToJson() });
+    }
+
     public async Task RenameAsync(long id, string name)
     {
         await using var connection = await connectionFactory.OpenAsync();
@@ -73,6 +91,11 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
     public async Task<IReadOnlyList<TrackDisplay>> GetTracksAsync(long playlistId)
     {
         await using var connection = await connectionFactory.OpenAsync();
+        var rules = await connection.ExecuteScalarAsync<string?>(
+            "SELECT rules FROM playlists WHERE id = @playlistId;", new { playlistId });
+        if (rules is not null)
+            return SmartRules.FromJson(rules).Apply(await LibraryAsync(connection), DateTime.UtcNow);
+
         var rows = await connection.QueryAsync<TrackDisplay>(
             """
             SELECT d.*
@@ -88,6 +111,11 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
     public async Task<int> AddTracksAsync(long playlistId, IReadOnlyList<long> trackIds)
     {
         await using var connection = await connectionFactory.OpenAsync();
+        // a smart playlist picks its tracks itself
+        if (await connection.ExecuteScalarAsync<bool>(
+                "SELECT rules IS NOT NULL FROM playlists WHERE id = @playlistId;", new { playlistId }))
+            return 0;
+
         await using var transaction = await connection.BeginTransactionAsync();
         var added = 0;
         foreach (var trackId in trackIds)
@@ -138,6 +166,27 @@ public sealed class PlaylistRepository(SqliteConnectionFactory connectionFactory
         await Touch(connection, playlistId, transaction);
         await transaction.CommitAsync();
     }
+
+    /// <summary>Smart playlists count the tracks their rules pick; the library is read once for all of them.</summary>
+    private static async Task<IReadOnlyList<Playlist>> WithSmartCountsAsync(SqliteConnection connection, IReadOnlyList<Playlist> playlists)
+    {
+        if (!playlists.Any(p => p.IsSmart))
+            return playlists;
+
+        var library = await LibraryAsync(connection);
+        var now = DateTime.UtcNow;
+        return playlists.Select(p => !p.IsSmart ? p : new Playlist
+        {
+            Id = p.Id,
+            Name = p.Name,
+            SourceUrl = p.SourceUrl,
+            Rules = p.Rules,
+            TrackCount = SmartRules.FromJson(p.Rules).Apply(library, now).Count,
+        }).ToList();
+    }
+
+    private static async Task<IReadOnlyList<TrackDisplay>> LibraryAsync(SqliteConnection connection) =>
+        (await connection.QueryAsync<TrackDisplay>("SELECT * FROM tracks_display;")).AsList();
 
     /// <summary>Closes gaps after a removal, so positions stay 0..n-1.</summary>
     private static Task Renumber(SqliteConnection connection, long playlistId,
