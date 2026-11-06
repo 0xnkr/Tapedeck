@@ -24,7 +24,14 @@
                         Command="{Binding ExportCsvCommand}" />
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlist_Rename}"
-                        Command="{Binding RenameCommand}" />
+                        Command="{Binding RenameCommand}"
+                        IsVisible="{Binding IsEditable}" />
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Playlist_EditRules}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlist_EditRulesHint}"
+                        Command="{Binding EditRulesCommand}"
+                        IsVisible="{Binding IsSmart}" />
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlist_Sync}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
@@ -79,6 +86,7 @@
                             <DataTemplate x:DataType="vm:PlaylistEntryViewModel">
                                 <views:PlaylistColumnsGrid VerticalAlignment="Center">
                                     <Border Classes="drag-handle"
+                                            IsVisible="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).IsEditable, FallbackValue=True}"
                                             Background="Transparent"
                                             Cursor="SizeNorthSouth"
                                             ToolTip.Tip="{x:Static res:Strings.Playlist_DragHandle}"
@@ -126,6 +134,7 @@
                                             controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
                                             Command="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).RemoveTrackCommand, FallbackValue={x:Null}}"
                                             CommandParameter="{Binding}"
+                                            IsVisible="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).IsEditable, FallbackValue=True}"
                                             AutomationProperties.Name="{x:Static res:Strings.Playlist_RemoveTrack}"
                                             ToolTip.Tip="{x:Static res:Strings.Playlist_RemoveTrack}"
                                             VerticalAlignment="Center" />
@@ -134,7 +143,7 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <TextBlock Classes="body"
-                               Text="{x:Static res:Strings.Playlist_Empty}"
+                               Text="{Binding EmptyText}"
                                Foreground="{DynamicResource Brush.Text2}"
                                TextWrapping="Wrap"
                                TextAlignment="Center"

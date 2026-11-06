@@ -1180,4 +1180,232 @@
     <value>Looks up new tracks on MusicBrainz right after you add them.</value>
     <comment>Tooltip of Settings_MusicBrainzAuto</comment>
   </data>
+  <data name="Playlists_NewSmart" xml:space="preserve">
+    <value>Smart playlist</value>
+    <comment>Header button on the playlists page: creates a playlist that fills itself by rules</comment>
+  </data>
+  <data name="Playlists_NewSmartHint" xml:space="preserve">
+    <value>A playlist that fills itself, e.g. all trap songs from 2014. It stays up to date when your library changes.</value>
+    <comment>Tooltip of Playlists_NewSmart</comment>
+  </data>
+  <data name="Playlist_EditRules" xml:space="preserve">
+    <value>Edit rules</value>
+    <comment>Header button on a smart playlist's page</comment>
+  </data>
+  <data name="Playlist_EditRulesHint" xml:space="preserve">
+    <value>Change which tracks this playlist picks from your library.</value>
+    <comment>Tooltip of Playlist_EditRules</comment>
+  </data>
+  <data name="Playlist_Smart" xml:space="preserve">
+    <value>{0} · smart</value>
+    <comment>Summary of a smart playlist; {0} track summary</comment>
+  </data>
+  <data name="Playlist_SmartEmpty" xml:space="preserve">
+    <value>No track fits the rules yet. Change the rules or add more music.</value>
+    <comment>Empty smart playlist</comment>
+  </data>
+  <data name="Confirm_SmartSaved" xml:space="preserve">
+    <value>“{0}” saved</value>
+    <comment>Activity toast; {0} playlist name</comment>
+  </data>
+  <data name="Smart_NewTitle" xml:space="preserve">
+    <value>New smart playlist</value>
+    <comment>Page title of the editor</comment>
+  </data>
+  <data name="Smart_EditTitle" xml:space="preserve">
+    <value>Edit smart playlist</value>
+    <comment>Page title of the editor</comment>
+  </data>
+  <data name="Smart_Subtitle" xml:space="preserve">
+    <value>Fills itself from your library and stays up to date. Your phone gets it as a normal playlist.</value>
+    <comment>Page subtitle of the editor</comment>
+  </data>
+  <data name="Smart_Save" xml:space="preserve">
+    <value>Save</value>
+    <comment>Primary header button of the editor</comment>
+  </data>
+  <data name="Smart_Name" xml:space="preserve">
+    <value>Name</value>
+    <comment>Label above the playlist name field</comment>
+  </data>
+  <data name="Smart_NamePlaceholder" xml:space="preserve">
+    <value>e.g. Trap 2014</value>
+    <comment>Placeholder of the name field</comment>
+  </data>
+  <data name="Smart_Rules" xml:space="preserve">
+    <value>Rules</value>
+    <comment>Section title</comment>
+  </data>
+  <data name="Smart_MatchAll" xml:space="preserve">
+    <value>All rules</value>
+    <comment>Segmented button: a track must match every rule</comment>
+  </data>
+  <data name="Smart_MatchAllHint" xml:space="preserve">
+    <value>A track has to fit every rule.</value>
+    <comment>Tooltip of Smart_MatchAll</comment>
+  </data>
+  <data name="Smart_MatchAny" xml:space="preserve">
+    <value>One is enough</value>
+    <comment>Segmented button: a track must match at least one rule</comment>
+  </data>
+  <data name="Smart_MatchAnyHint" xml:space="preserve">
+    <value>A track only has to fit one of the rules.</value>
+    <comment>Tooltip of Smart_MatchAny</comment>
+  </data>
+  <data name="Smart_FieldHint" xml:space="preserve">
+    <value>Pick what the rule looks at.</value>
+    <comment>Tooltip of the field button of a rule</comment>
+  </data>
+  <data name="Smart_OperatorHint" xml:space="preserve">
+    <value>Pick how the value is compared.</value>
+    <comment>Tooltip of the operator button of a rule</comment>
+  </data>
+  <data name="Smart_Value" xml:space="preserve">
+    <value>Value</value>
+    <comment>Accessible name of a rule's value field</comment>
+  </data>
+  <data name="Smart_RemoveRule" xml:space="preserve">
+    <value>Remove rule</value>
+    <comment>Icon button and tooltip</comment>
+  </data>
+  <data name="Smart_AddRule" xml:space="preserve">
+    <value>Rule</value>
+    <comment>Dashed chip with a plus icon: adds a rule</comment>
+  </data>
+  <data name="Smart_AddRuleHint" xml:space="preserve">
+    <value>Adds another rule.</value>
+    <comment>Tooltip of Smart_AddRule</comment>
+  </data>
+  <data name="Smart_NoRulesHint" xml:space="preserve">
+    <value>No rules: the playlist takes every track of your library.</value>
+    <comment>Hint when all rules were removed</comment>
+  </data>
+  <data name="Smart_Order" xml:space="preserve">
+    <value>Order</value>
+    <comment>Label before the order button</comment>
+  </data>
+  <data name="Smart_OrderHint" xml:space="preserve">
+    <value>Pick the order of the tracks in the playlist.</value>
+    <comment>Tooltip of the order button</comment>
+  </data>
+  <data name="Smart_Limit" xml:space="preserve">
+    <value>At most</value>
+    <comment>Label before the limit field</comment>
+  </data>
+  <data name="Smart_LimitPlaceholder" xml:space="preserve">
+    <value>all</value>
+    <comment>Placeholder of the limit field</comment>
+  </data>
+  <data name="Smart_LimitHint" xml:space="preserve">
+    <value>Keeps only the first tracks in this order, e.g. 50. Leave it empty for all.</value>
+    <comment>Tooltip of the limit field</comment>
+  </data>
+  <data name="Smart_LimitSuffix" xml:space="preserve">
+    <value>tracks</value>
+    <comment>Text after the limit field</comment>
+  </data>
+  <data name="Smart_Preview" xml:space="preserve">
+    <value>Preview</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Smart_PreviewCount_One" xml:space="preserve">
+    <value>1 track fits</value>
+    <comment>Preview count</comment>
+  </data>
+  <data name="Smart_PreviewCount_Other" xml:space="preserve">
+    <value>{0} tracks fit</value>
+    <comment>Preview count; {0} track count</comment>
+  </data>
+  <data name="Smart_PreviewMore" xml:space="preserve">
+    <value>… and {0} more</value>
+    <comment>Below the preview list; {0} track count</comment>
+  </data>
+  <data name="Smart_RuleEmpty" xml:space="preserve">
+    <value>Rule {0} has no value yet.</value>
+    <comment>Error line; {0} rule number</comment>
+  </data>
+  <data name="Smart_RuleNotNumber" xml:space="preserve">
+    <value>Rule {0}: “{1}” is not a number.</value>
+    <comment>Error line; {0} rule number, {1} typed value</comment>
+  </data>
+  <data name="Smart_LimitInvalid" xml:space="preserve">
+    <value>“{0}” is not a number of tracks.</value>
+    <comment>Error line; {0} typed limit</comment>
+  </data>
+  <data name="Smart_FieldGenre" xml:space="preserve">
+    <value>Genre</value>
+    <comment>Rule field</comment>
+  </data>
+  <data name="Smart_FieldAdded" xml:space="preserve">
+    <value>Added</value>
+    <comment>Rule field: when the track was added</comment>
+  </data>
+  <data name="Smart_OpContains" xml:space="preserve">
+    <value>contains</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpNotContains" xml:space="preserve">
+    <value>doesn't contain</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpIs" xml:space="preserve">
+    <value>is</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpIsNot" xml:space="preserve">
+    <value>is not</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpAtLeast" xml:space="preserve">
+    <value>at least</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpAtMost" xml:space="preserve">
+    <value>at most</value>
+    <comment>Rule operator</comment>
+  </data>
+  <data name="Smart_OpWithinDays" xml:space="preserve">
+    <value>in the last … days</value>
+    <comment>Rule operator for the added date; the value is the number of days</comment>
+  </data>
+  <data name="Smart_SortNewest" xml:space="preserve">
+    <value>Newest first</value>
+    <comment>Order of a smart playlist</comment>
+  </data>
+  <data name="Smart_SortArtist" xml:space="preserve">
+    <value>By artist</value>
+    <comment>Order of a smart playlist</comment>
+  </data>
+  <data name="Smart_SortAlbum" xml:space="preserve">
+    <value>By album</value>
+    <comment>Order of a smart playlist, album tracks in their order</comment>
+  </data>
+  <data name="Smart_SortYear" xml:space="preserve">
+    <value>By year, newest first</value>
+    <comment>Order of a smart playlist</comment>
+  </data>
+  <data name="Smart_SortRating" xml:space="preserve">
+    <value>By rating, best first</value>
+    <comment>Order of a smart playlist</comment>
+  </data>
+  <data name="Smart_PlaceholderYear" xml:space="preserve">
+    <value>e.g. 2014</value>
+    <comment>Placeholder of a rule value for the year</comment>
+  </data>
+  <data name="Smart_PlaceholderRating" xml:space="preserve">
+    <value>1 to 5</value>
+    <comment>Placeholder of a rule value for the rating</comment>
+  </data>
+  <data name="Smart_PlaceholderDays" xml:space="preserve">
+    <value>e.g. 30</value>
+    <comment>Placeholder of a rule value for the days</comment>
+  </data>
+  <data name="Smart_PlaceholderGenre" xml:space="preserve">
+    <value>e.g. Trap</value>
+    <comment>Placeholder of a rule value for the genre</comment>
+  </data>
+  <data name="Smart_PlaceholderText" xml:space="preserve">
+    <value>Text</value>
+    <comment>Placeholder of a rule value for text fields</comment>
+  </data>
 </root>

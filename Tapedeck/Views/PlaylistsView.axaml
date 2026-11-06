@@ -21,6 +21,11 @@
                         controls:ButtonAssist.Icon="{StaticResource Icon.Link}"
                         ToolTip.Tip="{x:Static res:Strings.Playlists_FromLinkHint}"
                         Command="{Binding ImportFromLinkCommand}" />
+                <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Playlists_NewSmart}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Refresh}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlists_NewSmartHint}"
+                        Command="{Binding CreateSmartCommand}" />
                 <Button Classes="primary lg"
                         Content="{x:Static res:Strings.Playlists_New}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
@@ -54,10 +59,17 @@
                                         AutomationProperties.Name="{Binding OpenLabel}">
                                     <Border Classes="row">
                                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space.3}">
-                                            <controls:Glyph Data="{StaticResource Icon.Playlists}"
-                                                            Width="24" Height="24"
-                                                            Foreground="{DynamicResource Brush.Text2}"
-                                                            VerticalAlignment="Center" />
+                                            <!-- smart playlists fill themselves, hence the refresh arrows -->
+                                            <Panel VerticalAlignment="Center">
+                                                <controls:Glyph Data="{StaticResource Icon.Playlists}"
+                                                                Width="24" Height="24"
+                                                                Foreground="{DynamicResource Brush.Text2}"
+                                                                IsVisible="{Binding !IsSmart}" />
+                                                <controls:Glyph Data="{StaticResource Icon.Refresh}"
+                                                                Width="24" Height="24"
+                                                                Foreground="{DynamicResource Brush.Accent}"
+                                                                IsVisible="{Binding IsSmart}" />
+                                            </Panel>
                                             <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                                                 <TextBlock Classes="body-strong" Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
                                                 <TextBlock Classes="support" Text="{Binding Summary}" Foreground="{DynamicResource Brush.Text2}" />
