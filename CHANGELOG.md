@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Every playlist is kept up to date as an `.m3u8` file in the library folder, ready for Android players like Poweramp or Musicolet. Your own `.m3u8` files are never touched.
 - Import YouTube playlists from the link bar or with "From link". Imported playlists stay linked, and "Sync" adds new videos without removing or reordering anything. Mixes (`list=RD…`) are added as a single video.
 - "Download playlist" downloads all pending and missing tracks of a playlist.
+- Smart playlists fill themselves from rules on artist, title, album, album artist, genre, year, rating and when a track was added, with "all rules" or "one is enough", an order and an optional limit. The editor shows a live preview. They stay up to date when the library changes, are exported as `.m3u8` like every playlist and are left out of "Add to playlist".
 
 #### Backup and moving
 
