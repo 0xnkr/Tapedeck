@@ -199,7 +199,8 @@
                 <controls:Island Grid.Row="1">
                     <StackPanel Spacing="{StaticResource Space.2}">
                         <Grid ColumnDefinitions="*,Auto">
-                            <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_MusicBrainz}" />
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_MusicBrainz}"
+                                       ToolTip.Tip="{x:Static res:Strings.Mb_About}" />
                             <TextBlock Grid.Column="1" Classes="fact-label" Text="{Binding MbStateText}" VerticalAlignment="Bottom" />
                         </Grid>
 
@@ -234,6 +235,7 @@
                                                     Classes="tonal"
                                                     VerticalAlignment="Center"
                                                     Content="{x:Static res:Strings.Mb_Apply}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Mb_ApplyHint}"
                                                     Command="{Binding ApplyCommand}" />
                                         </Grid>
                                     </Border>
@@ -244,6 +246,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.1}" Margin="-8,0,0,0">
                             <Button Classes="text"
                                     Content="{Binding MbSearchText}"
+                                    ToolTip.Tip="{x:Static res:Strings.Mb_SearchHint}"
                                     controls:ButtonAssist.Icon="{StaticResource Icon.Search}"
                                     Command="{Binding SearchMusicBrainzCommand}" />
                             <Button Classes="text"
@@ -253,11 +256,13 @@
                                     IsVisible="{Binding IsMbMatched}" />
                             <Button Classes="danger"
                                     Content="{x:Static res:Strings.Mb_Unlink}"
+                                    ToolTip.Tip="{x:Static res:Strings.Mb_UnlinkHint}"
                                     controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
                                     Command="{Binding RejectMusicBrainzCommand}"
                                     IsVisible="{Binding IsMbMatched}" />
                             <Button Classes="text"
                                     Content="{x:Static res:Strings.Mb_NoneOfThese}"
+                                    ToolTip.Tip="{x:Static res:Strings.Mb_NoneOfTheseHint}"
                                     controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
                                     Command="{Binding RejectMusicBrainzCommand}"
                                     IsVisible="{Binding IsMbSuggested}" />

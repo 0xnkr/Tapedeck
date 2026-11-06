@@ -219,12 +219,14 @@
                             <Border Classes="row">
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                                     <StackPanel Spacing="2" VerticalAlignment="Center">
-                                        <TextBlock Classes="body-strong" Text="MusicBrainz" />
+                                        <TextBlock Classes="body-strong" Text="MusicBrainz"
+                                                   ToolTip.Tip="{x:Static res:Strings.Mb_About}" />
                                         <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_MusicBrainzHint}" />
                                     </StackPanel>
                                     <CheckBox Grid.Column="1"
                                               VerticalAlignment="Center"
                                               Content="{x:Static res:Strings.Settings_MusicBrainzAuto}"
+                                              ToolTip.Tip="{x:Static res:Strings.Settings_MusicBrainzAutoHint}"
                                               IsChecked="{Binding MusicBrainzAuto}" />
                                 </Grid>
                             </Border>

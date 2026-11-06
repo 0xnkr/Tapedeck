@@ -1140,4 +1140,44 @@
     <value>Tags written for {0} tracks, {1} failed: {2}</value>
     <comment>Error line; {0} written track count, {1} failed track count, {2} first errors</comment>
   </data>
+  <data name="Mb_About" xml:space="preserve">
+    <value>A free music database. It provides the album, year, genres and cover that YouTube usually lacks.</value>
+    <comment>Tooltip on the MusicBrainz headings (detail page, settings): what MusicBrainz is and why Tapedeck uses it</comment>
+  </data>
+  <data name="Library_MatchMusicBrainzHint" xml:space="preserve">
+    <value>Looks up album, year, genres and cover for every track on MusicBrainz. Runs in the background, you can keep working.</value>
+    <comment>Tooltip of Library_MatchMusicBrainz</comment>
+  </data>
+  <data name="Library_CancelMatchingHint" xml:space="preserve">
+    <value>Stops the search. What was found so far is kept.</value>
+    <comment>Tooltip of Library_CancelMatching</comment>
+  </data>
+  <data name="Library_WriteAllTagsHint" xml:space="preserve">
+    <value>Saves title, album, genres and cover into the music files, so your phone shows them.</value>
+    <comment>Tooltip of Library_WriteAllTags</comment>
+  </data>
+  <data name="Filter_SuggestedHint" xml:space="preserve">
+    <value>Tracks MusicBrainz wasn't sure about. Open one and pick the right match.</value>
+    <comment>Tooltip of Filter_Suggested</comment>
+  </data>
+  <data name="Mb_SearchHint" xml:space="preserve">
+    <value>Looks this track up on MusicBrainz.</value>
+    <comment>Tooltip of Mb_Search and Mb_SearchAgain</comment>
+  </data>
+  <data name="Mb_ApplyHint" xml:space="preserve">
+    <value>Uses the album, year, genres and cover of this match.</value>
+    <comment>Tooltip of Mb_Apply</comment>
+  </data>
+  <data name="Mb_UnlinkHint" xml:space="preserve">
+    <value>Removes the MusicBrainz data. The track shows YouTube's details again.</value>
+    <comment>Tooltip of Mb_Unlink</comment>
+  </data>
+  <data name="Mb_NoneOfTheseHint" xml:space="preserve">
+    <value>None of them fits? Then the track keeps YouTube's details.</value>
+    <comment>Tooltip of Mb_NoneOfThese</comment>
+  </data>
+  <data name="Settings_MusicBrainzAutoHint" xml:space="preserve">
+    <value>Looks up new tracks on MusicBrainz right after you add them.</value>
+    <comment>Tooltip of Settings_MusicBrainzAuto</comment>
+  </data>
 </root>

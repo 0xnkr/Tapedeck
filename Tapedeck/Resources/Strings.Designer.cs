@@ -1039,6 +1039,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tracks MusicBrainz wasn't sure about. Open one and pick the right match..
+        /// </summary>
+        public static string Filter_SuggestedHint {
+            get {
+                return ResourceManager.GetString("Filter_SuggestedHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Genre.
         /// </summary>
         public static string Genre_Add {
@@ -1089,6 +1098,15 @@ namespace Tapedeck.Resources {
         public static string Library_CancelMatching {
             get {
                 return ResourceManager.GetString("Library_CancelMatching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stops the search. What was found so far is kept..
+        /// </summary>
+        public static string Library_CancelMatchingHint {
+            get {
+                return ResourceManager.GetString("Library_CancelMatchingHint", resourceCulture);
             }
         }
         
@@ -1170,6 +1188,15 @@ namespace Tapedeck.Resources {
         public static string Library_MatchMusicBrainz {
             get {
                 return ResourceManager.GetString("Library_MatchMusicBrainz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks up album, year, genres and cover for every track on MusicBrainz. Runs in the background, you can keep working..
+        /// </summary>
+        public static string Library_MatchMusicBrainzHint {
+            get {
+                return ResourceManager.GetString("Library_MatchMusicBrainzHint", resourceCulture);
             }
         }
         
@@ -1273,6 +1300,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saves title, album, genres and cover into the music files, so your phone shows them..
+        /// </summary>
+        public static string Library_WriteAllTagsHint {
+            get {
+                return ResourceManager.GetString("Library_WriteAllTagsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         public static string License_Copy {
@@ -1354,11 +1390,29 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A free music database. It provides the album, year, genres and cover that YouTube usually lacks..
+        /// </summary>
+        public static string Mb_About {
+            get {
+                return ResourceManager.GetString("Mb_About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apply.
         /// </summary>
         public static string Mb_Apply {
             get {
                 return ResourceManager.GetString("Mb_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uses the album, year, genres and cover of this match..
+        /// </summary>
+        public static string Mb_ApplyHint {
+            get {
+                return ResourceManager.GetString("Mb_ApplyHint", resourceCulture);
             }
         }
         
@@ -1408,6 +1462,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None of them fits? Then the track keeps YouTube's details..
+        /// </summary>
+        public static string Mb_NoneOfTheseHint {
+            get {
+                return ResourceManager.GetString("Mb_NoneOfTheseHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open on MusicBrainz.
         /// </summary>
         public static string Mb_Open {
@@ -1440,6 +1503,15 @@ namespace Tapedeck.Resources {
         public static string Mb_SearchAgain {
             get {
                 return ResourceManager.GetString("Mb_SearchAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks this track up on MusicBrainz..
+        /// </summary>
+        public static string Mb_SearchHint {
+            get {
+                return ResourceManager.GetString("Mb_SearchHint", resourceCulture);
             }
         }
         
@@ -1503,6 +1575,15 @@ namespace Tapedeck.Resources {
         public static string Mb_Unlink {
             get {
                 return ResourceManager.GetString("Mb_Unlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes the MusicBrainz data. The track shows YouTube's details again..
+        /// </summary>
+        public static string Mb_UnlinkHint {
+            get {
+                return ResourceManager.GetString("Mb_UnlinkHint", resourceCulture);
             }
         }
         
@@ -2322,6 +2403,15 @@ namespace Tapedeck.Resources {
         public static string Settings_MusicBrainzAuto {
             get {
                 return ResourceManager.GetString("Settings_MusicBrainzAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Looks up new tracks on MusicBrainz right after you add them..
+        /// </summary>
+        public static string Settings_MusicBrainzAutoHint {
+            get {
+                return ResourceManager.GetString("Settings_MusicBrainzAutoHint", resourceCulture);
             }
         }
         

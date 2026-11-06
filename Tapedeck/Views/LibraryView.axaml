@@ -14,11 +14,14 @@
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Library_MatchMusicBrainz}"
+                        ToolTip.Tip="{x:Static res:Strings.Library_MatchMusicBrainzHint}"
+                        ToolTip.ShowOnDisabled="True"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
                         Command="{Binding MatchMusicBrainzCommand}"
                         IsVisible="{Binding !IsMatching}" />
                 <Button Classes="danger lg"
                         Content="{x:Static res:Strings.Library_CancelMatching}"
+                        ToolTip.Tip="{x:Static res:Strings.Library_CancelMatchingHint}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
                         Command="{Binding CancelMatchingCommand}"
                         IsVisible="{Binding IsMatching}" />
@@ -53,6 +56,7 @@
                                 VerticalAlignment="Top" Margin="8,0,0,0">
                         <Button Classes="text"
                                 Content="{Binding WriteAllTagsText}"
+                                ToolTip.Tip="{x:Static res:Strings.Library_WriteAllTagsHint}"
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
                                 Command="{Binding WriteAllTagsCommand}"
                                 IsVisible="{Binding HasStaleTags}" />
@@ -98,6 +102,7 @@
                             <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Error}"
                                          IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
                             <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilter" Content="{x:Static res:Strings.Filter_Suggested}"
+                                         ToolTip.Tip="{x:Static res:Strings.Filter_SuggestedHint}"
                                          IsVisible="{Binding HasSuggestions}"
                                          IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
                         </WrapPanel>
