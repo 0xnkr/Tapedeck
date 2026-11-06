@@ -94,6 +94,7 @@ public partial class SettingsViewModel : ViewModelBase
         this.Language = FromCode(settings.Language);
         this.MusicBrainzAuto = settings.MusicBrainzAuto ?? true;
         this.AskBeforeKeep = settings.KeepDeletesFiles is null;
+        this.LevelPlayback = settings.LevelPlayback ?? true;
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -118,6 +119,10 @@ public partial class SettingsViewModel : ViewModelBase
     /// <summary>Look up new tracks on MusicBrainz after an import.</summary>
     [ObservableProperty]
     public partial bool MusicBrainzAuto { get; set; }
+
+    /// <summary>The player plays all tracks equally loud, from the next track on.</summary>
+    [ObservableProperty]
+    public partial bool LevelPlayback { get; set; }
 
     /// <summary>"Keep this one" asks before removing duplicates; switched off by "don't ask again" in that dialog.</summary>
     [ObservableProperty]
@@ -157,6 +162,9 @@ public partial class SettingsViewModel : ViewModelBase
 
     partial void OnMusicBrainzAutoChanged(bool value) =>
         this.store.Update(s => s with { MusicBrainzAuto = value });
+
+    partial void OnLevelPlaybackChanged(bool value) =>
+        this.store.Update(s => s with { LevelPlayback = value });
 
     // without asking, the copies' files go too, as the dialog suggests
     partial void OnAskBeforeKeepChanged(bool value) =>
