@@ -29,7 +29,11 @@ public interface ITrackRepository
     Task DeleteAsync(long id);
 
     Task SetThumbPathAsync(long id, string thumbPath);
+    /// <summary>Sets the square cover; a new one marks the file's tags as outdated, since the cover goes into the file.</summary>
     Task SetCoverAsync(long id, string coverPath, string coverSource);
+
+    /// <summary>Tracks with a thumbnail but no square cover yet, oldest first.</summary>
+    Task<IReadOnlyList<long>> ListWithoutCoverAsync();
 
     /// <summary>Stores the user's corrections and marks the file's tags as outdated.</summary>
     Task SetUserFieldsAsync(long id, UserFields fields);

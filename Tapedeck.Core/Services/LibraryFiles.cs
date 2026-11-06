@@ -59,6 +59,11 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
             File.Delete(paths.ToLibraryPath(file));
         if (track.ThumbPath is { } thumb && thumb.StartsWith(paths.ThumbsDir, StringComparison.OrdinalIgnoreCase))
             File.Delete(thumb);
+        // the cover cut from the thumbnail is the track's own, even when a Cover Art Archive cover replaced it;
+        // those are shared by the album and stay
+        var cutCover = Path.Combine(paths.CoversDir, ThumbnailCoverService.FILE_PREFIX + track.VideoId + ".jpg");
+        if (File.Exists(cutCover))
+            File.Delete(cutCover);
 
         await repository.DeleteAsync(trackId);
     }

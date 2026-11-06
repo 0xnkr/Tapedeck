@@ -119,8 +119,22 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
     {
         await using var connection = await connectionFactory.OpenAsync();
         await connection.ExecuteAsync(
-            "UPDATE tracks SET cover_path = @coverPath, cover_source = @coverSource WHERE id = @id;",
+            $"""
+            UPDATE tracks SET
+                edited_at    = CASE WHEN cover_path IS @coverPath THEN edited_at ELSE {NOW} END,
+                cover_path   = @coverPath,
+                cover_source = @coverSource
+            WHERE id = @id;
+            """,
             new { id, coverPath, coverSource });
+    }
+
+    public async Task<IReadOnlyList<long>> ListWithoutCoverAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<long>(
+            "SELECT id FROM tracks WHERE thumb_path IS NOT NULL AND cover_path IS NULL ORDER BY added_at, id;");
+        return rows.AsList();
     }
 
     public async Task SetUserFieldsAsync(long id, UserFields f)
