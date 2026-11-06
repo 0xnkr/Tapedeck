@@ -868,7 +868,7 @@
     <value>Hält die Suche an. Bisher Gefundenes bleibt erhalten.</value>
   </data>
   <data name="Library_WriteAllTagsHint" xml:space="preserve">
-    <value>Speichert Titel, Album, Genres und Cover in die Musikdateien, damit dein Handy sie anzeigt.</value>
+    <value>Speichert Titel, Album, Genres, Cover und den Lautstärkeausgleich in die Musikdateien, damit dein Handy sie anzeigt und alle Titel gleich laut spielt.</value>
   </data>
   <data name="Filter_SuggestedHint" xml:space="preserve">
     <value>Titel, bei denen MusicBrainz unsicher war. Öffne einen und wähle den richtigen Treffer.</value>
@@ -1115,5 +1115,11 @@
   </data>
   <data name="Detail_NextHint" xml:space="preserve">
     <value>Nächster Titel der Liste, aus der du kommst (Pfeiltaste rechts).</value>
+  </data>
+  <data name="Activity_MeasuringLoudness" xml:space="preserve">
+    <value>Messe Lautstärke {0}/{1} …</value>
+  </data>
+  <data name="Confirm_LoudnessMeasured" xml:space="preserve">
+    <value>Lautstärke für {0} Titel gemessen. „Tags schreiben“ überträgt sie in die Dateien.</value>
   </data>
 </root>

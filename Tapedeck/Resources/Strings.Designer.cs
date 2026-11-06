@@ -112,6 +112,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Measuring loudness {0}/{1} ….
+        /// </summary>
+        public static string Activity_MeasuringLoudness {
+            get {
+                return ResourceManager.GetString("Activity_MeasuringLoudness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moving files {0}/{1} ….
         /// </summary>
         public static string Activity_MovingLibrary {
@@ -315,6 +324,15 @@ namespace Tapedeck.Resources {
         public static string Confirm_LicenseCopied {
             get {
                 return ResourceManager.GetString("Confirm_LicenseCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loudness measured for {0} tracks. “Write tags” takes it to the files..
+        /// </summary>
+        public static string Confirm_LoudnessMeasured {
+            get {
+                return ResourceManager.GetString("Confirm_LoudnessMeasured", resourceCulture);
             }
         }
         
@@ -1390,7 +1408,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saves title, album, genres and cover into the music files, so your phone shows them..
+        ///   Looks up a localized string similar to Saves title, album, genres, cover and the volume level into the music files, so your phone shows them and plays all tracks equally loud..
         /// </summary>
         public static string Library_WriteAllTagsHint {
             get {
