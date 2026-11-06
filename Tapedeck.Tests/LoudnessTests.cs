@@ -62,6 +62,22 @@ public sealed class LoudnessTests : IAsyncLifetime
     public void Track_gain_is_the_distance_to_the_reference(double lufs, int gain) =>
         Assert.Equal(gain, LoudnessMeter.TrackGain(lufs));
 
+    [Theory]
+    // a loud music video is played 10 dB quieter, the target level as it is
+    [InlineData(-8.0, 0.316)]
+    [InlineData(-18.0, 1.0)]
+    // a quiet one is raised by at most 6 dB
+    [InlineData(-30.0, 1.995)]
+    public void Playback_gain_brings_tracks_to_the_target(double lufs, double factor) =>
+        Assert.Equal(factor, LoudnessMeter.PlaybackGain(lufs), 3);
+
+    [Fact]
+    public void Without_measurement_or_for_silence_the_file_plays_as_it_is()
+    {
+        Assert.Equal(1f, LoudnessMeter.PlaybackGain(null));
+        Assert.Equal(1f, LoudnessMeter.PlaybackGain(-70));
+    }
+
     [Fact]
     public async Task Only_downloaded_tracks_without_value_are_listed_and_a_new_value_outdates_the_tags()
     {

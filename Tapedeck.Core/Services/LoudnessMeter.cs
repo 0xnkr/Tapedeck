@@ -15,6 +15,15 @@ public sealed partial class LoudnessMeter(ToolService tools)
     /// <summary>The reference loudness of Opus gain tags (RFC 7845, section 5.2.1).</summary>
     public const double R128_REFERENCE_LUFS = -23;
 
+    /// <summary>
+    /// Level the app's own player brings every track to: the ReplayGain reference, about where players on the
+    /// phone end up with the track gain. Loud YouTube uploads (-7 to -10 LUFS) are turned down by about 10 dB.
+    /// </summary>
+    public const double PLAYBACK_TARGET_LUFS = -18;
+
+    // a quiet track is raised at most this much; OpenAL Soft's output limiter catches the peaks
+    private const double MAX_PLAYBACK_BOOST_DB = 6;
+
     /// <summary>ffmpeg can run; without it nothing is measured.</summary>
     public bool IsAvailable => File.Exists(tools.FFmpegPath);
 
@@ -102,6 +111,18 @@ public sealed partial class LoudnessMeter(ToolService tools)
     {
         var steps = Math.Round((R128_REFERENCE_LUFS - lufs) * 256, MidpointRounding.AwayFromZero);
         return (int)Math.Clamp(steps, short.MinValue, short.MaxValue);
+    }
+
+    /// <summary>
+    /// Linear volume factor for playing a track with the given loudness at <see cref="PLAYBACK_TARGET_LUFS"/>;
+    /// 1 without a measurement or for silence.
+    /// </summary>
+    public static float PlaybackGain(double? lufs)
+    {
+        if (lufs is not { } value || value <= -70)
+            return 1;
+        var decibels = Math.Min(PLAYBACK_TARGET_LUFS - value, MAX_PLAYBACK_BOOST_DB);
+        return (float)Math.Pow(10, decibels / 20);
     }
 
     private static string LastLine(string log) =>
