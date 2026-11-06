@@ -40,6 +40,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive. Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
+| 🔊 **Even volume** | Every download is measured once with FFmpeg (EBU R 128), and the result goes into the file as an Opus track gain (`R128_TRACK_GAIN`). Loud music videos and quiet Topic uploads then play equally loud in Poweramp, Musicolet & co. Older tracks are measured in the background. |
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
 | ▶️ **Listen in** | Click a cover to play the downloaded file, click again to pause. A small player bar shows the progress and lets you jump to any spot, on Windows, Linux and macOS alike. |
 | ✨ **Smart playlists** | Playlists that fill themselves from rules, like "genre contains Trap and year 2012 to 2016" or "the 50 newest tracks". They stay up to date as your library changes and land on your phone as normal `.m3u8` playlists. |
@@ -75,7 +76,7 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 | Tool | What it does | License |
 |---|---|---|
 | [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Reads metadata and downloads the audio from YouTube | [Unlicense](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE) |
-| [FFmpeg](https://ffmpeg.org) | Post-processes the downloaded audio (prebuilt static build; the Windows build is GPL-licensed) | [LGPL / GPL](https://ffmpeg.org/legal.html), see [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) |
+| [FFmpeg](https://ffmpeg.org) | Post-processes the downloaded audio and measures its loudness (prebuilt static build; the Windows build is GPL-licensed) | [LGPL / GPL](https://ffmpeg.org/legal.html), see [GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) |
 | [Deno](https://deno.com) | JavaScript runtime that yt-dlp needs for YouTube | [MIT](https://github.com/denoland/deno/blob/main/LICENSE.md) |
 
 You can check the installed versions and update yt-dlp under **Settings → Tools**.

@@ -39,6 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Genres come from the album, else the recording, else the artist, since singles rarely have genres of their own.
 - "Write tags" also writes the track and disc number and the MusicBrainz IDs.
 
+#### Even volume
+
+- Every download is measured once with FFmpeg's EBU R 128 filter. "Write tags" puts the result into the file as the Opus track gain `R128_TRACK_GAIN`, so players on the phone play loud music videos and quiet Topic uploads equally loud.
+- Tracks downloaded earlier, and files taken over from the library folder, are measured in the background. Afterwards "Write tags (N)" takes the gain to their files.
+
 #### Listening
 
 - Click the cover of a downloaded track to play it, click again to pause. Works in the library, on playlist pages and on the track's detail page; one track plays at a time.
@@ -70,3 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open source credits in the settings. Each license opens its full text in the app, offline, and the libraries bundled along with the others are listed too.
 - MIT license, plus third-party notices for everything bundled into `Tapedeck.exe`.
 - Publish profile for a single self-contained `Tapedeck.exe` on Windows x64.
+
+### Fixed
+
+- Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
