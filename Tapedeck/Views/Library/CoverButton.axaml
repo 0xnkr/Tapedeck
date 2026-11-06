@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             x:Class="Tapedeck.Views.Library.CoverButton"
+             x:DataType="vm:TrackRowViewModel">
+
+    <!--
+        Thumbnail of a table row that plays the track: a play mark shows on hover, and stays (as play or pause)
+        while the track is loaded in the player. Without a file the click does nothing and the tooltip says why.
+    -->
+    <UserControl.Styles>
+        <Style Selector="Panel.play-mark">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="Button.cover.playable:pointerover Panel.play-mark, Panel.play-mark.loaded">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.cover.playable">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </UserControl.Styles>
+
+    <Button Classes="link cover"
+            Classes.playable="{Binding CanPlay}"
+            Padding="0"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Command="{Binding TogglePlayCommand}"
+            ToolTip.Tip="{Binding PlayTooltip}"
+            AutomationProperties.Name="{Binding PlayTooltip}">
+        <Border CornerRadius="{StaticResource Radius.Thumb}"
+                Background="{DynamicResource Brush.Surface3}"
+                ClipToBounds="True">
+            <Panel>
+                <controls:Glyph Data="{StaticResource Icon.Play}"
+                                IsFilled="True"
+                                StrokeThickness="0"
+                                Width="16" Height="16"
+                                Foreground="{DynamicResource Brush.Text3}"
+                                IsVisible="{Binding ThumbPath, Converter={x:Static ObjectConverters.IsNull}}" />
+                <Image Source="{Binding ThumbPath, Converter={x:Static converters:ThumbnailConverter.INSTANCE}}"
+                       Stretch="UniformToFill" />
+
+                <Panel Classes="play-mark" Classes.loaded="{Binding IsLoaded}">
+                    <Border Background="{DynamicResource Brush.Bg}" Opacity="0.55" />
+                    <controls:Glyph Data="{StaticResource Icon.Play}"
+                                    IsFilled="True" StrokeThickness="0"
+                                    Width="18" Height="18"
+                                    Foreground="{DynamicResource Brush.Text}"
+                                    IsVisible="{Binding !IsPlaying}" />
+                    <controls:Glyph Data="{StaticResource Icon.Pause}"
+                                    IsFilled="True" StrokeThickness="0"
+                                    Width="18" Height="18"
+                                    Foreground="{DynamicResource Brush.Accent}"
+                                    IsVisible="{Binding IsPlaying}" />
+                </Panel>
+            </Panel>
+        </Border>
+    </Button>
+</UserControl>
