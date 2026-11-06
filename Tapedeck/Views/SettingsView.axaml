@@ -98,6 +98,17 @@
                                     </Grid>
                                 </StackPanel>
 
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_AskBeforeKeep}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_AskBeforeKeepHint}" />
+                                    </StackPanel>
+                                    <CheckBox Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              AutomationProperties.Name="{x:Static res:Strings.Settings_AskBeforeKeep}"
+                                              IsChecked="{Binding AskBeforeKeep}" />
+                                </Grid>
+
                                 <StackPanel Spacing="{StaticResource Space.2}">
                                     <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_FileName}" />
                                     <Border Classes="code">

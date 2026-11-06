@@ -93,6 +93,7 @@ public partial class SettingsViewModel : ViewModelBase
         var settings = store.Load();
         this.Language = FromCode(settings.Language);
         this.MusicBrainzAuto = settings.MusicBrainzAuto ?? true;
+        this.AskBeforeKeep = settings.KeepDeletesFiles is null;
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -118,6 +119,10 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool MusicBrainzAuto { get; set; }
 
+    /// <summary>"Keep this one" asks before removing duplicates; switched off by "don't ask again" in that dialog.</summary>
+    [ObservableProperty]
+    public partial bool AskBeforeKeep { get; set; }
+
     [ObservableProperty]
     public partial string LibraryDir { get; private set; }
 
@@ -139,6 +144,8 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadAsync()
     {
+        // the duplicate dialog may have been told not to ask again meanwhile
+        this.AskBeforeKeep = this.store.Load().KeepDeletesFiles is null;
         var versions = await this.tools.GetVersionsAsync();
         this.YtDlpVersion = versions.YtDlp;
         this.FFmpegVersion = versions.FFmpeg;
@@ -150,6 +157,10 @@ public partial class SettingsViewModel : ViewModelBase
 
     partial void OnMusicBrainzAutoChanged(bool value) =>
         this.store.Update(s => s with { MusicBrainzAuto = value });
+
+    // without asking, the copies' files go too, as the dialog suggests
+    partial void OnAskBeforeKeepChanged(bool value) =>
+        this.store.Update(s => s with { KeepDeletesFiles = value ? null : s.KeepDeletesFiles ?? true });
 
     [RelayCommand]
     private void ApplyCustomAccent()
