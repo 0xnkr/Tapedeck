@@ -1,0 +1,58 @@
+# Publishes a release when a version tag is pushed:
+#   git tag v0.1.0 && git push origin v0.1.0
+# The tests run first, then the single-file Tapedeck.exe is built with the tag's version and attached to a
+# GitHub release. Its notes are the matching "## [0.1.0]" section of CHANGELOG.md, which must exist.
+# A version with a suffix (v0.2.0-beta.1) becomes a pre-release.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read the version from the tag
+        shell: pwsh
+        run: |
+          $version = $env:TAG.TrimStart('v')
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+            Write-Error "Tag '$env:TAG' is no version like v1.2.3 or v1.2.3-beta.1"
+            exit 1
+          }
+          "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Take the release notes from the changelog
+        shell: pwsh
+        run: ./.github/scripts/changelog-section.ps1 -Version $env:VERSION -OutFile release-notes.md
+
+      - name: Test
+        run: dotnet test Tapedeck.Tests --configuration Release
+
+      - name: Publish Tapedeck.exe
+        run: dotnet publish Tapedeck -p:PublishProfile=win-x64 -p:Version=${{ env.VERSION }}
+
+      - name: Create the release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $exe = 'publish/win-x64/Tapedeck.exe'
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  Tapedeck.exe" | Out-File -Encoding ascii -NoNewline publish/win-x64/Tapedeck.exe.sha256
+          $arguments = @($env:TAG, $exe, 'publish/win-x64/Tapedeck.exe.sha256',
+                         '--title', "Tapedeck $env:VERSION", '--notes-file', 'release-notes.md', '--verify-tag')
+          if ($env:VERSION.Contains('-')) { $arguments += '--prerelease' }
+          gh release create @arguments
