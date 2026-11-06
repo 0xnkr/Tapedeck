@@ -1408,6 +1408,62 @@
     <value>Text</value>
     <comment>Placeholder of a rule value for text fields</comment>
   </data>
+  <data name="Player_Unreadable" xml:space="preserve">
+    <value>The file cannot be played: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Player_NoDevice" xml:space="preserve">
+    <value>No sound output available: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Player_NoDeviceFound" xml:space="preserve">
+    <value>no audio device found</value>
+    <comment>Error message inside Player_NoDevice</comment>
+  </data>
+  <data name="Player_Play" xml:space="preserve">
+    <value>Play</value>
+    <comment>Tooltip and accessible name of the cover button and the player bar</comment>
+  </data>
+  <data name="Player_Pause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Tooltip and accessible name while playing</comment>
+  </data>
+  <data name="Player_PlayHint" xml:space="preserve">
+    <value>Play this track. Click again to pause.</value>
+    <comment>Tooltip of a cover</comment>
+  </data>
+  <data name="Player_NotDownloaded" xml:space="preserve">
+    <value>Download the track first to listen to it.</value>
+    <comment>Tooltip of a cover without file</comment>
+  </data>
+  <data name="Player_Close" xml:space="preserve">
+    <value>Stop and close the player</value>
+    <comment>Tooltip of the close button in the player bar</comment>
+  </data>
+  <data name="Player_Seek" xml:space="preserve">
+    <value>Drag or click to jump to a spot in the track.</value>
+    <comment>Tooltip of the progress slider</comment>
+  </data>
+  <data name="Player_OpenDetails" xml:space="preserve">
+    <value>Open the track's details</value>
+    <comment>Tooltip of title and cover in the player bar</comment>
+  </data>
+  <data name="Credit_Concentus" xml:space="preserve">
+    <value>Decodes the Opus files for listening in</value>
+    <comment>Purpose of Concentus in the credits</comment>
+  </data>
+  <data name="Credit_ConcentusOggFile" xml:space="preserve">
+    <value>Reads the Ogg container of the Opus files</value>
+    <comment>Purpose of Concentus.OggFile in the credits</comment>
+  </data>
+  <data name="Credit_OpenAlSoft" xml:space="preserve">
+    <value>Plays the sound on every platform</value>
+    <comment>Purpose of OpenAL Soft in the credits</comment>
+  </data>
+  <data name="Credit_SilkNet" xml:space="preserve">
+    <value>Connects .NET with OpenAL</value>
+    <comment>Purpose of Silk.NET in the credits</comment>
+  </data>
   <data name="Detail_Position" xml:space="preserve">
     <value>{0} / {1}</value>
     <comment>Place of the track in the list the details were opened from; {0} number, {1} count</comment>

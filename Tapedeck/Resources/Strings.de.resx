@@ -1059,6 +1059,48 @@
   <data name="Smart_PlaceholderText" xml:space="preserve">
     <value>Text</value>
   </data>
+  <data name="Player_Unreadable" xml:space="preserve">
+    <value>Die Datei lässt sich nicht abspielen: {0}</value>
+  </data>
+  <data name="Player_NoDevice" xml:space="preserve">
+    <value>Keine Tonausgabe verfügbar: {0}</value>
+  </data>
+  <data name="Player_NoDeviceFound" xml:space="preserve">
+    <value>kein Audiogerät gefunden</value>
+  </data>
+  <data name="Player_Play" xml:space="preserve">
+    <value>Abspielen</value>
+  </data>
+  <data name="Player_Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Player_PlayHint" xml:space="preserve">
+    <value>Spielt diesen Titel ab. Nochmal klicken pausiert.</value>
+  </data>
+  <data name="Player_NotDownloaded" xml:space="preserve">
+    <value>Lade den Titel zuerst herunter, um ihn anzuhören.</value>
+  </data>
+  <data name="Player_Close" xml:space="preserve">
+    <value>Stoppen und Player schließen</value>
+  </data>
+  <data name="Player_Seek" xml:space="preserve">
+    <value>Ziehen oder klicken, um an eine Stelle im Titel zu springen.</value>
+  </data>
+  <data name="Player_OpenDetails" xml:space="preserve">
+    <value>Details des Titels öffnen</value>
+  </data>
+  <data name="Credit_Concentus" xml:space="preserve">
+    <value>Dekodiert die Opus-Dateien zum Reinhören</value>
+  </data>
+  <data name="Credit_ConcentusOggFile" xml:space="preserve">
+    <value>Liest den Ogg-Container der Opus-Dateien</value>
+  </data>
+  <data name="Credit_OpenAlSoft" xml:space="preserve">
+    <value>Gibt den Ton auf jeder Plattform aus</value>
+  </data>
+  <data name="Credit_SilkNet" xml:space="preserve">
+    <value>Verbindet .NET mit OpenAL</value>
+  </data>
   <data name="Detail_Position" xml:space="preserve">
     <value>{0} / {1}</value>
   </data>
