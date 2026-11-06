@@ -23,6 +23,9 @@ public sealed partial class NavigationService : ObservableObject
         this.Current = page;
     }
 
+    /// <summary>Swaps the current sub page for another, e.g. the next track's details; <see cref="Back"/> skips both.</summary>
+    public void Replace(ViewModelBase page) => this.Current = page;
+
     public void Back()
     {
         if (this.back.TryPop(out var page))

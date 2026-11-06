@@ -18,7 +18,13 @@ using Tapedeck.Services;
 namespace Tapedeck.ViewModels;
 
 /// <summary>Creates the detail page for a library row; the row's page carries out downloads and file actions.</summary>
-public delegate TrackDetailViewModel TrackDetailFactory(TrackRowViewModel row, ITrackActions actions);
+public delegate TrackDetailViewModel TrackDetailFactory(TrackRowViewModel row, ITrackActions actions, TrackSequence sequence);
+
+/// <summary>
+/// The list the details were opened from (the filtered library or a playlist), for going to the previous and next
+/// track. <paramref name="Select"/> marks the shown track in that list, so going back finds it.
+/// </summary>
+public sealed record TrackSequence(IReadOnlyList<TrackRowViewModel> Rows, Action<TrackRowViewModel> Select);
 
 /// <summary>A song MusicBrainz suggests for the track, with the button that applies it.</summary>
 /// <param name="Title">"Alright — Kendrick Lamar"</param>
@@ -41,13 +47,16 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly NavigationService navigation;
     private readonly MbEnrichmentService musicBrainz;
     private readonly IPlatformService platform;
+    private readonly TrackSequence sequence;
+    private readonly TrackDetailFactory createDetail;
 
     private CancellationTokenSource? pendingSave;
     private string? notes;
     private bool loading;
     private string? mbRecordingId;
 
-    public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, ITrackRepository repository,
+    public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, TrackSequence sequence, TrackDetailFactory createDetail,
+        ITrackRepository repository,
         TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation,
         MbEnrichmentService musicBrainz, IPlatformService platform)
     {
@@ -60,6 +69,9 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.navigation = navigation;
         this.musicBrainz = musicBrainz;
         this.platform = platform;
+        this.sequence = sequence;
+        this.createDetail = createDetail;
+        this.Index = sequence.Rows.ToList().IndexOf(row);
 
         this.ArtistField = new MetadataFieldViewModel(Strings.Field_Artist, this.ScheduleSave);
         this.TitleField = new MetadataFieldViewModel(Strings.Field_Title, this.ScheduleSave);
@@ -68,6 +80,18 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.YearField = new MetadataFieldViewModel(Strings.Field_Year, this.ScheduleSave);
         this.Fields = [this.ArtistField, this.TitleField, this.AlbumField, this.AlbumArtistField, this.YearField];
     }
+
+    /// <summary>Place of the track in the list it was opened from; -1 when it is not in it (any more).</summary>
+    public int Index { get; }
+
+    public bool HasPrevious => this.Index > 0;
+
+    public bool HasNext => this.Index >= 0 && this.Index < this.sequence.Rows.Count - 1;
+
+    /// <summary>"12 / 144"; empty without a list to go through.</summary>
+    public string PositionText => this.Index >= 0 && this.sequence.Rows.Count > 1
+        ? string.Format(Strings.Detail_Position, this.Index + 1, this.sequence.Rows.Count)
+        : string.Empty;
 
     /// <summary>The library row: status and progress stay in sync with downloads started anywhere.</summary>
     public TrackRowViewModel Row { get; }
@@ -231,6 +255,26 @@ public partial class TrackDetailViewModel : ViewModelBase
 
     [RelayCommand]
     private void Back() => this.navigation.Back();
+
+    /// <summary>The previous track of the list, in place of this page (button, arrow key left).</summary>
+    [RelayCommand(CanExecute = nameof(HasPrevious))]
+    private Task PreviousAsync() => this.ShowAsync(this.Index - 1);
+
+    /// <summary>The next track of the list, in place of this page (button, arrow key right).</summary>
+    [RelayCommand(CanExecute = nameof(HasNext))]
+    private Task NextAsync() => this.ShowAsync(this.Index + 1);
+
+    /// <summary>Saves what is still being typed, then swaps this page for the details of another track of the list.</summary>
+    private async Task ShowAsync(int index)
+    {
+        if (index < 0 || index >= this.sequence.Rows.Count)
+            return;
+        await this.SaveNowAsync();
+
+        var row = this.sequence.Rows[index];
+        this.sequence.Select(row);
+        this.navigation.Replace(this.createDetail(row, this.actions, this.sequence));
+    }
 
     [RelayCommand]
     private Task OpenOnYoutubeAsync() => this.actions.OpenOnYoutubeAsync(this.Row);

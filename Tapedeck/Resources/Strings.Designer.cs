@@ -841,6 +841,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next track.
+        /// </summary>
+        public static string Detail_Next {
+            get {
+                return ResourceManager.GetString("Detail_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next track of the list you came from (arrow key right)..
+        /// </summary>
+        public static string Detail_NextHint {
+            get {
+                return ResourceManager.GetString("Detail_NextHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not downloaded yet.
         /// </summary>
         public static string Detail_NoFile {
@@ -850,11 +868,38 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} / {1}.
+        /// </summary>
+        public static string Detail_Position {
+            get {
+                return ResourceManager.GetString("Detail_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preview.
         /// </summary>
         public static string Detail_Preview {
             get {
                 return ResourceManager.GetString("Detail_Preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous track.
+        /// </summary>
+        public static string Detail_Previous {
+            get {
+                return ResourceManager.GetString("Detail_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous track of the list you came from (arrow key left)..
+        /// </summary>
+        public static string Detail_PreviousHint {
+            get {
+                return ResourceManager.GetString("Detail_PreviousHint", resourceCulture);
             }
         }
         

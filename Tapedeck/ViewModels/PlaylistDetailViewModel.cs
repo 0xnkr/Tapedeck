@@ -105,6 +105,9 @@ public partial class PlaylistDetailViewModel(
     [RelayCommand]
     private void Back() => navigation.Back();
 
+    /// <summary>Marks a track, e.g. the one last shown on the detail page, so going back finds it.</summary>
+    public void SelectRow(TrackRowViewModel row) => this.SelectedEntry = this.Entries.FirstOrDefault(e => e.Row == row);
+
     /// <summary>Reads the YouTube playlist again and adds its new videos.</summary>
     [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncAsync()

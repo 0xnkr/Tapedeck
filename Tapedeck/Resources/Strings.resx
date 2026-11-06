@@ -1408,4 +1408,24 @@
     <value>Text</value>
     <comment>Placeholder of a rule value for text fields</comment>
   </data>
+  <data name="Detail_Position" xml:space="preserve">
+    <value>{0} / {1}</value>
+    <comment>Place of the track in the list the details were opened from; {0} number, {1} count</comment>
+  </data>
+  <data name="Detail_Previous" xml:space="preserve">
+    <value>Previous track</value>
+    <comment>Accessible name of the left arrow button on the detail page</comment>
+  </data>
+  <data name="Detail_Next" xml:space="preserve">
+    <value>Next track</value>
+    <comment>Accessible name of the right arrow button on the detail page</comment>
+  </data>
+  <data name="Detail_PreviousHint" xml:space="preserve">
+    <value>Previous track of the list you came from (arrow key left).</value>
+    <comment>Tooltip of the left arrow button</comment>
+  </data>
+  <data name="Detail_NextHint" xml:space="preserve">
+    <value>Next track of the list you came from (arrow key right).</value>
+    <comment>Tooltip of the right arrow button</comment>
+  </data>
 </root>

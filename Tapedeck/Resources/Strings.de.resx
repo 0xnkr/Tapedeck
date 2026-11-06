@@ -1059,4 +1059,19 @@
   <data name="Smart_PlaceholderText" xml:space="preserve">
     <value>Text</value>
   </data>
+  <data name="Detail_Position" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Detail_Previous" xml:space="preserve">
+    <value>Vorheriger Titel</value>
+  </data>
+  <data name="Detail_Next" xml:space="preserve">
+    <value>Nächster Titel</value>
+  </data>
+  <data name="Detail_PreviousHint" xml:space="preserve">
+    <value>Vorheriger Titel der Liste, aus der du kommst (Pfeiltaste links).</value>
+  </data>
+  <data name="Detail_NextHint" xml:space="preserve">
+    <value>Nächster Titel der Liste, aus der du kommst (Pfeiltaste rechts).</value>
+  </data>
 </root>

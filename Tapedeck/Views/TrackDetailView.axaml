@@ -22,6 +22,24 @@
                              Subtitle="{Binding Subtitle}"
                              BackCommand="{Binding BackCommand}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <!-- Previous and next track of the list the page was opened from (also arrow keys) -->
+                <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.1}" VerticalAlignment="Center"
+                            IsVisible="{Binding PositionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <Button Classes="icon"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.ChevronLeft}"
+                            Command="{Binding PreviousCommand}"
+                            ToolTip.Tip="{x:Static res:Strings.Detail_PreviousHint}"
+                            AutomationProperties.Name="{x:Static res:Strings.Detail_Previous}" />
+                    <TextBlock Classes="support tabular"
+                               Text="{Binding PositionText}"
+                               Foreground="{DynamicResource Brush.Text2}"
+                               VerticalAlignment="Center" />
+                    <Button Classes="icon"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.ChevronRight}"
+                            Command="{Binding NextCommand}"
+                            ToolTip.Tip="{x:Static res:Strings.Detail_NextHint}"
+                            AutomationProperties.Name="{x:Static res:Strings.Detail_Next}" />
+                </StackPanel>
                 <Button Classes="lg"
                         Content="{x:Static res:Strings.Track_OpenOnYoutube}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"

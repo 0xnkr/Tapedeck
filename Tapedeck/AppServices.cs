@@ -65,9 +65,9 @@ public static class AppServices
             id => ActivatorUtilities.CreateInstance<SmartPlaylistEditorViewModel>(sp, id));
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<MainViewModel>();
-        services.AddSingleton<TrackDetailFactory>(sp => (row, actions) =>
+        services.AddSingleton<TrackDetailFactory>(sp => (row, actions, sequence) =>
         {
-            var detail = ActivatorUtilities.CreateInstance<TrackDetailViewModel>(sp, row, actions);
+            var detail = ActivatorUtilities.CreateInstance<TrackDetailViewModel>(sp, row, actions, sequence);
             detail.LoadCommand.Execute(null);
             return detail;
         });
