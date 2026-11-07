@@ -1568,4 +1568,12 @@
     <value>Loud and quiet tracks play equally loud in Tapedeck, from the next track on. The files get their volume level through “Write tags” either way.</value>
     <comment>Hint below Settings_LevelPlayback; “Write tags” is Library_WriteAllTags</comment>
   </data>
+  <data name="Tools_OpenLog" xml:space="preserve">
+    <value>Open log</value>
+    <comment>Button in the Tapedeck row of the tools: opens the log file in a text editor</comment>
+  </data>
+  <data name="Tools_OpenLogHint" xml:space="preserve">
+    <value>Opens log.txt with every download, import and error. Attach it to a bug report.</value>
+    <comment>Tooltip of Tools_OpenLog; log.txt is a file name</comment>
+  </data>
 </root>

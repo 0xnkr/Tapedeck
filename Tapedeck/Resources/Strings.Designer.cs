@@ -3433,6 +3433,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open log.
+        /// </summary>
+        public static string Tools_OpenLog {
+            get {
+                return ResourceManager.GetString("Tools_OpenLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens log.txt with every download, import and error. Attach it to a bug report..
+        /// </summary>
+        public static string Tools_OpenLogHint {
+            get {
+                return ResourceManager.GetString("Tools_OpenLogHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string Tools_Update {
