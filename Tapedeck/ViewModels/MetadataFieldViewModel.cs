@@ -34,7 +34,10 @@ public partial class MetadataFieldViewModel(string label, Action changed) : View
         this.loading = true;
         this.original = value ?? string.Empty;
         this.originalSource = source;
-        this.Text = this.original;
+        // a value is saved trimmed, so the reload after a save would take away the space just typed
+        // ("28 " on the way to "28 Grams"); text that only differs by surrounding spaces stays as typed
+        if (this.Text.Trim() != this.original)
+            this.Text = this.original;
         this.Source = source;
         this.loading = false;
     }
