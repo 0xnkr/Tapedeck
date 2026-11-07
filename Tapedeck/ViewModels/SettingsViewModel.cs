@@ -131,6 +131,12 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial string LibraryDir { get; private set; }
 
+    /// <summary>Version and build of the running app, e.g. <c>1.0.0 · 2e02d19</c>.</summary>
+    public string AppVersion => AppInfo.DISPLAY;
+
+    /// <summary>The log can be opened; without write access to the app data folder there is none.</summary>
+    public bool HasLog => FileLog.Current is not null;
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(UpdateYtDlpCommand))]
     public partial string? YtDlpVersion { get; private set; }
@@ -249,6 +255,11 @@ public partial class SettingsViewModel : ViewModelBase
             this.Notice = string.Format(Strings.Notice_MoveFailed, ex.Message);
         }
     }
+
+    /// <summary>Opens <c>log.txt</c> in the text editor, e.g. to attach it to a bug report.</summary>
+    [RelayCommand]
+    private Task OpenLogAsync() =>
+        FileLog.Current is { } log ? this.platform.OpenFileAsync(log.Path) : Task.CompletedTask;
 
     [RelayCommand(CanExecute = nameof(CanUpdateYtDlp))]
     private async Task UpdateYtDlpAsync()

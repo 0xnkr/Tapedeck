@@ -206,6 +206,24 @@
                                            Text="{x:Static res:Strings.Settings_ToolsHint}" />
                             </StackPanel>
 
+                            <!-- Tapedeck itself: the version to name in a bug report, and the log to attach -->
+                            <Border Classes="row">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="Tapedeck" />
+                                        <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
+                                                   Text="{Binding AppVersion}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Classes="secondary"
+                                            Content="{x:Static res:Strings.Tools_OpenLog}"
+                                            ToolTip.Tip="{x:Static res:Strings.Tools_OpenLogHint}"
+                                            controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
+                                            Command="{Binding OpenLogCommand}"
+                                            IsVisible="{Binding HasLog}" />
+                                </Grid>
+                            </Border>
+
                             <Border Classes="row">
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                                     <StackPanel Spacing="2" VerticalAlignment="Center">

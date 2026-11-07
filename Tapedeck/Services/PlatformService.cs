@@ -23,6 +23,9 @@ public interface IPlatformService
 
     Task OpenFolderAsync(string path);
 
+    /// <summary>Opens a file with the program the system uses for it, e.g. the log in a text editor.</summary>
+    Task OpenFileAsync(string path);
+
     /// <returns>The chosen folder as local path, or <c>null</c> when cancelled.</returns>
     Task<string?> PickFolderAsync(string title, string? startFolder);
 
@@ -57,6 +60,12 @@ public sealed class PlatformService : IPlatformService
     {
         if (MainWindow is { } window)
             await window.Launcher.LaunchDirectoryInfoAsync(new DirectoryInfo(path));
+    }
+
+    public async Task OpenFileAsync(string path)
+    {
+        if (MainWindow is { } window)
+            await window.Launcher.LaunchFileInfoAsync(new FileInfo(path));
     }
 
     public async Task<string?> PickFolderAsync(string title, string? startFolder)
