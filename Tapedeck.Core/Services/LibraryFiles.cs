@@ -1,10 +1,14 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Tapedeck.Core.Models;
 
 namespace Tapedeck.Core.Services;
 
 /// <summary>The audio file of a track in the library: is it still there, does its name fit, removing it.</summary>
-public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
+public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths, ILogger<LibraryFiles>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     /// <summary>
     /// The status to show: <see cref="DownloadStatus.Missing"/> when the track is done but its file was
     /// deleted or moved outside the app, otherwise the stored status.
@@ -32,6 +36,7 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
             return null;
 
         File.Move(paths.ToLibraryPath(current), paths.ToLibraryPath(wanted));
+        this.log.LogInformation("Renamed {From} to {To}", current, wanted);
         await repository.SetFilePathAsync(trackId, wanted);
         return wanted;
     }
@@ -45,6 +50,8 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
     {
         var others = duplicateIds.Where(id => id != keepId).ToList();
         await repository.MergeIntoAsync(keepId, others);
+        this.log.LogInformation("Kept track {TrackId} of its duplicates and merged {Others} into it (files deleted: {DeleteFiles})",
+            keepId, string.Join(", ", others), deleteFiles);
         foreach (var id in others)
             await this.RemoveAsync(id, deleteFiles);
     }
@@ -66,5 +73,7 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths)
             File.Delete(cutCover);
 
         await repository.DeleteAsync(trackId);
+        this.log.LogInformation("Removed track {TrackId} ({VideoId}, {Artist} - {Title}), file deleted: {Deleted}",
+            trackId, track.VideoId, track.Artist, track.Title, deleteFile && track.FilePath is not null);
     }
 }

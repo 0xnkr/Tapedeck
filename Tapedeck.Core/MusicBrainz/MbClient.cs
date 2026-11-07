@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -8,8 +10,10 @@ namespace Tapedeck.Core.MusicBrainz;
 /// The MusicBrainz web service. At most one request per second for the whole app, as the service asks,
 /// with a User-Agent that names the app. A busy server (503) is asked again a few times with growing pauses.
 /// </summary>
-public sealed class MbClient(HttpClient http)
+public sealed class MbClient(HttpClient http, ILogger<MbClient>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     private const string BASE_URL = "https://musicbrainz.org/ws/2/";
     private const string CONTACT = "https://github.com/nilskruthoff/Tapedeck";
 
@@ -56,10 +60,14 @@ public sealed class MbClient(HttpClient http)
             var busy = response.StatusCode is HttpStatusCode.ServiceUnavailable or HttpStatusCode.TooManyRequests;
             if (busy && attempt < RETRY_DELAYS.Length)
             {
+                this.log.LogWarning("MusicBrainz is busy ({Status}), asking again in {Seconds} s", (int)response.StatusCode,
+                    RETRY_DELAYS[attempt].TotalSeconds);
                 await Task.Delay(RETRY_DELAYS[attempt], ct);
                 continue;
             }
 
+            if (!response.IsSuccessStatusCode)
+                this.log.LogWarning("MusicBrainz answered {Status} for {Url}", (int)response.StatusCode, relativeUrl);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync(ct);
         }

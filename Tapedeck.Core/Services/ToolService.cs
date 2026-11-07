@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.ComponentModel;
 using System.Diagnostics;
 using YoutubeDLSharp;
@@ -8,8 +10,10 @@ namespace Tapedeck.Core.Services;
 /// Manages yt-dlp, ffmpeg and Deno in the app's tools folder.
 /// yt-dlp needs Deno as its JS runtime to fully extract YouTube.
 /// </summary>
-public sealed class ToolService(AppPaths paths)
+public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     public string YtDlpPath => Path.Combine(paths.ToolsDir, Utils.YtDlpBinaryName);
     public string FFmpegPath => Path.Combine(paths.ToolsDir, Utils.FfmpegBinaryName);
     public string DenoPath => Path.Combine(paths.ToolsDir, OperatingSystem.IsWindows() ? "deno.exe" : "deno");
@@ -22,15 +26,29 @@ public sealed class ToolService(AppPaths paths)
     {
         Directory.CreateDirectory(paths.ToolsDir);
         if (!File.Exists(this.YtDlpPath))
+        {
+            this.log.LogInformation("Downloading yt-dlp into {ToolsDir}", paths.ToolsDir);
             await Utils.DownloadYtDlp(paths.ToolsDir);
+        }
         if (!File.Exists(this.FFmpegPath))
+        {
+            this.log.LogInformation("Downloading ffmpeg into {ToolsDir}", paths.ToolsDir);
             await Utils.DownloadFFmpeg(paths.ToolsDir);
+        }
         if (!File.Exists(this.DenoPath))
+        {
+            this.log.LogInformation("Downloading Deno into {ToolsDir}", paths.ToolsDir);
             await Utils.DownloadDeno(paths.ToolsDir);
+        }
     }
 
     /// <summary><c>yt-dlp -U</c>. Without regular updates yt-dlp breaks whenever YouTube changes.</summary>
-    public Task<string> UpdateYtDlpAsync() => this.CreateClient().RunUpdate();
+    public async Task<string> UpdateYtDlpAsync()
+    {
+        var output = await this.CreateClient().RunUpdate();
+        this.log.LogInformation("yt-dlp update: {Output}", output.Trim());
+        return output;
+    }
 
     public YoutubeDL CreateClient() => new()
     {

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 using Tapedeck.Core.Models;
@@ -8,8 +10,10 @@ namespace Tapedeck.Core.Services;
 /// Fetches metadata via <c>yt-dlp -J</c>. yt-dlp is invoked directly instead of through YoutubeDLSharp
 /// because we need the raw JSON for <c>info_json</c>.
 /// </summary>
-public sealed class MetadataService(ToolService tools)
+public sealed class MetadataService(ToolService tools, ILogger<MetadataService>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     // would otherwise bloat info_json to several hundred KB
     private static readonly string[] DROPPED_KEYS =
         ["formats", "requested_formats", "automatic_captions", "subtitles", "heatmap", "thumbnails"];
@@ -109,7 +113,12 @@ public sealed class MetadataService(ToolService tools)
         }
 
         if (process.ExitCode != 0)
-            throw new InvalidOperationException($"yt-dlp -J failed: {(await stderr).Trim()}");
+        {
+            var error = (await stderr).Trim();
+            this.log.LogWarning("yt-dlp -J {Arguments} failed with exit code {ExitCode}: {Error}",
+                string.Join(' ', args), process.ExitCode, error);
+            throw new InvalidOperationException($"yt-dlp -J failed: {error}");
+        }
         return await stdout;
     }
 
