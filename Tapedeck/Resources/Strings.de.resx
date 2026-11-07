@@ -1179,4 +1179,10 @@
   <data name="Settings_LevelPlaybackHint" xml:space="preserve">
     <value>Laute und leise Titel spielen in Tapedeck gleich laut, ab dem nächsten Titel. Die Dateien bekommen den Ausgleich unabhängig davon über „Tags schreiben“.</value>
   </data>
+  <data name="Tools_OpenLog" xml:space="preserve">
+    <value>Protokoll öffnen</value>
+  </data>
+  <data name="Tools_OpenLogHint" xml:space="preserve">
+    <value>Öffnet log.txt mit allen Downloads, Importen und Fehlern. Hänge sie an einen Fehlerbericht an.</value>
+  </data>
 </root>
