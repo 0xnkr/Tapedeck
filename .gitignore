@@ -30,3 +30,6 @@ Thumbs.db
 
 # Publish output (Properties/PublishProfiles)
 publish/
+
+# local test data directories
+tmp-spotify/
