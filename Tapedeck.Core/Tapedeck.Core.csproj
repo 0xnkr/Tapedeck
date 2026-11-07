@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Concentus.Oggfile" Version="1.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
     <PackageReference Include="YoutubeDLSharp" Version="1.2.0" />
   </ItemGroup>
