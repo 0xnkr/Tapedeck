@@ -30,3 +30,6 @@ Thumbs.db
 
 # Publish output (Properties/PublishProfiles)
 publish/
+
+# Spotify data dumps (confidential, local analysis only)
+tmp-spotify/
