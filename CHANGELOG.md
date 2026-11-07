@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The settings show Tapedeck's version and build (the git commit it was built from) under Tools.
+- A log file, `log.txt` in the app data folder, records start, downloads, imports, MusicBrainz results, written tags, the audio output and every error. "Open log" in the settings opens it for a bug report. It is trimmed to its newest part once it grows beyond 2 MB.
+- A guide to publishing a release, [docs/release.md](docs/release.md).
+
 ## [1.0.0] - 2026-11-07
 
 ### Added
