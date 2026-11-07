@@ -29,11 +29,15 @@ public partial class SpotifySongRowViewModel : ViewModelBase
 {
     private readonly Func<SpotifySongRowViewModel, string?, Task> decide;
     private readonly Action<SpotifySongRowViewModel> changed;
+    // the starting value is no change by the user
+    private readonly bool built;
 
     public SpotifySongRowViewModel(int rank, SpotifySong song, SpotifyRowGroup group, long? trackId, SpotifyCandidate? video,
         IReadOnlyList<SpotifyCandidate> suggestions, bool included,
         Func<SpotifySongRowViewModel, string?, Task> decide, Action<SpotifySongRowViewModel> changed, Func<string, Task> open)
     {
+        this.decide = decide;
+        this.changed = changed;
         this.Rank = rank;
         this.Song = song;
         this.Group = group;
@@ -41,8 +45,7 @@ public partial class SpotifySongRowViewModel : ViewModelBase
         this.Video = video is null ? null : new SpotifyCandidateViewModel(song, video, open);
         this.Suggestions = suggestions.Select(s => new SpotifyCandidateViewModel(song, s, open, this.Choose)).ToList();
         this.IsIncluded = included;
-        this.decide = decide;
-        this.changed = changed;
+        this.built = true;
     }
 
     public int Rank { get; }
@@ -75,7 +78,11 @@ public partial class SpotifySongRowViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool IsIncluded { get; set; }
 
-    partial void OnIsIncludedChanged(bool value) => this.changed(this);
+    partial void OnIsIncludedChanged(bool value)
+    {
+        if (this.built)
+            this.changed(this);
+    }
 
     /// <summary>None of the suggestions is the song.</summary>
     [RelayCommand]
