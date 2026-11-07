@@ -25,7 +25,12 @@ abstract class Program
         var options = StartupOptions.Parse(args);
         if (options.SpotifyReport is { } spotifyHistory)
         {
-            RunSpotifyReport(spotifyHistory, log);
+            RunCommand(logging => SpotifyReportCommand.RunAsync(spotifyHistory, logging), log);
+            return;
+        }
+        if (options.SpotifyMatch is { } matchHistory)
+        {
+            RunCommand(logging => SpotifyMatchCommand.RunAsync(matchHistory, options.SpotifyMatchCount ?? SpotifyMatchCommand.DEFAULT_COUNT, logging), log);
             return;
         }
 
@@ -50,8 +55,8 @@ abstract class Program
             log.LogError(e.Exception, "Unobserved error in a background task");
     }
 
-    /// <summary>Writes the report without a window; errors only reach the log, there is no console.</summary>
-    private static void RunSpotifyReport(string historyPath, ILogger? log)
+    /// <summary>Runs a command without a window; errors only reach the log, there is no console.</summary>
+    private static void RunCommand(Func<ILoggerFactory, Task> command, ILogger? log)
     {
         using var logging = LoggerFactory.Create(builder =>
         {
@@ -60,11 +65,11 @@ abstract class Program
         });
         try
         {
-            SpotifyReportCommand.RunAsync(historyPath, logging).GetAwaiter().GetResult();
+            command(logging).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
-            log?.LogError(ex, "Spotify report failed");
+            log?.LogError(ex, "Command failed");
             Environment.ExitCode = 1;
         }
     }
