@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -22,7 +23,8 @@ public sealed partial class MusicBrainzQueue(
     MbEnrichmentService enrichment,
     ITrackRepository repository,
     ActivityService activity,
-    SettingsStore settings) : ObservableObject
+    SettingsStore settings,
+    ILogger<MusicBrainzQueue> log) : ObservableObject
 {
     private const int MAX_FAILURES_IN_A_ROW = 3;
 
@@ -114,6 +116,7 @@ public sealed partial class MusicBrainzQueue(
                 }
                 catch (HttpRequestException ex)
                 {
+                    log.LogWarning("MusicBrainz search for track {TrackId} failed: {Error}", entry.Id, ex.Message);
                     // a busy server can fail a single track; it stays unsearched for the next run.
                     // Several in a row mean offline or MusicBrainz down: the rest would fail the same way
                     error = ex.Message;
@@ -134,6 +137,8 @@ public sealed partial class MusicBrainzQueue(
         this.run = null;
         this.IsRunning = false;
 
+        log.LogInformation("MusicBrainz run ended after {Done} tracks: {Matched} matched, {Suggested} suggested, {NotFound} not found",
+            done, matched, suggested, notFound);
         // single failed tracks just stay unsearched; only a stopped run is worth a notice
         if (failures >= MAX_FAILURES_IN_A_ROW && error is not null)
             this.Failed?.Invoke(error);

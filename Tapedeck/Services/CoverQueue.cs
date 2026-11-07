@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,11 @@ namespace Tapedeck.Services;
 /// A later Cover Art Archive cover replaces the cut one. Each new cover marks the tags as outdated, so
 /// "Write tags" takes it to the file.
 /// </summary>
-public sealed class CoverQueue(ThumbnailCoverService cutter, ITrackRepository repository, ActivityService activity)
+public sealed class CoverQueue(
+    ThumbnailCoverService cutter,
+    ITrackRepository repository,
+    ActivityService activity,
+    ILogger<CoverQueue> log)
 {
     // rows are refreshed in groups, so a large library does not rebuild the table for every cover
     private const int REPORT_EVERY = 25;
@@ -84,8 +89,9 @@ public sealed class CoverQueue(ThumbnailCoverService cutter, ITrackRepository re
                         total++;
                     }
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException ex)
                 {
+                    log.LogWarning("Could not cut a cover for track {TrackId}: {Error}", id, ex.Message);
                     this.failed.Add(id);
                 }
 
@@ -99,6 +105,7 @@ public sealed class CoverQueue(ThumbnailCoverService cutter, ITrackRepository re
 
         if (covered.Count > 0)
             this.Covered?.Invoke(covered);
+        log.LogInformation("Cut covers for {Covered} of {Count} tracks in the background", total, ids.Count);
         if (total > 0)
             activity.Confirm(string.Format(Strings.Confirm_CoversCut, total));
     }
