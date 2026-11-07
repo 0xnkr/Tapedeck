@@ -50,6 +50,33 @@ public sealed class SpotifyTests : IDisposable
         Assert.Equal(3, history.Stats.Files);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Reads_the_data_download_as_spotify_sends_it_and_skips_the_account_data(bool zipped)
+    {
+        // my_spotify_data/Spotify Extended Streaming History/… next to the short history of the account data
+        var unpacked = Path.Combine(this.root, "my_spotify_data");
+        var extended = Directory.CreateDirectory(Path.Combine(unpacked, "Spotify Extended Streaming History")).FullName;
+        var account = Directory.CreateDirectory(Path.Combine(unpacked, "Spotify Account Data")).FullName;
+        foreach (var file in Directory.GetFiles(FIXTURES))
+            File.Copy(file, Path.Combine(extended, Path.GetFileName(file)));
+        await File.WriteAllTextAsync(Path.Combine(extended, "ReadMeFirst_ExtendedStreamingHistory.pdf"), "%PDF");
+        await File.WriteAllTextAsync(Path.Combine(account, "StreamingHistory_music_0.json"),
+            """[{"endTime":"2025-01-01 10:00","artistName":"Coolio","trackName":"Gangsta's Paradise","msPlayed":240000}]""");
+        var path = unpacked;
+        if (zipped)
+        {
+            path = Path.Combine(this.root, "my_spotify_data.zip");
+            ZipFile.CreateFromDirectory(unpacked, path, CompressionLevel.Fastest, includeBaseDirectory: true);
+        }
+
+        var history = await new SpotifyHistoryReader().ReadAsync(path);
+
+        Assert.Equal(3, history.Stats.Files);
+        Assert.Equal(11, history.Streams.Count);
+    }
+
     [Fact]
     public async Task Account_data_is_refused_with_a_hint()
     {
