@@ -1576,4 +1576,280 @@
     <value>Opens log.txt with every download, import and error. Attach it to a bug report.</value>
     <comment>Tooltip of Tools_OpenLog; log.txt is a file name</comment>
   </data>
+  <data name="Playlists_FromSpotify" xml:space="preserve">
+    <value>From Spotify</value>
+    <comment>Header button on the playlists page; opens the Spotify import</comment>
+  </data>
+  <data name="Playlists_FromSpotifyHint" xml:space="preserve">
+    <value>Import your most played songs from your Spotify streaming history</value>
+    <comment>Tooltip of Playlists_FromSpotify</comment>
+  </data>
+  <data name="Spotify_Title" xml:space="preserve">
+    <value>Import from Spotify</value>
+    <comment>Page title</comment>
+  </data>
+  <data name="Spotify_Subtitle" xml:space="preserve">
+    <value>Finds your most played Spotify songs on YouTube and puts them into a playlist.</value>
+    <comment>Page subtitle</comment>
+  </data>
+  <data name="Spotify_Source" xml:space="preserve">
+    <value>Streaming history</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Spotify_SourceHint" xml:space="preserve">
+    <value>In your Spotify account, request the "Extended streaming history" under privacy. Spotify sends a zip file after a few days.</value>
+    <comment>Explains where the history comes from</comment>
+  </data>
+  <data name="Spotify_PickZip" xml:space="preserve">
+    <value>Choose zip</value>
+    <comment>Button: pick the zip file Spotify sent</comment>
+  </data>
+  <data name="Spotify_PickFolder" xml:space="preserve">
+    <value>Choose folder</value>
+    <comment>Button: pick the folder with the unpacked files</comment>
+  </data>
+  <data name="Spotify_PickZipTitle" xml:space="preserve">
+    <value>Spotify data download</value>
+    <comment>File dialog title</comment>
+  </data>
+  <data name="Spotify_PickFolderTitle" xml:space="preserve">
+    <value>Folder with the Streaming_History_Audio files</value>
+    <comment>Folder dialog title; Streaming_History_Audio is a file name</comment>
+  </data>
+  <data name="Spotify_ZipFileType" xml:space="preserve">
+    <value>Zip archive</value>
+    <comment>File type in the open dialog</comment>
+  </data>
+  <data name="Spotify_NoSource" xml:space="preserve">
+    <value>No history chosen yet.</value>
+    <comment>Shown before a history is chosen</comment>
+  </data>
+  <data name="Spotify_Reading" xml:space="preserve">
+    <value>Reading Spotify history …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Spotify_SourceSummary" xml:space="preserve">
+    <value>{0} plays from {1} to {2}</value>
+    <comment>{0} number of plays, {1} first date, {2} last date</comment>
+  </data>
+  <data name="Spotify_ReadFailed" xml:space="preserve">
+    <value>The history could not be read: {0}</value>
+    <comment>{0} error message</comment>
+  </data>
+  <data name="Spotify_Selection" xml:space="preserve">
+    <value>Selection</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Spotify_MinPlays" xml:space="preserve">
+    <value>At least</value>
+    <comment>Before the number field: at least N real plays</comment>
+  </data>
+  <data name="Spotify_MinPlaysSuffix" xml:space="preserve">
+    <value>real plays</value>
+    <comment>After the number field</comment>
+  </data>
+  <data name="Spotify_MinPlaysHint" xml:space="preserve">
+    <value>A real play lasted at least 30 seconds and was not ended with the skip or back button.</value>
+    <comment>Tooltip of the minimum plays</comment>
+  </data>
+  <data name="Spotify_SkipFilter" xml:space="preserve">
+    <value>Leave out often skipped songs</value>
+    <comment>Checkbox</comment>
+  </data>
+  <data name="Spotify_SkipFilterHint" xml:space="preserve">
+    <value>Songs skipped in more than 60 % of the plays: usually playlist filler rather than favorites.</value>
+    <comment>Tooltip of Spotify_SkipFilter</comment>
+  </data>
+  <data name="Spotify_SelectionSummary" xml:space="preserve">
+    <value>{0} songs · {1} already in the library · {2} still to search</value>
+    <comment>{0} songs of the selection, {1} of them in the library, {2} without a search</comment>
+  </data>
+  <data name="Spotify_SearchTitle" xml:space="preserve">
+    <value>Search</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Spotify_SearchHint" xml:space="preserve">
+    <value>Searches each song on YouTube Music, about 10 seconds per song. Results are kept, so a stopped search continues where it ended.</value>
+    <comment>Explains the search</comment>
+  </data>
+  <data name="Spotify_Search" xml:space="preserve">
+    <value>Search on YouTube</value>
+    <comment>Button</comment>
+  </data>
+  <data name="Spotify_StopSearch" xml:space="preserve">
+    <value>Stop</value>
+    <comment>Button: stops the running search</comment>
+  </data>
+  <data name="Spotify_Searching" xml:space="preserve">
+    <value>Searching Spotify songs on YouTube: {0} / {1}</value>
+    <comment>Activity toast; {0} done, {1} total</comment>
+  </data>
+  <data name="Spotify_SearchProgress" xml:space="preserve">
+    <value>{0} of {1} songs · about {2} left</value>
+    <comment>{0} done, {1} total, {2} remaining time like Spotify_Minutes</comment>
+  </data>
+  <data name="Spotify_Minutes" xml:space="preserve">
+    <value>{0} min</value>
+    <comment>Remaining time; {0} minutes</comment>
+  </data>
+  <data name="Spotify_Hours" xml:space="preserve">
+    <value>{0} h {1} min</value>
+    <comment>Remaining time; {0} hours, {1} minutes</comment>
+  </data>
+  <data name="Spotify_SearchDone" xml:space="preserve">
+    <value>All songs of the selection are searched.</value>
+    <comment>Search status when nothing is left</comment>
+  </data>
+  <data name="Spotify_Throttled" xml:space="preserve">
+    <value>YouTube asks to slow down. Wait a while, then continue the search.</value>
+    <comment>Notice when YouTube rate-limits</comment>
+  </data>
+  <data name="Spotify_SearchFailed" xml:space="preserve">
+    <value>The search stopped: {0}</value>
+    <comment>{0} error message</comment>
+  </data>
+  <data name="Spotify_SearchSomeFailed" xml:space="preserve">
+    <value>{0} songs could not be searched; the next search tries them again.</value>
+    <comment>{0} number of songs</comment>
+  </data>
+  <data name="Spotify_Ready" xml:space="preserve">
+    <value>Ready ({0})</value>
+    <comment>Tab; {0} number of songs</comment>
+  </data>
+  <data name="Spotify_ReadyHint" xml:space="preserve">
+    <value>Found as a plain Topic upload with the right length, or chosen by you. Untick what you do not want.</value>
+    <comment>Tooltip of Spotify_Ready</comment>
+  </data>
+  <data name="Spotify_Review" xml:space="preserve">
+    <value>To check ({0})</value>
+    <comment>Tab; {0} number of songs</comment>
+  </data>
+  <data name="Spotify_ReviewHint" xml:space="preserve">
+    <value>No sure match: choose the right video or none. Music videos often have an intro or another length.</value>
+    <comment>Tooltip of Spotify_Review</comment>
+  </data>
+  <data name="Spotify_NotFound" xml:space="preserve">
+    <value>Not found ({0})</value>
+    <comment>Tab; {0} number of songs</comment>
+  </data>
+  <data name="Spotify_NotFoundHint" xml:space="preserve">
+    <value>Nothing fitting on YouTube, or none of the videos was the song.</value>
+    <comment>Tooltip of Spotify_NotFound</comment>
+  </data>
+  <data name="Spotify_InLibrary" xml:space="preserve">
+    <value>In library ({0})</value>
+    <comment>Tab; {0} number of songs</comment>
+  </data>
+  <data name="Spotify_InLibraryHint" xml:space="preserve">
+    <value>Already in your library. They go into the playlist too, unless you untick them.</value>
+    <comment>Tooltip of Spotify_InLibrary</comment>
+  </data>
+  <data name="Spotify_EmptyList" xml:space="preserve">
+    <value>No songs here.</value>
+    <comment>Shown when a tab is empty</comment>
+  </data>
+  <data name="Spotify_IncludeHint" xml:space="preserve">
+    <value>Into the playlist</value>
+    <comment>Tooltip of the checkbox of a song</comment>
+  </data>
+  <data name="Spotify_Plays_One" xml:space="preserve">
+    <value>{0} play</value>
+    <comment>{0} number of real plays, singular</comment>
+  </data>
+  <data name="Spotify_Plays_Other" xml:space="preserve">
+    <value>{0} plays</value>
+    <comment>{0} number of real plays, plural</comment>
+  </data>
+  <data name="Spotify_Topic" xml:space="preserve">
+    <value>Topic</value>
+    <comment>Chip for a Topic upload; YouTube's term, usually not translated</comment>
+  </data>
+  <data name="Spotify_TopicHint" xml:space="preserve">
+    <value>The plain release, uploaded by YouTube from the label's delivery: no intro, the album length.</value>
+    <comment>Tooltip of Spotify_Topic</comment>
+  </data>
+  <data name="Spotify_OpenVideo" xml:space="preserve">
+    <value>Open {0} on YouTube</value>
+    <comment>Tooltip; {0} video title</comment>
+  </data>
+  <data name="Spotify_CheckAgain" xml:space="preserve">
+    <value>Check again</value>
+    <comment>Link button: forget the user's decision</comment>
+  </data>
+  <data name="Spotify_CheckAgainHint" xml:space="preserve">
+    <value>Forgets your choice, so the song is judged by its search results again.</value>
+    <comment>Tooltip of Spotify_CheckAgain</comment>
+  </data>
+  <data name="Spotify_Choose" xml:space="preserve">
+    <value>Take</value>
+    <comment>Button next to a suggested video</comment>
+  </data>
+  <data name="Spotify_ChooseHint" xml:space="preserve">
+    <value>This video is the song</value>
+    <comment>Tooltip of Spotify_Choose</comment>
+  </data>
+  <data name="Spotify_None" xml:space="preserve">
+    <value>None of them</value>
+    <comment>Link button below the suggestions</comment>
+  </data>
+  <data name="Spotify_NoneHint" xml:space="preserve">
+    <value>None of the videos is the song; it is not imported.</value>
+    <comment>Tooltip of Spotify_None</comment>
+  </data>
+  <data name="Spotify_NoTopic" xml:space="preserve">
+    <value>no Topic upload</value>
+    <comment>Problem of a suggested video</comment>
+  </data>
+  <data name="Spotify_TitleDiffers" xml:space="preserve">
+    <value>title differs</value>
+    <comment>Problem of a suggested video</comment>
+  </data>
+  <data name="Spotify_OtherLength" xml:space="preserve">
+    <value>{0} instead of {1}</value>
+    <comment>Problem of a suggested video; {0} its length, {1} the length on Spotify</comment>
+  </data>
+  <data name="Spotify_OtherVersion" xml:space="preserve">
+    <value>other version: {0}</value>
+    <comment>Problem of a suggested video; {0} words from its title</comment>
+  </data>
+  <data name="Spotify_OtherGuests" xml:space="preserve">
+    <value>other guests</value>
+    <comment>Problem of a suggested video: other featured artists</comment>
+  </data>
+  <data name="Spotify_ImportTitle" xml:space="preserve">
+    <value>Import</value>
+    <comment>Island title</comment>
+  </data>
+  <data name="Spotify_PlaylistName" xml:space="preserve">
+    <value>Playlist</value>
+    <comment>Label of the playlist name field</comment>
+  </data>
+  <data name="Spotify_DefaultPlaylistName" xml:space="preserve">
+    <value>Spotify ≥ {0} plays</value>
+    <comment>Suggested playlist name; {0} minimum real plays</comment>
+  </data>
+  <data name="Spotify_ImportHint" xml:space="preserve">
+    <value>Adds the ready songs to the library and creates the playlist with them and the ticked songs already there, most played first. Downloads start on the playlist page.</value>
+    <comment>Explains the import</comment>
+  </data>
+  <data name="Spotify_ImportButton" xml:space="preserve">
+    <value>Add {0} songs</value>
+    <comment>Button; {0} number of songs</comment>
+  </data>
+  <data name="Spotify_Importing" xml:space="preserve">
+    <value>Adding Spotify songs: {0} / {1}</value>
+    <comment>Activity toast; {0} done, {1} total</comment>
+  </data>
+  <data name="Spotify_Imported" xml:space="preserve">
+    <value>Playlist "{0}" created with {1} songs</value>
+    <comment>Confirmation; {0} playlist name, {1} number of songs</comment>
+  </data>
+  <data name="Spotify_ImportFailed" xml:space="preserve">
+    <value>The import stopped: {0}</value>
+    <comment>{0} error message</comment>
+  </data>
+  <data name="Spotify_SongsFailed" xml:space="preserve">
+    <value>{0} songs could not be added: {1}</value>
+    <comment>{0} number of songs, {1} the first errors</comment>
+  </data>
 </root>

@@ -12,6 +12,11 @@
                              Subtitle="{x:Static res:Strings.Playlists_Hint}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
                 <Button Classes="secondary lg"
+                        Content="{x:Static res:Strings.Playlists_FromSpotify}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Star}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlists_FromSpotifyHint}"
+                        Command="{Binding ImportFromSpotifyCommand}" />
+                <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlists_FromCsv}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
                         ToolTip.Tip="{x:Static res:Strings.Playlists_FromCsvHint}"
