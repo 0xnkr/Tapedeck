@@ -26,7 +26,11 @@ public sealed record SpotifySong(
     DateTimeOffset LastPlayed,
     IReadOnlyDictionary<int, int> RealPlaysPerYear,
     int? EstimatedDurationMs,
-    IReadOnlyList<string> Spellings);
+    IReadOnlyList<string> Spellings)
+{
+    /// <summary>Share of the streams that were no real play: short, or ended with forward or back.</summary>
+    public double SkipShare => this.Streams == 0 ? 0 : 1 - (double)this.RealPlays / this.Streams;
+}
 
 /// <summary>Groups the plays of a history into songs and counts the real plays.</summary>
 public static partial class SpotifyAnalyzer
@@ -35,7 +39,8 @@ public static partial class SpotifyAnalyzer
     private const int OTHER_LANGUAGE = 1 << 20;
 
     // how Spotify names versions besides the words MbNormalizer knows; matched on normalized qualifiers
-    [GeneratedRegex(@"\b(?:club|extended|dub) mix\b")]
+    // "Club Mix", "G-Mix", "Alle Farben Mix"; a single, radio, original or album mix is the song itself
+    [GeneratedRegex(@"\b(?!(?:single|radio|original|album|main|stereo|mono) mix\b)\w+ mix\b")]
     private static partial Regex ClubMix();
 
     [GeneratedRegex(@"\b(?:tour|concert|ao vivo|en vivo)\b")]
@@ -44,7 +49,7 @@ public static partial class SpotifyAnalyzer
     [GeneratedRegex(@"\b(?:stripped|piano version)\b")]
     private static partial Regex Stripped();
 
-    [GeneratedRegex(@"\b(?:japanese|korean|chinese|english|spanish|french|german|deutsche|italian|portuguese) version\b")]
+    [GeneratedRegex(@"\b(?:japan|japanese|korea|korean|chinese|english|spanish|french|german|deutsche|italian|portuguese) (?:version|ver)\b")]
     private static partial Regex Language();
 
     /// <summary>
@@ -53,13 +58,19 @@ public static partial class SpotifyAnalyzer
     /// "Song - Radio Edit"), which share the key; a remix, club mix, live, stripped, instrumental or other-language
     /// version gets its own. Library tracks use the same key.
     /// </summary>
-    public static string SongKey(string artist, string title)
+    public static string SongKey(string artist, string title) =>
+        $"{ArtistKey(artist)}\n{MbNormalizer.Normalize(MbNormalizer.Core(title))}\n{VersionKey(title)}";
+
+    /// <summary>
+    /// The version a title names, equal for "Song - Radio Edit" and "Song (Remastered)", different for a live,
+    /// stripped or other-language version and for every remixer ("PNAU Remix" is not "Claptone Remix").
+    /// </summary>
+    public static string VersionKey(string title)
     {
-        var mainArtist = MbNormalizer.SplitArtists(MbNormalizer.SplitFeaturing(artist).Main).FirstOrDefault() ?? artist;
         var versions = Versions(title);
-        // every remixer makes another song: "PNAU Remix" is not "Claptone Remix"
-        var remix = (versions & (int)MbVariant.Remix) != 0 ? MbNormalizer.Normalize(MbNormalizer.Qualifiers(title)) : string.Empty;
-        return $"{MbNormalizer.Normalize(mainArtist)}\n{MbNormalizer.Normalize(MbNormalizer.Core(title))}\n{versions}\n{remix}";
+        // without words like "official video", so a remix video compares equal to the remix upload
+        var remix = (versions & (int)MbVariant.Remix) != 0 ? string.Join(' ', MbNormalizer.SearchWords(MbNormalizer.Qualifiers(title))) : string.Empty;
+        return $"{versions}\n{remix}";
     }
 
     private static int Versions(string title)

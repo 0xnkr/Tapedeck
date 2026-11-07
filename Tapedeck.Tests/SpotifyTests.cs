@@ -90,6 +90,7 @@ public sealed class SpotifyTests : IDisposable
     [InlineData("T.I.", "Live Your Life", "T.I.", "Live Your Life (feat. Rihanna)")]
     [InlineData("Avicii", "Levels", "Avicii", "Levels - Radio Edit")]
     [InlineData("Avicii", "Levels", "Avicii", "Levels - Single Version")]
+    [InlineData("The Fray", "How to Save a Life", "The Fray", "How to Save a Life - Single Mix")]
     [InlineData("Kendrick Lamar", "Swimming Pools (Drank)", "Kendrick Lamar", "Swimming Pools (Drank) - Extended Version")]
     public void Versions_of_a_release_are_one_song(string artistA, string titleA, string artistB, string titleB) =>
         Assert.Equal(SpotifyAnalyzer.SongKey(artistA, titleA), SpotifyAnalyzer.SongKey(artistB, titleB));
@@ -99,6 +100,7 @@ public sealed class SpotifyTests : IDisposable
     [InlineData("Alright (Remix)")]
     [InlineData("Alright - Instrumental")]
     [InlineData("Alright - Club Mix")]
+    [InlineData("Alright - G-Mix")]
     [InlineData("Alright - Extended Mix")]
     [InlineData("Alright - World Tour 2018")]
     [InlineData("Alright - Stripped")]
