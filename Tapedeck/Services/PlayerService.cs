@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +30,7 @@ public sealed record PlayRequest(
 /// A background task owns all OpenAL calls; pause, seek and stop are requests it picks up.
 /// The audio file is open while a track is loaded, so callers stop it before writing or moving the file.
 /// </summary>
-public sealed partial class PlayerService : ObservableObject, IDisposable
+public sealed partial class PlayerService(ILogger<PlayerService> log) : ObservableObject, IDisposable
 {
     private const int BUFFER_COUNT = 4;
     // a quarter second per buffer: a second of audio queued, short enough for a quick pause and seek
@@ -419,6 +420,7 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
             this.device = device;
             this.context = context;
             this.al = al;
+            log.LogInformation("Audio output: {Device}", alc.GetContextProperty(device, (GetContextString)ALC_ALL_DEVICES_SPECIFIER));
         }
     }
 
@@ -446,7 +448,9 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
                 return;
 
             // null opens the default device; on failure the old one stays
-            this.reopenDevice(this.device, null, null);
+            var moved = this.reopenDevice(this.device, null, null) != 0;
+            log.LogInformation("Audio output {Result} from {From} to {To} (connected: {Connected})",
+                moved ? "moved" : "could not move", current, wanted, connected != 0);
         }
     }
 
@@ -466,7 +470,13 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
         return (new ALContext(exports), new AL(exports));
     }
 
-    private void Fail(long trackId, string message) => this.Post(() =>
+    private void Fail(long trackId, string message)
+    {
+        log.LogWarning("Playback of track {TrackId} failed: {Message}", trackId, message);
+        this.Post(() => this.OnFailed(trackId, message));
+    }
+
+    private void OnFailed(long trackId, string message)
     {
         if (this.CurrentTrackId == trackId)
         {
@@ -474,7 +484,7 @@ public sealed partial class PlayerService : ObservableObject, IDisposable
             this.IsPlaying = false;
         }
         this.Failed?.Invoke(message);
-    });
+    }
 
     private void Post(Action action)
     {

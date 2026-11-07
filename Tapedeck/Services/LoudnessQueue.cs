@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,12 @@ namespace Tapedeck.Services;
 /// downloads from before the measurement existed and files adopted from the library folder. New downloads
 /// measure themselves. Each new value marks the tags as outdated, so "Write tags" takes the gain to the file.
 /// </summary>
-public sealed class LoudnessQueue(LoudnessMeter meter, ITrackRepository repository, AppPaths paths, ActivityService activity)
+public sealed class LoudnessQueue(
+    LoudnessMeter meter,
+    ITrackRepository repository,
+    AppPaths paths,
+    ActivityService activity,
+    ILogger<LoudnessQueue> log)
 {
     // rows are refreshed in groups, so a large library does not rebuild the table for every file
     private const int REPORT_EVERY = 25;
@@ -78,8 +84,9 @@ public sealed class LoudnessQueue(LoudnessMeter meter, ITrackRepository reposito
                     measured.Add(id);
                     total++;
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException ex)
                 {
+                    log.LogWarning("Could not measure the loudness of track {TrackId}: {Error}", id, ex.Message);
                     this.failed.Add(id);
                 }
 
@@ -93,6 +100,7 @@ public sealed class LoudnessQueue(LoudnessMeter meter, ITrackRepository reposito
 
         if (measured.Count > 0)
             this.Measured?.Invoke(measured);
+        log.LogInformation("Measured the loudness of {Measured} of {Count} tracks in the background", total, ids.Count);
         if (total > 0)
             activity.Confirm(string.Format(Strings.Confirm_LoudnessMeasured, total));
     }
