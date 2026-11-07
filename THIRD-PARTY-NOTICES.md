@@ -19,7 +19,7 @@ Tapedeck is licensed under the [MIT License](LICENSE). The published `Tapedeck.e
 | [Tmds.DBus.Protocol](https://github.com/tmds/Tmds.DBus) | 0.94.1 | [MIT](#mit-license) | Copyright Tom Deseyn |
 | [Inter typeface](https://rsms.me/inter/) | – | [OFL-1.1](#inter) | Copyright (c) 2016 The Inter Project Authors |
 | [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet) | 8.4.2 | [MIT](#mit-license) | (c) .NET Foundation and Contributors |
-| [Microsoft.Extensions.DependencyInjection](https://github.com/dotnet/runtime) | 10.0.0 | [MIT](#mit-license) | © Microsoft Corporation |
+| [Microsoft.Extensions.DependencyInjection, Microsoft.Extensions.Logging](https://github.com/dotnet/runtime) | 10.0.0 | [MIT](#mit-license) | © Microsoft Corporation |
 | [Microsoft.Data.Sqlite](https://github.com/dotnet/efcore) | 10.0.14 | [MIT](#mit-license) | © Microsoft Corporation |
 | [SQLitePCLRaw](https://github.com/ericsink/SQLitePCL.raw) | 2.1.13 | [Apache-2.0](#apache-license-20) | Copyright 2014-2024 SourceGear, LLC |
 | [SQLite (`e_sqlite3.dll`)](https://sqlite.org/copyright.html) | – | [Public Domain](#sqlite) | — |
