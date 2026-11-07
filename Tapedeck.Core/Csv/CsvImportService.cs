@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Tapedeck.Core.Services;
 
 namespace Tapedeck.Core.Csv;
@@ -12,8 +14,13 @@ public sealed record CsvImportResult(IReadOnlyList<long> TrackIds, IReadOnlyList
 /// Adds the tracks of a CSV file to the library and applies its corrections, genres and ratings.
 /// Known tracks are not fetched again; rows that fail are reported and skipped.
 /// </summary>
-public sealed class CsvImportService(ITrackRepository repository, TrackImportService importer)
+public sealed class CsvImportService(
+    ITrackRepository repository,
+    TrackImportService importer,
+    ILogger<CsvImportService>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     /// <param name="progress">Number of rows handled so far.</param>
     public async Task<CsvImportResult> ImportAsync(IReadOnlyList<CsvTrack> rows, IProgress<int>? progress = null,
         CancellationToken ct = default)
@@ -53,6 +60,9 @@ public sealed class CsvImportService(ITrackRepository repository, TrackImportSer
             }
         }
 
+        this.log.LogInformation("CSV import: {Rows} rows, {Imported} imported, {Failed} failed", rows.Count, ids.Count, errors.Count);
+        foreach (var error in errors)
+            this.log.LogWarning("CSV line {Line} skipped: {Error}", error.Line, error.Message);
         return new CsvImportResult(ids, errors);
     }
 }

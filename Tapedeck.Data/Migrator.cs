@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 using Dapper;
 
@@ -7,14 +9,17 @@ namespace Tapedeck.Data;
 /// Applies the numbered scripts from <c>Migrations/NNN_name.sql</c>.
 /// The current version is stored in <c>PRAGMA user_version</c>.
 /// </summary>
-public sealed class Migrator(SqliteConnectionFactory connectionFactory)
+public sealed class Migrator(SqliteConnectionFactory connectionFactory, ILogger<Migrator>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     private const string RESOURCE_PREFIX = "Tapedeck.Data.Migrations.";
 
     public async Task<int> MigrateAsync()
     {
         await using var connection = await connectionFactory.OpenAsync();
         var current = await connection.ExecuteScalarAsync<int>("PRAGMA user_version;");
+        var before = current;
 
         foreach (var (version, resource) in Scripts().Where(s => s.Version > current))
         {
@@ -27,6 +32,10 @@ public sealed class Migrator(SqliteConnectionFactory connectionFactory)
             current = version;
         }
 
+        if (current != before)
+            this.log.LogInformation("Database migrated from version {From} to {To}", before, current);
+        else
+            this.log.LogInformation("Database is at version {Version}", current);
         return current;
     }
 

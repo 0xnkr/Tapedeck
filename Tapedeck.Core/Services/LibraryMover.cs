@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 namespace Tapedeck.Core.Services;
 
 /// <summary>Why the library cannot be moved to a folder.</summary>
@@ -19,8 +21,10 @@ public sealed record MoveCheck(MoveProblem? Problem, string? FileName = null)
 /// Moves the downloaded files to another library folder. File paths in the database are relative
 /// to the library, so only the files move and <see cref="AppPaths.LibraryDir"/> changes.
 /// </summary>
-public sealed class LibraryMover(ITrackRepository repository, AppPaths paths)
+public sealed class LibraryMover(ITrackRepository repository, AppPaths paths, ILogger<LibraryMover>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     /// <summary>Checks everything that could stop the move halfway, before any file is touched.</summary>
     public async Task<MoveCheck> CheckAsync(string newDir)
     {
@@ -62,6 +66,7 @@ public sealed class LibraryMover(ITrackRepository repository, AppPaths paths)
             progress?.Report((i + 1, files.Count));
         }
 
+        this.log.LogInformation("Moved the library with {Count} files from {From} to {To}", files.Count, paths.LibraryDir, newDir);
         paths.ChangeLibraryDir(newDir);
         return files.Count;
     }

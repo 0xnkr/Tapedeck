@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Tapedeck.Core.Models;
 using YoutubeDLSharp.Options;
 
@@ -12,8 +15,11 @@ public sealed class DownloadService(
     ToolService tools,
     TagWriter tagWriter,
     LoudnessMeter loudness,
-    AppPaths paths)
+    AppPaths paths,
+    ILogger<DownloadService>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     public const string FORMAT = "opus";
 
     public async Task DownloadAsync(long trackId, IProgress<double>? progress = null, CancellationToken ct = default)
@@ -21,6 +27,8 @@ public sealed class DownloadService(
         var track = await repository.GetDisplayAsync(trackId)
                     ?? throw new InvalidOperationException($"Track {trackId} does not exist.");
 
+        this.log.LogInformation("Downloading {VideoId} ({Artist} - {Title})", track.VideoId, track.Artist, track.Title);
+        var watch = Stopwatch.StartNew();
         await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading);
         Directory.CreateDirectory(paths.TempDir);
         Directory.CreateDirectory(paths.LibraryDir);
@@ -56,17 +64,21 @@ public sealed class DownloadService(
             await this.MeasureLoudnessAsync(trackId, fileName, ct);
             await tagWriter.WriteTagsAsync(trackId);
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Done);
+            this.log.LogInformation("Downloaded {VideoId} as {File} ({Megabytes:0.0} MB in {Seconds:0.0} s)", track.VideoId,
+                fileName, new FileInfo(paths.ToLibraryPath(fileName)).Length / 1048576.0, watch.Elapsed.TotalSeconds);
         }
         catch (OperationCanceledException)
         {
             // a cancelled repeat download leaves the earlier file in place
             var hadFile = track.FilePath is { } file && File.Exists(paths.ToLibraryPath(file));
+            this.log.LogInformation("Download of {VideoId} cancelled", track.VideoId);
             await repository.UpdateDownloadStateAsync(trackId, hadFile ? DownloadStatus.Done : DownloadStatus.Pending);
             this.CleanTemp(track.VideoId);
             throw;
         }
         catch (Exception ex)
         {
+            this.log.LogError(ex, "Download of {VideoId} failed", track.VideoId);
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Error, errorMsg: ex.Message);
             this.CleanTemp(track.VideoId);
             throw;
@@ -83,9 +95,10 @@ public sealed class DownloadService(
         {
             await repository.SetLoudnessAsync(trackId, await loudness.MeasureAsync(paths.ToLibraryPath(fileName), ct));
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
             // the background measurement (LoudnessQueue in the app) tries it again later
+            this.log.LogWarning("Could not measure the loudness of {File}: {Error}", fileName, ex.Message);
         }
     }
 

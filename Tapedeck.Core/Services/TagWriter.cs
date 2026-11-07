@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
 
 namespace Tapedeck.Core.Services;
@@ -6,8 +8,10 @@ namespace Tapedeck.Core.Services;
 /// Writes the values from <c>tracks_display</c> into the audio file. Android players sort by these tags,
 /// not by folders. Repeatable: existing tags are overwritten, not appended.
 /// </summary>
-public sealed class TagWriter(ITrackRepository repository, AppPaths paths)
+public sealed class TagWriter(ITrackRepository repository, AppPaths paths, ILogger<TagWriter>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     /// <summary>Opus track gain (RFC 7845), read by Poweramp, Musicolet and most other players.</summary>
     public const string TRACK_GAIN_FIELD = "R128_TRACK_GAIN";
 
@@ -26,7 +30,8 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths)
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
-            OggCommentRepair.Repair(filePath);
+            if (OggCommentRepair.Repair(filePath))
+                this.log.LogWarning("Repaired the tags of {File} before writing (TagLib# had left out their end)", track.FilePath);
             using (var file = TagLib.File.Create(filePath))
             {
                 var tag = file.Tag;
@@ -60,8 +65,11 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths)
             }
 
             // TagLib# may have left out the end of the comment packet again
-            OggCommentRepair.Repair(filePath);
+            if (OggCommentRepair.Repair(filePath))
+                this.log.LogWarning("Repaired the tags of {File} after writing (TagLib# had left out their end)", track.FilePath);
         });
         await repository.MarkTagsWrittenAsync(trackId);
+        this.log.LogInformation("Wrote tags to {File} ({Artist} - {Title}, album {Album}, loudness {Lufs} LUFS)",
+            track.FilePath, track.Artist, track.Title, track.Album, loudness?.ToString("0.0", CultureInfo.InvariantCulture) ?? "unknown");
     }
 }

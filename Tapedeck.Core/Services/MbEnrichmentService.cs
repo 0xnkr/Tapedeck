@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Collections.Concurrent;
 using System.Globalization;
 using Tapedeck.Core.Models;
@@ -9,8 +11,14 @@ namespace Tapedeck.Core.Services;
 /// Matches a track with MusicBrainz: searches, decides with <see cref="MbMatcher"/> and stores the outcome.
 /// A certain match is applied with its genres and cover, a plausible one is kept as a suggestion.
 /// </summary>
-public sealed class MbEnrichmentService(ITrackRepository repository, MbClient client, CoverArtService covers)
+public sealed class MbEnrichmentService(
+    ITrackRepository repository,
+    MbClient client,
+    CoverArtService covers,
+    ILogger<MbEnrichmentService>? logger = null)
 {
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
     // tracks of one album or artist share their genres; ask MusicBrainz once per app run
     private readonly ConcurrentDictionary<string, IReadOnlyList<string>> genres = new();
 
@@ -26,6 +34,7 @@ public sealed class MbEnrichmentService(ITrackRepository repository, MbClient cl
         var query = MbQuery.From(track);
         if (query is null)
         {
+            this.log.LogInformation("MusicBrainz: track {TrackId} has no artist and title to search for", trackId);
             await repository.SaveMbResultAsync(trackId, MbMatchState.NoMatch, null, [], null, MbCandidatesJson.Serialize([]));
             return MbMatchState.NoMatch;
         }
@@ -43,8 +52,12 @@ public sealed class MbEnrichmentService(ITrackRepository repository, MbClient cl
         }
 
         var candidates = MbCandidatesJson.Serialize(result.Candidates.Select(c => c.Pick));
+        this.log.LogInformation("MusicBrainz: track {TrackId} ({YtTitle}) → {Decision}, best {Best} (score {Score:0.00})",
+            trackId, track.YtTitle, result.Decision, result.Best is { } best ? $"{best.Pick.Artist} - {best.Pick.Title} on {best.Pick.Album}" : "none",
+            result.Best?.Score ?? 0);
         if (keepMatch && result.Decision != MbDecision.Matched && StoredPick(track) is { } stored)
         {
+            this.log.LogInformation("MusicBrainz: track {TrackId} keeps its match {Album}", trackId, stored.Album);
             await this.ApplyAsync(trackId, stored, ct: ct);
             return MbMatchState.Matched;
         }
@@ -75,9 +88,10 @@ public sealed class MbEnrichmentService(ITrackRepository repository, MbClient cl
         {
             cover = await covers.DownloadAsync(pick.ReleaseId, pick.ReleaseGroupId, ct);
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException ex)
         {
             // the match stays without cover; the thumbnail keeps serving
+            this.log.LogWarning("Cover Art Archive: no cover for release {ReleaseId}: {Error}", pick.ReleaseId, ex.Message);
             cover = null;
         }
 
