@@ -68,6 +68,9 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 Your music lands in `Music/Tapedeck` by default, and you can change that in the settings. App data (database, settings, tools, thumbnails) lives in the system's application data folder, `%APPDATA%\Tapedeck` on Windows.
 
 > [!TIP]
+> Something went wrong? **Settings → Tools** shows the exact version and build, and **Open log** opens `log.txt` with every download, import and error. Attach both to a bug report.
+
+> [!TIP]
 > Moving to a new computer? Export the library as CSV, copy the music folder, then import the CSV on the new machine. Tapedeck finds the existing files and marks them as downloaded.
 
 ## Third-party tools and licenses
@@ -113,7 +116,7 @@ dotnet publish Tapedeck -p:PublishProfile=win-x64
 
 The executable bundles the .NET runtime and native libraries. Trimming is off on purpose because Dapper and the dependency injection rely on reflection. For Linux or macOS use `dotnet publish Tapedeck -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true` (or `osx-arm64`); those builds are not tested yet.
 
-Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/nilskruthoff/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging.
+Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/nilskruthoff/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging. Every step is in [docs/release.md](docs/release.md).
 
 Handy command line options for a single run:
 
