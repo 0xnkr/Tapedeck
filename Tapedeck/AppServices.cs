@@ -1,5 +1,6 @@
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
 using Tapedeck.Core.Csv;
 using Tapedeck.Core.MusicBrainz;
@@ -22,6 +23,15 @@ public static class AppServices
         paths.EnsureDirectories();
 
         var services = new ServiceCollection();
+
+        // everything goes into the one log file; without it (designer, no write access) logging stays silent
+        services.AddLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.SetMinimumLevel(LogLevel.Information);
+            if (FileLog.Current is { } file)
+                logging.AddProvider(file);
+        });
 
         services.AddSingleton(paths);
         services.AddSingleton(store);
