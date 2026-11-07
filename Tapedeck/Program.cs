@@ -22,9 +22,16 @@ abstract class Program
         if (log is not null)
             LogStart(log);
 
+        var options = StartupOptions.Parse(args);
+        if (options.SpotifyReport is { } spotifyHistory)
+        {
+            RunSpotifyReport(spotifyHistory, log);
+            return;
+        }
+
         // Before any window or resource lookup, so every text uses the chosen language
         var settings = new SettingsStore(AppPaths.DefaultDataDir()).Load();
-        StartupOptions.Parse(args).ApplyLanguage(settings.Language);
+        options.ApplyLanguage(settings.Language);
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
@@ -41,6 +48,25 @@ abstract class Program
         // a fire-and-forget task that failed: nothing waits for it, so its error would be lost
         TaskScheduler.UnobservedTaskException += (_, e) =>
             log.LogError(e.Exception, "Unobserved error in a background task");
+    }
+
+    /// <summary>Writes the report without a window; errors only reach the log, there is no console.</summary>
+    private static void RunSpotifyReport(string historyPath, ILogger? log)
+    {
+        using var logging = LoggerFactory.Create(builder =>
+        {
+            if (FileLog.Current is { } file)
+                builder.AddProvider(file);
+        });
+        try
+        {
+            SpotifyReportCommand.RunAsync(historyPath, logging).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            log?.LogError(ex, "Spotify report failed");
+            Environment.ExitCode = 1;
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

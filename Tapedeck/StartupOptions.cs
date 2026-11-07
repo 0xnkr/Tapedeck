@@ -8,13 +8,15 @@ namespace Tapedeck;
 /// Command line options for trying things out without code changes:
 /// <c>--lang en</c> overrides the UI language, <c>--accent #C8B6FF</c> the accent color.
 /// They win over the saved settings for this run only.
+/// <c>--spotify-report &lt;folder|zip&gt;</c> writes a report of a Spotify streaming history and exits.
 /// </summary>
-public sealed record StartupOptions(CultureInfo? Language, Color? Accent)
+public sealed record StartupOptions(CultureInfo? Language, Color? Accent, string? SpotifyReport = null)
 {
     public static StartupOptions Parse(string[] args)
     {
         CultureInfo? language = null;
         Color? accent = null;
+        string? spotifyReport = null;
 
         for (var i = 0; i + 1 < args.Length; i++)
         {
@@ -27,10 +29,13 @@ public sealed record StartupOptions(CultureInfo? Language, Color? Accent)
                     accent = color;
                     i++;
                     break;
+                case "--spotify-report":
+                    spotifyReport = args[++i];
+                    break;
             }
         }
 
-        return new StartupOptions(language, accent);
+        return new StartupOptions(language, accent, spotifyReport);
     }
 
     /// <summary>
