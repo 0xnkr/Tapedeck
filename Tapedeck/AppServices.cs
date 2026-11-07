@@ -7,6 +7,7 @@ using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
+using Tapedeck.Core.Spotify;
 using Tapedeck.Data;
 using Tapedeck.Services;
 using Tapedeck.Theme;
@@ -56,6 +57,10 @@ public static class AppServices
         services.AddSingleton<MbClient>();
         services.AddSingleton<CoverArtService>();
         services.AddSingleton<MbEnrichmentService>();
+        services.AddSingleton<IYtSearch>(sp => sp.GetRequiredService<MetadataService>());
+        services.AddSingleton<ISpotifyMatchRepository, SpotifyMatchRepository>();
+        services.AddSingleton<SpotifySearchService>();
+        services.AddSingleton<SpotifyImportService>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
@@ -78,6 +83,9 @@ public static class AppServices
             id => ActivatorUtilities.CreateInstance<PlaylistDetailViewModel>(sp, id));
         services.AddSingleton<SmartPlaylistEditorFactory>(sp =>
             id => ActivatorUtilities.CreateInstance<SmartPlaylistEditorViewModel>(sp, id));
+        // one page that keeps its search running; resolved on use, it needs the playlists view model
+        services.AddSingleton<SpotifyImportViewModel>();
+        services.AddSingleton<SpotifyImportFactory>(sp => () => sp.GetRequiredService<SpotifyImportViewModel>());
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<TrackDetailFactory>(sp => (row, actions, sequence) =>

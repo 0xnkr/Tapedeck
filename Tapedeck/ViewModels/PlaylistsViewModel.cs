@@ -53,7 +53,8 @@ public partial class PlaylistsViewModel(
     MetadataService metadata,
     IPlatformService platform,
     PlaylistDetailFactory createDetail,
-    SmartPlaylistEditorFactory createSmartEditor) : ViewModelBase
+    SmartPlaylistEditorFactory createSmartEditor,
+    SpotifyImportFactory openSpotifyImport) : ViewModelBase
 {
     /// <summary>All playlists by name; shared with the "add to playlist" menus.</summary>
     public ObservableCollection<PlaylistItemViewModel> Playlists { get; } = [];
@@ -87,6 +88,10 @@ public partial class PlaylistsViewModel(
     /// <summary>Opens the editor for a new smart playlist; it is created when the editor saves.</summary>
     [RelayCommand]
     private void CreateSmart() => this.OpenSmartEditor(0);
+
+    /// <summary>Opens the page that imports the most played songs of a Spotify streaming history.</summary>
+    [RelayCommand]
+    private void ImportFromSpotify() => navigation.Open(openSpotifyImport());
 
     /// <summary>Opens the rules of a smart playlist, or an empty editor for <c>0</c>.</summary>
     public void OpenSmartEditor(long playlistId)
@@ -318,7 +323,7 @@ public partial class PlaylistsViewModel(
     }
 
     /// <summary>The wanted name, or "Name (2)", "Name (3)", … when it is taken.</summary>
-    private async Task<string> FreeNameAsync(string wanted)
+    public async Task<string> FreeNameAsync(string wanted)
     {
         var baseName = wanted.Trim().Length > 0 ? wanted.Trim() : Strings.Playlist_YoutubeName;
         var name = baseName;
@@ -328,7 +333,8 @@ public partial class PlaylistsViewModel(
     }
 
     /// <summary>The name must be set, unused and must not map to another playlist's .m3u8 file name.</summary>
-    private async Task<string?> ValidateNameAsync(string name, long? exceptId)
+    /// <returns>Why the name cannot be used, or <c>null</c>.</returns>
+    public async Task<string?> ValidateNameAsync(string name, long? exceptId)
     {
         if (name.Length == 0)
             return Strings.Prompt_NameEmpty;
