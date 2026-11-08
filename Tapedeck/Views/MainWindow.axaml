@@ -117,6 +117,35 @@
                 </Grid>
             </controls:Island>
 
+            <!-- Stays above every page until the found Spotify songs are added: a search can run for hours -->
+            <controls:Island DockPanel.Dock="Top"
+                             Classes="reminder"
+                             Margin="0,0,0,12"
+                             IsVisible="{Binding SpotifyImport.HasReminder}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource Space.3}">
+                    <controls:Glyph Data="{StaticResource Icon.Alert}" Width="20" Height="20" VerticalAlignment="Center"
+                                    Foreground="{DynamicResource Brush.Info}" />
+                    <TextBlock Grid.Column="1"
+                               Classes="body"
+                               Text="{Binding SpotifyImport.ReminderText}"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center" />
+                    <Panel Grid.Column="2" VerticalAlignment="Center">
+                        <Button Classes="primary"
+                                Content="{Binding SpotifyImport.ImportLabel}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                                IsEnabled="{Binding SpotifyImport.CanImport}"
+                                IsVisible="{Binding IsSpotifyImportShown}"
+                                Command="{Binding SpotifyImport.ImportCommand}" />
+                        <Button Classes="secondary"
+                                Content="{x:Static res:Strings.Spotify_ReminderOpen}"
+                                ToolTip.Tip="{x:Static res:Strings.Spotify_ReminderOpenHint}"
+                                IsVisible="{Binding !IsSpotifyImportShown}"
+                                Command="{Binding OpenSpotifyImportCommand}" />
+                    </Panel>
+                </Grid>
+            </controls:Island>
+
             <Panel>
                 <ContentControl Content="{Binding Navigation.Current}" />
 

@@ -3575,5 +3575,725 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Window_Minimize", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From Spotify.
+        /// </summary>
+        public static string Playlists_FromSpotify {
+            get {
+                return ResourceManager.GetString("Playlists_FromSpotify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import your most played songs from your Spotify streaming history.
+        /// </summary>
+        public static string Playlists_FromSpotifyHint {
+            get {
+                return ResourceManager.GetString("Playlists_FromSpotifyHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import from Spotify.
+        /// </summary>
+        public static string Spotify_Title {
+            get {
+                return ResourceManager.GetString("Spotify_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finds your most played Spotify songs on YouTube and puts them into a playlist..
+        /// </summary>
+        public static string Spotify_Subtitle {
+            get {
+                return ResourceManager.GetString("Spotify_Subtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Streaming history.
+        /// </summary>
+        public static string Spotify_Source {
+            get {
+                return ResourceManager.GetString("Spotify_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In your Spotify account, request the "Extended streaming history" under privacy. Spotify sends a zip file after a few days..
+        /// </summary>
+        public static string Spotify_SourceHint {
+            get {
+                return ResourceManager.GetString("Spotify_SourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose zip.
+        /// </summary>
+        public static string Spotify_PickZip {
+            get {
+                return ResourceManager.GetString("Spotify_PickZip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose folder.
+        /// </summary>
+        public static string Spotify_PickFolder {
+            get {
+                return ResourceManager.GetString("Spotify_PickFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify data download.
+        /// </summary>
+        public static string Spotify_PickZipTitle {
+            get {
+                return ResourceManager.GetString("Spotify_PickZipTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder with the Streaming_History_Audio files.
+        /// </summary>
+        public static string Spotify_PickFolderTitle {
+            get {
+                return ResourceManager.GetString("Spotify_PickFolderTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zip archive.
+        /// </summary>
+        public static string Spotify_ZipFileType {
+            get {
+                return ResourceManager.GetString("Spotify_ZipFileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No history chosen yet..
+        /// </summary>
+        public static string Spotify_NoSource {
+            get {
+                return ResourceManager.GetString("Spotify_NoSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading Spotify history ….
+        /// </summary>
+        public static string Spotify_Reading {
+            get {
+                return ResourceManager.GetString("Spotify_Reading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} plays from {1} to {2}.
+        /// </summary>
+        public static string Spotify_SourceSummary {
+            get {
+                return ResourceManager.GetString("Spotify_SourceSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The history could not be read: {0}.
+        /// </summary>
+        public static string Spotify_ReadFailed {
+            get {
+                return ResourceManager.GetString("Spotify_ReadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selection.
+        /// </summary>
+        public static string Spotify_Selection {
+            get {
+                return ResourceManager.GetString("Spotify_Selection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least.
+        /// </summary>
+        public static string Spotify_MinPlays {
+            get {
+                return ResourceManager.GetString("Spotify_MinPlays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to real plays.
+        /// </summary>
+        public static string Spotify_MinPlaysSuffix {
+            get {
+                return ResourceManager.GetString("Spotify_MinPlaysSuffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A real play lasted at least 30 seconds and was not ended with the skip or back button..
+        /// </summary>
+        public static string Spotify_MinPlaysHint {
+            get {
+                return ResourceManager.GetString("Spotify_MinPlaysHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leave out often skipped songs.
+        /// </summary>
+        public static string Spotify_SkipFilter {
+            get {
+                return ResourceManager.GetString("Spotify_SkipFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Songs skipped in more than 60 % of the plays: usually playlist filler rather than favorites..
+        /// </summary>
+        public static string Spotify_SkipFilterHint {
+            get {
+                return ResourceManager.GetString("Spotify_SkipFilterHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} songs · {1} already in the library · {2} still to search.
+        /// </summary>
+        public static string Spotify_SelectionSummary {
+            get {
+                return ResourceManager.GetString("Spotify_SelectionSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Spotify_SearchTitle {
+            get {
+                return ResourceManager.GetString("Spotify_SearchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searches each song on YouTube Music, about 10 seconds per song. Results are kept, so a stopped search continues where it ended..
+        /// </summary>
+        public static string Spotify_SearchHint {
+            get {
+                return ResourceManager.GetString("Spotify_SearchHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search on YouTube.
+        /// </summary>
+        public static string Spotify_Search {
+            get {
+                return ResourceManager.GetString("Spotify_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string Spotify_StopSearch {
+            get {
+                return ResourceManager.GetString("Spotify_StopSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching Spotify songs on YouTube: {0} / {1}.
+        /// </summary>
+        public static string Spotify_Searching {
+            get {
+                return ResourceManager.GetString("Spotify_Searching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} songs · about {2} left.
+        /// </summary>
+        public static string Spotify_SearchProgress {
+            get {
+                return ResourceManager.GetString("Spotify_SearchProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} min.
+        /// </summary>
+        public static string Spotify_Minutes {
+            get {
+                return ResourceManager.GetString("Spotify_Minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} h {1} min.
+        /// </summary>
+        public static string Spotify_Hours {
+            get {
+                return ResourceManager.GetString("Spotify_Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All songs of the selection are searched..
+        /// </summary>
+        public static string Spotify_SearchDone {
+            get {
+                return ResourceManager.GetString("Spotify_SearchDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to YouTube asks to slow down. Wait a while, then continue the search..
+        /// </summary>
+        public static string Spotify_Throttled {
+            get {
+                return ResourceManager.GetString("Spotify_Throttled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The search stopped: {0}.
+        /// </summary>
+        public static string Spotify_SearchFailed {
+            get {
+                return ResourceManager.GetString("Spotify_SearchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} songs could not be searched; the next search tries them again..
+        /// </summary>
+        public static string Spotify_SearchSomeFailed {
+            get {
+                return ResourceManager.GetString("Spotify_SearchSomeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready ({0}).
+        /// </summary>
+        public static string Spotify_Ready {
+            get {
+                return ResourceManager.GetString("Spotify_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found as a plain Topic upload with the right length, or chosen by you. Untick what you do not want..
+        /// </summary>
+        public static string Spotify_ReadyHint {
+            get {
+                return ResourceManager.GetString("Spotify_ReadyHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To check ({0}).
+        /// </summary>
+        public static string Spotify_Review {
+            get {
+                return ResourceManager.GetString("Spotify_Review", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No sure match: choose the right video or none. Music videos often have an intro or another length..
+        /// </summary>
+        public static string Spotify_ReviewHint {
+            get {
+                return ResourceManager.GetString("Spotify_ReviewHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not found ({0}).
+        /// </summary>
+        public static string Spotify_NotFound {
+            get {
+                return ResourceManager.GetString("Spotify_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing fitting on YouTube, or none of the videos was the song..
+        /// </summary>
+        public static string Spotify_NotFoundHint {
+            get {
+                return ResourceManager.GetString("Spotify_NotFoundHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In library ({0}).
+        /// </summary>
+        public static string Spotify_InLibrary {
+            get {
+                return ResourceManager.GetString("Spotify_InLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already in your library. They go into the playlist too, unless you untick them..
+        /// </summary>
+        public static string Spotify_InLibraryHint {
+            get {
+                return ResourceManager.GetString("Spotify_InLibraryHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No songs here..
+        /// </summary>
+        public static string Spotify_EmptyList {
+            get {
+                return ResourceManager.GetString("Spotify_EmptyList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Into the playlist.
+        /// </summary>
+        public static string Spotify_IncludeHint {
+            get {
+                return ResourceManager.GetString("Spotify_IncludeHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} play.
+        /// </summary>
+        public static string Spotify_Plays_One {
+            get {
+                return ResourceManager.GetString("Spotify_Plays_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} plays.
+        /// </summary>
+        public static string Spotify_Plays_Other {
+            get {
+                return ResourceManager.GetString("Spotify_Plays_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic.
+        /// </summary>
+        public static string Spotify_Topic {
+            get {
+                return ResourceManager.GetString("Spotify_Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The plain release, uploaded by YouTube from the label's delivery: no intro, the album length..
+        /// </summary>
+        public static string Spotify_TopicHint {
+            get {
+                return ResourceManager.GetString("Spotify_TopicHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open {0} on YouTube.
+        /// </summary>
+        public static string Spotify_OpenVideo {
+            get {
+                return ResourceManager.GetString("Spotify_OpenVideo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check again.
+        /// </summary>
+        public static string Spotify_CheckAgain {
+            get {
+                return ResourceManager.GetString("Spotify_CheckAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forgets your choice, so the song is judged by its search results again..
+        /// </summary>
+        public static string Spotify_CheckAgainHint {
+            get {
+                return ResourceManager.GetString("Spotify_CheckAgainHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take.
+        /// </summary>
+        public static string Spotify_Choose {
+            get {
+                return ResourceManager.GetString("Spotify_Choose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This video is the song.
+        /// </summary>
+        public static string Spotify_ChooseHint {
+            get {
+                return ResourceManager.GetString("Spotify_ChooseHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of them.
+        /// </summary>
+        public static string Spotify_None {
+            get {
+                return ResourceManager.GetString("Spotify_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None of the videos is the song; it is not imported..
+        /// </summary>
+        public static string Spotify_NoneHint {
+            get {
+                return ResourceManager.GetString("Spotify_NoneHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no Topic upload.
+        /// </summary>
+        public static string Spotify_NoTopic {
+            get {
+                return ResourceManager.GetString("Spotify_NoTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to title differs.
+        /// </summary>
+        public static string Spotify_TitleDiffers {
+            get {
+                return ResourceManager.GetString("Spotify_TitleDiffers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} instead of {1}.
+        /// </summary>
+        public static string Spotify_OtherLength {
+            get {
+                return ResourceManager.GetString("Spotify_OtherLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to other version: {0}.
+        /// </summary>
+        public static string Spotify_OtherVersion {
+            get {
+                return ResourceManager.GetString("Spotify_OtherVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to other guests.
+        /// </summary>
+        public static string Spotify_OtherGuests {
+            get {
+                return ResourceManager.GetString("Spotify_OtherGuests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string Spotify_ImportTitle {
+            get {
+                return ResourceManager.GetString("Spotify_ImportTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist.
+        /// </summary>
+        public static string Spotify_PlaylistName {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify ≥ {0} plays.
+        /// </summary>
+        public static string Spotify_DefaultPlaylistName {
+            get {
+                return ResourceManager.GetString("Spotify_DefaultPlaylistName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the ready songs to the library and creates the playlist with them and the ticked songs already there, most played first. Downloads start on the playlist page..
+        /// </summary>
+        public static string Spotify_ImportHint {
+            get {
+                return ResourceManager.GetString("Spotify_ImportHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add {0} songs.
+        /// </summary>
+        public static string Spotify_ImportButton {
+            get {
+                return ResourceManager.GetString("Spotify_ImportButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding Spotify songs: {0} / {1}.
+        /// </summary>
+        public static string Spotify_Importing {
+            get {
+                return ResourceManager.GetString("Spotify_Importing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist "{0}" created with {1} songs.
+        /// </summary>
+        public static string Spotify_Imported {
+            get {
+                return ResourceManager.GetString("Spotify_Imported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The import stopped: {0}.
+        /// </summary>
+        public static string Spotify_ImportFailed {
+            get {
+                return ResourceManager.GetString("Spotify_ImportFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} songs could not be added: {1}.
+        /// </summary>
+        public static string Spotify_SongsFailed {
+            get {
+                return ResourceManager.GetString("Spotify_SongsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} found Spotify songs are not in your library yet. When you have checked them, click "{1}"..
+        /// </summary>
+        public static string Spotify_Reminder {
+            get {
+                return ResourceManager.GetString("Spotify_Reminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string Spotify_ReminderOpen {
+            get {
+                return ResourceManager.GetString("Spotify_ReminderOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the Spotify import to check and add the songs.
+        /// </summary>
+        public static string Spotify_ReminderOpenHint {
+            get {
+                return ResourceManager.GetString("Spotify_ReminderOpenHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At most.
+        /// </summary>
+        public static string Spotify_MaxPlays {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to any.
+        /// </summary>
+        public static string Spotify_MaxPlaysPlaceholder {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlaysPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leave empty for no upper limit. With at least 40 and at most 49 you get the songs between two earlier imports..
+        /// </summary>
+        public static string Spotify_MaxPlaysHint {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlaysHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify {0}–{1} plays.
+        /// </summary>
+        public static string Spotify_RangePlaylistName {
+            get {
+                return ResourceManager.GetString("Spotify_RangePlaylistName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        public static string Spotify_SelectAll {
+            get {
+                return ResourceManager.GetString("Spotify_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ticks all songs of this tab.
+        /// </summary>
+        public static string Spotify_SelectAllHint {
+            get {
+                return ResourceManager.GetString("Spotify_SelectAllHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deselect all.
+        /// </summary>
+        public static string Spotify_DeselectAll {
+            get {
+                return ResourceManager.GetString("Spotify_DeselectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unticks all songs of this tab, e.g. the ones already in an earlier Spotify playlist.
+        /// </summary>
+        public static string Spotify_DeselectAllHint {
+            get {
+                return ResourceManager.GetString("Spotify_DeselectAllHint", resourceCulture);
+            }
+        }
     }
 }
