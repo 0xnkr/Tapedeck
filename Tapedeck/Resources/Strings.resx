@@ -1896,4 +1896,32 @@
     <value>Unticks all songs of this tab, e.g. the ones already in an earlier Spotify playlist</value>
     <comment>Tooltip of Spotify_DeselectAll</comment>
   </data>
+  <data name="Activity_DownloadingMany" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2} at once) …</value>
+    <comment>Activity toast while a batch downloads; {0} done, {1} total, {2} downloads at once</comment>
+  </data>
+  <data name="Confirm_DownloadedMany_One" xml:space="preserve">
+    <value>1 track downloaded</value>
+    <comment>Confirmation after a batch with one finished download</comment>
+  </data>
+  <data name="Confirm_DownloadedMany_Other" xml:space="preserve">
+    <value>{0} tracks downloaded</value>
+    <comment>Confirmation after a batch; {0} number of finished downloads</comment>
+  </data>
+  <data name="Notice_DownloadsFailed" xml:space="preserve">
+    <value>{0} downloads failed, e.g. “{1}”: {2}</value>
+    <comment>Error line after a batch; {0} number of failed downloads, {1} title of the first one, {2} its error</comment>
+  </data>
+  <data name="Notice_DownloadsStopped" xml:space="preserve">
+    <value>Downloads stopped after {0} failures in a row: {1} YouTube may be refusing for now; try again later.</value>
+    <comment>Error line when a batch stops; {0} number of failures, {1} the last error message</comment>
+  </data>
+  <data name="Settings_ParallelDownloads" xml:space="preserve">
+    <value>Downloads at once</value>
+    <comment>Setting title; how many tracks a batch downloads at the same time</comment>
+  </data>
+  <data name="Settings_ParallelDownloadsHint" xml:space="preserve">
+    <value>More finish a long list sooner, since YouTube slows down each single download. Too many can make YouTube refuse.</value>
+    <comment>Hint below Settings_ParallelDownloads</comment>
+  </data>
 </root>
