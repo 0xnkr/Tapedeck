@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
 using Tapedeck.Core.Csv;
+using Tapedeck.Core.LastFm;
 using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
@@ -57,6 +58,8 @@ public static class AppServices
         services.AddSingleton<MbClient>();
         services.AddSingleton<CoverArtService>();
         services.AddSingleton<MbEnrichmentService>();
+        services.AddSingleton<ILastFmTags, LastFmClient>();
+        services.AddSingleton<LastFmGenreService>();
         services.AddSingleton<IYtSearch>(sp => sp.GetRequiredService<MetadataService>());
         services.AddSingleton<ISpotifyMatchRepository, SpotifyMatchRepository>();
         services.AddSingleton<SpotifySearchService>();
@@ -75,6 +78,7 @@ public static class AppServices
         services.AddSingleton<PlayerService>();
         services.AddSingleton<LoudnessQueue>();
         services.AddSingleton<CoverQueue>();
+        services.AddSingleton<LastFmQueue>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<PlaylistsViewModel>();

@@ -4295,5 +4295,194 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Spotify_DeselectAllHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main genre.
+        /// </summary>
+        public static string Smart_FieldMainGenre {
+            get {
+                return ResourceManager.GetString("Smart_FieldMainGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g. Hip-Hop.
+        /// </summary>
+        public static string Smart_PlaceholderMainGenre {
+            get {
+                return ResourceManager.GetString("Smart_PlaceholderMainGenre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Main genre in the file: {0}.
+        /// </summary>
+        public static string Genre_Main {
+            get {
+                return ResourceManager.GetString("Genre_Main", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The fine genres are mapped to a few stable main genres, so a phone sorts the library into clear groups. Only these go into the file..
+        /// </summary>
+        public static string Genre_MainHint {
+            get {
+                return ResourceManager.GetString("Genre_MainHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genres from Last.fm {0}/{1} ….
+        /// </summary>
+        public static string Activity_LastFmGenres {
+            get {
+                return ResourceManager.GetString("Activity_LastFmGenres", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last.fm does not accept the API key. Check it in the settings..
+        /// </summary>
+        public static string Notice_LastFmInvalidKey {
+            get {
+                return ResourceManager.GetString("Notice_LastFmInvalidKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last.fm could not be reached: {0}.
+        /// </summary>
+        public static string Notice_LastFmFailed {
+            get {
+                return ResourceManager.GetString("Notice_LastFmFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last.fm could not answer for {0} tracks; they are asked again next time..
+        /// </summary>
+        public static string Notice_LastFmSomeFailed {
+            get {
+                return ResourceManager.GetString("Notice_LastFmSomeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Genres for tracks MusicBrainz has none for, from the tags listeners gave the artist. Needs your own free API key; Last.fm gets the artist names..
+        /// </summary>
+        public static string Settings_LastFmHint {
+            get {
+                return ResourceManager.GetString("Settings_LastFmHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get a key.
+        /// </summary>
+        public static string Settings_LastFmGetKey {
+            get {
+                return ResourceManager.GetString("Settings_LastFmGetKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens last.fm/api/account/create. Any name works for the application; copy the "API key" here..
+        /// </summary>
+        public static string Settings_LastFmGetKeyHint {
+            get {
+                return ResourceManager.GetString("Settings_LastFmGetKeyHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last.fm API key.
+        /// </summary>
+        public static string Settings_LastFmKeyPlaceholder {
+            get {
+                return ResourceManager.GetString("Settings_LastFmKeyPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch genres ({0}).
+        /// </summary>
+        public static string Settings_LastFmFetch {
+            get {
+                return ResourceManager.GetString("Settings_LastFmFetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asks Last.fm for the genres of all tracks that have none yet. New tracks are asked on their own after MusicBrainz..
+        /// </summary>
+        public static string Settings_LastFmFetchHint {
+            get {
+                return ResourceManager.GetString("Settings_LastFmFetchHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading {0}/{1} ({2} at once) ….
+        /// </summary>
+        public static string Activity_DownloadingMany {
+            get {
+                return ResourceManager.GetString("Activity_DownloadingMany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 track downloaded.
+        /// </summary>
+        public static string Confirm_DownloadedMany_One {
+            get {
+                return ResourceManager.GetString("Confirm_DownloadedMany_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks downloaded.
+        /// </summary>
+        public static string Confirm_DownloadedMany_Other {
+            get {
+                return ResourceManager.GetString("Confirm_DownloadedMany_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} downloads failed, e.g. “{1}”: {2}.
+        /// </summary>
+        public static string Notice_DownloadsFailed {
+            get {
+                return ResourceManager.GetString("Notice_DownloadsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloads stopped after {0} failures in a row: {1} YouTube may be refusing for now; try again later..
+        /// </summary>
+        public static string Notice_DownloadsStopped {
+            get {
+                return ResourceManager.GetString("Notice_DownloadsStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloads at once.
+        /// </summary>
+        public static string Settings_ParallelDownloads {
+            get {
+                return ResourceManager.GetString("Settings_ParallelDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More finish a long list sooner, since YouTube slows down each single download. Too many can make YouTube refuse..
+        /// </summary>
+        public static string Settings_ParallelDownloadsHint {
+            get {
+                return ResourceManager.GetString("Settings_ParallelDownloadsHint", resourceCulture);
+            }
+        }
     }
 }

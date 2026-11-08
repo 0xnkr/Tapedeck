@@ -1425,4 +1425,67 @@
   <data name="Spotify_DeselectAllHint" xml:space="preserve">
     <value>Entfernt den Haken bei allen Songs dieses Reiters, z. B. bei denen aus einer früheren Spotify-Playlist</value>
   </data>
+  <data name="Smart_FieldMainGenre" xml:space="preserve">
+    <value>Hauptgenre</value>
+  </data>
+  <data name="Smart_PlaceholderMainGenre" xml:space="preserve">
+    <value>z. B. Hip-Hop</value>
+  </data>
+  <data name="Genre_Main" xml:space="preserve">
+    <value>Hauptgenre in der Datei: {0}</value>
+  </data>
+  <data name="Genre_MainHint" xml:space="preserve">
+    <value>Die feinen Genres werden auf wenige feste Hauptgenres abgebildet, damit das Handy die Bibliothek in klare Gruppen sortiert. Nur diese kommen in die Datei.</value>
+  </data>
+  <data name="Activity_LastFmGenres" xml:space="preserve">
+    <value>Genres von Last.fm {0}/{1} …</value>
+  </data>
+  <data name="Notice_LastFmInvalidKey" xml:space="preserve">
+    <value>Last.fm akzeptiert den API-Key nicht. Prüfe ihn in den Einstellungen.</value>
+  </data>
+  <data name="Notice_LastFmFailed" xml:space="preserve">
+    <value>Last.fm war nicht erreichbar: {0}</value>
+  </data>
+  <data name="Notice_LastFmSomeFailed" xml:space="preserve">
+    <value>Last.fm konnte für {0} Titel nicht antworten; sie werden beim nächsten Mal erneut gefragt.</value>
+  </data>
+  <data name="Settings_LastFmHint" xml:space="preserve">
+    <value>Genres für Titel, für die MusicBrainz keine hat, aus den Tags, die Hörer dem Artist gegeben haben. Braucht deinen eigenen kostenlosen API-Key; Last.fm bekommt dafür die Artist-Namen.</value>
+  </data>
+  <data name="Settings_LastFmGetKey" xml:space="preserve">
+    <value>Key anlegen</value>
+  </data>
+  <data name="Settings_LastFmGetKeyHint" xml:space="preserve">
+    <value>Öffnet last.fm/api/account/create. Der Name der Anwendung ist egal; kopiere den „API key“ hierher.</value>
+  </data>
+  <data name="Settings_LastFmKeyPlaceholder" xml:space="preserve">
+    <value>Last.fm-API-Key</value>
+  </data>
+  <data name="Settings_LastFmFetch" xml:space="preserve">
+    <value>Genres holen ({0})</value>
+  </data>
+  <data name="Settings_LastFmFetchHint" xml:space="preserve">
+    <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
+  </data>
+  <data name="Activity_DownloadingMany" xml:space="preserve">
+    <value>Lade herunter {0}/{1} ({2} gleichzeitig) …</value>
+  </data>
+  <data name="Confirm_DownloadedMany_One" xml:space="preserve">
+    <value>1 Titel heruntergeladen</value>
+  </data>
+  <data name="Confirm_DownloadedMany_Other" xml:space="preserve">
+    <value>{0} Titel heruntergeladen</value>
+  </data>
+  <data name="Notice_DownloadsFailed" xml:space="preserve">
+    <value>{0} Downloads sind fehlgeschlagen, z. B. „{1}“: {2}</value>
+  </data>
+  <data name="Notice_DownloadsStopped" xml:space="preserve">
+    <value>Downloads nach {0} Fehlern in Folge angehalten: {1} YouTube blockt vermutlich gerade; versuch es später noch einmal.</value>
+  </data>
+  <data name="Settings_ParallelDownloads" xml:space="preserve">
+    <value>Gleichzeitige Downloads</value>
+  </data>
+  <data name="Settings_ParallelDownloadsHint" xml:space="preserve">
+    <value>Mehr werden eine lange Liste schneller fertig, weil YouTube jeden einzelnen Download bremst. Zu viele können YouTube blocken lassen.</value>
+  </data>
 </root>

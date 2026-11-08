@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.0] - 2026-11-09
+
+### Added
+
+- Main genres: the fine genres of a track ("G-Funk", "Deep House", "Dance-Pop") are mapped to a few stable main genres such as Hip-Hop, Electronic, Pop, Rock or K-Pop. The detail page shows the main genre that goes into the file.
+- Smart playlists can pick tracks by main genre, next to the fine genres.
+- Genres from [Last.fm](https://www.last.fm) for tracks MusicBrainz has none for, from the tags listeners gave the artist. Enter your own free API key under **Settings → Tools**; new tracks are asked after the MusicBrainz lookup, and "Fetch genres (N)" asks for all others. Only tags that map to a main genre are kept, so noise like "seen live" stays out.
+- "Download pending", "Download missing" and "Download playlist" download several tracks at once, 3 by default, so a long list is done much sooner. Choose 1 to 4 under **Settings → Library → Downloads at once**. One toast counts the whole batch, and after five failures in a row the batch stops, since YouTube is then most likely refusing for a while.
+
+### Changed
+
+- "Write tags" puts only the main genres into the file instead of every fine genre, so a phone's genre list stays short. The fine genres stay in Tapedeck. After the update, files tagged before show up in "Write tags (N)" to get their main genres.
 
 ## [1.1.0] - 2026-11-08
 

@@ -32,6 +32,13 @@ public class SmartRulesTests
         Assert.Equal([3, 4], Ids(All(new SmartRule(SmartField.Genre, SmartOperator.Contains, "trap"))));
 
     [Fact]
+    public void Main_genre_looks_at_the_main_genres_the_fine_ones_map_to()
+    {
+        Assert.Equal([1, 2, 3, 4], Ids(All(new SmartRule(SmartField.MainGenre, SmartOperator.Is, "hip-hop"))).Order());
+        Assert.Equal([5], Ids(All(new SmartRule(SmartField.MainGenre, SmartOperator.Is, "R&B"))));
+    }
+
+    [Fact]
     public void Text_ignores_case_and_accents() =>
         Assert.Equal([5], Ids(All(new SmartRule(SmartField.Artist, SmartOperator.Is, "beyonce"))));
 

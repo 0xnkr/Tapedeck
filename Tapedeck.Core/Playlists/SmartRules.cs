@@ -14,6 +14,8 @@ public enum SmartField
     AlbumArtist,
     /// <summary>Any of the track's genres.</summary>
     Genre,
+    /// <summary>Any of the track's main genres (see <see cref="Genres.GenreMap"/>), as written into the file.</summary>
+    MainGenre,
     Year,
     /// <summary>1 to 5 stars; unrated tracks have no value.</summary>
     Rating,
@@ -177,6 +179,7 @@ public sealed record SmartRules(SmartMatch Match, IReadOnlyList<SmartRule> Rules
         SmartField.Album => track.Album is { } album ? [album] : [],
         SmartField.AlbumArtist => [track.AlbumArtist],
         SmartField.Genre => track.GenreList,
+        SmartField.MainGenre => track.MainGenreList,
         _ => [],
     };
 

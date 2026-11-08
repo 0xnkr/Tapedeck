@@ -1896,4 +1896,88 @@
     <value>Unticks all songs of this tab, e.g. the ones already in an earlier Spotify playlist</value>
     <comment>Tooltip of Spotify_DeselectAll</comment>
   </data>
+  <data name="Smart_FieldMainGenre" xml:space="preserve">
+    <value>Main genre</value>
+    <comment>Rule field: the stable main genre a track's fine genres map to, as written into the file</comment>
+  </data>
+  <data name="Smart_PlaceholderMainGenre" xml:space="preserve">
+    <value>e.g. Hip-Hop</value>
+    <comment>Placeholder of a rule value for the main genre</comment>
+  </data>
+  <data name="Genre_Main" xml:space="preserve">
+    <value>Main genre in the file: {0}</value>
+    <comment>Below the genre chips on the detail page; {0} one or two main genres</comment>
+  </data>
+  <data name="Genre_MainHint" xml:space="preserve">
+    <value>The fine genres are mapped to a few stable main genres, so a phone sorts the library into clear groups. Only these go into the file.</value>
+    <comment>Tooltip of Genre_Main</comment>
+  </data>
+  <data name="Activity_LastFmGenres" xml:space="preserve">
+    <value>Genres from Last.fm {0}/{1} …</value>
+    <comment>Activity toast while Last.fm is asked for genres; {0} done, {1} total</comment>
+  </data>
+  <data name="Notice_LastFmInvalidKey" xml:space="preserve">
+    <value>Last.fm does not accept the API key. Check it in the settings.</value>
+    <comment>Error line when Last.fm refuses the key</comment>
+  </data>
+  <data name="Notice_LastFmFailed" xml:space="preserve">
+    <value>Last.fm could not be reached: {0}</value>
+    <comment>Error line; {0} error message</comment>
+  </data>
+  <data name="Notice_LastFmSomeFailed" xml:space="preserve">
+    <value>Last.fm could not answer for {0} tracks; they are asked again next time.</value>
+    <comment>Error line; {0} number of tracks</comment>
+  </data>
+  <data name="Settings_LastFmHint" xml:space="preserve">
+    <value>Genres for tracks MusicBrainz has none for, from the tags listeners gave the artist. Needs your own free API key; Last.fm gets the artist names.</value>
+    <comment>Hint below Last.fm in the settings</comment>
+  </data>
+  <data name="Settings_LastFmGetKey" xml:space="preserve">
+    <value>Get a key</value>
+    <comment>Link button that opens Last.fm's page to create an API key</comment>
+  </data>
+  <data name="Settings_LastFmGetKeyHint" xml:space="preserve">
+    <value>Opens last.fm/api/account/create. Any name works for the application; copy the "API key" here.</value>
+    <comment>Tooltip of Settings_LastFmGetKey; "API key" is the label on Last.fm's page</comment>
+  </data>
+  <data name="Settings_LastFmKeyPlaceholder" xml:space="preserve">
+    <value>Last.fm API key</value>
+    <comment>Placeholder and accessible name of the key field</comment>
+  </data>
+  <data name="Settings_LastFmFetch" xml:space="preserve">
+    <value>Fetch genres ({0})</value>
+    <comment>Button; {0} number of tracks without genres Last.fm was not asked for yet</comment>
+  </data>
+  <data name="Settings_LastFmFetchHint" xml:space="preserve">
+    <value>Asks Last.fm for the genres of all tracks that have none yet. New tracks are asked on their own after MusicBrainz.</value>
+    <comment>Tooltip of Settings_LastFmFetch</comment>
+  </data>
+  <data name="Activity_DownloadingMany" xml:space="preserve">
+    <value>Downloading {0}/{1} ({2} at once) …</value>
+    <comment>Activity toast while a batch downloads; {0} done, {1} total, {2} downloads at once</comment>
+  </data>
+  <data name="Confirm_DownloadedMany_One" xml:space="preserve">
+    <value>1 track downloaded</value>
+    <comment>Confirmation after a batch with one finished download</comment>
+  </data>
+  <data name="Confirm_DownloadedMany_Other" xml:space="preserve">
+    <value>{0} tracks downloaded</value>
+    <comment>Confirmation after a batch; {0} number of finished downloads</comment>
+  </data>
+  <data name="Notice_DownloadsFailed" xml:space="preserve">
+    <value>{0} downloads failed, e.g. “{1}”: {2}</value>
+    <comment>Error line after a batch; {0} number of failed downloads, {1} title of the first one, {2} its error</comment>
+  </data>
+  <data name="Notice_DownloadsStopped" xml:space="preserve">
+    <value>Downloads stopped after {0} failures in a row: {1} YouTube may be refusing for now; try again later.</value>
+    <comment>Error line when a batch stops; {0} number of failures, {1} the last error message</comment>
+  </data>
+  <data name="Settings_ParallelDownloads" xml:space="preserve">
+    <value>Downloads at once</value>
+    <comment>Setting title; how many tracks a batch downloads at the same time</comment>
+  </data>
+  <data name="Settings_ParallelDownloadsHint" xml:space="preserve">
+    <value>More finish a long list sooner, since YouTube slows down each single download. Too many can make YouTube refuse.</value>
+    <comment>Hint below Settings_ParallelDownloads</comment>
+  </data>
 </root>

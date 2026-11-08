@@ -37,9 +37,10 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | | |
 |---|---|
 | 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
-| ⬇️ **Download as Opus** | Live progress, cancel at any time, and missing files are detected and fetched again. |
+| ⬇️ **Download as Opus** | Several tracks at once (3 by default), live progress, cancel at any time, and missing files are detected and fetched again. |
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive (or, without one, cut from the middle of the video thumbnail). Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
+| 🎼 **Stable genres** | Fine genres like *G-Funk*, *Deep House* or *Dance-Pop* are mapped to a few main genres such as Hip-Hop, Electronic or Pop, and only those go into the file, so your phone sorts a mixed library into clear groups. Tracks MusicBrainz has no genres for can get them from [Last.fm](https://www.last.fm) with your own free API key. |
 | 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
 | 🧹 **No duplicates** | The same song from the music video, the Topic upload and a lyric video? The **Duplicates** filter puts them side by side, and **Keep this one** removes the rest without breaking your playlists. |
 | 🔊 **Even volume** | Every download is measured once with FFmpeg (EBU R 128), and the result goes into the file as an Opus track gain (`R128_TRACK_GAIN`). Loud music videos and quiet Topic uploads then play equally loud in Poweramp, Musicolet & co. Older tracks are measured in the background, and the built-in player levels them the same way. |
@@ -90,7 +91,7 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 
 You can check the installed versions and update yt-dlp under **Settings → Tools**.
 
-Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0](https://musicbrainz.org/doc/About/Data_License)) and covers from the [Cover Art Archive](https://coverartarchive.org). Tapedeck asks them at most once per second, as MusicBrainz requests, and you can turn off the automatic lookup under **Settings → Tools**.
+Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0](https://musicbrainz.org/doc/About/Data_License)) and covers from the [Cover Art Archive](https://coverartarchive.org). Tapedeck asks them at most once per second, as MusicBrainz requests, and you can turn off the automatic lookup under **Settings → Tools**. Genres for tracks without MusicBrainz genres can come from the tags listeners gave the artist on [Last.fm](https://www.last.fm), with your own API key; Last.fm then gets the artist names.
 
 ## Please use it responsibly
 
@@ -146,7 +147,7 @@ dotnet run --project Tapedeck -- --spotify-match "path/to/my_spotify_data.zip" 1
 - [x] Playlists with `.m3u8` export and linked YouTube playlists
 - [x] CSV backup, restore and moving to another computer
 - [x] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
-- [ ] Genres from [Last.fm](https://www.last.fm)
+- [x] Genres from [Last.fm](https://www.last.fm), mapped to stable main genres
 - [ ] Installer and auto updates
 - [x] Smart playlists
 - [x] Import of the most played songs from the Spotify streaming history

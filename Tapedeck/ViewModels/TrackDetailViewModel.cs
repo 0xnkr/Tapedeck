@@ -110,6 +110,10 @@ public partial class TrackDetailViewModel : ViewModelBase
     [ObservableProperty]
     public partial FieldSource GenresSource { get; private set; }
 
+    /// <summary>"Main genre in the file: Hip-Hop"; empty when none of the genres maps to a main genre.</summary>
+    [ObservableProperty]
+    public partial string MainGenres { get; private set; } = string.Empty;
+
     [ObservableProperty]
     public partial bool IsAddingGenre { get; set; }
 
@@ -245,6 +249,7 @@ public partial class TrackDetailViewModel : ViewModelBase
         foreach (var genre in track.GenreList)
             this.Genres.Add(genre);
         this.GenresSource = track.GenresFrom;
+        this.MainGenres = track.MainGenreList.Count == 0 ? string.Empty : string.Format(Strings.Genre_Main, string.Join(", ", track.MainGenreList));
 
         // fields the user is typing in right now keep their text
         this.LoadField(this.ArtistField, track.Artist, track.ArtistFrom);
