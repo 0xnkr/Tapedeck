@@ -1467,4 +1467,25 @@
   <data name="Settings_LastFmFetchHint" xml:space="preserve">
     <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
   </data>
+  <data name="Activity_DownloadingMany" xml:space="preserve">
+    <value>Lade herunter {0}/{1} ({2} gleichzeitig) …</value>
+  </data>
+  <data name="Confirm_DownloadedMany_One" xml:space="preserve">
+    <value>1 Titel heruntergeladen</value>
+  </data>
+  <data name="Confirm_DownloadedMany_Other" xml:space="preserve">
+    <value>{0} Titel heruntergeladen</value>
+  </data>
+  <data name="Notice_DownloadsFailed" xml:space="preserve">
+    <value>{0} Downloads sind fehlgeschlagen, z. B. „{1}“: {2}</value>
+  </data>
+  <data name="Notice_DownloadsStopped" xml:space="preserve">
+    <value>Downloads nach {0} Fehlern in Folge angehalten: {1} YouTube blockt vermutlich gerade; versuch es später noch einmal.</value>
+  </data>
+  <data name="Settings_ParallelDownloads" xml:space="preserve">
+    <value>Gleichzeitige Downloads</value>
+  </data>
+  <data name="Settings_ParallelDownloadsHint" xml:space="preserve">
+    <value>Mehr werden eine lange Liste schneller fertig, weil YouTube jeden einzelnen Download bremst. Zu viele können YouTube blocken lassen.</value>
+  </data>
 </root>

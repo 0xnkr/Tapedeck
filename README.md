@@ -37,7 +37,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | | |
 |---|---|
 | 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
-| ⬇️ **Download as Opus** | Live progress, cancel at any time, and missing files are detected and fetched again. |
+| ⬇️ **Download as Opus** | Several tracks at once (3 by default), live progress, cancel at any time, and missing files are detected and fetched again. |
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive (or, without one, cut from the middle of the video thumbnail). Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🎼 **Stable genres** | Fine genres like *G-Funk*, *Deep House* or *Dance-Pop* are mapped to a few main genres such as Hip-Hop, Electronic or Pop, and only those go into the file, so your phone sorts a mixed library into clear groups. Tracks MusicBrainz has no genres for can get them from [Last.fm](https://www.last.fm) with your own free API key. |

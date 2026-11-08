@@ -22,6 +22,9 @@ public sealed class DownloadService(
 
     public const string FORMAT = "opus";
 
+    // choosing a free file name and taking it is one step for all downloads of the app
+    private static readonly SemaphoreSlim NAMING = new(1, 1);
+
     public async Task DownloadAsync(long trackId, IProgress<double>? progress = null, CancellationToken ct = default)
     {
         var track = await repository.GetDisplayAsync(trackId)
@@ -52,13 +55,23 @@ public sealed class DownloadService(
             if (!result.Success)
                 throw new InvalidOperationException(string.Join(Environment.NewLine, result.ErrorOutput));
 
-            var fileName = FileNaming.ChooseForTrack(track.FilePath, track.Artist, track.Title, track.VideoId, FORMAT,
-                name => File.Exists(paths.ToLibraryPath(name)));
-            // overwrite only ever hits the track's own file from an earlier download
-            File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
-            // a correction since the last download gave the file a new name; drop the outdated copy
-            if (track.FilePath is { } oldFile && !string.Equals(oldFile, fileName, StringComparison.OrdinalIgnoreCase))
-                File.Delete(paths.ToLibraryPath(oldFile));
+            string fileName;
+            // parallel downloads of two songs with the same name must not pick the same free name
+            await NAMING.WaitAsync(ct);
+            try
+            {
+                fileName = FileNaming.ChooseForTrack(track.FilePath, track.Artist, track.Title, track.VideoId, FORMAT,
+                    name => File.Exists(paths.ToLibraryPath(name)));
+                // overwrite only ever hits the track's own file from an earlier download
+                File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
+                // a correction since the last download gave the file a new name; drop the outdated copy
+                if (track.FilePath is { } oldFile && !string.Equals(oldFile, fileName, StringComparison.OrdinalIgnoreCase))
+                    File.Delete(paths.ToLibraryPath(oldFile));
+            }
+            finally
+            {
+                NAMING.Release();
+            }
 
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, FORMAT);
             await this.MeasureLoudnessAsync(trackId, fileName, ct);

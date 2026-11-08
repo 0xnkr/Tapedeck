@@ -58,6 +58,9 @@ public partial class LibraryViewModel(
     // a search plus up to three genre lookups at one request per second, with the occasional retry
     private const double MATCH_SECONDS_PER_TRACK = 4;
 
+    // this many failed downloads in a row mean YouTube refuses for now; trying the rest would only fail too
+    private const int MAX_DOWNLOAD_FAILURES_IN_A_ROW = 5;
+
     private readonly List<TrackRowViewModel> all = [];
     // one per running download, so a single row can be cancelled
     private readonly Dictionary<long, CancellationTokenSource> running = [];
@@ -387,24 +390,62 @@ public partial class LibraryViewModel(
     private Task DownloadAllAsync(DownloadStatus status) =>
         this.DownloadTracksAsync(this.all.Where(r => r.Status == status).ToList());
 
-    /// <summary>Downloads the given rows one by one; "Cancel downloads" stops the rest.</summary>
+    /// <summary>
+    /// Downloads the given rows, a few at once (see <see cref="AppSettings.ParallelDownloads"/>), so a long list is done
+    /// sooner: YouTube slows down each connection, and every download also waits for yt-dlp to start and read the page.
+    /// One toast counts the whole batch; "Cancel downloads" stops the rest. Several failures in a row stop the batch,
+    /// since then YouTube is most likely refusing.
+    /// </summary>
     public async Task DownloadTracksAsync(IReadOnlyList<TrackRowViewModel> rows)
     {
-        rows = await this.TakeOverFilesAsync(rows);
+        rows = (await this.TakeOverFilesAsync(rows)).Where(r => r.Status != DownloadStatus.Downloading).ToList();
+        if (rows.Count <= 1)
+        {
+            foreach (var row in rows)
+                await this.DownloadRowAsync(row);
+            return;
+        }
+
+        var parallel = Math.Clamp(settings.Load().ParallelDownloads ?? AppSettings.DEFAULT_PARALLEL_DOWNLOADS, 1, AppSettings.MAX_PARALLEL_DOWNLOADS);
+        int downloaded = 0, failed = 0, failuresInARow = 0;
+        (string Title, string Error)? firstFailure = null;
+        var stopped = false;
         using var cts = this.batch = new CancellationTokenSource();
         try
         {
-            foreach (var row in rows)
+            using var progress = activity.Begin(string.Format(Strings.Activity_DownloadingMany, 0, rows.Count, parallel));
+            await Throttle.ForEachAsync(rows, parallel, async row =>
             {
-                if (cts.IsCancellationRequested)
-                    break;
-                await this.DownloadRowAsync(row);
-            }
+                var error = await this.DownloadRowAsync(row, quiet: true);
+                if (error is null)
+                {
+                    downloaded++;
+                    failuresInARow = 0;
+                }
+                else if (error.Length > 0)
+                {
+                    failed++;
+                    firstFailure ??= (row.Title, error);
+                    if (++failuresInARow >= MAX_DOWNLOAD_FAILURES_IN_A_ROW && !cts.IsCancellationRequested)
+                    {
+                        stopped = true;
+                        cts.Cancel();
+                    }
+                }
+                progress.Update(string.Format(Strings.Activity_DownloadingMany, downloaded + failed, rows.Count, parallel));
+            }, cts.Token);
         }
         finally
         {
             this.batch = null;
         }
+
+        if (stopped && firstFailure is { } cause)
+            this.Notice = string.Format(Strings.Notice_DownloadsStopped, MAX_DOWNLOAD_FAILURES_IN_A_ROW, cause.Error);
+        else if (firstFailure is { } first)
+            this.Notice = string.Format(Strings.Notice_DownloadsFailed, failed, first.Title, first.Error);
+        if (downloaded > 0)
+            activity.Confirm(downloaded == 1 ? Strings.Confirm_DownloadedMany_One : string.Format(Strings.Confirm_DownloadedMany_Other, downloaded));
     }
 
     public static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
@@ -785,12 +826,15 @@ public partial class LibraryViewModel(
         return rows.Where(r => !adopted.Contains(r.Id)).ToList();
     }
 
-    private async Task DownloadRowAsync(TrackRowViewModel row)
+    /// <param name="quiet">Part of a batch: no toast and notice of its own, the batch reports for all.</param>
+    /// <returns><c>null</c> when downloaded, empty when cancelled or skipped, otherwise the error.</returns>
+    private async Task<string?> DownloadRowAsync(TrackRowViewModel row, bool quiet = false)
     {
         if (row.Status == DownloadStatus.Downloading)
-            return;
+            return string.Empty;
 
-        this.Notice = null;
+        if (!quiet)
+            this.Notice = null;
         // the new download replaces the file that may be playing
         await player.StopIfLoadedAsync(row.Id);
         row.Status = DownloadStatus.Downloading;
@@ -798,21 +842,26 @@ public partial class LibraryViewModel(
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(this.batch?.Token ?? CancellationToken.None);
         this.running[row.Id] = cts;
         this.IsDownloading = true;
+        string? error = null;
         try
         {
             await toolSetup.EnsureAsync();
-            using (activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
+            using (quiet ? null : activity.Begin(string.Format(Strings.Activity_Downloading, row.Title)))
                 await downloader.DownloadAsync(row.Id, new Progress<double>(p => row.Progress = p), cts.Token);
-            activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
+            if (!quiet)
+                activity.Confirm(string.Format(Strings.Confirm_Downloaded, row.Title));
             playlistSync.Request();
         }
         catch (OperationCanceledException)
         {
             // cancelled on purpose; the download service already restored the status
+            error = string.Empty;
         }
         catch (Exception ex)
         {
-            this.Notice = string.Format(Strings.Notice_DownloadFailed, row.Title, ex.Message);
+            error = ex.Message;
+            if (!quiet)
+                this.Notice = string.Format(Strings.Notice_DownloadFailed, row.Title, ex.Message);
         }
         finally
         {
@@ -821,6 +870,7 @@ public partial class LibraryViewModel(
         }
 
         await this.RefreshRowAsync(row.Id);
+        return error;
     }
 
     private async Task RefreshRowAsync(long id)
