@@ -40,7 +40,8 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, ILogg
                 tag.AlbumArtists = string.IsNullOrEmpty(track.AlbumArtist) ? [] : [track.AlbumArtist];
                 tag.Album = track.Album;
                 tag.Year = (uint)(track.Year ?? 0);
-                tag.Genres = [.. track.GenreList];
+                // the stable main genres sort a phone's library; the fine ones only when none of them maps
+                tag.Genres = track.MainGenreList.Count > 0 ? [.. track.MainGenreList] : [.. track.GenreList];
                 // place on the album and the MusicBrainz ids (as Picard names them), only with a match.
                 // Empty instead of null clears a field: TagLib's Ogg setter of the artist id throws on null.
                 tag.Track = (uint)(track.TrackNo ?? 0);
