@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-08
+
+### Added
+
+#### Import from Spotify
+
+- "From Spotify" on the playlists page imports your most played songs from your Spotify streaming history. Request the "Extended streaming history" in your Spotify account under privacy; Spotify sends it as a zip file. Choose the zip or the unpacked folder, the whole history back to your first year is read in seconds.
+- A play counts when it ran for at least 30 seconds, as a stream on Spotify does, and was not ended with the skip or back button. The same song on the album, the single and the deluxe edition counts as one song, while remixes, live and sped-up versions stay apart.
+- Choose the songs by their plays, for example "at least 10" or "at least 40, at most 49", and leave out songs you skipped more often than not. Songs already in your library are recognized.
+- "Search on YouTube" looks up every song on YouTube Music and takes the plain release (the "Topic" upload) with the length you heard on Spotify, without an intro or a different edit. Results are kept, so a search can be stopped and continued later, also after a restart. When YouTube asks to slow down, the search pauses with a notice instead of failing.
+- Songs without a sure match wait under "To check" with up to three suggestions, each with the reason it is not sure, a link to listen on YouTube, "Take" and "None of them".
+- "Add N songs" puts the found songs into the library and creates a playlist with them and the ticked songs already there, most played first. "Select all" and "Deselect all" tick or untick a whole tab, so a series of imports like 50+, 40–49, 30–39 gives playlists without overlaps.
+- While found songs are not added yet, a reminder stays above every page, so a search that ran for hours is not forgotten.
+- The history stays on your computer: only artist and title of the chosen songs go to YouTube for the search, and the IP addresses, devices and countries in it are never read. Tapedeck stores the YouTube results and your choices, not your plays.
+
 ## [1.0.0] - 2026-11-07
 
 ### Added
@@ -95,5 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/nilskruthoff/Tapedeck/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/nilskruthoff/Tapedeck/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/nilskruthoff/Tapedeck/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/nilskruthoff/Tapedeck/releases/tag/v1.0.0

@@ -1,0 +1,281 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             x:Class="Tapedeck.Views.SpotifyImportView"
+             x:DataType="vm:SpotifyImportViewModel">
+
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <controls:PageHeader Title="{x:Static res:Strings.Spotify_Title}"
+                             Subtitle="{x:Static res:Strings.Spotify_Subtitle}"
+                             BackCommand="{Binding BackCommand}" />
+
+        <TextBlock Grid.Row="1"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="22,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="360,*" ColumnSpacing="{StaticResource Space.3}">
+
+            <!-- Left: the steps from history to playlist -->
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="{StaticResource Space.3}" Margin="0,0,0,4">
+
+                    <controls:Island>
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_Source}" />
+                            <TextBlock Classes="body" Text="{Binding SourceSummary}" TextWrapping="Wrap" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Spotify_SourceHint}" />
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                                <Button Classes="secondary"
+                                        Content="{x:Static res:Strings.Spotify_PickZip}"
+                                        controls:ButtonAssist.Icon="{StaticResource Icon.Download}"
+                                        Command="{Binding PickZipCommand}" />
+                                <Button Classes="secondary"
+                                        Content="{x:Static res:Strings.Spotify_PickFolder}"
+                                        controls:ButtonAssist.Icon="{StaticResource Icon.Folder}"
+                                        Command="{Binding PickFolderCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </controls:Island>
+
+                    <controls:Island IsEnabled="{Binding HasHistory}">
+                        <StackPanel Spacing="{StaticResource Space.3}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_Selection}" />
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}"
+                                        ToolTip.Tip="{x:Static res:Strings.Spotify_MinPlaysHint}">
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MinPlays}" />
+                                <TextBox Width="72"
+                                         Text="{Binding MinPlaysText}"
+                                         VerticalContentAlignment="Center"
+                                         AutomationProperties.Name="{x:Static res:Strings.Spotify_MinPlays}" />
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MinPlaysSuffix}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}"
+                                        ToolTip.Tip="{x:Static res:Strings.Spotify_MaxPlaysHint}">
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MaxPlays}" />
+                                <TextBox Width="72"
+                                         Text="{Binding MaxPlaysText}"
+                                         PlaceholderText="{x:Static res:Strings.Spotify_MaxPlaysPlaceholder}"
+                                         VerticalContentAlignment="Center"
+                                         AutomationProperties.Name="{x:Static res:Strings.Spotify_MaxPlays}" />
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MinPlaysSuffix}" />
+                            </StackPanel>
+                            <CheckBox Content="{x:Static res:Strings.Spotify_SkipFilter}"
+                                      IsChecked="{Binding LeaveOutSkipped}"
+                                      ToolTip.Tip="{x:Static res:Strings.Spotify_SkipFilterHint}" />
+                            <TextBlock Classes="body-strong" Text="{Binding SelectionSummary}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </controls:Island>
+
+                    <controls:Island IsEnabled="{Binding HasHistory}">
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_SearchTitle}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Spotify_SearchHint}" />
+                            <TextBlock Classes="body" Text="{Binding SearchStatus}" TextWrapping="Wrap"
+                                       IsVisible="{Binding SearchStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                                <Button Classes="primary"
+                                        Content="{x:Static res:Strings.Spotify_Search}"
+                                        controls:ButtonAssist.Icon="{StaticResource Icon.Search}"
+                                        IsEnabled="{Binding CanSearch}"
+                                        Command="{Binding SearchCommand}" />
+                                <Button Classes="secondary"
+                                        Content="{x:Static res:Strings.Spotify_StopSearch}"
+                                        controls:ButtonAssist.Icon="{StaticResource Icon.Stop}"
+                                        IsVisible="{Binding IsSearching}"
+                                        Command="{Binding StopSearchCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </controls:Island>
+
+                    <controls:Island IsEnabled="{Binding HasHistory}">
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_ImportTitle}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}"
+                                       Text="{x:Static res:Strings.Spotify_PlaylistName}" />
+                            <TextBox Text="{Binding PlaylistName}"
+                                     MinHeight="{StaticResource Control.Lg}"
+                                     VerticalContentAlignment="Center"
+                                     AutomationProperties.Name="{x:Static res:Strings.Spotify_PlaylistName}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Spotify_ImportHint}" />
+                            <Button Classes="primary"
+                                    HorizontalAlignment="Left"
+                                    Content="{Binding ImportLabel}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                                    IsEnabled="{Binding CanImport}"
+                                    Command="{Binding ImportCommand}" />
+                        </StackPanel>
+                    </controls:Island>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Right: the songs of the selection by where they stand -->
+            <controls:Island Grid.Column="1" Classes="table">
+                <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.2}" Margin="4">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Spacing="{StaticResource Space.2}" IsVisible="{Binding CanToggleAll}">
+                        <Button Classes="link"
+                                Content="{x:Static res:Strings.Spotify_SelectAll}"
+                                ToolTip.Tip="{x:Static res:Strings.Spotify_SelectAllHint}"
+                                Command="{Binding SelectAllCommand}" />
+                        <Button Classes="link"
+                                Content="{x:Static res:Strings.Spotify_DeselectAll}"
+                                ToolTip.Tip="{x:Static res:Strings.Spotify_DeselectAllHint}"
+                                Command="{Binding DeselectAllCommand}" />
+                    </StackPanel>
+
+                    <Border Classes="segmented" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Theme="{StaticResource Segment}" GroupName="SpotifyTab"
+                                         Content="{Binding ReadyTab}"
+                                         ToolTip.Tip="{x:Static res:Strings.Spotify_ReadyHint}"
+                                         IsChecked="{Binding Tab, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:SpotifyRowGroup.Ready}}" />
+                            <RadioButton Theme="{StaticResource Segment}" GroupName="SpotifyTab"
+                                         Content="{Binding ReviewTab}"
+                                         ToolTip.Tip="{x:Static res:Strings.Spotify_ReviewHint}"
+                                         IsChecked="{Binding Tab, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:SpotifyRowGroup.Review}}" />
+                            <RadioButton Theme="{StaticResource Segment}" GroupName="SpotifyTab"
+                                         Content="{Binding NotFoundTab}"
+                                         ToolTip.Tip="{x:Static res:Strings.Spotify_NotFoundHint}"
+                                         IsChecked="{Binding Tab, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:SpotifyRowGroup.NotFound}}" />
+                            <RadioButton Theme="{StaticResource Segment}" GroupName="SpotifyTab"
+                                         Content="{Binding InLibraryTab}"
+                                         ToolTip.Tip="{x:Static res:Strings.Spotify_InLibraryHint}"
+                                         IsChecked="{Binding Tab, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:SpotifyRowGroup.InLibrary}}" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Grid.Row="1"
+                               Classes="support"
+                               Foreground="{DynamicResource Brush.Text3}"
+                               Margin="8"
+                               Text="{x:Static res:Strings.Spotify_EmptyList}"
+                               IsVisible="{Binding IsListEmpty}" />
+
+                    <ListBox Grid.Row="1"
+                             Theme="{StaticResource PlainList}"
+                             ItemsSource="{Binding VisibleRows}"
+                             IsVisible="{Binding !IsListEmpty}">
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0,0,0,6" />
+                                <Setter Property="Background" Value="Transparent" />
+                            </Style>
+                        </ListBox.Styles>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SpotifySongRowViewModel">
+                                <Border Classes="row">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="{StaticResource Space.3}">
+                                        <CheckBox VerticalAlignment="Top"
+                                                  IsChecked="{Binding IsIncluded}"
+                                                  IsVisible="{Binding CanInclude}"
+                                                  ToolTip.Tip="{x:Static res:Strings.Spotify_IncludeHint}"
+                                                  AutomationProperties.Name="{Binding Title}" />
+
+                                        <StackPanel Grid.Column="1" Spacing="2">
+                                            <TextBlock Classes="body-strong" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextTrimming="CharacterEllipsis">
+                                                <Run Text="{Binding Artist}" />
+                                                <Run Text=" · " />
+                                                <Run Text="{Binding Plays}" />
+                                            </TextBlock>
+                                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}" Margin="0,4,0,0"
+                                                        IsVisible="{Binding Video, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                <Border Classes="pill" IsVisible="{Binding Video.IsTopic}" ToolTip.Tip="{x:Static res:Strings.Spotify_TopicHint}">
+                                                    <TextBlock Classes="label" Text="{x:Static res:Strings.Spotify_Topic}" />
+                                                </Border>
+                                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" MaxWidth="520">
+                                                    <Run Text="{Binding Video.Title}" />
+                                                    <Run Text=" · " />
+                                                    <Run Text="{Binding Video.Details}" />
+                                                </TextBlock>
+                                                <Button Classes="icon"
+                                                        controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
+                                                        Command="{Binding Video.OpenCommand}"
+                                                        ToolTip.Tip="{Binding Video.OpenLabel}"
+                                                        AutomationProperties.Name="{Binding Video.OpenLabel}" />
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" Spacing="{StaticResource Space.1}" HorizontalAlignment="Right">
+                                            <TextBlock Classes="support tabular" Foreground="{DynamicResource Brush.Text3}" HorizontalAlignment="Right"
+                                                       Text="{Binding Rank, StringFormat='#{0}'}" />
+                                            <Button Classes="link"
+                                                    Content="{x:Static res:Strings.Spotify_CheckAgain}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Spotify_CheckAgainHint}"
+                                                    IsVisible="{Binding CanCheckAgain}"
+                                                    Command="{Binding CheckAgainCommand}" />
+                                        </StackPanel>
+
+                                        <!-- Rows to check: the suggestions to choose from -->
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Spacing="{StaticResource Space.2}" Margin="0,8,0,0"
+                                                    IsVisible="{Binding IsReview}">
+                                            <ItemsControl ItemsSource="{Binding Suggestions}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Spacing="{StaticResource Space.1}" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:SpotifyCandidateViewModel">
+                                                        <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                                            <Button Classes="tonal"
+                                                                    Content="{x:Static res:Strings.Spotify_Choose}"
+                                                                    ToolTip.Tip="{x:Static res:Strings.Spotify_ChooseHint}"
+                                                                    Command="{Binding ChooseCommand}" />
+                                                            <Border Grid.Column="1" Classes="pill" VerticalAlignment="Center"
+                                                                    IsVisible="{Binding IsTopic}" ToolTip.Tip="{x:Static res:Strings.Spotify_TopicHint}">
+                                                                <TextBlock Classes="label" Text="{x:Static res:Strings.Spotify_Topic}" />
+                                                            </Border>
+                                                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                                <TextBlock Classes="support" TextTrimming="CharacterEllipsis">
+                                                                    <Run Text="{Binding Title}" />
+                                                                    <Run Text=" · " Foreground="{DynamicResource Brush.Text3}" />
+                                                                    <Run Text="{Binding Details}" Foreground="{DynamicResource Brush.Text3}" />
+                                                                </TextBlock>
+                                                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Pending}" TextTrimming="CharacterEllipsis"
+                                                                           Text="{Binding Problems}" IsVisible="{Binding HasProblems}" />
+                                                            </StackPanel>
+                                                            <Button Grid.Column="3"
+                                                                    Classes="icon"
+                                                                    VerticalAlignment="Center"
+                                                                    controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
+                                                                    Command="{Binding OpenCommand}"
+                                                                    ToolTip.Tip="{Binding OpenLabel}"
+                                                                    AutomationProperties.Name="{Binding OpenLabel}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                            <Button Classes="link"
+                                                    HorizontalAlignment="Left"
+                                                    Content="{x:Static res:Strings.Spotify_None}"
+                                                    ToolTip.Tip="{x:Static res:Strings.Spotify_NoneHint}"
+                                                    Command="{Binding RejectCommand}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </controls:Island>
+        </Grid>
+    </Grid>
+</UserControl>
