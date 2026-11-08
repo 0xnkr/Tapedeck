@@ -68,4 +68,7 @@ public sealed class TrackDisplay
 
     public IReadOnlyList<string> GenreList =>
         string.IsNullOrEmpty(this.Genres) ? [] : this.Genres.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+    /// <summary>The stable main genres of <see cref="GenreList"/> (at most two), see <see cref="Genres.GenreMap"/>.</summary>
+    public IReadOnlyList<string> MainGenreList => Tapedeck.Core.Genres.GenreMap.MainGenres(this.GenreList);
 }
