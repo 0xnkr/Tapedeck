@@ -37,7 +37,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | | |
 |---|---|
 | 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
-| ⬇️ **Download as Opus** | Live progress, cancel at any time, and missing files are detected and fetched again. |
+| ⬇️ **Download as Opus** | Several tracks at once (3 by default), live progress, cancel at any time, and missing files are detected and fetched again. |
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive (or, without one, cut from the middle of the video thumbnail). Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
