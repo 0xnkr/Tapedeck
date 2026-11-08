@@ -4295,5 +4295,68 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Spotify_DeselectAllHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading {0}/{1} ({2} at once) ….
+        /// </summary>
+        public static string Activity_DownloadingMany {
+            get {
+                return ResourceManager.GetString("Activity_DownloadingMany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 track downloaded.
+        /// </summary>
+        public static string Confirm_DownloadedMany_One {
+            get {
+                return ResourceManager.GetString("Confirm_DownloadedMany_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks downloaded.
+        /// </summary>
+        public static string Confirm_DownloadedMany_Other {
+            get {
+                return ResourceManager.GetString("Confirm_DownloadedMany_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} downloads failed, e.g. “{1}”: {2}.
+        /// </summary>
+        public static string Notice_DownloadsFailed {
+            get {
+                return ResourceManager.GetString("Notice_DownloadsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloads stopped after {0} failures in a row: {1} YouTube may be refusing for now; try again later..
+        /// </summary>
+        public static string Notice_DownloadsStopped {
+            get {
+                return ResourceManager.GetString("Notice_DownloadsStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloads at once.
+        /// </summary>
+        public static string Settings_ParallelDownloads {
+            get {
+                return ResourceManager.GetString("Settings_ParallelDownloads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More finish a long list sooner, since YouTube slows down each single download. Too many can make YouTube refuse..
+        /// </summary>
+        public static string Settings_ParallelDownloadsHint {
+            get {
+                return ResourceManager.GetString("Settings_ParallelDownloadsHint", resourceCulture);
+            }
+        }
     }
 }
