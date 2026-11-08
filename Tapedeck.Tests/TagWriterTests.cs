@@ -57,6 +57,30 @@ public sealed class TagWriterTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Only_the_main_genres_go_into_the_file()
+    {
+        var id = await this.AddWithFileAsync();
+        await this.repo.SetUserTagsAsync(id, ["G-Funk", "West Coast Hip Hop", "Hip Hop"]);
+
+        await this.writer.WriteTagsAsync(id);
+
+        using var file = TagLib.File.Create(Path.Combine(this.dir, "song.opus"));
+        Assert.Equal(["Hip-Hop"], file.Tag.Genres);
+    }
+
+    [Fact]
+    public async Task Genres_without_a_main_genre_are_written_as_they_are()
+    {
+        var id = await this.AddWithFileAsync();
+        await this.repo.SetUserTagsAsync(id, ["Hörspiel"]);
+
+        await this.writer.WriteTagsAsync(id);
+
+        using var file = TagLib.File.Create(Path.Combine(this.dir, "song.opus"));
+        Assert.Equal(["Hörspiel"], file.Tag.Genres);
+    }
+
+    [Fact]
     public async Task Removing_a_match_clears_the_ids_in_the_file()
     {
         var id = await this.AddWithFileAsync();
