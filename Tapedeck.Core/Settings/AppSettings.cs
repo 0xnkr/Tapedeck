@@ -10,10 +10,12 @@ namespace Tapedeck.Core.Settings;
 /// <c>null</c> asks every time.
 /// </param>
 /// <param name="LevelPlayback">The app's player plays all tracks equally loud; <c>null</c> means on. The track gain in the files does not depend on it.</param>
+/// <param name="LastFmApiKey">The user's own Last.fm API key for genres of tracks MusicBrainz has none for; <c>null</c> turns Last.fm off.</param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
     string? LibraryDir = null,
     bool? MusicBrainzAuto = null,
     bool? KeepDeletesFiles = null,
-    bool? LevelPlayback = null);
+    bool? LevelPlayback = null,
+    string? LastFmApiKey = null);

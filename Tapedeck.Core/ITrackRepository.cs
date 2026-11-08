@@ -49,6 +49,18 @@ public interface ITrackRepository
     /// </summary>
     Task SetUserTagsAsync(long trackId, IReadOnlyList<string> names);
 
+    /// <summary>
+    /// Tracks whose shown genres come from nowhere better than YouTube and that Last.fm was not asked for yet,
+    /// with their shown artist, oldest first.
+    /// </summary>
+    Task<IReadOnlyList<(long Id, string Artist)>> ListWithoutGenresAsync();
+
+    /// <summary>
+    /// Replaces the track's Last.fm genres and remembers that Last.fm was asked, also when it had none.
+    /// New genres mark the file's tags as outdated.
+    /// </summary>
+    Task SetLastFmTagsAsync(long trackId, IReadOnlyList<string> names);
+
     /// <summary>Records that the tags in the file now match the displayed values.</summary>
     Task MarkTagsWrittenAsync(long id);
 
