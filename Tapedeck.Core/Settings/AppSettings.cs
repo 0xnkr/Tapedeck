@@ -11,6 +11,10 @@ namespace Tapedeck.Core.Settings;
 /// </param>
 /// <param name="LevelPlayback">The app's player plays all tracks equally loud; <c>null</c> means on. The track gain in the files does not depend on it.</param>
 /// <param name="LastFmApiKey">The user's own Last.fm API key for genres of tracks MusicBrainz has none for; <c>null</c> turns Last.fm off.</param>
+/// <param name="ParallelDownloads">
+/// How many tracks "Download pending" and similar download at once, 1 to <see cref="MAX_PARALLEL_DOWNLOADS"/>;
+/// <c>null</c> means <see cref="DEFAULT_PARALLEL_DOWNLOADS"/>.
+/// </param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
@@ -18,4 +22,11 @@ public sealed record AppSettings(
     bool? MusicBrainzAuto = null,
     bool? KeepDeletesFiles = null,
     bool? LevelPlayback = null,
-    string? LastFmApiKey = null);
+    string? LastFmApiKey = null,
+    int? ParallelDownloads = null)
+{
+    /// <summary>Clearly faster than one at a time, and still below what makes YouTube refuse.</summary>
+    public const int DEFAULT_PARALLEL_DOWNLOADS = 3;
+
+    public const int MAX_PARALLEL_DOWNLOADS = 4;
+}

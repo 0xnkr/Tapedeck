@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Main genres: the fine genres of a track ("G-Funk", "Deep House", "Dance-Pop") are mapped to a few stable main genres such as Hip-Hop, Electronic, Pop, Rock or K-Pop. The detail page shows the main genre that goes into the file.
 - Smart playlists can pick tracks by main genre, next to the fine genres.
 - Genres from [Last.fm](https://www.last.fm) for tracks MusicBrainz has none for, from the tags listeners gave the artist. Enter your own free API key under **Settings → Tools**; new tracks are asked after the MusicBrainz lookup, and "Fetch genres (N)" asks for all others. Only tags that map to a main genre are kept, so noise like "seen live" stays out.
+- "Download pending", "Download missing" and "Download playlist" download several tracks at once, 3 by default, so a long list is done much sooner. Choose 1 to 4 under **Settings → Library → Downloads at once**. One toast counts the whole batch, and after five failures in a row the batch stops, since YouTube is then most likely refusing for a while.
 
 ### Changed
 
