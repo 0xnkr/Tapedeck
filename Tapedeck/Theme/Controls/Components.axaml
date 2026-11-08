@@ -35,6 +35,12 @@
             <Setter Property="Padding" Value="22,8,8,8" />
             <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
         </Style>
+        <!-- Pill above every page for something that waits for the user, e.g. found Spotify songs not added yet -->
+        <Style Selector="^.reminder">
+            <Setter Property="Background" Value="{DynamicResource Brush.InfoContainer}" />
+            <Setter Property="Padding" Value="20,8,8,8" />
+            <Setter Property="CornerRadius" Value="{StaticResource Radius.Pill}" />
+        </Style>
         <!-- Small pill floating above an island, e.g. the activity toast. One level brighter than Surface1. -->
         <Style Selector="^.toast">
             <Setter Property="Background" Value="{DynamicResource Brush.Surface2}" />
