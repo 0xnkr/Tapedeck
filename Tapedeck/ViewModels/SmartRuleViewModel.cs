@@ -22,6 +22,7 @@ public static class SmartLabels
         SmartField.Album => Strings.Field_Album,
         SmartField.AlbumArtist => Strings.Field_AlbumArtist,
         SmartField.Genre => Strings.Smart_FieldGenre,
+        SmartField.MainGenre => Strings.Smart_FieldMainGenre,
         SmartField.Year => Strings.Field_Year,
         SmartField.Rating => Strings.Field_Rating,
         _ => Strings.Smart_FieldAdded,
@@ -96,6 +97,7 @@ public partial class SmartRuleViewModel : ViewModelBase
         SmartField.Rating => Strings.Smart_PlaceholderRating,
         SmartField.Added => Strings.Smart_PlaceholderDays,
         SmartField.Genre => Strings.Smart_PlaceholderGenre,
+        SmartField.MainGenre => Strings.Smart_PlaceholderMainGenre,
         _ => Strings.Smart_PlaceholderText,
     };
 

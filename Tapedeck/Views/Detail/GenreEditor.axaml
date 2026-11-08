@@ -6,6 +6,7 @@
              x:Class="Tapedeck.Views.Detail.GenreEditor"
              x:DataType="vm:TrackDetailViewModel">
 
+    <StackPanel Spacing="{StaticResource Space.2}">
     <!-- Genre chips with remove buttons, then "+ Genre" which turns into a small field -->
     <WrapPanel ItemSpacing="6" LineSpacing="6">
         <ItemsControl ItemsSource="{Binding Genres}">
@@ -41,4 +42,12 @@
             </TextBox.KeyBindings>
         </TextBox>
     </WrapPanel>
+
+    <!-- What goes into the file: the stable main genres the fine ones map to -->
+    <TextBlock Classes="support"
+               Foreground="{DynamicResource Brush.Text2}"
+               Text="{Binding MainGenres}"
+               ToolTip.Tip="{x:Static res:Strings.Genre_MainHint}"
+               IsVisible="{Binding MainGenres, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    </StackPanel>
 </UserControl>
