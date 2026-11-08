@@ -1852,4 +1852,16 @@
     <value>{0} songs could not be added: {1}</value>
     <comment>{0} number of songs, {1} the first errors</comment>
   </data>
+  <data name="Spotify_Reminder" xml:space="preserve">
+    <value>{0} found Spotify songs are not in your library yet. When you have checked them, click "{1}".</value>
+    <comment>Lasting reminder above every page; {0} number of songs, {1} the text of Spotify_ImportButton</comment>
+  </data>
+  <data name="Spotify_ReminderOpen" xml:space="preserve">
+    <value>Open</value>
+    <comment>Button in the Spotify reminder; opens the Spotify import page</comment>
+  </data>
+  <data name="Spotify_ReminderOpenHint" xml:space="preserve">
+    <value>Opens the Spotify import to check and add the songs</value>
+    <comment>Tooltip of Spotify_ReminderOpen</comment>
+  </data>
 </root>
