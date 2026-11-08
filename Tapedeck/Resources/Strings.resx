@@ -1864,4 +1864,36 @@
     <value>Opens the Spotify import to check and add the songs</value>
     <comment>Tooltip of Spotify_ReminderOpen</comment>
   </data>
+  <data name="Spotify_MaxPlays" xml:space="preserve">
+    <value>At most</value>
+    <comment>Before the number field: at most N real plays</comment>
+  </data>
+  <data name="Spotify_MaxPlaysPlaceholder" xml:space="preserve">
+    <value>any</value>
+    <comment>Placeholder of the empty maximum field: no upper limit</comment>
+  </data>
+  <data name="Spotify_MaxPlaysHint" xml:space="preserve">
+    <value>Leave empty for no upper limit. With at least 40 and at most 49 you get the songs between two earlier imports.</value>
+    <comment>Tooltip of the maximum plays</comment>
+  </data>
+  <data name="Spotify_RangePlaylistName" xml:space="preserve">
+    <value>Spotify {0}–{1} plays</value>
+    <comment>Suggested playlist name; {0} minimum, {1} maximum real plays</comment>
+  </data>
+  <data name="Spotify_SelectAll" xml:space="preserve">
+    <value>Select all</value>
+    <comment>Link button above the song list</comment>
+  </data>
+  <data name="Spotify_SelectAllHint" xml:space="preserve">
+    <value>Ticks all songs of this tab</value>
+    <comment>Tooltip of Spotify_SelectAll</comment>
+  </data>
+  <data name="Spotify_DeselectAll" xml:space="preserve">
+    <value>Deselect all</value>
+    <comment>Link button above the song list</comment>
+  </data>
+  <data name="Spotify_DeselectAllHint" xml:space="preserve">
+    <value>Unticks all songs of this tab, e.g. the ones already in an earlier Spotify playlist</value>
+    <comment>Tooltip of Spotify_DeselectAll</comment>
+  </data>
 </root>
