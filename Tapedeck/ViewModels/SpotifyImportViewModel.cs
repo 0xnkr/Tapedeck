@@ -70,7 +70,22 @@ public partial class SpotifyImportViewModel(
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanImport))]
+    [NotifyPropertyChangedFor(nameof(HasReminder))]
     public partial bool IsImporting { get; private set; }
+
+    /// <summary>Found songs that are ticked but not in the library yet.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasReminder))]
+    [NotifyPropertyChangedFor(nameof(ReminderText))]
+    public partial int ReadyCount { get; private set; }
+
+    /// <summary>
+    /// Found songs wait for "Add N songs". Shown app-wide and kept until they are added: a search can run for hours,
+    /// and nothing reaches the library before the click.
+    /// </summary>
+    public bool HasReminder => this.ReadyCount > 0 && !this.IsImporting;
+
+    public string ReminderText => string.Format(Strings.Spotify_Reminder, this.ReadyCount, this.ImportLabel);
 
     /// <summary>"23 of 790 songs · about 2 h 10 min left", or that all are searched.</summary>
     [ObservableProperty]
@@ -367,7 +382,12 @@ public partial class SpotifyImportViewModel(
         this.UpdateCounts();
     }
 
-    private void UpdateCounts() => this.ImportCount = this.rows.Count(r => r.CanInclude && r.IsIncluded);
+    private void UpdateCounts()
+    {
+        this.ImportCount = this.rows.Count(r => r.CanInclude && r.IsIncluded);
+        this.ReadyCount = this.rows.Count(r => r.Group == SpotifyRowGroup.Ready && r.IsIncluded);
+        this.OnPropertyChanged(nameof(this.ReminderText));
+    }
 
     private string TabLabel(string format, SpotifyRowGroup group) => string.Format(format, this.rows.Count(r => r.Group == group));
 

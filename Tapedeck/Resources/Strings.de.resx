@@ -1392,4 +1392,13 @@
   <data name="Spotify_SongsFailed" xml:space="preserve">
     <value>{0} Songs konnten nicht hinzugefügt werden: {1}</value>
   </data>
+  <data name="Spotify_Reminder" xml:space="preserve">
+    <value>{0} gefundene Spotify-Songs sind noch nicht in deiner Bibliothek. Wenn du sie geprüft hast, klicke auf „{1}“.</value>
+  </data>
+  <data name="Spotify_ReminderOpen" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Spotify_ReminderOpenHint" xml:space="preserve">
+    <value>Öffnet den Spotify-Import, um die Songs zu prüfen und zu übernehmen</value>
+  </data>
 </root>
