@@ -183,6 +183,33 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         await transaction.CommitAsync();
     }
 
+    public async Task<IReadOnlyList<(long Id, string Artist)>> ListWithoutGenresAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(long Id, string Artist)>(
+            """
+            SELECT d.id, d.artist FROM tracks_display d JOIN tracks t ON t.id = d.id
+            WHERE d.genres_source IN ('none', 'yt') AND d.artist <> '' AND t.lastfm_checked_at IS NULL
+            ORDER BY d.added_at, d.id;
+            """);
+        return rows.AsList();
+    }
+
+    public async Task SetLastFmTagsAsync(long trackId, IReadOnlyList<string> names)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        await connection.ExecuteAsync(
+            "DELETE FROM track_tags WHERE track_id = @trackId AND source = @source;",
+            new { trackId, source = TagSource.Lastfm.ToDb() }, transaction);
+        foreach (var name in names)
+            await InsertTagAsync(connection, transaction, trackId, name, TagSource.Lastfm);
+        var edited = names.Count > 0 ? $", edited_at = {NOW}" : string.Empty;
+        await connection.ExecuteAsync(
+            $"UPDATE tracks SET lastfm_checked_at = {NOW}{edited} WHERE id = @trackId;", new { trackId }, transaction);
+        await transaction.CommitAsync();
+    }
+
     public async Task MarkTagsWrittenAsync(long id)
     {
         await using var connection = await connectionFactory.OpenAsync();
