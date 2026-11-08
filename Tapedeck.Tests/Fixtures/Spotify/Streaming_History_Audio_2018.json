@@ -1,6 +1,6 @@
 [ {
   "ts" : "2018-09-01T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 240000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -20,11 +20,11 @@
   "shuffle" : false,
   "skipped" : false,
   "offline" : false,
-  "offline_timestamp" : 1535606718583,
+  "offline_timestamp" : 1536000000000,
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-01T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 240000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -44,11 +44,11 @@
   "shuffle" : false,
   "skipped" : false,
   "offline" : false,
-  "offline_timestamp" : 1535606718583,
+  "offline_timestamp" : 1536000000000,
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-01T10:00:00Z",
-  "platform" : "Partner SCEI sony_tv;ps4;;",
+  "platform" : "Partner generic_tv;console;;",
   "ms_played" : 5000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.2",
@@ -72,7 +72,7 @@
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-02T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 200000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -96,7 +96,7 @@
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-03T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 29900,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -120,7 +120,7 @@
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-04T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 120000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -144,7 +144,7 @@
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-05T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 1500000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
@@ -168,7 +168,7 @@
   "incognito_mode" : false
 }, {
   "ts" : "2018-09-06T10:00:00Z",
-  "platform" : "Android OS 8.0.0 API 26 (HUAWEI, ANE-LX1)",
+  "platform" : "Android OS 9 API 28 (Generic, Phone)",
   "ms_played" : 180000,
   "conn_country" : "DE",
   "ip_addr" : "192.0.2.1",
