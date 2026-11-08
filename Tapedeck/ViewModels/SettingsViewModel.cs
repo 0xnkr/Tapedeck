@@ -95,6 +95,7 @@ public partial class SettingsViewModel : ViewModelBase
         this.MusicBrainzAuto = settings.MusicBrainzAuto ?? true;
         this.AskBeforeKeep = settings.KeepDeletesFiles is null;
         this.LevelPlayback = settings.LevelPlayback ?? true;
+        this.ParallelDownloads = Math.Clamp(settings.ParallelDownloads ?? AppSettings.DEFAULT_PARALLEL_DOWNLOADS, 1, AppSettings.MAX_PARALLEL_DOWNLOADS);
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -165,6 +166,13 @@ public partial class SettingsViewModel : ViewModelBase
 
     partial void OnLanguageChanged(LanguageChoice value) =>
         this.store.Update(s => s with { Language = ToCode(value) });
+
+    /// <summary>How many tracks a batch downloads at once.</summary>
+    [ObservableProperty]
+    public partial int ParallelDownloads { get; set; }
+
+    partial void OnParallelDownloadsChanged(int value) =>
+        this.store.Update(s => s with { ParallelDownloads = value });
 
     partial void OnMusicBrainzAutoChanged(bool value) =>
         this.store.Update(s => s with { MusicBrainzAuto = value });
