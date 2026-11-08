@@ -4196,5 +4196,32 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Spotify_SongsFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} found Spotify songs are not in your library yet. When you have checked them, click "{1}"..
+        /// </summary>
+        public static string Spotify_Reminder {
+            get {
+                return ResourceManager.GetString("Spotify_Reminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string Spotify_ReminderOpen {
+            get {
+                return ResourceManager.GetString("Spotify_ReminderOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the Spotify import to check and add the songs.
+        /// </summary>
+        public static string Spotify_ReminderOpenHint {
+            get {
+                return ResourceManager.GetString("Spotify_ReminderOpenHint", resourceCulture);
+            }
+        }
     }
 }
