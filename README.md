@@ -46,6 +46,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
 | ▶️ **Listen in** | Click a cover to play the downloaded file, click again to pause. A small player bar shows the progress and lets you jump to any spot, on Windows, Linux and macOS alike. |
 | ✨ **Smart playlists** | Playlists that fill themselves from rules, like "genre contains Trap and year 2012 to 2016" or "the 50 newest tracks". They stay up to date as your library changes and land on your phone as normal `.m3u8` playlists. |
+| 🎧 **Import from Spotify** | Bring your Spotify favorites along: Tapedeck reads your extended streaming history, counts real plays, finds each song as the plain release on YouTube Music and adds them as a playlist, most played first. Unsure matches wait for you to pick the right video, and the search keeps its place across restarts. |
 | 🔄 **Linked YouTube playlists** | Import a YouTube playlist once and hit **Sync** later to pull in new videos. Nothing is ever removed or reordered behind your back. |
 | 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
 | 🧰 **Zero setup** | yt-dlp, FFmpeg and Deno are downloaded on first use, and yt-dlp updates with one click. |
@@ -71,6 +72,9 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 > Something went wrong? **Settings → Tools** shows the exact version and build, and **Open log** opens `log.txt` with every download, import and error. Attach both to a bug report.
 
 > [!TIP]
+> Coming from Spotify? In your Spotify account, request the **Extended streaming history** under privacy. Spotify sends a zip file after a few days. Then open **Playlists → From Spotify**, choose the zip and search your most played songs on YouTube.
+
+> [!TIP]
 > Moving to a new computer? Export the library as CSV, copy the music folder, then import the CSV on the new machine. Tapedeck finds the existing files and marks them as downloaded.
 
 ## Third-party tools and licenses
@@ -91,6 +95,8 @@ Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0
 ## Please use it responsibly
 
 Tapedeck is a personal tool for building a library of music you are allowed to keep. Downloading from YouTube may violate [YouTube's Terms of Service](https://www.youtube.com/t/terms) and copyright law where you live. You are responsible for what you download. Support the artists you listen to. 💛
+
+Tapedeck is not affiliated with YouTube, Spotify or MusicBrainz. It reads only the Spotify data download you request yourself and does not use the Spotify API.
 
 ## Build it yourself
 
@@ -124,6 +130,16 @@ Handy command line options for a single run:
 dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
 ```
 
+Two options work on a Spotify history without opening a window. They write a Markdown report into the history folder: `--spotify-report` the plays, top songs and artists, `--spotify-match` how the first songs (100 by default) are found on YouTube, for tuning the matching:
+
+```bash
+dotnet run --project Tapedeck -- --spotify-report "path/to/my_spotify_data.zip"
+```
+
+```bash
+dotnet run --project Tapedeck -- --spotify-match "path/to/my_spotify_data.zip" 100
+```
+
 ## Roadmap
 
 - [x] Library, downloads, corrections, tags, ratings
@@ -133,6 +149,7 @@ dotnet run --project Tapedeck -- --lang de --accent "#C8B6FF"
 - [ ] Genres from [Last.fm](https://www.last.fm)
 - [ ] Installer and auto updates
 - [x] Smart playlists
+- [x] Import of the most played songs from the Spotify streaming history
 - [ ] Auto playlists
 - [ ] Filtering the library by playlist
 
