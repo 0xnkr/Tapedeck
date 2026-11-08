@@ -4223,5 +4223,77 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Spotify_ReminderOpenHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At most.
+        /// </summary>
+        public static string Spotify_MaxPlays {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to any.
+        /// </summary>
+        public static string Spotify_MaxPlaysPlaceholder {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlaysPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leave empty for no upper limit. With at least 40 and at most 49 you get the songs between two earlier imports..
+        /// </summary>
+        public static string Spotify_MaxPlaysHint {
+            get {
+                return ResourceManager.GetString("Spotify_MaxPlaysHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify {0}–{1} plays.
+        /// </summary>
+        public static string Spotify_RangePlaylistName {
+            get {
+                return ResourceManager.GetString("Spotify_RangePlaylistName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        public static string Spotify_SelectAll {
+            get {
+                return ResourceManager.GetString("Spotify_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ticks all songs of this tab.
+        /// </summary>
+        public static string Spotify_SelectAllHint {
+            get {
+                return ResourceManager.GetString("Spotify_SelectAllHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deselect all.
+        /// </summary>
+        public static string Spotify_DeselectAll {
+            get {
+                return ResourceManager.GetString("Spotify_DeselectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unticks all songs of this tab, e.g. the ones already in an earlier Spotify playlist.
+        /// </summary>
+        public static string Spotify_DeselectAllHint {
+            get {
+                return ResourceManager.GetString("Spotify_DeselectAllHint", resourceCulture);
+            }
+        }
     }
 }

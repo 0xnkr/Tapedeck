@@ -1401,4 +1401,28 @@
   <data name="Spotify_ReminderOpenHint" xml:space="preserve">
     <value>Öffnet den Spotify-Import, um die Songs zu prüfen und zu übernehmen</value>
   </data>
+  <data name="Spotify_MaxPlays" xml:space="preserve">
+    <value>Höchstens</value>
+  </data>
+  <data name="Spotify_MaxPlaysPlaceholder" xml:space="preserve">
+    <value>beliebig</value>
+  </data>
+  <data name="Spotify_MaxPlaysHint" xml:space="preserve">
+    <value>Leer lassen für keine Obergrenze. Mit mindestens 40 und höchstens 49 bekommst du die Songs zwischen zwei früheren Importen.</value>
+  </data>
+  <data name="Spotify_RangePlaylistName" xml:space="preserve">
+    <value>Spotify {0}–{1} Plays</value>
+  </data>
+  <data name="Spotify_SelectAll" xml:space="preserve">
+    <value>Alle auswählen</value>
+  </data>
+  <data name="Spotify_SelectAllHint" xml:space="preserve">
+    <value>Hakt alle Songs dieses Reiters an</value>
+  </data>
+  <data name="Spotify_DeselectAll" xml:space="preserve">
+    <value>Alle abwählen</value>
+  </data>
+  <data name="Spotify_DeselectAllHint" xml:space="preserve">
+    <value>Entfernt den Haken bei allen Songs dieses Reiters, z. B. bei denen aus einer früheren Spotify-Playlist</value>
+  </data>
 </root>
