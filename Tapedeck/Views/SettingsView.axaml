@@ -98,6 +98,58 @@
                                     </Grid>
                                 </StackPanel>
 
+                                <!-- Several downloads at once finish a long list sooner -->
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_ParallelDownloads}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_ParallelDownloadsHint}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Classes="segmented" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="ParallelDownloads" Content="1"
+                                                         AutomationProperties.Name="{x:Static res:Strings.Settings_ParallelDownloads}">
+                                                <RadioButton.IsChecked>
+                                                    <Binding Path="ParallelDownloads" Converter="{x:Static converters:EqualsConverter.INSTANCE}">
+                                                        <Binding.ConverterParameter>
+                                                            <x:Int32>1</x:Int32>
+                                                        </Binding.ConverterParameter>
+                                                    </Binding>
+                                                </RadioButton.IsChecked>
+                                            </RadioButton>
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="ParallelDownloads" Content="2"
+                                                         AutomationProperties.Name="{x:Static res:Strings.Settings_ParallelDownloads}">
+                                                <RadioButton.IsChecked>
+                                                    <Binding Path="ParallelDownloads" Converter="{x:Static converters:EqualsConverter.INSTANCE}">
+                                                        <Binding.ConverterParameter>
+                                                            <x:Int32>2</x:Int32>
+                                                        </Binding.ConverterParameter>
+                                                    </Binding>
+                                                </RadioButton.IsChecked>
+                                            </RadioButton>
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="ParallelDownloads" Content="3"
+                                                         AutomationProperties.Name="{x:Static res:Strings.Settings_ParallelDownloads}">
+                                                <RadioButton.IsChecked>
+                                                    <Binding Path="ParallelDownloads" Converter="{x:Static converters:EqualsConverter.INSTANCE}">
+                                                        <Binding.ConverterParameter>
+                                                            <x:Int32>3</x:Int32>
+                                                        </Binding.ConverterParameter>
+                                                    </Binding>
+                                                </RadioButton.IsChecked>
+                                            </RadioButton>
+                                            <RadioButton Theme="{StaticResource Segment}" GroupName="ParallelDownloads" Content="4"
+                                                         AutomationProperties.Name="{x:Static res:Strings.Settings_ParallelDownloads}">
+                                                <RadioButton.IsChecked>
+                                                    <Binding Path="ParallelDownloads" Converter="{x:Static converters:EqualsConverter.INSTANCE}">
+                                                        <Binding.ConverterParameter>
+                                                            <x:Int32>4</x:Int32>
+                                                        </Binding.ConverterParameter>
+                                                    </Binding>
+                                                </RadioButton.IsChecked>
+                                            </RadioButton>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                                     <StackPanel Spacing="2" VerticalAlignment="Center">
                                         <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_LevelPlayback}" />
