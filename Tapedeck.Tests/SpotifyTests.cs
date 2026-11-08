@@ -179,6 +179,16 @@ public sealed class SpotifyTests : IDisposable
     }
 
     [Fact]
+    public async Task Selection_can_take_a_range_of_plays()
+    {
+        var streams = (await ReadFixturesAsync()).Streams;
+
+        // Gangsta's Paradise and Alright have 3 real plays, the live version and HUMBLE. one
+        Assert.Equal(["Alright - Live", "HUMBLE."], new SpotifySelection(MaxRealPlays: 2).Apply(streams).Select(s => s.Title));
+        Assert.Equal(["Gangsta's Paradise", "Alright"], new SpotifySelection(MinRealPlays: 2, MaxRealPlays: 3).Apply(streams).Select(s => s.Title));
+    }
+
+    [Fact]
     public async Task Selection_counts_only_the_plays_of_its_period()
     {
         var streams = (await ReadFixturesAsync()).Streams;
