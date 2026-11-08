@@ -270,6 +270,35 @@
                                               IsChecked="{Binding MusicBrainzAuto}" />
                                 </Grid>
                             </Border>
+
+                            <!-- Last.fm: genres for tracks MusicBrainz has none for, with the user's own key -->
+                            <Border Classes="row">
+                                <StackPanel Spacing="{StaticResource Space.2}">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Classes="body-strong" Text="Last.fm" />
+                                            <TextBlock Classes="setting-hint" TextWrapping="Wrap" Text="{x:Static res:Strings.Settings_LastFmHint}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Classes="link"
+                                                VerticalAlignment="Center"
+                                                Content="{x:Static res:Strings.Settings_LastFmGetKey}"
+                                                ToolTip.Tip="{x:Static res:Strings.Settings_LastFmGetKeyHint}"
+                                                Command="{Binding OpenLastFmKeyPageCommand}" />
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                        <TextBox Text="{Binding LastFmApiKey}"
+                                                 PlaceholderText="{x:Static res:Strings.Settings_LastFmKeyPlaceholder}"
+                                                 VerticalContentAlignment="Center"
+                                                 AutomationProperties.Name="{x:Static res:Strings.Settings_LastFmKeyPlaceholder}" />
+                                        <Button Grid.Column="1"
+                                                Classes="secondary"
+                                                Content="{Binding LastFmFetchLabel}"
+                                                ToolTip.Tip="{x:Static res:Strings.Settings_LastFmFetchHint}"
+                                                Command="{Binding FetchLastFmCommand}" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </controls:Island>
                 </Grid>

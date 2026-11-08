@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.LastFm;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
@@ -70,12 +71,18 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly PlaylistSync playlistSync;
     private readonly DialogService dialogs;
     private readonly PlayerService player;
+    private readonly LastFmQueue lastFm;
+    private readonly LastFmGenreService lastFmGenres;
+
+    private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
-        DialogService dialogs, PlayerService player)
+        DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres)
     {
         this.player = player;
+        this.lastFm = lastFm;
+        this.lastFmGenres = lastFmGenres;
         this.store = store;
         this.paths = paths;
         this.mover = mover;
@@ -95,6 +102,12 @@ public partial class SettingsViewModel : ViewModelBase
         this.MusicBrainzAuto = settings.MusicBrainzAuto ?? true;
         this.AskBeforeKeep = settings.KeepDeletesFiles is null;
         this.LevelPlayback = settings.LevelPlayback ?? true;
+        this.LastFmApiKey = settings.LastFmApiKey ?? string.Empty;
+        lastFm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(LastFmQueue.IsRunning) && !lastFm.IsRunning)
+                _ = this.CountLastFmPendingAsync();
+        };
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -147,6 +160,20 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial string? DenoVersion { get; private set; }
 
+    /// <summary>The user's own Last.fm API key; empty turns Last.fm off.</summary>
+    [ObservableProperty]
+    public partial string LastFmApiKey { get; set; } = string.Empty;
+
+    /// <summary>Tracks without genres that Last.fm was not asked for yet.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LastFmFetchLabel))]
+    [NotifyCanExecuteChangedFor(nameof(FetchLastFmCommand))]
+    public partial int LastFmPending { get; private set; }
+
+    public string LastFmFetchLabel => string.Format(Strings.Settings_LastFmFetch, this.LastFmPending);
+
+    private bool CanFetchLastFm => this.LastFmPending > 0 && this.LastFmApiKey.Trim().Length > 0;
+
     /// <summary>Last error, shown below the header.</summary>
     [ObservableProperty]
     public partial string? Notice { get; private set; }
@@ -161,7 +188,24 @@ public partial class SettingsViewModel : ViewModelBase
         this.YtDlpVersion = versions.YtDlp;
         this.FFmpegVersion = versions.FFmpeg;
         this.DenoVersion = versions.Deno;
+        await this.CountLastFmPendingAsync();
     }
+
+    private async Task CountLastFmPendingAsync() => this.LastFmPending = await this.lastFmGenres.CountPendingAsync();
+
+    partial void OnLastFmApiKeyChanged(string value)
+    {
+        var key = value.Trim();
+        this.store.Update(s => s with { LastFmApiKey = key.Length > 0 ? key : null });
+        this.FetchLastFmCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>Asks Last.fm for the genres of all tracks that have none yet.</summary>
+    [RelayCommand(CanExecute = nameof(CanFetchLastFm))]
+    private void FetchLastFm() => this.lastFm.EnqueueMissing();
+
+    [RelayCommand]
+    private Task OpenLastFmKeyPageAsync() => this.platform.OpenUrlAsync(LASTFM_KEY_URL);
 
     partial void OnLanguageChanged(LanguageChoice value) =>
         this.store.Update(s => s with { Language = ToCode(value) });
