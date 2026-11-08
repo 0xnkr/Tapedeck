@@ -17,8 +17,10 @@ public enum AppPage
 public partial class MainViewModel : ViewModelBase
 {
     public MainViewModel(LibraryViewModel library, PlaylistsViewModel playlists, SettingsViewModel settings,
-        NavigationService navigation, ActivityService activity, DialogService dialogs, PlayerService player)
+        NavigationService navigation, ActivityService activity, DialogService dialogs, PlayerService player,
+        SpotifyImportViewModel spotifyImport)
     {
+        this.SpotifyImport = spotifyImport;
         this.Player = player;
         this.Playlists = playlists;
         this.Dialogs = dialogs;
@@ -27,6 +29,24 @@ public partial class MainViewModel : ViewModelBase
         this.Navigation = navigation;
         this.Activity = activity;
         this.Navigation.Reset(this.Library);
+        this.Navigation.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(NavigationService.Current))
+                this.OnPropertyChanged(nameof(this.IsSpotifyImportShown));
+        };
+    }
+
+    /// <summary>For the reminder above every page while found Spotify songs wait to be added.</summary>
+    public SpotifyImportViewModel SpotifyImport { get; }
+
+    /// <summary>The reminder offers "Add N songs" there and a way to the page everywhere else.</summary>
+    public bool IsSpotifyImportShown => this.Navigation.Current == this.SpotifyImport;
+
+    [RelayCommand]
+    private void OpenSpotifyImport()
+    {
+        this.ShowPage(AppPage.Playlists);
+        this.Navigation.Open(this.SpotifyImport);
     }
 
     public LibraryViewModel Library { get; }
