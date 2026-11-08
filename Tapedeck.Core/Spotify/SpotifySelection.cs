@@ -8,7 +8,9 @@ namespace Tapedeck.Core.Spotify;
 /// <param name="From">First day, inclusive (UTC).</param>
 /// <param name="To">Last day, inclusive (UTC).</param>
 /// <param name="MaxSkipShare">Leaves out songs skipped more often, e.g. 0.6: playlist filler rather than favorites.</param>
-public sealed record SpotifySelection(int? Top = null, int? MinRealPlays = null, DateOnly? From = null, DateOnly? To = null, double? MaxSkipShare = null)
+/// <param name="MaxRealPlays">Leaves out songs played more often, e.g. 49 next to 40 for the songs between two imports.</param>
+public sealed record SpotifySelection(int? Top = null, int? MinRealPlays = null, DateOnly? From = null, DateOnly? To = null,
+    double? MaxSkipShare = null, int? MaxRealPlays = null)
 {
     /// <summary>What the import offers first: at least 10 real plays, skipped at most 60 % of the times.</summary>
     public static readonly SpotifySelection DEFAULT = new(MinRealPlays: 10, MaxSkipShare: 0.6);
@@ -22,6 +24,8 @@ public sealed record SpotifySelection(int? Top = null, int? MinRealPlays = null,
             .Where(s => s.RealPlays > 0);
         if (this.MinRealPlays is { } min)
             songs = songs.Where(s => s.RealPlays >= min);
+        if (this.MaxRealPlays is { } max)
+            songs = songs.Where(s => s.RealPlays <= max);
         if (this.MaxSkipShare is { } maxSkip)
             songs = songs.Where(s => s.SkipShare <= maxSkip);
         if (this.Top is { } top)
