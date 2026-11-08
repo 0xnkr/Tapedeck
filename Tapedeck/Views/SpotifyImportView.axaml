@@ -60,6 +60,18 @@
                                 <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
                                            Text="{x:Static res:Strings.Spotify_MinPlaysSuffix}" />
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}"
+                                        ToolTip.Tip="{x:Static res:Strings.Spotify_MaxPlaysHint}">
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MaxPlays}" />
+                                <TextBox Width="72"
+                                         Text="{Binding MaxPlaysText}"
+                                         PlaceholderText="{x:Static res:Strings.Spotify_MaxPlaysPlaceholder}"
+                                         VerticalContentAlignment="Center"
+                                         AutomationProperties.Name="{x:Static res:Strings.Spotify_MaxPlays}" />
+                                <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" VerticalAlignment="Center"
+                                           Text="{x:Static res:Strings.Spotify_MinPlaysSuffix}" />
+                            </StackPanel>
                             <CheckBox Content="{x:Static res:Strings.Spotify_SkipFilter}"
                                       IsChecked="{Binding LeaveOutSkipped}"
                                       ToolTip.Tip="{x:Static res:Strings.Spotify_SkipFilterHint}" />
@@ -114,6 +126,18 @@
             <!-- Right: the songs of the selection by where they stand -->
             <controls:Island Grid.Column="1" Classes="table">
                 <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.2}" Margin="4">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Spacing="{StaticResource Space.2}" IsVisible="{Binding CanToggleAll}">
+                        <Button Classes="link"
+                                Content="{x:Static res:Strings.Spotify_SelectAll}"
+                                ToolTip.Tip="{x:Static res:Strings.Spotify_SelectAllHint}"
+                                Command="{Binding SelectAllCommand}" />
+                        <Button Classes="link"
+                                Content="{x:Static res:Strings.Spotify_DeselectAll}"
+                                ToolTip.Tip="{x:Static res:Strings.Spotify_DeselectAllHint}"
+                                Command="{Binding DeselectAllCommand}" />
+                    </StackPanel>
+
                     <Border Classes="segmented" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <RadioButton Theme="{StaticResource Segment}" GroupName="SpotifyTab"

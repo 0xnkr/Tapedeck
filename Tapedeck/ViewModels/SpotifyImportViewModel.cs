@@ -56,6 +56,10 @@ public partial class SpotifyImportViewModel(
     [ObservableProperty]
     public partial string MinPlaysText { get; set; } = SpotifySelection.DEFAULT.MinRealPlays!.Value.ToString(CultureInfo.InvariantCulture);
 
+    /// <summary>Empty for no upper limit; with 40 to 49 the songs between two earlier imports.</summary>
+    [ObservableProperty]
+    public partial string MaxPlaysText { get; set; } = string.Empty;
+
     [ObservableProperty]
     public partial bool LeaveOutSkipped { get; set; } = true;
 
@@ -104,6 +108,7 @@ public partial class SpotifyImportViewModel(
     [NotifyPropertyChangedFor(nameof(InLibraryTab))]
     [NotifyPropertyChangedFor(nameof(VisibleRows))]
     [NotifyPropertyChangedFor(nameof(IsListEmpty))]
+    [NotifyPropertyChangedFor(nameof(CanToggleAll))]
     public partial SpotifyRowGroup Tab { get; set; } = SpotifyRowGroup.Ready;
 
     public string ReadyTab => this.TabLabel(Strings.Spotify_Ready, SpotifyRowGroup.Ready);
@@ -114,6 +119,9 @@ public partial class SpotifyImportViewModel(
     public IReadOnlyList<SpotifySongRowViewModel> VisibleRows => this.rows.Where(r => r.Group == this.Tab).ToList();
 
     public bool IsListEmpty => this.VisibleRows.Count == 0;
+
+    /// <summary>Only ready and library songs have a tick.</summary>
+    public bool CanToggleAll => this.Tab is SpotifyRowGroup.Ready or SpotifyRowGroup.InLibrary && !this.IsListEmpty;
 
     [ObservableProperty]
     public partial string PlaylistName { get; set; } = string.Empty;
@@ -132,6 +140,8 @@ public partial class SpotifyImportViewModel(
 
     partial void OnMinPlaysTextChanged(string value) => _ = this.RefreshAsync();
 
+    partial void OnMaxPlaysTextChanged(string value) => _ = this.RefreshAsync();
+
     partial void OnLeaveOutSkippedChanged(bool value) => _ = this.RefreshAsync();
 
     partial void OnImportCountChanged(int value) => this.OnPropertyChanged(nameof(this.ImportLabel));
@@ -141,6 +151,20 @@ public partial class SpotifyImportViewModel(
 
     [RelayCommand]
     private void ShowTab(SpotifyRowGroup tab) => this.Tab = tab;
+
+    /// <summary>Ticks every song of the open tab.</summary>
+    [RelayCommand]
+    private void SelectAll() => this.SetAllIncluded(true);
+
+    /// <summary>Unticks every song of the open tab, e.g. the ones that went into an earlier Spotify playlist.</summary>
+    [RelayCommand]
+    private void DeselectAll() => this.SetAllIncluded(false);
+
+    private void SetAllIncluded(bool included)
+    {
+        foreach (var row in this.VisibleRows.Where(r => r.CanInclude))
+            row.IsIncluded = included;
+    }
 
     [RelayCommand]
     private async Task PickFolderAsync()
@@ -293,7 +317,9 @@ public partial class SpotifyImportViewModel(
             return;
 
         var minPlays = int.TryParse(this.MinPlaysText, NumberStyles.None, CultureInfo.InvariantCulture, out var min) && min > 0 ? min : 1;
-        var selection = new SpotifySelection(MinRealPlays: minPlays, MaxSkipShare: this.LeaveOutSkipped ? SpotifySelection.DEFAULT.MaxSkipShare : null);
+        int? maxPlays = int.TryParse(this.MaxPlaysText, NumberStyles.None, CultureInfo.InvariantCulture, out var max) && max >= minPlays ? max : null;
+        var selection = new SpotifySelection(MinRealPlays: minPlays, MaxRealPlays: maxPlays,
+            MaxSkipShare: this.LeaveOutSkipped ? SpotifySelection.DEFAULT.MaxSkipShare : null);
         var songs = selection.Apply(this.history.Streams);
         var searches = await matches.ListAsync();
         var inLibrary = SpotifyLibraryMatch.TracksBySongKey(await tracks.ListDisplayAsync(), searches);
@@ -344,11 +370,13 @@ public partial class SpotifyImportViewModel(
         if (!this.IsSearching)
             this.SearchStatus = waiting.Count == 0 ? Strings.Spotify_SearchDone : string.Empty;
         this.UpdateCounts();
-        foreach (var name in new[] { nameof(this.ReadyTab), nameof(this.ReviewTab), nameof(this.NotFoundTab), nameof(this.InLibraryTab), nameof(this.VisibleRows), nameof(this.IsListEmpty) })
+        foreach (var name in new[] { nameof(this.ReadyTab), nameof(this.ReviewTab), nameof(this.NotFoundTab), nameof(this.InLibraryTab), nameof(this.VisibleRows), nameof(this.IsListEmpty), nameof(this.CanToggleAll) })
             this.OnPropertyChanged(name);
 
         // a name the user did not change follows the selection
-        var suggestion = await playlists.FreeNameAsync(string.Format(Strings.Spotify_DefaultPlaylistName, minPlays));
+        var suggestion = await playlists.FreeNameAsync(maxPlays is { } upper
+            ? string.Format(Strings.Spotify_RangePlaylistName, minPlays, upper)
+            : string.Format(Strings.Spotify_DefaultPlaylistName, minPlays));
         if (this.PlaylistName.Length == 0 || this.PlaylistName == this.suggestedName)
             this.PlaylistName = suggestion;
         this.suggestedName = suggestion;
