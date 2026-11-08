@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- "Download pending", "Download missing" and "Download playlist" download several tracks at once, 3 by default, so a long list is done much sooner. Choose 1 to 4 under **Settings → Library → Downloads at once**. One toast counts the whole batch, and after five failures in a row the batch stops, since YouTube is then most likely refusing for a while.
+
 ## [1.1.0] - 2026-11-08
 
 ### Added
