@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- "Target player" under **Settings → Library** writes the tags for the phone player you use. "PixelPlayer" adds a ReplayGain volume level, since PixelPlayer misreads the Opus one and plays the tracks nearly silent with ReplayGain on. Switching back takes it out again: after a change, "Write tags (N)" updates every file.
+
 ### Changed
 
 - The Spotify search reads each YouTube hit about a second faster and with fewer requests, since it skips the download formats it never uses. Age-restricted hits can now be read too.
