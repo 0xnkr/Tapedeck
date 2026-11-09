@@ -70,6 +70,10 @@ public sealed class LastFmTests : IAsyncLifetime
     }
 
     [Fact]
+    public void An_html_error_page_fails_only_this_answer() =>
+        Assert.Throws<InvalidDataException>(() => LastFmJson.ParseTopTags("<html><body><h1>502 Bad Gateway</h1></body></html>"));
+
+    [Fact]
     public void A_single_tag_comes_as_object() =>
         Assert.Equal([new LastFmTag("k-pop", 100)], LastFmJson.ParseTopTags("""{"toptags": {"tag": {"count": "100", "name": "k-pop"}}}"""));
 

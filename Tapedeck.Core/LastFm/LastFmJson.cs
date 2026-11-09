@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Tapedeck.Core.LastFm;
@@ -23,7 +24,16 @@ public static class LastFmJson
     /// <exception cref="LastFmException">Last.fm answered with an error.</exception>
     public static IReadOnlyList<LastFmTag> ParseTopTags(string json)
     {
-        var root = JsonNode.Parse(json)?.AsObject() ?? throw new InvalidDataException("Last.fm did not return a JSON object.");
+        JsonObject root;
+        try
+        {
+            root = JsonNode.Parse(json)?.AsObject() ?? throw new InvalidDataException("Last.fm did not return a JSON object.");
+        }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException)
+        {
+            // an HTML error page, or JSON that is no object; fails this artist, not the whole run
+            throw new InvalidDataException("Last.fm did not return a JSON object.", ex);
+        }
         if (root["error"] is JsonValue code && code.TryGetValue<int>(out var number))
             throw new LastFmException(number, (string?)root["message"] ?? string.Empty);
 

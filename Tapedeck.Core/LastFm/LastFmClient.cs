@@ -44,7 +44,8 @@ public sealed class LastFmClient(HttpClient http, ILogger<LastFmClient>? logger 
 
             try
             {
-                if (status is HttpStatusCode.ServiceUnavailable or HttpStatusCode.TooManyRequests)
+                // a server error comes as an HTML page from Last.fm or a proxy in between, not as a JSON error
+                if (status is HttpStatusCode.TooManyRequests || (int)status >= 500)
                     throw new LastFmException(LastFmException.TEMPORARILY_UNAVAILABLE, $"HTTP {(int)status}");
                 return LastFmJson.ParseTopTags(body);
             }
