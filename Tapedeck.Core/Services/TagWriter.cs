@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
+using Tapedeck.Core.Settings;
 
 namespace Tapedeck.Core.Services;
 
@@ -8,12 +9,16 @@ namespace Tapedeck.Core.Services;
 /// Writes the values from <c>tracks_display</c> into the audio file. Android players sort by these tags,
 /// not by folders. Repeatable: existing tags are overwritten, not appended.
 /// </summary>
-public sealed class TagWriter(ITrackRepository repository, AppPaths paths, ILogger<TagWriter>? logger = null)
+/// <param name="settings">Tells the target player; without it, the files follow the standard.</param>
+public sealed class TagWriter(ITrackRepository repository, AppPaths paths, SettingsStore? settings = null, ILogger<TagWriter>? logger = null)
 {
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
     /// <summary>Opus track gain (RFC 7845), read by Poweramp, Musicolet and most other players.</summary>
     public const string TRACK_GAIN_FIELD = "R128_TRACK_GAIN";
+
+    /// <summary>Only for target players that need it (<see cref="PlayerQuirks.ReplayGain"/>); Opus players should use R128.</summary>
+    public const string REPLAYGAIN_FIELD = "REPLAYGAIN_TRACK_GAIN";
 
     /// <summary>ffmpeg reports this for silence; there is nothing to level out.</summary>
     private const double SILENCE_LUFS = -70;
@@ -27,6 +32,7 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, ILogg
 
         var filePath = paths.ToLibraryPath(track.FilePath);
         var loudness = await repository.GetLoudnessAsync(trackId);
+        var quirks = PlayerQuirks.Of(TargetPlayerCode.Parse(settings?.Load().TargetPlayer));
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
@@ -54,13 +60,20 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, ILogg
                 tag.Pictures = track.Cover is { } cover && File.Exists(cover)
                     ? [new TagLib.Picture(cover) { Type = TagLib.PictureType.FrontCover }]
                     : [];
-                // a file without a measurement gets no gain rather than an outdated one
+                // a file without a measurement gets no gain rather than an outdated one; the ReplayGain field
+                // goes again when the target player no longer needs it
                 if (file.GetTag(TagLib.TagTypes.Xiph, create: true) is TagLib.Ogg.XiphComment xiph)
                 {
-                    if (loudness is { } lufs and > SILENCE_LUFS)
+                    var measured = loudness is > SILENCE_LUFS ? loudness : null;
+                    if (measured is { } lufs)
                         xiph.SetField(TRACK_GAIN_FIELD, LoudnessMeter.TrackGain(lufs).ToString(CultureInfo.InvariantCulture));
                     else
                         xiph.RemoveField(TRACK_GAIN_FIELD);
+
+                    if (measured is { } level && quirks.ReplayGain)
+                        xiph.SetField(REPLAYGAIN_FIELD, LoudnessMeter.ReplayGain(level));
+                    else
+                        xiph.RemoveField(REPLAYGAIN_FIELD);
                 }
                 file.Save();
             }

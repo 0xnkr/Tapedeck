@@ -15,6 +15,9 @@ public sealed partial class LoudnessMeter(ToolService tools)
     /// <summary>The reference loudness of Opus gain tags (RFC 7845, section 5.2.1).</summary>
     public const double R128_REFERENCE_LUFS = -23;
 
+    /// <summary>ReplayGain 2.0 levels to -18 LUFS, 5 dB louder than R128.</summary>
+    public const double REPLAYGAIN_REFERENCE_LUFS = -18;
+
     /// <summary>
     /// Level the app's own player brings every track to: the ReplayGain reference, about where players on the
     /// phone end up with the track gain. Loud YouTube uploads (-7 to -10 LUFS) are turned down by about 10 dB.
@@ -112,6 +115,13 @@ public sealed partial class LoudnessMeter(ToolService tools)
         var steps = Math.Round((R128_REFERENCE_LUFS - lufs) * 256, MidpointRounding.AwayFromZero);
         return (int)Math.Clamp(steps, short.MinValue, short.MaxValue);
     }
+
+    /// <summary>
+    /// The value of <c>REPLAYGAIN_TRACK_GAIN</c>: the gain to the ReplayGain reference of -18 LUFS in decibels,
+    /// e.g. <c>-5.23 dB</c>.
+    /// </summary>
+    public static string ReplayGain(double lufs) =>
+        (REPLAYGAIN_REFERENCE_LUFS - lufs).ToString("+0.00;-0.00;0.00", CultureInfo.InvariantCulture) + " dB";
 
     /// <summary>
     /// Linear volume factor for playing a track with the given loudness at <see cref="PLAYBACK_TARGET_LUFS"/>;
