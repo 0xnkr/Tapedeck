@@ -24,6 +24,8 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
 
     private const int DESCRIPTION_LENGTH = 300;
 
+    private const string SKIP_FORMATS = "youtube:skip=dash,hls;player_skip=js";
+
     // what yt-dlp reports when YouTube rate-limits or suspects a bot; waiting helps, retrying right away does not.
     // Not just "Sign in to confirm": age-restricted videos say "Sign in to confirm your age", which is no throttling.
     private static readonly string[] THROTTLE_MARKS = ["HTTP Error 429", "Too Many Requests", "not a bot"];
@@ -62,7 +64,9 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
 
     public async Task<YtSearchResult> FetchResultAsync(string videoId, CancellationToken ct = default)
     {
-        var json = await this.RunYtDlpAsync(["--no-playlist", "--", VideoId.WatchUrl(videoId)], ct);
+        // a search result needs no formats: skipping them and the player JavaScript saves requests and about a second
+        var json = await this.RunYtDlpAsync(["--no-playlist", "--extractor-args", SKIP_FORMATS, "--ignore-no-formats-error",
+            "--", VideoId.WatchUrl(videoId)], ct);
         return ParseResult(json);
     }
 
