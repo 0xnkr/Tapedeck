@@ -15,6 +15,7 @@ namespace Tapedeck.Core.Settings;
 /// How many tracks "Download pending" and similar download at once, 1 to <see cref="MAX_PARALLEL_DOWNLOADS"/>;
 /// <c>null</c> means <see cref="DEFAULT_PARALLEL_DOWNLOADS"/>.
 /// </param>
+/// <param name="TargetPlayer">The phone player the tags are written for, as <see cref="TargetPlayerCode"/>; <c>null</c> follows the Opus standard.</param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
@@ -23,7 +24,8 @@ public sealed record AppSettings(
     bool? KeepDeletesFiles = null,
     bool? LevelPlayback = null,
     string? LastFmApiKey = null,
-    int? ParallelDownloads = null)
+    int? ParallelDownloads = null,
+    string? TargetPlayer = null)
 {
     /// <summary>Clearly faster than one at a time, and still below what makes YouTube refuse.</summary>
     public const int DEFAULT_PARALLEL_DOWNLOADS = 3;
