@@ -3,6 +3,7 @@ using Tapedeck.Core;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Services;
+using Tapedeck.Core.Settings;
 using Tapedeck.Data;
 
 namespace Tapedeck.Tests;
@@ -114,10 +115,49 @@ public sealed class TagWriterTests : IAsyncLifetime
         Assert.Empty(this.GainField());
     }
 
-    private string[] GainField()
+    [Fact]
+    public async Task The_target_player_adds_replaygain_and_switching_back_removes_it()
+    {
+        var store = new SettingsStore(this.dir);
+        var writer = new TagWriter(this.repo, new AppPaths(this.dir, this.dir), store);
+        var id = await this.AddWithFileAsync();
+        await this.repo.SetLoudnessAsync(id, -8);
+
+        store.Update(s => s with { TargetPlayer = TargetPlayerCode.Of(TargetPlayer.PixelPlayer) });
+        await writer.WriteTagsAsync(id);
+
+        Assert.Equal(["-3840"], this.GainField());
+        Assert.Equal(["-10.00 dB"], this.GainField(TagWriter.REPLAYGAIN_FIELD));
+
+        store.Update(s => s with { TargetPlayer = TargetPlayerCode.Of(TargetPlayer.Standard) });
+        Assert.Equal([id], await this.repo.MarkGainTagsOutdatedAsync());
+        Assert.True((await this.repo.GetDisplayAsync(id))!.TagsStale);
+        await writer.WriteTagsAsync(id);
+
+        Assert.Equal(["-3840"], this.GainField());
+        Assert.Empty(this.GainField(TagWriter.REPLAYGAIN_FIELD));
+    }
+
+    [Theory]
+    [InlineData(-8, "-10.00 dB")]
+    [InlineData(-21.5, "+3.50 dB")]
+    [InlineData(-18, "0.00 dB")]
+    public void Replaygain_levels_to_minus_18_lufs(double lufs, string expected) =>
+        Assert.Equal(expected, LoudnessMeter.ReplayGain(lufs));
+
+    [Fact]
+    public void Target_player_codes_round_trip_and_unknown_ones_are_the_standard()
+    {
+        foreach (var player in Enum.GetValues<TargetPlayer>())
+            Assert.Equal(player, TargetPlayerCode.Parse(TargetPlayerCode.Of(player)));
+        Assert.Equal(TargetPlayer.Standard, TargetPlayerCode.Parse("winamp"));
+        Assert.False(PlayerQuirks.Of(TargetPlayer.Standard).ReplayGain);
+    }
+
+    private string[] GainField(string field = TagWriter.TRACK_GAIN_FIELD)
     {
         using var file = TagLib.File.Create(Path.Combine(this.dir, "song.opus"));
         var xiph = (TagLib.Ogg.XiphComment)file.GetTag(TagLib.TagTypes.Xiph);
-        return xiph.GetField(TagWriter.TRACK_GAIN_FIELD);
+        return xiph.GetField(field);
     }
 }
