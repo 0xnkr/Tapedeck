@@ -300,6 +300,30 @@ public sealed class SpotifyMatchTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task An_age_restricted_hit_is_skipped_without_stopping_the_search()
+    {
+        var song = Song("Zedd", "Make You Say", 206_000);
+        var search = new FakeSearch(throttleAfter: 100)
+        {
+            Music = [new("restricted0", "Make You Say", null, null, null, null), new("right000000", "Make You Say", null, null, null, null)],
+            Fetched = { ["right000000"] = Topic("right000000", "Make You Say", "Zedd", 206) },
+        };
+
+        var summary = await new SpotifySearchService(search, this.matches, TimeSpan.Zero).SearchAsync([song]);
+
+        Assert.Equal(["music: Zedd Make You Say", "fetch: restricted0", "fetch: right000000"], search.Calls);
+        Assert.Equal(new SpotifySearchSummary(Searched: 1, Sure: 1, Unsure: 0, NotFound: 0, Failed: 0, Throttled: false), summary);
+    }
+
+    [Theory]
+    [InlineData("ERROR: [youtube] MaB9uzef3ko: Sign in to confirm your age. This video may be inappropriate for some users.", false)]
+    [InlineData("ERROR: [youtube] MaB9uzef3ko: Video unavailable", false)]
+    [InlineData("ERROR: [youtube] MaB9uzef3ko: Sign in to confirm you’re not a bot. Use --cookies-from-browser", true)]
+    [InlineData("ERROR: [youtube:search] HTTP Error 429: Too Many Requests", true)]
+    public void Only_rate_limits_and_bot_checks_count_as_throttling(string error, bool throttled) =>
+        Assert.Equal(throttled, MetadataService.IsThrottled(error));
+
+    [Fact]
     public async Task Import_adds_the_chosen_songs_to_a_playlist_in_play_order()
     {
         // known videos only, so yt-dlp is never started
@@ -349,7 +373,9 @@ public sealed class SpotifyMatchTests : IAsyncLifetime
             this.Answer($"music: {query}", () => this.Music);
 
         public Task<YtSearchResult> FetchResultAsync(string videoId, CancellationToken ct = default) =>
-            this.Answer($"fetch: {videoId}", () => this.Fetched[videoId]);
+            this.Answer($"fetch: {videoId}", () => this.Fetched.TryGetValue(videoId, out var result)
+                ? result
+                : throw new InvalidOperationException($"yt-dlp -J failed: ERROR: [youtube] {videoId}: Sign in to confirm your age."));
 
         private Task<T> Answer<T>(string call, Func<T> result)
         {

@@ -22,10 +22,15 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
     // placeholders yt-dlp lists for videos that cannot be played anymore
     private static readonly string[] UNAVAILABLE_TITLES = ["[Private video]", "[Deleted video]"];
 
-    // what yt-dlp reports when YouTube rate-limits or suspects a bot; waiting helps, retrying right away does not
     private const int DESCRIPTION_LENGTH = 300;
 
-    private static readonly string[] THROTTLE_MARKS = ["HTTP Error 429", "Too Many Requests", "Sign in to confirm"];
+    // what yt-dlp reports when YouTube rate-limits or suspects a bot; waiting helps, retrying right away does not.
+    // Not just "Sign in to confirm": age-restricted videos say "Sign in to confirm your age", which is no throttling.
+    private static readonly string[] THROTTLE_MARKS = ["HTTP Error 429", "Too Many Requests", "not a bot"];
+
+    /// <summary>Whether a yt-dlp error means YouTube throttles, rather than that this one video is unavailable.</summary>
+    public static bool IsThrottled(string error) =>
+        THROTTLE_MARKS.Any(m => error.Contains(m, StringComparison.OrdinalIgnoreCase));
 
     public async Task<YtMetadata> FetchAsync(string url, CancellationToken ct = default)
     {
@@ -186,7 +191,7 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
             var error = (await stderr).Trim();
             this.log.LogWarning("yt-dlp -J {Arguments} failed with exit code {ExitCode}: {Error}",
                 string.Join(' ', args), process.ExitCode, error);
-            if (THROTTLE_MARKS.Any(m => error.Contains(m, StringComparison.OrdinalIgnoreCase)))
+            if (IsThrottled(error))
                 throw new YtThrottledException(error);
             throw new InvalidOperationException($"yt-dlp -J failed: {error}");
         }

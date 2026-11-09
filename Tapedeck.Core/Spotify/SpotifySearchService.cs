@@ -110,7 +110,16 @@ public sealed class SpotifySearchService(
         var songs = await this.ThrottledAsync(() => search.SearchMusicAsync(SpotifyYtMatcher.MusicQuery(song), MUSIC_RESULTS, ct), ct);
         foreach (var hit in songs.Where(s => SpotifyYtMatcher.TitleMatches(song, s.Title)).Take(MAX_FETCHES))
         {
-            results.Add(await this.ThrottledAsync(() => search.FetchResultAsync(hit.VideoId, ct), ct));
+            try
+            {
+                results.Add(await this.ThrottledAsync(() => search.FetchResultAsync(hit.VideoId, ct), ct));
+            }
+            catch (Exception ex) when (ex is not YtThrottledException and not OperationCanceledException)
+            {
+                // e.g. an age-restricted music video: without it, the other hits and the video search still find the song
+                this.log.LogInformation("Skipped YouTube hit {VideoId}: {Error}", hit.VideoId, ex.Message);
+                continue;
+            }
             if (SpotifyYtMatcher.Match(song, results).State == SpotifyMatchState.Sure)
                 return results;
         }
