@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- The Spotify search no longer stops with "YouTube is slowing down" when one of the YouTube hits is age-restricted. Such a video was mistaken for throttling, so every new run stopped at the same song. It is now skipped and the search goes on with the other hits.
+- An error page from Last.fm no longer stops fetching genres; only that artist is asked again in the next run.
+
 ## [1.2.0] - 2026-11-09
 
 ### Added
