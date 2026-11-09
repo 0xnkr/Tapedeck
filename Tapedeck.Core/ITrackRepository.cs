@@ -73,6 +73,13 @@ public interface ITrackRepository
     /// </summary>
     Task SetLoudnessAsync(long id, double lufs);
 
+    /// <summary>
+    /// Marks the tags of every tagged file with a measured loudness as outdated, because the gain fields change
+    /// with the target player.
+    /// </summary>
+    /// <returns>The tracks marked.</returns>
+    Task<IReadOnlyList<long>> MarkGainTagsOutdatedAsync();
+
     /// <summary>Downloaded tracks whose file was never measured, oldest first.</summary>
     Task<IReadOnlyList<long>> ListWithoutLoudnessAsync();
 

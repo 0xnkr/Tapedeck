@@ -216,6 +216,21 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         await connection.ExecuteAsync($"UPDATE tracks SET tags_written_at = {NOW} WHERE id = @id;", new { id });
     }
 
+    public async Task<IReadOnlyList<long>> MarkGainTagsOutdatedAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        // untagged files are outdated anyway; without a measurement there is no gain field to change
+        var ids = await connection.QueryAsync<long>(
+            $"""
+            UPDATE tracks SET edited_at = {NOW}
+            WHERE file_path IS NOT NULL
+              AND tags_written_at IS NOT NULL
+              AND loudness_lufs IS NOT NULL
+            RETURNING id;
+            """);
+        return ids.ToList();
+    }
+
     public async Task<double?> GetLoudnessAsync(long id)
     {
         await using var connection = await connectionFactory.OpenAsync();
