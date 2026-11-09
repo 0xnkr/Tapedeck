@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The Spotify search reads each YouTube hit about a second faster and with fewer requests, since it skips the download formats it never uses. Age-restricted hits can now be read too.
+
 ### Fixed
 
 - The Spotify search no longer stops with "YouTube is slowing down" when one of the YouTube hits is age-restricted. Such a video was mistaken for throttling, so every new run stopped at the same song. It is now skipped and the search goes on with the other hits.
