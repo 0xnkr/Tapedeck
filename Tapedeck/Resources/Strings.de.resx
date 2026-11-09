@@ -1488,4 +1488,25 @@
   <data name="Settings_ParallelDownloadsHint" xml:space="preserve">
     <value>Mehr werden eine lange Liste schneller fertig, weil YouTube jeden einzelnen Download bremst. Zu viele können YouTube blocken lassen.</value>
   </data>
+  <data name="Settings_TargetPlayer" xml:space="preserve">
+    <value>Ziel-Player</value>
+  </data>
+  <data name="Settings_TargetPlayerHint" xml:space="preserve">
+    <value>Manche Handy-Player lesen den Lautstärke-Ausgleich anders. Nach einem Wechsel bringt „Tags schreiben“ die Dateien auf Stand.</value>
+  </data>
+  <data name="Settings_TargetPlayerStandard" xml:space="preserve">
+    <value>Standard (Opus)</value>
+  </data>
+  <data name="Settings_TargetPlayerPixelPlayer" xml:space="preserve">
+    <value>PixelPlayer</value>
+  </data>
+  <data name="Confirm_TargetPlayerChanged_One" xml:space="preserve">
+    <value>1 Datei bekommt mit „Tags schreiben“ die Tags für den neuen Player.</value>
+  </data>
+  <data name="Confirm_TargetPlayerChanged_Other" xml:space="preserve">
+    <value>{0} Dateien bekommen mit „Tags schreiben“ die Tags für den neuen Player.</value>
+  </data>
+  <data name="Notice_TargetPlayerFailed" xml:space="preserve">
+    <value>Die Dateien konnten nicht für den neuen Player vorgemerkt werden: {0}</value>
+  </data>
 </root>

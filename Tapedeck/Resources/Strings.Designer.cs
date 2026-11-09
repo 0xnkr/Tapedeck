@@ -4484,5 +4484,68 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Settings_ParallelDownloadsHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target player.
+        /// </summary>
+        public static string Settings_TargetPlayer {
+            get {
+                return ResourceManager.GetString("Settings_TargetPlayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some phone players read the volume level differently. After a change, “Write tags” updates the files..
+        /// </summary>
+        public static string Settings_TargetPlayerHint {
+            get {
+                return ResourceManager.GetString("Settings_TargetPlayerHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard (Opus).
+        /// </summary>
+        public static string Settings_TargetPlayerStandard {
+            get {
+                return ResourceManager.GetString("Settings_TargetPlayerStandard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PixelPlayer.
+        /// </summary>
+        public static string Settings_TargetPlayerPixelPlayer {
+            get {
+                return ResourceManager.GetString("Settings_TargetPlayerPixelPlayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 file gets the tags for the new player with “Write tags”..
+        /// </summary>
+        public static string Confirm_TargetPlayerChanged_One {
+            get {
+                return ResourceManager.GetString("Confirm_TargetPlayerChanged_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} files get the tags for the new player with “Write tags”..
+        /// </summary>
+        public static string Confirm_TargetPlayerChanged_Other {
+            get {
+                return ResourceManager.GetString("Confirm_TargetPlayerChanged_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not mark the files for the new player: {0}.
+        /// </summary>
+        public static string Notice_TargetPlayerFailed {
+            get {
+                return ResourceManager.GetString("Notice_TargetPlayerFailed", resourceCulture);
+            }
+        }
     }
 }

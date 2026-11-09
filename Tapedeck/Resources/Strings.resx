@@ -1980,4 +1980,32 @@
     <value>More finish a long list sooner, since YouTube slows down each single download. Too many can make YouTube refuse.</value>
     <comment>Hint below Settings_ParallelDownloads</comment>
   </data>
+  <data name="Settings_TargetPlayer" xml:space="preserve">
+    <value>Target player</value>
+    <comment>Label of the setting that picks the phone player the tags are written for</comment>
+  </data>
+  <data name="Settings_TargetPlayerHint" xml:space="preserve">
+    <value>Some phone players read the volume level differently. After a change, “Write tags” updates the files.</value>
+    <comment>Hint below Settings_TargetPlayer; “Write tags” is Library_WriteAllTags</comment>
+  </data>
+  <data name="Settings_TargetPlayerStandard" xml:space="preserve">
+    <value>Standard (Opus)</value>
+    <comment>Target player choice for players that follow the Opus standard</comment>
+  </data>
+  <data name="Settings_TargetPlayerPixelPlayer" xml:space="preserve">
+    <value>PixelPlayer</value>
+    <comment>Target player choice; product name of an Android music player, not translated</comment>
+  </data>
+  <data name="Confirm_TargetPlayerChanged_One" xml:space="preserve">
+    <value>1 file gets the tags for the new player with “Write tags”.</value>
+    <comment>Activity toast after changing Settings_TargetPlayer, one file; “Write tags” is Library_WriteAllTags</comment>
+  </data>
+  <data name="Confirm_TargetPlayerChanged_Other" xml:space="preserve">
+    <value>{0} files get the tags for the new player with “Write tags”.</value>
+    <comment>Activity toast after changing Settings_TargetPlayer; {0} file count; “Write tags” is Library_WriteAllTags</comment>
+  </data>
+  <data name="Notice_TargetPlayerFailed" xml:space="preserve">
+    <value>Could not mark the files for the new player: {0}</value>
+    <comment>Error on the settings page after changing Settings_TargetPlayer; {0} error message</comment>
+  </data>
 </root>
