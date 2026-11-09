@@ -358,6 +358,9 @@ public partial class LibraryViewModel(
             await detail.LoadCommand.ExecuteAsync(null);
     }
 
+    /// <summary>Reads the rows anew after a change made elsewhere, e.g. tags marked outdated by the settings.</summary>
+    public Task RefreshRowsAsync(IReadOnlyList<long> ids) => this.RefreshRowsQuietlyAsync(ids);
+
     /// <summary>
     /// New loudness values and covers from the background make the tags outdated; the rows learn it quietly,
     /// the table updates once.

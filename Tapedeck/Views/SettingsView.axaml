@@ -161,6 +161,25 @@
                                               IsChecked="{Binding LevelPlayback}" />
                                 </Grid>
 
+                                <!-- Some phone players read the tags differently; switching rewrites the files with "Write tags" -->
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_TargetPlayer}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_TargetPlayerHint}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Classes="tonal"
+                                            VerticalAlignment="Center"
+                                            Content="{Binding TargetPlayerText}"
+                                            AutomationProperties.Name="{x:Static res:Strings.Settings_TargetPlayer}">
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="BottomEdgeAlignedRight"
+                                                        FlyoutPresenterClasses="choice-menu"
+                                                        ItemsSource="{Binding TargetPlayerChoices}" />
+                                        </Button.Flyout>
+                                    </Button>
+                                </Grid>
+
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                                     <StackPanel Spacing="2" VerticalAlignment="Center">
                                         <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_AskBeforeKeep}" />

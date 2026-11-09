@@ -73,13 +73,21 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly PlayerService player;
     private readonly LastFmQueue lastFm;
     private readonly LastFmGenreService lastFmGenres;
+    private readonly ITrackRepository repository;
+    private readonly LibraryViewModel library;
 
     private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
-        DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres)
+        DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres,
+        ITrackRepository repository, LibraryViewModel library)
     {
+        this.repository = repository;
+        this.library = library;
+        this.TargetPlayerChoices = Enum.GetValues<TargetPlayer>()
+            .Select(p => new MenuChoice(PlayerName(p), new RelayCommand(() => this.TargetPlayer = p)))
+            .ToList();
         this.player = player;
         this.lastFm = lastFm;
         this.lastFmGenres = lastFmGenres;
@@ -109,6 +117,7 @@ public partial class SettingsViewModel : ViewModelBase
                 _ = this.CountLastFmPendingAsync();
         };
         this.ParallelDownloads = Math.Clamp(settings.ParallelDownloads ?? AppSettings.DEFAULT_PARALLEL_DOWNLOADS, 1, AppSettings.MAX_PARALLEL_DOWNLOADS);
+        this.TargetPlayer = TargetPlayerCode.Parse(settings.TargetPlayer);
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -217,6 +226,50 @@ public partial class SettingsViewModel : ViewModelBase
 
     partial void OnParallelDownloadsChanged(int value) =>
         this.store.Update(s => s with { ParallelDownloads = value });
+
+    /// <summary>The phone player the tags are written for.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TargetPlayerText))]
+    public partial TargetPlayer TargetPlayer { get; set; }
+
+    public string TargetPlayerText => PlayerName(this.TargetPlayer);
+
+    public IReadOnlyList<MenuChoice> TargetPlayerChoices { get; }
+
+    partial void OnTargetPlayerChanged(TargetPlayer value) => _ = this.ChangeTargetPlayerAsync(value);
+
+    /// <summary>
+    /// Stores the new player and marks the tagged files as outdated, so "Write tags (N)" adds or removes the
+    /// fields this player needs.
+    /// </summary>
+    private async Task ChangeTargetPlayerAsync(TargetPlayer value)
+    {
+        var code = TargetPlayerCode.Of(value);
+        // also reached when the constructor shows the stored player
+        if (this.store.Load().TargetPlayer == code)
+            return;
+
+        this.store.Update(s => s with { TargetPlayer = code });
+        try
+        {
+            var ids = await this.repository.MarkGainTagsOutdatedAsync();
+            await this.library.RefreshRowsAsync(ids);
+            if (ids.Count > 0)
+                this.activity.Confirm(ids.Count == 1
+                    ? Strings.Confirm_TargetPlayerChanged_One
+                    : string.Format(Strings.Confirm_TargetPlayerChanged_Other, ids.Count));
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_TargetPlayerFailed, ex.Message);
+        }
+    }
+
+    private static string PlayerName(TargetPlayer player) => player switch
+    {
+        TargetPlayer.PixelPlayer => Strings.Settings_TargetPlayerPixelPlayer,
+        _ => Strings.Settings_TargetPlayerStandard,
+    };
 
     partial void OnMusicBrainzAutoChanged(bool value) =>
         this.store.Update(s => s with { MusicBrainzAuto = value });
