@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Tapedeck.Core.Lyrics;
+
 namespace Tapedeck.Core.Services;
 
 /// <summary>Why the library cannot be moved to a folder.</summary>
@@ -71,15 +73,19 @@ public sealed class LibraryMover(ITrackRepository repository, AppPaths paths, IL
         return files.Count;
     }
 
-    /// <summary>Library-relative paths of downloaded files that are still there.</summary>
+    /// <summary>Library-relative paths of downloaded files that are still there, and the <c>.lrc</c> Tapedeck wrote for them.</summary>
     private async Task<IReadOnlyList<string>> ExistingFilesAsync()
     {
         var tracks = await repository.ListDisplayAsync();
-        return tracks
+        var audio = tracks
             .Select(t => t.FilePath)
             .OfType<string>()
             .Where(f => File.Exists(paths.ToLibraryPath(f)))
             .ToList();
+        var lyrics = audio
+            .Select(LrcSidecar.PathFor)
+            .Where(f => LrcSidecar.IsOwn(paths.ToLibraryPath(f)));
+        return [.. audio, .. lyrics];
     }
 
     private static string Normalize(string dir) => Path.TrimEndingDirectorySeparator(Path.GetFullPath(dir));

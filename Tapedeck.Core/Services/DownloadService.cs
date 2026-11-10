@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using YoutubeDLSharp.Options;
 
@@ -66,7 +67,11 @@ public sealed class DownloadService(
                 File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
                 // a correction since the last download gave the file a new name; drop the outdated copy
                 if (track.FilePath is { } oldFile && !string.Equals(oldFile, fileName, StringComparison.OrdinalIgnoreCase))
+                {
                     File.Delete(paths.ToLibraryPath(oldFile));
+                    // writing the tags below puts a new one next to the new name
+                    LrcSidecar.DeleteOwn(paths.ToLibraryPath(oldFile));
+                }
             }
             finally
             {

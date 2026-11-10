@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 
 namespace Tapedeck.Core.Services;
@@ -36,6 +37,7 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths, IL
             return null;
 
         File.Move(paths.ToLibraryPath(current), paths.ToLibraryPath(wanted));
+        LrcSidecar.MoveOwn(paths.ToLibraryPath(current), paths.ToLibraryPath(wanted));
         this.log.LogInformation("Renamed {From} to {To}", current, wanted);
         await repository.SetFilePathAsync(trackId, wanted);
         return wanted;
@@ -63,7 +65,10 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths, IL
             return;
 
         if (deleteFile && track.FilePath is { } file)
+        {
             File.Delete(paths.ToLibraryPath(file));
+            LrcSidecar.DeleteOwn(paths.ToLibraryPath(file));
+        }
         if (track.ThumbPath is { } thumb && thumb.StartsWith(paths.ThumbsDir, StringComparison.OrdinalIgnoreCase))
             File.Delete(thumb);
         // the cover cut from the thumbnail is the track's own, even when a Cover Art Archive cover replaced it;
