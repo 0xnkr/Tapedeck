@@ -13,6 +13,12 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource Brush.Text3}" />
         </Style>
+
+        <!-- Lines of the lyrics panel: as wide as the island, the text left aligned and wrapping -->
+        <Style Selector="Button.lyric-line">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
@@ -221,7 +227,7 @@
                 </controls:Island>
 
                 <!-- MusicBrainz: the applied match, or the suggestions to confirm -->
-                <controls:Island Grid.Row="1">
+                <controls:Island Grid.Row="2">
                     <StackPanel Spacing="{StaticResource Space.2}">
                         <Grid ColumnDefinitions="*,Auto">
                             <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_MusicBrainz}"
@@ -295,7 +301,7 @@
                     </StackPanel>
                 </controls:Island>
 
-                <controls:Island Grid.Row="2">
+                <controls:Island Grid.Row="3">
                     <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="16" VerticalAlignment="Top">
                         <TextBlock Grid.ColumnSpan="4" Classes="title" Text="{x:Static res:Strings.Detail_YouTube}" Margin="0,0,0,8" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Classes="fact-label" Text="{x:Static res:Strings.Detail_Channel}" />
@@ -309,8 +315,12 @@
                     </Grid>
                 </controls:Island>
 
-                <!-- Lyrics: LRCLIB's or the user's own; "Write tags" puts them into the file and a .lrc next to it -->
-                <controls:Island Grid.Row="3">
+                <!--
+                    Lyrics: timed ones follow the player (the line sung now big, the next one below), plain ones show as
+                    text; the text box for pasting or correcting opens with "Edit". "Write tags" puts them into the
+                    file and a .lrc next to it.
+                -->
+                <controls:Island Grid.Row="1">
                     <StackPanel Spacing="{StaticResource Space.2}">
                         <Grid ColumnDefinitions="*,Auto">
                             <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_Lyrics}"
@@ -318,16 +328,67 @@
                             <TextBlock Grid.Column="1" Classes="fact-label" Text="{Binding LyricsState}" VerticalAlignment="Bottom" />
                         </Grid>
 
+                        <!-- clicking a line jumps there, and starts the track first when it is not playing -->
+                        <StackPanel Spacing="2" IsVisible="{Binding ShowsLyricsPanel}" Margin="-8,0">
+                            <Button Classes="text lyric-line"
+                                    Command="{Binding LyricsPanel.SeekCommand}"
+                                    CommandParameter="{Binding LyricsPanel.Current}"
+                                    ToolTip.Tip="{x:Static res:Strings.Detail_LyricsJumpHint}">
+                                <TransitioningContentControl Content="{Binding LyricsPanel.Current}">
+                                    <TransitioningContentControl.PageTransition>
+                                        <CrossFade Duration="0:0:0.25" />
+                                    </TransitioningContentControl.PageTransition>
+                                    <TransitioningContentControl.ContentTemplate>
+                                        <DataTemplate x:DataType="vm:LyricLineViewModel">
+                                            <TextBlock Classes="headline" Text="{Binding Shown}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </TransitioningContentControl.ContentTemplate>
+                                </TransitioningContentControl>
+                            </Button>
+                            <Button Classes="text lyric-line"
+                                    Command="{Binding LyricsPanel.SeekCommand}"
+                                    CommandParameter="{Binding LyricsPanel.Next}"
+                                    IsVisible="{Binding LyricsPanel.Next, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    ToolTip.Tip="{x:Static res:Strings.Detail_LyricsJumpHint}">
+                                <TransitioningContentControl Content="{Binding LyricsPanel.Next}">
+                                    <TransitioningContentControl.PageTransition>
+                                        <CrossFade Duration="0:0:0.25" />
+                                    </TransitioningContentControl.PageTransition>
+                                    <TransitioningContentControl.ContentTemplate>
+                                        <DataTemplate x:DataType="vm:LyricLineViewModel">
+                                            <TextBlock Classes="body" Foreground="{DynamicResource Brush.Text3}"
+                                                       Text="{Binding Shown}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </TransitioningContentControl.ContentTemplate>
+                                </TransitioningContentControl>
+                            </Button>
+                            <TextBlock Classes="support"
+                                       Foreground="{DynamicResource Brush.Text3}"
+                                       Margin="8,4,8,0"
+                                       Text="{x:Static res:Strings.Detail_LyricsPlayToFollow}"
+                                       IsVisible="{Binding !LyricsPanel.IsFollowing}" />
+                        </StackPanel>
+
+                        <ScrollViewer MaxHeight="360" IsVisible="{Binding ShowsPlainLyrics}">
+                            <SelectableTextBlock Classes="body" Text="{Binding LyricsText}" TextWrapping="Wrap" />
+                        </ScrollViewer>
+
                         <TextBox Classes="user-value"
                                  Text="{Binding LyricsText}"
                                  AcceptsReturn="True"
                                  TextWrapping="Wrap"
                                  MinHeight="120"
                                  MaxHeight="360"
+                                 IsVisible="{Binding ShowsLyricsEditor}"
                                  PlaceholderText="{x:Static res:Strings.Detail_LyricsPlaceholder}"
                                  AutomationProperties.Name="{x:Static res:Strings.Detail_Lyrics}" />
 
                         <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.1}" Margin="-8,0,0,0">
+                            <Button Classes="text"
+                                    Content="{Binding EditLyricsText}"
+                                    ToolTip.Tip="{x:Static res:Strings.Detail_LyricsEditHint}"
+                                    Command="{Binding EditLyricsCommand}"
+                                    IsVisible="{Binding HasLyrics}" />
                             <Button Classes="text"
                                     Content="{x:Static res:Strings.Detail_LyricsSearch}"
                                     ToolTip.Tip="{x:Static res:Strings.Detail_LyricsSearchHint}"

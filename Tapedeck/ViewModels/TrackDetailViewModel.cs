@@ -68,6 +68,7 @@ public partial class TrackDetailViewModel : ViewModelBase
         MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player, LyricsService lyricsService)
     {
         this.lyricsService = lyricsService;
+        this.LyricsPanel = new LyricsPanelViewModel(row, player);
         this.player = player;
         this.sequence = sequence;
         this.createDetail = createDetail;
@@ -619,6 +620,36 @@ public partial class TrackDetailViewModel : ViewModelBase
 
     private bool IsLyricsIdle() => !this.IsLyricsBusy;
 
+    /// <summary>Timed lyrics that follow the player: the line sung now and the next one.</summary>
+    public LyricsPanelViewModel LyricsPanel { get; }
+
+    /// <summary>The text box is open for pasting or correcting the lyrics.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowsLyricsEditor), nameof(ShowsLyricsPanel), nameof(ShowsPlainLyrics), nameof(EditLyricsText))]
+    public partial bool IsEditingLyrics { get; private set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowsLyricsEditor), nameof(ShowsLyricsPanel), nameof(ShowsPlainLyrics))]
+    public partial bool HasLyrics { get; private set; }
+
+    /// <summary>Without lyrics, the text box is all there is to show.</summary>
+    public bool ShowsLyricsEditor => this.IsEditingLyrics || !this.HasLyrics;
+
+    public bool ShowsLyricsPanel => !this.ShowsLyricsEditor && this.LyricsPanel.IsTimed;
+
+    public bool ShowsPlainLyrics => !this.ShowsLyricsEditor && !this.LyricsPanel.IsTimed;
+
+    public string EditLyricsText => this.IsEditingLyrics ? Strings.Detail_LyricsDone : Strings.Detail_LyricsEdit;
+
+    /// <summary>Opens the text box, or closes it and saves what was typed.</summary>
+    [RelayCommand]
+    private async Task EditLyricsAsync()
+    {
+        if (this.IsEditingLyrics)
+            await this.SaveNowAsync();
+        this.IsEditingLyrics = !this.IsEditingLyrics;
+    }
+
     private void LoadLyrics(TrackLyrics loaded)
     {
         this.lyrics = loaded;
@@ -627,6 +658,10 @@ public partial class TrackDetailViewModel : ViewModelBase
         // lyrics typed while the last save ran are saved after the next pause; don't overwrite them
         if (this.pendingLyricsSave is null)
             this.LyricsText = loaded.Text ?? string.Empty;
+        this.LyricsPanel.Load(loaded);
+        this.HasLyrics = loaded.Text is not null;
+        this.OnPropertyChanged(nameof(this.ShowsLyricsPanel));
+        this.OnPropertyChanged(nameof(this.ShowsPlainLyrics));
     }
 
     private static string LyricsStateOf(TrackLyrics lyrics)
