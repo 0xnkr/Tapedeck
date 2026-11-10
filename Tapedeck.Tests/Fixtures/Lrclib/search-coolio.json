@@ -1,0 +1,57 @@
+[
+  {
+    "id": 7018741,
+    "name": "Gangsta’s Paradise",
+    "trackName": "Gangsta’s Paradise",
+    "artistName": "Coolio",
+    "albumName": "Fantastic Voyage: The Greatest Hits",
+    "duration": 243.0,
+    "instrumental": false,
+    "plainLyrics": "First line of the song\nSecond line of the song\nThird line of the song",
+    "syncedLyrics": "[00:14.85] First line of the song\n[00:17.72] Second line of the song\n[00:21.12] Third line of the song"
+  },
+  {
+    "id": 7288976,
+    "name": "Gangstas Paradise",
+    "trackName": "Gangstas Paradise",
+    "artistName": "Coolio",
+    "albumName": "Billboard Top 100 Hits 1996",
+    "duration": 241.0,
+    "instrumental": false,
+    "plainLyrics": "First line of the song\nSecond line of the song\nThird line of the song",
+    "syncedLyrics": "[00:11.89] First line of the song\n[00:14.87] Second line of the song\n[00:18.30] Third line of the song"
+  },
+  {
+    "id": 4936320,
+    "name": "Gangsta's Paradise",
+    "trackName": "Gangsta's Paradise",
+    "artistName": "Coolio",
+    "albumName": "The Night of the Proms 2000",
+    "duration": 256.0,
+    "instrumental": false,
+    "plainLyrics": "First line of the song\nSecond line of the song\nThird line of the song",
+    "syncedLyrics": "[00:25.56] First line of the song\n[00:28.80] Second line of the song\n[00:32.37] Third line of the song"
+  },
+  {
+    "id": 5514494,
+    "name": "Gangsta's Paradise",
+    "trackName": "Gangsta's Paradise",
+    "artistName": "Coolio",
+    "albumName": "Gangsta's Paradise",
+    "duration": 248.0,
+    "instrumental": false,
+    "plainLyrics": "First line of the song\nSecond line of the song\nThird line of the song",
+    "syncedLyrics": "[00:17.31] First line of the song\n[00:26.03] Second line of the song\n[00:29.12] Third line of the song"
+  },
+  {
+    "id": 5772164,
+    "name": "Gangsta's Paradise",
+    "trackName": "Gangsta's Paradise",
+    "artistName": "Coolio",
+    "albumName": "CD Single",
+    "duration": 241.0,
+    "instrumental": false,
+    "plainLyrics": "First line of the song\nSecond line of the song\nThird line of the song",
+    "syncedLyrics": "[00:11.85] First line of the song\n[00:14.62] Second line of the song\n[00:18.07] Third line of the song"
+  }
+]

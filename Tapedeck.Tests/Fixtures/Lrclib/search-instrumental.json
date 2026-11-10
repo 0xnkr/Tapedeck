@@ -1,0 +1,35 @@
+[
+  {
+    "id": 5144421,
+    "name": "Aerodynamic",
+    "trackName": "Aerodynamic",
+    "artistName": "Daft Punk",
+    "albumName": "Discovery (96kHz)",
+    "duration": 213.0,
+    "instrumental": true,
+    "plainLyrics": null,
+    "syncedLyrics": null
+  },
+  {
+    "id": 5048870,
+    "name": "Aerodynamic",
+    "trackName": "Aerodynamic",
+    "artistName": "Daft Punk",
+    "albumName": "Digital Love",
+    "duration": 213.0,
+    "instrumental": true,
+    "plainLyrics": null,
+    "syncedLyrics": null
+  },
+  {
+    "id": 5636398,
+    "name": "Aerodynamic",
+    "trackName": "Aerodynamic",
+    "artistName": "Daft Punk",
+    "albumName": ".",
+    "duration": null,
+    "instrumental": true,
+    "plainLyrics": null,
+    "syncedLyrics": null
+  }
+]

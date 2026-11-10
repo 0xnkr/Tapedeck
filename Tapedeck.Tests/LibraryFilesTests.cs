@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
 using Tapedeck.Data;
@@ -74,6 +75,33 @@ public sealed class LibraryFilesTests : IAsyncLifetime
         await this.repository.SetUserFieldsAsync(id, new UserFields("Rick", "NGGYU", null, null, null, null));
         Assert.Equal("Rick - NGGYU [dQw4w9WgXcQ].opus", await this.files.RenameToMatchAsync(id));
         Assert.Equal("someone else", await File.ReadAllTextAsync(this.paths.ToLibraryPath("Rick - NGGYU.opus")));
+    }
+
+    [Fact]
+    public async Task The_own_lrc_moves_with_a_rename_and_goes_with_the_file()
+    {
+        var id = await this.AddDownloadedAsync("Rick Astley - Never Gonna Give You Up.opus");
+        LrcSidecar.Write(this.paths.ToLibraryPath("Rick Astley - Never Gonna Give You Up.opus"), "[00:01.00] Line");
+
+        await this.repository.SetUserFieldsAsync(id, new UserFields("Rick", "NGGYU", null, null, null, null));
+        await this.files.RenameToMatchAsync(id);
+
+        Assert.True(LrcSidecar.IsOwn(this.paths.ToLibraryPath("Rick - NGGYU.lrc")));
+        Assert.False(File.Exists(this.paths.ToLibraryPath("Rick Astley - Never Gonna Give You Up.lrc")));
+
+        await this.files.RemoveAsync(id, deleteFile: true);
+        Assert.False(File.Exists(this.paths.ToLibraryPath("Rick - NGGYU.lrc")));
+    }
+
+    [Fact]
+    public async Task Removing_keeps_a_lrc_of_the_users_own()
+    {
+        var id = await this.AddDownloadedAsync("Rick Astley - Never Gonna Give You Up.opus");
+        await File.WriteAllTextAsync(this.paths.ToLibraryPath("Rick Astley - Never Gonna Give You Up.lrc"), "[00:01.00] mine");
+
+        await this.files.RemoveAsync(id, deleteFile: true);
+
+        Assert.True(File.Exists(this.paths.ToLibraryPath("Rick Astley - Never Gonna Give You Up.lrc")));
     }
 
     [Theory]

@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.Services;
 using Tapedeck.Data;
@@ -57,6 +58,22 @@ public sealed class LibraryMoverTests : IAsyncLifetime
         Assert.True(File.Exists(Path.Combine(this.NewDir, "A - One.opus")));
         Assert.False(File.Exists(Path.Combine(this.OldDir, "A - One.opus")));
         Assert.Equal([(1, 2), (2, 2)], reports);
+    }
+
+    [Fact]
+    public async Task The_own_lrc_files_move_along_and_the_users_ones_stay()
+    {
+        await this.AddDownloadedAsync("dQw4w9WgXcQ", "A - One.opus");
+        await this.AddDownloadedAsync("9bZkp7q19f0", "B - Two.opus");
+        LrcSidecar.Write(this.paths.ToLibraryPath("A - One.opus"), "[00:01.00] Line");
+        await File.WriteAllTextAsync(this.paths.ToLibraryPath("B - Two.lrc"), "[00:01.00] mine");
+
+        var moved = await this.mover.MoveAsync(this.NewDir);
+
+        Assert.Equal(3, moved);
+        Assert.True(LrcSidecar.IsOwn(Path.Combine(this.NewDir, "A - One.lrc")));
+        Assert.True(File.Exists(Path.Combine(this.OldDir, "B - Two.lrc")));
+        Assert.False(File.Exists(Path.Combine(this.NewDir, "B - Two.lrc")));
     }
 
     [Fact]

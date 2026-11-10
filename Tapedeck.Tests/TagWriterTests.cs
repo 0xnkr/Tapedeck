@@ -2,6 +2,7 @@ using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Data;
@@ -136,6 +137,49 @@ public sealed class TagWriterTests : IAsyncLifetime
 
         Assert.Equal(["-3840"], this.GainField());
         Assert.Empty(this.GainField(TagWriter.REPLAYGAIN_FIELD));
+    }
+
+    [Fact]
+    public async Task Timed_lyrics_go_into_the_file_and_a_lrc_next_to_it()
+    {
+        var id = await this.AddWithFileAsync();
+        var lrc = Path.Combine(this.dir, "song.lrc");
+        await this.repo.SaveLrclibLyricsAsync(id, new LrclibLyrics("First line", "[00:01.00] First line", false));
+
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Equal(["[00:01.00] First line"], this.GainField(TagWriter.LYRICS_FIELD));
+        Assert.Equal(LrcText.OWNER_TAG + "\r\n[00:01.00] First line", await File.ReadAllTextAsync(lrc));
+
+        // without times, only the file gets them; the own .lrc goes
+        await this.repo.SetUserLyricsAsync(id, "My own words\r\nSecond line");
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Equal(["My own words\nSecond line"], this.GainField(TagWriter.LYRICS_FIELD));
+        Assert.False(File.Exists(lrc));
+
+        // no lyrics at all removes the field
+        await this.repo.SetUserLyricsAsync(id, null);
+        await this.repo.SaveLrclibLyricsAsync(id, LrclibLyrics.NONE);
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Empty(this.GainField(TagWriter.LYRICS_FIELD));
+    }
+
+    [Fact]
+    public async Task The_users_own_lrc_file_stays_as_it_is()
+    {
+        var id = await this.AddWithFileAsync();
+        var lrc = Path.Combine(this.dir, "song.lrc");
+        await File.WriteAllTextAsync(lrc, "[00:05.00] typed by hand");
+        await this.repo.SaveLrclibLyricsAsync(id, new LrclibLyrics("Line", "[00:01.00] Line", false));
+
+        await this.writer.WriteTagsAsync(id);
+        Assert.Equal("[00:05.00] typed by hand", await File.ReadAllTextAsync(lrc));
+
+        await this.repo.SaveLrclibLyricsAsync(id, LrclibLyrics.NONE);
+        await this.writer.WriteTagsAsync(id);
+        Assert.True(File.Exists(lrc));
     }
 
     [Theory]
