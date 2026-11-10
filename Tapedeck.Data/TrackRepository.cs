@@ -2,6 +2,7 @@ using System.Data.Common;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
 
@@ -249,6 +250,87 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
             """,
             new { id, lufs });
     }
+
+    public async Task<TrackLyrics> GetLyricsAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(string? User, string? Synced, string? Plain, long Instrumental, string? CheckedAt)>(
+            """
+            SELECT user_lyrics, lrclib_synced, lrclib_plain, lrclib_instrumental, lyrics_checked_at
+            FROM tracks WHERE id = @id;
+            """,
+            new { id });
+        return rows.Select(r => new TrackLyrics(r.User, r.Synced, r.Plain, r.Instrumental != 0, r.CheckedAt))
+            .FirstOrDefault() ?? TrackLyrics.NONE;
+    }
+
+    public async Task SaveLrclibLyricsAsync(long id, LrclibLyrics lyrics)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        // the shown text changes only without lyrics of the user's own
+        await connection.ExecuteAsync(
+            $"""
+            UPDATE tracks SET
+                edited_at = CASE
+                    WHEN user_lyrics IS NULL AND COALESCE(lrclib_synced, lrclib_plain) IS NOT COALESCE(@synced, @plain) THEN {NOW}
+                    ELSE edited_at END,
+                lrclib_plain        = @plain,
+                lrclib_synced       = @synced,
+                lrclib_instrumental = @instrumental,
+                lyrics_checked_at   = {NOW}
+            WHERE id = @id;
+            """,
+            new { id, plain = lyrics.Plain, synced = lyrics.Synced, instrumental = lyrics.Instrumental });
+    }
+
+    public async Task SetUserLyricsAsync(long id, string? text)
+    {
+        var value = string.IsNullOrWhiteSpace(text) ? null : text;
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync(
+            $"""
+            UPDATE tracks SET
+                edited_at   = CASE WHEN user_lyrics IS @value THEN edited_at ELSE {NOW} END,
+                user_lyrics = @value
+            WHERE id = @id;
+            """,
+            new { id, value });
+    }
+
+    public async Task<IReadOnlyList<LyricsRequest>> ListWithoutLyricsAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(long Id, string Artist, string Title, string? Album, long? DurationS, long IsTopic)>(
+            $"""
+            SELECT {LYRICS_REQUEST_COLUMNS} FROM tracks_display d JOIN tracks t ON t.id = d.id
+            WHERE t.status = 'done' AND t.file_path IS NOT NULL AND d.artist <> '' AND d.title <> ''
+              AND (t.lyrics_checked_at IS NULL
+                   OR (t.lrclib_plain IS NULL AND t.lrclib_synced IS NULL AND t.lrclib_instrumental = 0
+                       AND t.mb_checked_at > t.lyrics_checked_at))
+            ORDER BY d.added_at, d.id;
+            """);
+        return rows.Select(ToRequest).ToList();
+    }
+
+    public async Task<LyricsRequest?> GetLyricsRequestAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(long Id, string Artist, string Title, string? Album, long? DurationS, long IsTopic)>(
+            $"SELECT {LYRICS_REQUEST_COLUMNS} FROM tracks_display d JOIN tracks t ON t.id = d.id WHERE d.id = @id;", new { id });
+        return rows.Select(ToRequest).FirstOrDefault();
+    }
+
+    // a YouTube Music upload, recognized as YtSearchResult.IsTopic does it
+    private const string LYRICS_REQUEST_COLUMNS =
+        """
+        d.id, d.artist, d.title, d.album, d.duration_s,
+        (COALESCE(json_extract(t.info_json, '$.description'), '') LIKE 'Provided to YouTube by%'
+         OR COALESCE(t.channel, '') LIKE '% - Topic') AS is_topic
+        """;
+
+    private static LyricsRequest ToRequest((long Id, string Artist, string Title, string? Album, long? DurationS, long IsTopic) row) =>
+        new(row.Id, row.Artist, row.Title, string.IsNullOrEmpty(row.Album) ? null : row.Album, (int?)row.DurationS, row.IsTopic != 0);
+
 
     public async Task<IReadOnlyList<long>> ListWithoutLoudnessAsync()
     {

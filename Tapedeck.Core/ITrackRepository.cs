@@ -1,3 +1,4 @@
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
 
@@ -79,6 +80,27 @@ public interface ITrackRepository
     /// </summary>
     /// <returns>The tracks marked.</returns>
     Task<IReadOnlyList<long>> MarkGainTagsOutdatedAsync();
+
+    /// <summary>The track's lyrics from LRCLIB and from the user; <see cref="TrackLyrics.NONE"/> for an unknown track.</summary>
+    Task<TrackLyrics> GetLyricsAsync(long id);
+
+    /// <summary>
+    /// Stores what LRCLIB has and remembers that it was asked. Lyrics that change what is shown mark the file's
+    /// tags as outdated.
+    /// </summary>
+    Task SaveLrclibLyricsAsync(long id, LrclibLyrics lyrics);
+
+    /// <summary>The user's own lyrics; <c>null</c> or blank lets LRCLIB's show again. Marks the tags as outdated.</summary>
+    Task SetUserLyricsAsync(long id, string? text);
+
+    /// <summary>
+    /// Downloaded tracks LRCLIB was not asked for yet, and ones it had nothing for that MusicBrainz has given
+    /// better names since; oldest first.
+    /// </summary>
+    Task<IReadOnlyList<LyricsRequest>> ListWithoutLyricsAsync();
+
+    /// <summary>The track as LRCLIB is asked for it.</summary>
+    Task<LyricsRequest?> GetLyricsRequestAsync(long id);
 
     /// <summary>Downloaded tracks whose file was never measured, oldest first.</summary>
     Task<IReadOnlyList<long>> ListWithoutLoudnessAsync();
