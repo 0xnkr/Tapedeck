@@ -4547,5 +4547,257 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Notice_TargetPlayerFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lyrics from LRCLIB {0}/{1} ….
+        /// </summary>
+        public static string Activity_Lyrics {
+            get {
+                return ResourceManager.GetString("Activity_Lyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching LRCLIB ….
+        /// </summary>
+        public static string Activity_SearchingLyrics {
+            get {
+                return ResourceManager.GetString("Activity_SearchingLyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LRCLIB could not answer for {0} tracks; they are asked again on the next start or with “Fetch lyrics”..
+        /// </summary>
+        public static string Notice_LyricsSomeFailed {
+            get {
+                return ResourceManager.GetString("Notice_LyricsSomeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lyrics from LRCLIB failed: {0}.
+        /// </summary>
+        public static string Notice_LyricsFailed {
+            get {
+                return ResourceManager.GetString("Notice_LyricsFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lyrics from the free lyrics database, timed where the length fits the file. “Write tags” puts them into the file and a .lrc next to it..
+        /// </summary>
+        public static string Settings_LyricsHint {
+            get {
+                return ResourceManager.GetString("Settings_LyricsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically.
+        /// </summary>
+        public static string Settings_LyricsAuto {
+            get {
+                return ResourceManager.GetString("Settings_LyricsAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asks LRCLIB for the lyrics of downloaded tracks in the background, one request per second..
+        /// </summary>
+        public static string Settings_LyricsAutoHint {
+            get {
+                return ResourceManager.GetString("Settings_LyricsAutoHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fetch lyrics ({0}).
+        /// </summary>
+        public static string Settings_LyricsFetch {
+            get {
+                return ResourceManager.GetString("Settings_LyricsFetch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asks LRCLIB now for all downloaded tracks without lyrics, also when automatic lookups are off..
+        /// </summary>
+        public static string Settings_LyricsFetchHint {
+            get {
+                return ResourceManager.GetString("Settings_LyricsFetchHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found timed lyrics..
+        /// </summary>
+        public static string Confirm_LyricsTimed {
+            get {
+                return ResourceManager.GetString("Confirm_LyricsTimed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found lyrics without times..
+        /// </summary>
+        public static string Confirm_LyricsPlain {
+            get {
+                return ResourceManager.GetString("Confirm_LyricsPlain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LRCLIB knows this track as instrumental..
+        /// </summary>
+        public static string Confirm_LyricsInstrumental {
+            get {
+                return ResourceManager.GetString("Confirm_LyricsInstrumental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LRCLIB has no lyrics for this track..
+        /// </summary>
+        public static string Confirm_LyricsNone {
+            get {
+                return ResourceManager.GetString("Confirm_LyricsNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} · {1}.
+        /// </summary>
+        public static string Lyrics_State {
+            get {
+                return ResourceManager.GetString("Lyrics_State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LRCLIB.
+        /// </summary>
+        public static string Lyrics_SourceLrclib {
+            get {
+                return ResourceManager.GetString("Lyrics_SourceLrclib", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your own.
+        /// </summary>
+        public static string Lyrics_SourceUser {
+            get {
+                return ResourceManager.GetString("Lyrics_SourceUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to timed.
+        /// </summary>
+        public static string Lyrics_Timed {
+            get {
+                return ResourceManager.GetString("Lyrics_Timed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to without times.
+        /// </summary>
+        public static string Lyrics_Plain {
+            get {
+                return ResourceManager.GetString("Lyrics_Plain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instrumental.
+        /// </summary>
+        public static string Lyrics_Instrumental {
+            get {
+                return ResourceManager.GetString("Lyrics_Instrumental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not searched yet.
+        /// </summary>
+        public static string Lyrics_NotSearched {
+            get {
+                return ResourceManager.GetString("Lyrics_NotSearched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None found.
+        /// </summary>
+        public static string Lyrics_NoneFound {
+            get {
+                return ResourceManager.GetString("Lyrics_NoneFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lyrics.
+        /// </summary>
+        public static string Detail_Lyrics {
+            get {
+                return ResourceManager.GetString("Detail_Lyrics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From LRCLIB, or paste your own. Timed lyrics are only taken when their length fits the file..
+        /// </summary>
+        public static string Detail_LyricsAbout {
+            get {
+                return ResourceManager.GetString("Detail_LyricsAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste lyrics, with or without times like [01:23.45] ….
+        /// </summary>
+        public static string Detail_LyricsPlaceholder {
+            get {
+                return ResourceManager.GetString("Detail_LyricsPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search again.
+        /// </summary>
+        public static string Detail_LyricsSearch {
+            get {
+                return ResourceManager.GetString("Detail_LyricsSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asks LRCLIB again, e.g. after you corrected artist or title..
+        /// </summary>
+        public static string Detail_LyricsSearchHint {
+            get {
+                return ResourceManager.GetString("Detail_LyricsSearchHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string Detail_LyricsReset {
+            get {
+                return ResourceManager.GetString("Detail_LyricsReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drops your own lyrics, so LRCLIB's show again..
+        /// </summary>
+        public static string Detail_LyricsResetHint {
+            get {
+                return ResourceManager.GetString("Detail_LyricsResetHint", resourceCulture);
+            }
+        }
     }
 }

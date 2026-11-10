@@ -1509,4 +1509,88 @@
   <data name="Notice_TargetPlayerFailed" xml:space="preserve">
     <value>Die Dateien konnten nicht für den neuen Player vorgemerkt werden: {0}</value>
   </data>
+  <data name="Activity_Lyrics" xml:space="preserve">
+    <value>Lyrics von LRCLIB {0}/{1} …</value>
+  </data>
+  <data name="Activity_SearchingLyrics" xml:space="preserve">
+    <value>Suche auf LRCLIB …</value>
+  </data>
+  <data name="Notice_LyricsSomeFailed" xml:space="preserve">
+    <value>LRCLIB konnte für {0} Titel nicht antworten; sie werden beim nächsten Start oder mit „Lyrics holen“ erneut gefragt.</value>
+  </data>
+  <data name="Notice_LyricsFailed" xml:space="preserve">
+    <value>Lyrics von LRCLIB fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Settings_LyricsHint" xml:space="preserve">
+    <value>Lyrics aus der freien Lyrics-Datenbank, getimt, wenn die Länge zur Datei passt. „Tags schreiben“ legt sie in die Datei und als .lrc daneben.</value>
+  </data>
+  <data name="Settings_LyricsAuto" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Settings_LyricsAutoHint" xml:space="preserve">
+    <value>Fragt LRCLIB im Hintergrund nach den Lyrics geladener Titel, eine Anfrage pro Sekunde.</value>
+  </data>
+  <data name="Settings_LyricsFetch" xml:space="preserve">
+    <value>Lyrics holen ({0})</value>
+  </data>
+  <data name="Settings_LyricsFetchHint" xml:space="preserve">
+    <value>Fragt LRCLIB jetzt nach allen geladenen Titeln ohne Lyrics, auch wenn „Automatisch“ aus ist.</value>
+  </data>
+  <data name="Confirm_LyricsTimed" xml:space="preserve">
+    <value>Getimte Lyrics gefunden.</value>
+  </data>
+  <data name="Confirm_LyricsPlain" xml:space="preserve">
+    <value>Lyrics ohne Zeiten gefunden.</value>
+  </data>
+  <data name="Confirm_LyricsInstrumental" xml:space="preserve">
+    <value>LRCLIB kennt diesen Titel als Instrumental.</value>
+  </data>
+  <data name="Confirm_LyricsNone" xml:space="preserve">
+    <value>LRCLIB hat keine Lyrics für diesen Titel.</value>
+  </data>
+  <data name="Lyrics_State" xml:space="preserve">
+    <value>{0} · {1}</value>
+  </data>
+  <data name="Lyrics_SourceLrclib" xml:space="preserve">
+    <value>LRCLIB</value>
+  </data>
+  <data name="Lyrics_SourceUser" xml:space="preserve">
+    <value>Eigene</value>
+  </data>
+  <data name="Lyrics_Timed" xml:space="preserve">
+    <value>getimt</value>
+  </data>
+  <data name="Lyrics_Plain" xml:space="preserve">
+    <value>ohne Zeiten</value>
+  </data>
+  <data name="Lyrics_Instrumental" xml:space="preserve">
+    <value>Instrumental</value>
+  </data>
+  <data name="Lyrics_NotSearched" xml:space="preserve">
+    <value>Noch nicht gesucht</value>
+  </data>
+  <data name="Lyrics_NoneFound" xml:space="preserve">
+    <value>Nichts gefunden</value>
+  </data>
+  <data name="Detail_Lyrics" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="Detail_LyricsAbout" xml:space="preserve">
+    <value>Von LRCLIB, oder eigene einfügen. Getimte Lyrics werden nur übernommen, wenn ihre Länge zur Datei passt.</value>
+  </data>
+  <data name="Detail_LyricsPlaceholder" xml:space="preserve">
+    <value>Lyrics einfügen, mit oder ohne Zeiten wie [01:23.45] …</value>
+  </data>
+  <data name="Detail_LyricsSearch" xml:space="preserve">
+    <value>Neu suchen</value>
+  </data>
+  <data name="Detail_LyricsSearchHint" xml:space="preserve">
+    <value>Fragt LRCLIB erneut, z. B. nachdem du Artist oder Titel korrigiert hast.</value>
+  </data>
+  <data name="Detail_LyricsReset" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="Detail_LyricsResetHint" xml:space="preserve">
+    <value>Entfernt deine eigenen Lyrics, dann gelten wieder die von LRCLIB.</value>
+  </data>
 </root>

@@ -2008,4 +2008,116 @@
     <value>Could not mark the files for the new player: {0}</value>
     <comment>Error on the settings page after changing Settings_TargetPlayer; {0} error message</comment>
   </data>
+  <data name="Activity_Lyrics" xml:space="preserve">
+    <value>Lyrics from LRCLIB {0}/{1} …</value>
+    <comment>Activity toast while lyrics are fetched in the background; {0} done, {1} total</comment>
+  </data>
+  <data name="Activity_SearchingLyrics" xml:space="preserve">
+    <value>Searching LRCLIB …</value>
+    <comment>Activity toast while the detail page asks LRCLIB for one track</comment>
+  </data>
+  <data name="Notice_LyricsSomeFailed" xml:space="preserve">
+    <value>LRCLIB could not answer for {0} tracks; they are asked again on the next start or with “Fetch lyrics”.</value>
+    <comment>Notice after a background lyrics run with failures; {0} track count; “Fetch lyrics” is Settings_LyricsFetch</comment>
+  </data>
+  <data name="Notice_LyricsFailed" xml:space="preserve">
+    <value>Lyrics from LRCLIB failed: {0}</value>
+    <comment>Notice when asking LRCLIB failed; {0} error message</comment>
+  </data>
+  <data name="Settings_LyricsHint" xml:space="preserve">
+    <value>Lyrics from the free lyrics database, timed where the length fits the file. “Write tags” puts them into the file and a .lrc next to it.</value>
+    <comment>Hint of the LRCLIB row in the settings; LRCLIB is a product name; “Write tags” is Library_WriteAllTags</comment>
+  </data>
+  <data name="Settings_LyricsAuto" xml:space="preserve">
+    <value>Automatically</value>
+    <comment>Checkbox of the LRCLIB row: fetch lyrics in the background</comment>
+  </data>
+  <data name="Settings_LyricsAutoHint" xml:space="preserve">
+    <value>Asks LRCLIB for the lyrics of downloaded tracks in the background, one request per second.</value>
+    <comment>Tooltip of Settings_LyricsAuto</comment>
+  </data>
+  <data name="Settings_LyricsFetch" xml:space="preserve">
+    <value>Fetch lyrics ({0})</value>
+    <comment>Button of the LRCLIB row; {0} tracks not asked yet</comment>
+  </data>
+  <data name="Settings_LyricsFetchHint" xml:space="preserve">
+    <value>Asks LRCLIB now for all downloaded tracks without lyrics, also when automatic lookups are off.</value>
+    <comment>Tooltip of Settings_LyricsFetch</comment>
+  </data>
+  <data name="Confirm_LyricsTimed" xml:space="preserve">
+    <value>Found timed lyrics.</value>
+    <comment>Activity toast after searching lyrics on the detail page</comment>
+  </data>
+  <data name="Confirm_LyricsPlain" xml:space="preserve">
+    <value>Found lyrics without times.</value>
+    <comment>Activity toast after searching lyrics on the detail page; no timing, e.g. the video is longer than the song</comment>
+  </data>
+  <data name="Confirm_LyricsInstrumental" xml:space="preserve">
+    <value>LRCLIB knows this track as instrumental.</value>
+    <comment>Activity toast after searching lyrics on the detail page</comment>
+  </data>
+  <data name="Confirm_LyricsNone" xml:space="preserve">
+    <value>LRCLIB has no lyrics for this track.</value>
+    <comment>Activity toast after searching lyrics on the detail page</comment>
+  </data>
+  <data name="Lyrics_State" xml:space="preserve">
+    <value>{0} · {1}</value>
+    <comment>Lyrics state on the detail page; {0} Lyrics_SourceLrclib or Lyrics_SourceUser, {1} Lyrics_Timed or Lyrics_Plain</comment>
+  </data>
+  <data name="Lyrics_SourceLrclib" xml:space="preserve">
+    <value>LRCLIB</value>
+    <comment>Source of the lyrics; product name, not translated</comment>
+  </data>
+  <data name="Lyrics_SourceUser" xml:space="preserve">
+    <value>Your own</value>
+    <comment>Source of the lyrics: typed or pasted by the user</comment>
+  </data>
+  <data name="Lyrics_Timed" xml:space="preserve">
+    <value>timed</value>
+    <comment>Lyrics with a time per line</comment>
+  </data>
+  <data name="Lyrics_Plain" xml:space="preserve">
+    <value>without times</value>
+    <comment>Lyrics without timing</comment>
+  </data>
+  <data name="Lyrics_Instrumental" xml:space="preserve">
+    <value>Instrumental</value>
+    <comment>Lyrics state: LRCLIB knows the track as instrumental</comment>
+  </data>
+  <data name="Lyrics_NotSearched" xml:space="preserve">
+    <value>Not searched yet</value>
+    <comment>Lyrics state: LRCLIB was not asked yet</comment>
+  </data>
+  <data name="Lyrics_NoneFound" xml:space="preserve">
+    <value>None found</value>
+    <comment>Lyrics state: LRCLIB had nothing fitting</comment>
+  </data>
+  <data name="Detail_Lyrics" xml:space="preserve">
+    <value>Lyrics</value>
+    <comment>Title of the lyrics island on the detail page</comment>
+  </data>
+  <data name="Detail_LyricsAbout" xml:space="preserve">
+    <value>From LRCLIB, or paste your own. Timed lyrics are only taken when their length fits the file.</value>
+    <comment>Tooltip of Detail_Lyrics</comment>
+  </data>
+  <data name="Detail_LyricsPlaceholder" xml:space="preserve">
+    <value>Paste lyrics, with or without times like [01:23.45] …</value>
+    <comment>Placeholder of the empty lyrics box on the detail page</comment>
+  </data>
+  <data name="Detail_LyricsSearch" xml:space="preserve">
+    <value>Search again</value>
+    <comment>Button: ask LRCLIB again for this track</comment>
+  </data>
+  <data name="Detail_LyricsSearchHint" xml:space="preserve">
+    <value>Asks LRCLIB again, e.g. after you corrected artist or title.</value>
+    <comment>Tooltip of Detail_LyricsSearch</comment>
+  </data>
+  <data name="Detail_LyricsReset" xml:space="preserve">
+    <value>Reset</value>
+    <comment>Button: drop the user's own lyrics</comment>
+  </data>
+  <data name="Detail_LyricsResetHint" xml:space="preserve">
+    <value>Drops your own lyrics, so LRCLIB's show again.</value>
+    <comment>Tooltip of Detail_LyricsReset</comment>
+  </data>
 </root>
