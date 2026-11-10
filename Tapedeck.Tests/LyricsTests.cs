@@ -125,6 +125,36 @@ public sealed class LyricsTests : IAsyncLifetime
     }
 
     [Fact]
+    public void Lrc_lines_in_playing_order_with_repeats_pauses_and_offset()
+    {
+        const string LRC = "[re:Tapedeck]\n[ar:Coolio]\n[offset:+500]\n[00:10.5]First\n[00:20.00][00:40.00] Chorus\n[00:30.123]\nno time here";
+
+        var lines = LrcText.Parse(LRC);
+
+        Assert.Equal(
+        [
+            new LrcLine(TimeSpan.FromSeconds(10), "First"),
+            new LrcLine(TimeSpan.FromSeconds(19.5), "Chorus"),
+            new LrcLine(TimeSpan.FromMilliseconds(29_623), string.Empty),
+            new LrcLine(TimeSpan.FromSeconds(39.5), "Chorus"),
+        ], lines);
+    }
+
+    [Theory]
+    [InlineData(0, -1)]
+    [InlineData(10, 0)]
+    [InlineData(19.4, 0)]
+    [InlineData(19.5, 1)]
+    [InlineData(35, 2)]
+    [InlineData(500, 3)]
+    public void The_line_sung_at_a_position(double seconds, int index)
+    {
+        var lines = LrcText.Parse("[offset:+500]\n[00:10.5]First\n[00:20.00][00:40.00] Chorus\n[00:30.123]");
+
+        Assert.Equal(index, LrcText.IndexAt(lines, TimeSpan.FromSeconds(seconds)));
+    }
+
+    [Fact]
     public async Task The_service_searches_when_the_exact_lookup_has_nothing_and_asks_each_track_once()
     {
         var id = await this.AddDownloadedAsync(270);
@@ -146,7 +176,7 @@ public sealed class LyricsTests : IAsyncLifetime
     public async Task The_users_lyrics_win_and_mark_the_tags_outdated_only_when_they_change()
     {
         var id = await this.AddDownloadedAsync(241);
-        await this.repo.MarkTagsWrittenAsync(id);
+        await this.MarkWrittenLongAgoAsync(id);
         await this.repo.SaveLrclibLyricsAsync(id, new LrclibLyrics("Plain", "[00:01.00] Timed", false));
         Assert.True((await this.repo.GetDisplayAsync(id))!.TagsStale);
         Assert.Equal("[00:01.00] Timed", (await this.repo.GetLyricsAsync(id)).Text);
@@ -160,6 +190,7 @@ public sealed class LyricsTests : IAsyncLifetime
         await this.repo.SaveLrclibLyricsAsync(id, new LrclibLyrics("Other", "[00:01.00] Other", false));
         Assert.False((await this.repo.GetDisplayAsync(id))!.TagsStale);
 
+        await this.MarkWrittenLongAgoAsync(id);
         await this.repo.SetUserLyricsAsync(id, "  ");
         Assert.Equal("[00:01.00] Other", (await this.repo.GetLyricsAsync(id)).Text);
         Assert.True((await this.repo.GetDisplayAsync(id))!.TagsStale);
@@ -176,6 +207,15 @@ public sealed class LyricsTests : IAsyncLifetime
             await connection.ExecuteAsync("UPDATE tracks SET mb_checked_at = '2999-01-01T00:00:00.000Z' WHERE id = @id;", new { id });
 
         Assert.Equal([id], (await this.repo.ListWithoutLyricsAsync()).Select(r => r.Id));
+    }
+
+    // edits within the same millisecond as writing the tags would not count as newer
+    private async Task MarkWrittenLongAgoAsync(long id)
+    {
+        await using var connection = await this.factory.OpenAsync();
+        await connection.ExecuteAsync(
+            "UPDATE tracks SET tags_written_at = '2000-01-01T00:00:00.000Z', edited_at = '2000-01-01T00:00:00.000Z' WHERE id = @id;",
+            new { id });
     }
 
     private async Task<long> AddDownloadedAsync(int duration, string channel = "Tommy Boy")
