@@ -36,7 +36,8 @@ public sealed partial class PlayerService(ILogger<PlayerService> log) : Observab
     // a quarter second per buffer: a second of audio queued, short enough for a quick pause and seek
     private const int BLOCK_SAMPLES = OpusPcmReader.SAMPLE_RATE / 4 * OpusPcmReader.CHANNELS;
     private static readonly TimeSpan TICK = TimeSpan.FromMilliseconds(30);
-    private static readonly TimeSpan POSITION_INTERVAL = TimeSpan.FromMilliseconds(250);
+    // often enough that a lyrics line changes with the singing, not a beat late
+    private static readonly TimeSpan POSITION_INTERVAL = TimeSpan.FromMilliseconds(100);
     // asking for the default device enumerates all devices, so not on every tick
     private static readonly TimeSpan DEVICE_CHECK_INTERVAL = TimeSpan.FromSeconds(2);
 
