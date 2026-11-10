@@ -185,8 +185,8 @@
                 </controls:Island>
             </Grid>
 
-            <!-- Right: metadata, MusicBrainz match and YouTube facts -->
-            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+            <!-- Right: metadata, MusicBrainz match, YouTube facts and lyrics -->
+            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
                 <controls:Island>
                     <StackPanel Spacing="{StaticResource Space.2}">
                         <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,6">
@@ -307,6 +307,40 @@
                         <TextBlock Grid.Row="2" Grid.Column="2" Classes="mono" Text="{Binding VideoId}" />
                         <TextBlock Grid.Row="2" Grid.Column="3" Classes="body" Text="{Binding AddedAt}" />
                     </Grid>
+                </controls:Island>
+
+                <!-- Lyrics: LRCLIB's or the user's own; "Write tags" puts them into the file and a .lrc next to it -->
+                <controls:Island Grid.Row="3">
+                    <StackPanel Spacing="{StaticResource Space.2}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_Lyrics}"
+                                       ToolTip.Tip="{x:Static res:Strings.Detail_LyricsAbout}" />
+                            <TextBlock Grid.Column="1" Classes="fact-label" Text="{Binding LyricsState}" VerticalAlignment="Bottom" />
+                        </Grid>
+
+                        <TextBox Classes="user-value"
+                                 Text="{Binding LyricsText}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 MinHeight="120"
+                                 MaxHeight="360"
+                                 PlaceholderText="{x:Static res:Strings.Detail_LyricsPlaceholder}"
+                                 AutomationProperties.Name="{x:Static res:Strings.Detail_Lyrics}" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.1}" Margin="-8,0,0,0">
+                            <Button Classes="text"
+                                    Content="{x:Static res:Strings.Detail_LyricsSearch}"
+                                    ToolTip.Tip="{x:Static res:Strings.Detail_LyricsSearchHint}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Search}"
+                                    Command="{Binding SearchLyricsCommand}" />
+                            <Button Classes="text"
+                                    Content="{x:Static res:Strings.Detail_LyricsReset}"
+                                    ToolTip.Tip="{x:Static res:Strings.Detail_LyricsResetHint}"
+                                    controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                                    Command="{Binding ResetLyricsCommand}"
+                                    IsVisible="{Binding HasUserLyrics}" />
+                        </StackPanel>
+                    </StackPanel>
                 </controls:Island>
             </Grid>
         </Grid>

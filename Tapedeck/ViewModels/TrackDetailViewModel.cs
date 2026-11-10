@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Services;
@@ -51,7 +53,11 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly TrackSequence sequence;
     private readonly TrackDetailFactory createDetail;
 
+    private readonly LyricsService lyricsService;
+
     private CancellationTokenSource? pendingSave;
+    private CancellationTokenSource? pendingLyricsSave;
+    private TrackLyrics lyrics = TrackLyrics.NONE;
     private string? notes;
     private bool loading;
     private string? mbRecordingId;
@@ -59,8 +65,9 @@ public partial class TrackDetailViewModel : ViewModelBase
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, TrackSequence sequence, TrackDetailFactory createDetail,
         ITrackRepository repository,
         TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation,
-        MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player)
+        MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player, LyricsService lyricsService)
     {
+        this.lyricsService = lyricsService;
         this.player = player;
         this.sequence = sequence;
         this.createDetail = createDetail;
@@ -228,8 +235,10 @@ public partial class TrackDetailViewModel : ViewModelBase
             return;
         var raw = await this.repository.GetAsync(this.Row.Id);
         this.LoadMusicBrainz(track, raw);
+        var trackLyrics = await this.repository.GetLyricsAsync(this.Row.Id);
 
         this.loading = true;
+        this.LoadLyrics(trackLyrics);
         this.Title = track.Title;
         this.Subtitle = string.Join(" · ", new[] { track.Artist, track.Album, Row.DurationText }.Where(p => !string.IsNullOrEmpty(p)));
         this.ThumbPath = track.ThumbPath;
@@ -502,12 +511,135 @@ public partial class TrackDetailViewModel : ViewModelBase
     /// <summary>Saves edits still waiting for the typing pause before an action that relies on them.</summary>
     private async Task SaveNowAsync()
     {
+        if (this.pendingLyricsSave is { } lyricsSave)
+        {
+            lyricsSave.Cancel();
+            this.pendingLyricsSave = null;
+            await this.SaveLyricsAsync();
+        }
         if (this.pendingSave is null)
             return;
         this.pendingSave.Cancel();
         this.pendingSave = null;
         await this.SaveFieldsAsync();
     }
+
+    /// <summary>The shown lyrics: the user's own, else LRCLIB's. Editing them makes them the user's own.</summary>
+    [ObservableProperty]
+    public partial string LyricsText { get; set; } = string.Empty;
+
+    /// <summary>Where the lyrics come from and whether they are timed, e.g. "LRCLIB · timed".</summary>
+    [ObservableProperty]
+    public partial string LyricsState { get; private set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ResetLyricsCommand))]
+    public partial bool HasUserLyrics { get; private set; }
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SearchLyricsCommand))]
+    public partial bool IsLyricsBusy { get; private set; }
+
+    partial void OnLyricsTextChanged(string value)
+    {
+        if (this.loading)
+            return;
+        this.pendingLyricsSave?.Cancel();
+        var cts = this.pendingLyricsSave = new CancellationTokenSource();
+        _ = this.SaveLyricsAfterDelayAsync(cts);
+    }
+
+    private async Task SaveLyricsAfterDelayAsync(CancellationTokenSource cts)
+    {
+        try
+        {
+            await Task.Delay(SAVE_DELAY, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        finally
+        {
+            if (this.pendingLyricsSave == cts)
+                this.pendingLyricsSave = null;
+            cts.Dispose();
+        }
+
+        await this.SaveLyricsAsync();
+    }
+
+    /// <summary>Text equal to LRCLIB's, or none at all, is no correction: LRCLIB's lyrics show again.</summary>
+    private Task SaveLyricsAsync()
+    {
+        var text = Normalize(this.LyricsText);
+        var fromLrclib = Normalize(this.lyrics.Synced ?? this.lyrics.Plain ?? string.Empty);
+        string? own = text.Length == 0 || text == fromLrclib ? null : text;
+        return this.RunSaveAsync(() => this.repository.SetUserLyricsAsync(this.Row.Id, own));
+    }
+
+    /// <summary>Drops the user's own lyrics, so LRCLIB's show again.</summary>
+    [RelayCommand(CanExecute = nameof(HasUserLyrics))]
+    private async Task ResetLyricsAsync()
+    {
+        this.pendingLyricsSave?.Cancel();
+        this.pendingLyricsSave = null;
+        await this.RunSaveAsync(() => this.repository.SetUserLyricsAsync(this.Row.Id, null));
+    }
+
+    /// <summary>Asks LRCLIB again, e.g. after correcting artist or title.</summary>
+    [RelayCommand(CanExecute = nameof(IsLyricsIdle))]
+    private async Task SearchLyricsAsync()
+    {
+        await this.SaveNowAsync();
+        this.Notice = null;
+        this.IsLyricsBusy = true;
+        try
+        {
+            LrclibLyrics found;
+            using (this.activity.Begin(Strings.Activity_SearchingLyrics))
+                found = await this.lyricsService.FetchAsync(this.Row.Id);
+            this.activity.Confirm(found.Synced is not null ? Strings.Confirm_LyricsTimed
+                : found.Plain is not null ? Strings.Confirm_LyricsPlain
+                : found.Instrumental ? Strings.Confirm_LyricsInstrumental
+                : Strings.Confirm_LyricsNone);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or InvalidDataException or TaskCanceledException)
+        {
+            this.Notice = string.Format(Strings.Notice_LyricsFailed, ex.Message);
+        }
+        finally
+        {
+            this.IsLyricsBusy = false;
+        }
+
+        await this.LoadAsync();
+        await this.actions.RefreshAsync(this.Row);
+    }
+
+    private bool IsLyricsIdle() => !this.IsLyricsBusy;
+
+    private void LoadLyrics(TrackLyrics loaded)
+    {
+        this.lyrics = loaded;
+        this.HasUserLyrics = loaded.IsUser;
+        this.LyricsState = LyricsStateOf(loaded);
+        // lyrics typed while the last save ran are saved after the next pause; don't overwrite them
+        if (this.pendingLyricsSave is null)
+            this.LyricsText = loaded.Text ?? string.Empty;
+    }
+
+    private static string LyricsStateOf(TrackLyrics lyrics)
+    {
+        if (lyrics.Text is null)
+            return lyrics.Instrumental ? Strings.Lyrics_Instrumental
+                : lyrics.CheckedAt is null ? Strings.Lyrics_NotSearched
+                : Strings.Lyrics_NoneFound;
+        var source = lyrics.IsUser ? Strings.Lyrics_SourceUser : Strings.Lyrics_SourceLrclib;
+        return string.Format(Strings.Lyrics_State, source, lyrics.IsSynced ? Strings.Lyrics_Timed : Strings.Lyrics_Plain);
+    }
+
+    private static string Normalize(string text) => text.Replace("\r\n", "\n").Trim();
 
     private async Task SaveFieldsAsync()
     {
