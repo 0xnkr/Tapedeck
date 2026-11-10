@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Lyrics from [LRCLIB](https://lrclib.net), a free lyrics database. Downloaded tracks are looked up in the background; "Write tags" puts the lyrics into the file and, when they are timed, also as a `.lrc` file next to the song, so phone players show the lines along with the music. Timed lyrics are only taken when they fit the file: a YouTube Music upload, or a video as long as the song usually is. A music video with an intro gets the lyrics without times. Switch it off or fetch the rest under **Settings → Tools**.
-- The detail page shows the lyrics, whether they are timed, and lets you paste or correct your own. "Search again" asks LRCLIB anew, "Reset" brings LRCLIB's lyrics back. A `.lrc` file of your own next to a song is never touched.
+- The detail page shows the lyrics right below the metadata, and lets you paste or correct your own under "Edit". "Search again" asks LRCLIB anew, "Reset" brings LRCLIB's lyrics back. A `.lrc` file of your own next to a song is never touched.
+- Timed lyrics follow the song while it plays: the line sung now in large type, the next one smaller below, fading over as the song goes on. Click a line to jump there; when the track is not playing, it starts.
 
 - "Target player" under **Settings → Library** writes the tags for the phone player you use. "PixelPlayer" adds a ReplayGain volume level, since PixelPlayer misreads the Opus one and plays the tracks nearly silent with ReplayGain on. Switching back takes it out again: after a change, "Write tags (N)" updates every file.
 
