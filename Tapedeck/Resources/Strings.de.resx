@@ -1593,4 +1593,22 @@
   <data name="Detail_LyricsResetHint" xml:space="preserve">
     <value>Entfernt deine eigenen Lyrics, dann gelten wieder die von LRCLIB.</value>
   </data>
+  <data name="Lyrics_Pause" xml:space="preserve">
+    <value>♪</value>
+  </data>
+  <data name="Detail_LyricsJumpHint" xml:space="preserve">
+    <value>Springt zu dieser Zeile; startet den Titel, wenn er nicht läuft.</value>
+  </data>
+  <data name="Detail_LyricsPlayToFollow" xml:space="preserve">
+    <value>Spiel den Titel ab, um mitzulesen.</value>
+  </data>
+  <data name="Detail_LyricsEdit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Detail_LyricsDone" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="Detail_LyricsEditHint" xml:space="preserve">
+    <value>Lyrics einfügen oder korrigieren; mit Zeiten wie [01:23.45] laufen sie mit dem Song mit.</value>
+  </data>
 </root>

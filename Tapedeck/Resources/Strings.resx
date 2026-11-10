@@ -2120,4 +2120,28 @@
     <value>Drops your own lyrics, so LRCLIB's show again.</value>
     <comment>Tooltip of Detail_LyricsReset</comment>
   </data>
+  <data name="Lyrics_Pause" xml:space="preserve">
+    <value>♪</value>
+    <comment>Shown in the lyrics panel while there is no singing; a music note</comment>
+  </data>
+  <data name="Detail_LyricsJumpHint" xml:space="preserve">
+    <value>Jumps to this line; starts the track when it is not playing.</value>
+    <comment>Tooltip of a line in the lyrics panel</comment>
+  </data>
+  <data name="Detail_LyricsPlayToFollow" xml:space="preserve">
+    <value>Play the track to follow along.</value>
+    <comment>Hint below the lyrics panel while another track or none is playing</comment>
+  </data>
+  <data name="Detail_LyricsEdit" xml:space="preserve">
+    <value>Edit</value>
+    <comment>Button: open the text box to paste or correct the lyrics</comment>
+  </data>
+  <data name="Detail_LyricsDone" xml:space="preserve">
+    <value>Done</value>
+    <comment>Button: close the lyrics text box</comment>
+  </data>
+  <data name="Detail_LyricsEditHint" xml:space="preserve">
+    <value>Paste or correct the lyrics; with times like [01:23.45] they follow the song.</value>
+    <comment>Tooltip of Detail_LyricsEdit</comment>
+  </data>
 </root>

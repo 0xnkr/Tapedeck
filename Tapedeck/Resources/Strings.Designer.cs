@@ -4799,5 +4799,59 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Detail_LyricsResetHint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ♪.
+        /// </summary>
+        public static string Lyrics_Pause {
+            get {
+                return ResourceManager.GetString("Lyrics_Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jumps to this line; starts the track when it is not playing..
+        /// </summary>
+        public static string Detail_LyricsJumpHint {
+            get {
+                return ResourceManager.GetString("Detail_LyricsJumpHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play the track to follow along..
+        /// </summary>
+        public static string Detail_LyricsPlayToFollow {
+            get {
+                return ResourceManager.GetString("Detail_LyricsPlayToFollow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string Detail_LyricsEdit {
+            get {
+                return ResourceManager.GetString("Detail_LyricsEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string Detail_LyricsDone {
+            get {
+                return ResourceManager.GetString("Detail_LyricsDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste or correct the lyrics; with times like [01:23.45] they follow the song..
+        /// </summary>
+        public static string Detail_LyricsEditHint {
+            get {
+                return ResourceManager.GetString("Detail_LyricsEditHint", resourceCulture);
+            }
+        }
     }
 }
