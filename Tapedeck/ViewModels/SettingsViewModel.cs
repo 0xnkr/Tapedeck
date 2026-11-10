@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
 using Tapedeck.Core.LastFm;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
@@ -75,14 +76,18 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly LastFmGenreService lastFmGenres;
     private readonly ITrackRepository repository;
     private readonly LibraryViewModel library;
+    private readonly LyricsQueue lyrics;
+    private readonly LyricsService lyricsService;
 
     private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
         DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres,
-        ITrackRepository repository, LibraryViewModel library)
+        ITrackRepository repository, LibraryViewModel library, LyricsQueue lyrics, LyricsService lyricsService)
     {
+        this.lyrics = lyrics;
+        this.lyricsService = lyricsService;
         this.repository = repository;
         this.library = library;
         this.TargetPlayerChoices = Enum.GetValues<TargetPlayer>()
@@ -118,6 +123,12 @@ public partial class SettingsViewModel : ViewModelBase
         };
         this.ParallelDownloads = Math.Clamp(settings.ParallelDownloads ?? AppSettings.DEFAULT_PARALLEL_DOWNLOADS, 1, AppSettings.MAX_PARALLEL_DOWNLOADS);
         this.TargetPlayer = TargetPlayerCode.Parse(settings.TargetPlayer);
+        this.LyricsAuto = settings.LyricsAuto ?? true;
+        lyrics.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(LyricsQueue.IsRunning) && !lyrics.IsRunning)
+                _ = this.CountLyricsPendingAsync();
+        };
         this.LibraryDir = paths.LibraryDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
@@ -199,9 +210,40 @@ public partial class SettingsViewModel : ViewModelBase
         this.FFmpegVersion = versions.FFmpeg;
         this.DenoVersion = versions.Deno;
         await this.CountLastFmPendingAsync();
+        await this.CountLyricsPendingAsync();
     }
 
     private async Task CountLastFmPendingAsync() => this.LastFmPending = await this.lastFmGenres.CountPendingAsync();
+
+    /// <summary>Ask LRCLIB in the background for the lyrics of downloaded tracks.</summary>
+    [ObservableProperty]
+    public partial bool LyricsAuto { get; set; }
+
+    partial void OnLyricsAutoChanged(bool value)
+    {
+        // also reached when the constructor shows the stored choice
+        if ((this.store.Load().LyricsAuto ?? true) == value)
+            return;
+        this.store.Update(s => s with { LyricsAuto = value });
+        if (value)
+            this.lyrics.EnqueueMissing();
+    }
+
+    /// <summary>Downloaded tracks LRCLIB was not asked for yet.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LyricsFetchLabel))]
+    [NotifyCanExecuteChangedFor(nameof(FetchLyricsCommand))]
+    public partial int LyricsPending { get; private set; }
+
+    public string LyricsFetchLabel => string.Format(Strings.Settings_LyricsFetch, this.LyricsPending);
+
+    private bool CanFetchLyrics => this.LyricsPending > 0;
+
+    private async Task CountLyricsPendingAsync() => this.LyricsPending = await this.lyricsService.CountPendingAsync();
+
+    /// <summary>Asks LRCLIB for the lyrics of all tracks that have none yet, also when automatic lookups are off.</summary>
+    [RelayCommand(CanExecute = nameof(CanFetchLyrics))]
+    private void FetchLyrics() => this.lyrics.EnqueueNow();
 
     partial void OnLastFmApiKeyChanged(string value)
     {

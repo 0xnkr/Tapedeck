@@ -52,6 +52,7 @@ public partial class LibraryViewModel(
     LoudnessQueue loudness,
     CoverQueue covers,
     LastFmQueue lastFm,
+    LyricsQueue lyrics,
     SettingsStore settings,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
@@ -338,15 +339,20 @@ public partial class LibraryViewModel(
         covers.Covered += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         lastFm.Tagged += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         lastFm.Failed += message => this.Notice = message;
+        lyrics.Changed += ids => _ = this.RefreshRowsQuietlyAsync(ids);
+        lyrics.Failed += message => this.Notice = message;
         musicBrainz.Failed += message => this.Notice = string.Format(Strings.Notice_MusicBrainzFailed, message);
         musicBrainz.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName != nameof(MusicBrainzQueue.IsRunning))
                 return;
             this.IsMatching = musicBrainz.IsRunning;
-            // Last.fm only fills in what MusicBrainz did not find
+            // Last.fm only fills in what MusicBrainz did not find; LRCLIB finds more with its names
             if (!musicBrainz.IsRunning)
+            {
                 lastFm.EnqueueMissing();
+                lyrics.EnqueueMissing();
+            }
         };
     }
 
@@ -911,6 +917,8 @@ public partial class LibraryViewModel(
         covers.EnqueueMissing();
         // tracks without genres ask Last.fm, with the user's key
         lastFm.EnqueueMissing();
+        // downloaded tracks ask LRCLIB for their lyrics
+        lyrics.EnqueueMissing();
     }
 
     private void ApplyFilter()

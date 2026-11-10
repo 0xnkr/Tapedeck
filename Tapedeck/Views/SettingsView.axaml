@@ -370,6 +370,28 @@
                                     </Grid>
                                 </StackPanel>
                             </Border>
+
+                            <!-- LRCLIB: lyrics for the downloaded tracks, a web service without a key -->
+                            <Border Classes="row">
+                                <StackPanel Spacing="{StaticResource Space.2}">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                                            <TextBlock Classes="body-strong" Text="LRCLIB" />
+                                            <TextBlock Classes="setting-hint" TextWrapping="Wrap" Text="{x:Static res:Strings.Settings_LyricsHint}" />
+                                        </StackPanel>
+                                        <CheckBox Grid.Column="1"
+                                                  VerticalAlignment="Center"
+                                                  Content="{x:Static res:Strings.Settings_LyricsAuto}"
+                                                  ToolTip.Tip="{x:Static res:Strings.Settings_LyricsAutoHint}"
+                                                  IsChecked="{Binding LyricsAuto}" />
+                                    </Grid>
+                                    <Button Classes="secondary"
+                                            HorizontalAlignment="Right"
+                                            Content="{Binding LyricsFetchLabel}"
+                                            ToolTip.Tip="{x:Static res:Strings.Settings_LyricsFetchHint}"
+                                            Command="{Binding FetchLyricsCommand}" />
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
                     </controls:Island>
                 </Grid>

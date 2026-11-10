@@ -16,6 +16,7 @@ namespace Tapedeck.Core.Settings;
 /// <c>null</c> means <see cref="DEFAULT_PARALLEL_DOWNLOADS"/>.
 /// </param>
 /// <param name="TargetPlayer">The phone player the tags are written for, as <see cref="TargetPlayerCode"/>; <c>null</c> follows the Opus standard.</param>
+/// <param name="LyricsAuto">Ask LRCLIB in the background for the lyrics of downloaded tracks; <c>null</c> means on.</param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
@@ -25,7 +26,8 @@ public sealed record AppSettings(
     bool? LevelPlayback = null,
     string? LastFmApiKey = null,
     int? ParallelDownloads = null,
-    string? TargetPlayer = null)
+    string? TargetPlayer = null,
+    bool? LyricsAuto = null)
 {
     /// <summary>Clearly faster than one at a time, and still below what makes YouTube refuse.</summary>
     public const int DEFAULT_PARALLEL_DOWNLOADS = 3;
