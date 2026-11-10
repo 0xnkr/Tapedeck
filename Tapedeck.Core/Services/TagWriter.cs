@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
+using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Settings;
 
 namespace Tapedeck.Core.Services;
@@ -20,6 +21,9 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
     /// <summary>Only for target players that need it (<see cref="PlayerQuirks.ReplayGain"/>); Opus players should use R128.</summary>
     public const string REPLAYGAIN_FIELD = "REPLAYGAIN_TRACK_GAIN";
 
+    /// <summary>The lyrics, as most players and taggers name the field in Vorbis comments.</summary>
+    public const string LYRICS_FIELD = "LYRICS";
+
     /// <summary>ffmpeg reports this for silence; there is nothing to level out.</summary>
     private const double SILENCE_LUFS = -70;
 
@@ -33,6 +37,10 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
         var filePath = paths.ToLibraryPath(track.FilePath);
         var loudness = await repository.GetLoudnessAsync(trackId);
         var quirks = PlayerQuirks.Of(TargetPlayerCode.Parse(settings?.Load().TargetPlayer));
+        var lyrics = await repository.GetLyricsAsync(trackId);
+        var lyricsText = lyrics.Text?.Replace("\r\n", "\n").Trim();
+        if (lyricsText is { Length: 0 })
+            lyricsText = null;
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
@@ -74,6 +82,12 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
                         xiph.SetField(REPLAYGAIN_FIELD, LoudnessMeter.ReplayGain(level));
                     else
                         xiph.RemoveField(REPLAYGAIN_FIELD);
+
+                    // timed LRC when there is one; players that parse it show the lines along with the song
+                    if (lyricsText is { } text)
+                        xiph.SetField(LYRICS_FIELD, text);
+                    else
+                        xiph.RemoveField(LYRICS_FIELD);
                 }
                 file.Save();
             }
@@ -81,9 +95,21 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
             // TagLib# may have left out the end of the comment packet again
             if (OggCommentRepair.Repair(filePath))
                 this.log.LogWarning("Repaired the tags of {File} after writing (TagLib# had left out their end)", track.FilePath);
+
+            // the .lrc next to the song serves players that do not read timed lyrics from the tags
+            if (lyricsText is { } timed && lyrics.IsSynced)
+            {
+                if (!LrcSidecar.Write(filePath, timed))
+                    this.log.LogInformation("Left the user's own lyrics file next to {File} as it is", track.FilePath);
+            }
+            else
+            {
+                LrcSidecar.DeleteOwn(filePath);
+            }
         });
         await repository.MarkTagsWrittenAsync(trackId);
-        this.log.LogInformation("Wrote tags to {File} ({Artist} - {Title}, album {Album}, loudness {Lufs} LUFS)",
-            track.FilePath, track.Artist, track.Title, track.Album, loudness?.ToString("0.0", CultureInfo.InvariantCulture) ?? "unknown");
+        this.log.LogInformation("Wrote tags to {File} ({Artist} - {Title}, album {Album}, loudness {Lufs} LUFS, lyrics {Lyrics})",
+            track.FilePath, track.Artist, track.Title, track.Album, loudness?.ToString("0.0", CultureInfo.InvariantCulture) ?? "unknown",
+            lyricsText is null ? "none" : lyrics.IsSynced ? "timed" : "plain");
     }
 }
