@@ -17,7 +17,7 @@ Paste a link, get a clean, tagged Opus file and a library your phone actually un
 
 <br />
 
-<img src="docs/tapedeck-screenshot.png" alt="Tapedeck showing a playlist linked to YouTube, with all 40 tracks downloaded" width="900" />
+<img src="docs/tapedeck_playlist.png" alt="Tapedeck showing the playlist Presenting K.Dot with all 34 tracks downloaded, the first one playing in the player bar" width="900" />
 
 </div>
 
@@ -41,7 +41,8 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive (or, without one, cut from the middle of the video thumbnail). Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🎼 **Stable genres** | Fine genres like *G-Funk*, *Deep House* or *Dance-Pop* are mapped to a few main genres such as Hip-Hop, Electronic or Pop, and only those go into the file, so your phone sorts a mixed library into clear groups. Tracks MusicBrainz has no genres for can get them from [Last.fm](https://www.last.fm) with your own free API key. |
-| 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
+| 🏷️ **Write real tags** | Title, artist, album, album artist, year, track number, genres, cover art, lyrics, MusicBrainz IDs and the YouTube link go straight into the file. Files are renamed to match your corrections. |
+| 🎤 **Lyrics** | Lyrics come from [LRCLIB](https://lrclib.net) in the background, timed wherever the timing really fits the file. They go into the file and, when timed, also as a `.lrc` next to the song, so phone players show the lines along with the music. In Tapedeck the line sung now follows the song, and a click jumps to any line. Paste or correct your own at any time. |
 | 🧹 **No duplicates** | The same song from the music video, the Topic upload and a lyric video? The **Duplicates** filter puts them side by side, and **Keep this one** removes the rest without breaking your playlists. |
 | 🔊 **Even volume** | Every download is measured once with FFmpeg (EBU R 128), and the result goes into the file as an Opus track gain (`R128_TRACK_GAIN`). Loud music videos and quiet Topic uploads then play equally loud in Poweramp, Musicolet & co. Older tracks are measured in the background, and the built-in player levels them the same way. |
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
@@ -54,9 +55,9 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 
 <div align="center">
 
-<img src="docs/tapedeck-song-details.png" alt="Track details of Till I Collapse: metadata matched with MusicBrainz, square cover from the Cover Art Archive, and the player bar playing the track" width="900" />
+<img src="docs/tapedeck_track.png" alt="Track details of Fake Plastic Trees: metadata matched with MusicBrainz, square cover from the Cover Art Archive, and timed lyrics from LRCLIB following the track in the player bar" width="900" />
 
-<sub>Every value shows where it comes from. Here MusicBrainz found the album, year, track number and genres, the Cover Art Archive the square cover, and the player bar plays the file.</sub>
+<sub>Every value shows where it comes from. Here MusicBrainz found the album, year and genres, the Cover Art Archive the square cover, and the timed lyrics from LRCLIB follow the song: the line sung now in large type, the next one below.</sub>
 
 </div>
 
@@ -91,13 +92,13 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 
 You can check the installed versions and update yt-dlp under **Settings → Tools**.
 
-Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0](https://musicbrainz.org/doc/About/Data_License)) and covers from the [Cover Art Archive](https://coverartarchive.org). Tapedeck asks them at most once per second, as MusicBrainz requests, and you can turn off the automatic lookup under **Settings → Tools**. Genres for tracks without MusicBrainz genres can come from the tags listeners gave the artist on [Last.fm](https://www.last.fm), with your own API key; Last.fm then gets the artist names.
+Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0](https://musicbrainz.org/doc/About/Data_License)) and covers from the [Cover Art Archive](https://coverartarchive.org). Tapedeck asks them at most once per second, as MusicBrainz requests, and you can turn off the automatic lookup under **Settings → Tools**. Genres for tracks without MusicBrainz genres can come from the tags listeners gave the artist on [Last.fm](https://www.last.fm), with your own API key; Last.fm then gets the artist names. Lyrics come from [LRCLIB](https://lrclib.net), a free lyrics database, which gets artist, title, album and length of your downloaded tracks; that lookup can be turned off under **Settings → Tools** as well.
 
 ## Please use it responsibly
 
 Tapedeck is a personal tool for building a library of music you are allowed to keep. Downloading from YouTube may violate [YouTube's Terms of Service](https://www.youtube.com/t/terms) and copyright law where you live. You are responsible for what you download. Support the artists you listen to. 💛
 
-Tapedeck is not affiliated with YouTube, Spotify or MusicBrainz. It reads only the Spotify data download you request yourself and does not use the Spotify API.
+Tapedeck is not affiliated with YouTube, Spotify, MusicBrainz or LRCLIB. Lyrics are stored for your own library only; please don't share them on. It reads only the Spotify data download you request yourself and does not use the Spotify API.
 
 ## Build it yourself
 
@@ -148,6 +149,7 @@ dotnet run --project Tapedeck -- --spotify-match "path/to/my_spotify_data.zip" 1
 - [x] CSV backup, restore and moving to another computer
 - [x] Better metadata from [MusicBrainz](https://musicbrainz.org) and square covers from the [Cover Art Archive](https://coverartarchive.org)
 - [x] Genres from [Last.fm](https://www.last.fm), mapped to stable main genres
+- [x] Timed lyrics from [LRCLIB](https://lrclib.net), in the file, as `.lrc` and live in the app
 - [ ] Installer and auto updates
 - [x] Smart playlists
 - [x] Import of the most played songs from the Spotify streaming history
