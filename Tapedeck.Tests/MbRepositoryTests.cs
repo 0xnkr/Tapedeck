@@ -102,6 +102,8 @@ public sealed class MbRepositoryTests : IAsyncLifetime
         await this.repo.SaveMbResultAsync(id, MbMatchState.Matched, PICK, ["Hip Hop"], null, null);
         await this.repo.SetCoverAsync(id, "covers/release-1.jpg", "caa");
         await this.repo.MarkTagsWrittenAsync(id);
+        // an edit within the same millisecond as writing the tags would not count as newer
+        await Task.Delay(5);
         await this.repo.SaveMbResultAsync(id, MbMatchState.Rejected, null, [], null, null);
 
         var rejected = (await this.repo.GetDisplayAsync(id))!;
