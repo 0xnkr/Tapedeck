@@ -3,6 +3,7 @@ using Tapedeck.Core;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
 using Tapedeck.Core.Lyrics;
+using Tapedeck.Core.Recommendations;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Data;
@@ -196,6 +197,30 @@ public sealed class TagWriterTests : IAsyncLifetime
             Assert.Equal(player, TargetPlayerCode.Parse(TargetPlayerCode.Of(player)));
         Assert.Equal(TargetPlayer.Standard, TargetPlayerCode.Parse("winamp"));
         Assert.False(PlayerQuirks.Of(TargetPlayer.Standard).ReplayGain);
+    }
+
+    [Fact]
+    public async Task Writes_the_recommendation_tags_and_removes_them_without_data()
+    {
+        var id = await this.AddWithFileAsync();
+        await this.repo.SaveArtistTagsAsync(RecommendationTags.ArtistKey("Juicy J"),
+            [new ArtistTag("dirty south", 100), new ArtistTag("trap", 47)], [id]);
+        await this.repo.SetListeningHistoryAsync(new Dictionary<long, ListeningHistory>
+        {
+            [id] = new(57, 3, new DateOnly(2025, 3, 14)),
+        });
+
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Equal(["dirty south=1.00;trap=0.47"], this.GainField(RecommendationTags.TAGS_FIELD));
+        Assert.Equal(["plays=57;skips=3;last=2025-03-14"], this.GainField(RecommendationTags.HISTORY_FIELD));
+
+        await this.repo.SaveArtistTagsAsync(RecommendationTags.ArtistKey("Juicy J"), [], [id]);
+        await this.repo.SetListeningHistoryAsync(new Dictionary<long, ListeningHistory>());
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Empty(this.GainField(RecommendationTags.TAGS_FIELD));
+        Assert.Empty(this.GainField(RecommendationTags.HISTORY_FIELD));
     }
 
     private string[] GainField(string field = TagWriter.TRACK_GAIN_FIELD)

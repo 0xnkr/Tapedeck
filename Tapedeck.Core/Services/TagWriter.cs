@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
 using Tapedeck.Core.Lyrics;
+using Tapedeck.Core.Recommendations;
 using Tapedeck.Core.Settings;
 
 namespace Tapedeck.Core.Services;
@@ -41,6 +42,9 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
         var lyricsText = lyrics.Text?.Replace("\r\n", "\n").Trim();
         if (lyricsText is { Length: 0 })
             lyricsText = null;
+        // for the phone app's recommendations: the artist's Last.fm tags and the Spotify history
+        var artistTags = RecommendationTags.FormatTags(await repository.GetArtistTagsAsync(RecommendationTags.ArtistKey(track.Artist)));
+        var history = RecommendationTags.FormatHistory(await repository.GetListeningHistoryAsync(trackId));
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
@@ -88,6 +92,16 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
                         xiph.SetField(LYRICS_FIELD, text);
                     else
                         xiph.RemoveField(LYRICS_FIELD);
+
+                    if (artistTags is { } tags)
+                        xiph.SetField(RecommendationTags.TAGS_FIELD, tags);
+                    else
+                        xiph.RemoveField(RecommendationTags.TAGS_FIELD);
+
+                    if (history is { } plays)
+                        xiph.SetField(RecommendationTags.HISTORY_FIELD, plays);
+                    else
+                        xiph.RemoveField(RecommendationTags.HISTORY_FIELD);
                 }
                 file.Save();
             }
