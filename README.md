@@ -48,7 +48,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
 | ▶️ **Listen in** | Click a cover to play the downloaded file, click again to pause. A small player bar shows the progress and lets you jump to any spot, on Windows, Linux and macOS alike. |
 | ✨ **Smart playlists** | Playlists that fill themselves from rules, like "genre contains Trap and year 2012 to 2016" or "the 50 newest tracks". They stay up to date as your library changes and land on your phone as normal `.m3u8` playlists. |
-| 🎧 **Import from Spotify** | Bring your Spotify favorites along: Tapedeck reads your extended streaming history, counts real plays, finds each song as the plain release on YouTube Music and adds them as a playlist, most played first. Unsure matches wait for you to pick the right video, and the search keeps its place across restarts. |
+| 🎧 **Import from Spotify** | Bring your Spotify favorites along: Tapedeck reads your extended streaming history, counts real plays, finds each song as the plain release on YouTube Music and adds them as a playlist, most played first. A public Spotify playlist works the same way: paste its link, no Spotify account needed (up to its first 100 songs). Unsure matches wait for you to pick the right video, and the search keeps its place across restarts. |
 | 🔄 **Linked YouTube playlists** | Import a YouTube playlist once and hit **Sync** later to pull in new videos. Nothing is ever removed or reordered behind your back. |
 | 💾 **Backup and move** | Export the library or a single playlist as CSV and import it on another machine. Files already in the folder are recognized, so nothing is downloaded twice. |
 | 🧰 **Zero setup** | yt-dlp, FFmpeg and Deno are downloaded on first use, and yt-dlp updates with one click. |
@@ -71,7 +71,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 Your music lands in `Music/Tapedeck` by default, and you can change that in the settings. App data (database, settings, tools, thumbnails) lives in the system's application data folder, `%APPDATA%\Tapedeck` on Windows.
 
 > [!TIP]
-> Coming from Spotify? In your Spotify account, request the **Extended streaming history** under privacy. Spotify sends a zip file after a few days. Then open **Playlists → From Spotify**, choose the zip and search your most played songs on YouTube.
+> Coming from Spotify? In your Spotify account, request the **Extended streaming history** under privacy. Spotify sends a zip file after a few days. Then open **Playlists → From Spotify**, choose the zip and search your most played songs on YouTube. For a single playlist, paste its link there instead.
 
 > [!TIP]
 > Moving to a new computer? Export the library as CSV, copy the music folder, then import the CSV on the new machine. Tapedeck finds the existing files and marks them as downloaded.
@@ -98,7 +98,7 @@ Metadata comes from [MusicBrainz](https://musicbrainz.org) (core data under [CC0
 
 Tapedeck is a personal tool for building a library of music you are allowed to keep. Downloading from YouTube may violate [YouTube's Terms of Service](https://www.youtube.com/t/terms) and copyright law where you live. You are responsible for what you download. Support the artists you listen to. 💛
 
-Tapedeck is not affiliated with YouTube, Spotify, MusicBrainz or LRCLIB. Lyrics are stored for your own library only; please don't share them on. It reads only the Spotify data download you request yourself and does not use the Spotify API.
+Tapedeck is not affiliated with YouTube, Spotify, MusicBrainz or LRCLIB. Lyrics are stored for your own library only; please don't share them on. It reads only the Spotify data download you request yourself and the public pages of playlists you paste, and does not use the Spotify API.
 
 ## Build it yourself
 
@@ -153,6 +153,7 @@ dotnet run --project Tapedeck -- --spotify-match "path/to/my_spotify_data.zip" 1
 - [ ] Installer and auto updates
 - [x] Smart playlists
 - [x] Import of the most played songs from the Spotify streaming history
+- [x] Import of public Spotify playlists by their link
 - [ ] Auto playlists
 - [ ] Filtering the library by playlist
 
