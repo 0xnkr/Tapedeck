@@ -148,6 +148,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Removing tracks ….
+        /// </summary>
+        public static string Activity_Removing {
+            get {
+                return ResourceManager.GetString("Activity_Removing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Searching MusicBrainz ….
         /// </summary>
         public static string Activity_SearchingMusicBrainz {
@@ -409,6 +418,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1 track taken out of the playlist.
+        /// </summary>
+        public static string Confirm_PlaylistRemoved_One {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistRemoved_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks taken out of the playlist.
+        /// </summary>
+        public static string Confirm_PlaylistRemoved_Other {
+            get {
+                return ResourceManager.GetString("Confirm_PlaylistRemoved_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to “{0}” is up to date.
         /// </summary>
         public static string Confirm_PlaylistUpToDate {
@@ -423,6 +450,24 @@ namespace Tapedeck.Resources {
         public static string Confirm_Removed {
             get {
                 return ResourceManager.GetString("Confirm_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 track removed.
+        /// </summary>
+        public static string Confirm_RemovedMany_One {
+            get {
+                return ResourceManager.GetString("Confirm_RemovedMany_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks removed.
+        /// </summary>
+        public static string Confirm_RemovedMany_Other {
+            get {
+                return ResourceManager.GetString("Confirm_RemovedMany_Other", resourceCulture);
             }
         }
         
@@ -1426,6 +1471,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove {0} tracks.
+        /// </summary>
+        public static string Library_RemoveSelected_Other {
+            get {
+                return ResourceManager.GetString("Library_RemoveSelected_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes the selected tracks from the library. Select more with Ctrl+click or Shift+click, or press Delete..
+        /// </summary>
+        public static string Library_RemoveSelectedHint {
+            get {
+                return ResourceManager.GetString("Library_RemoveSelectedHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search.
         /// </summary>
         public static string Library_Search {
@@ -1984,6 +2047,33 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} removed, {1} could not be removed: {2}.
+        /// </summary>
+        public static string Notice_RemoveManyFailed {
+            get {
+                return ResourceManager.GetString("Notice_RemoveManyFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to “{0}” is downloading and was not removed. Cancel the download first..
+        /// </summary>
+        public static string Notice_RemoveWhileDownloading_One {
+            get {
+                return ResourceManager.GetString("Notice_RemoveWhileDownloading_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks are downloading and were not removed. Cancel the downloads first..
+        /// </summary>
+        public static string Notice_RemoveWhileDownloading_Other {
+            get {
+                return ResourceManager.GetString("Notice_RemoveWhileDownloading_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not save the changes: {0}.
         /// </summary>
         public static string Notice_SaveFailed {
@@ -2196,6 +2286,24 @@ namespace Tapedeck.Resources {
         public static string Playlist_NumberedName {
             get {
                 return ResourceManager.GetString("Playlist_NumberedName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0} from playlist.
+        /// </summary>
+        public static string Playlist_RemoveSelected_Other {
+            get {
+                return ResourceManager.GetString("Playlist_RemoveSelected_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Takes the selected tracks out of this playlist; they stay in the library. Select more with Ctrl+click or Shift+click, or press Delete..
+        /// </summary>
+        public static string Playlist_RemoveSelectedHint {
+            get {
+                return ResourceManager.GetString("Playlist_RemoveSelectedHint", resourceCulture);
             }
         }
         
@@ -2547,6 +2655,51 @@ namespace Tapedeck.Resources {
         public static string Remove_Title {
             get {
                 return ResourceManager.GetString("Remove_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also delete the audio files.
+        /// </summary>
+        public static string RemoveMany_DeleteFiles {
+            get {
+                return ResourceManager.GetString("RemoveMany_DeleteFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The tracks disappear from the library, together with their corrections, ratings and genres..
+        /// </summary>
+        public static string RemoveMany_Message {
+            get {
+                return ResourceManager.GetString("RemoveMany_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One track is downloading and stays..
+        /// </summary>
+        public static string RemoveMany_Skipped_One {
+            get {
+                return ResourceManager.GetString("RemoveMany_Skipped_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} tracks are downloading and stay..
+        /// </summary>
+        public static string RemoveMany_Skipped_Other {
+            get {
+                return ResourceManager.GetString("RemoveMany_Skipped_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0} tracks?.
+        /// </summary>
+        public static string RemoveMany_Title_Other {
+            get {
+                return ResourceManager.GetString("RemoveMany_Title_Other", resourceCulture);
             }
         }
         

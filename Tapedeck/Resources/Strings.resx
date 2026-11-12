@@ -2212,4 +2212,72 @@
     <value>The playlist could not be read: {0}</value>
     <comment>{0} error message</comment>
   </data>
+  <data name="Library_RemoveSelected_Other" xml:space="preserve">
+    <value>Remove {0} tracks</value>
+    <comment>Toolbar button, shown when more than one track is selected; {0} number of selected tracks</comment>
+  </data>
+  <data name="Library_RemoveSelectedHint" xml:space="preserve">
+    <value>Removes the selected tracks from the library. Select more with Ctrl+click or Shift+click, or press Delete.</value>
+    <comment>Tooltip of the remove button in the library toolbar</comment>
+  </data>
+  <data name="RemoveMany_Title_Other" xml:space="preserve">
+    <value>Remove {0} tracks?</value>
+    <comment>Dialog title when removing several tracks; {0} number of tracks</comment>
+  </data>
+  <data name="RemoveMany_Message" xml:space="preserve">
+    <value>The tracks disappear from the library, together with their corrections, ratings and genres.</value>
+    <comment>Dialog text when removing several tracks</comment>
+  </data>
+  <data name="RemoveMany_Skipped_One" xml:space="preserve">
+    <value>One track is downloading and stays.</value>
+    <comment>Added to the dialog text when a selected track is downloading</comment>
+  </data>
+  <data name="RemoveMany_Skipped_Other" xml:space="preserve">
+    <value>{0} tracks are downloading and stay.</value>
+    <comment>Added to the dialog text; {0} number of selected tracks that are downloading</comment>
+  </data>
+  <data name="RemoveMany_DeleteFiles" xml:space="preserve">
+    <value>Also delete the audio files</value>
+    <comment>Check box in the dialog when removing several tracks</comment>
+  </data>
+  <data name="Activity_Removing" xml:space="preserve">
+    <value>Removing tracks …</value>
+    <comment>Activity toast while several tracks are removed</comment>
+  </data>
+  <data name="Confirm_RemovedMany_One" xml:space="preserve">
+    <value>1 track removed</value>
+    <comment>Activity toast after removing selected tracks</comment>
+  </data>
+  <data name="Confirm_RemovedMany_Other" xml:space="preserve">
+    <value>{0} tracks removed</value>
+    <comment>Activity toast; {0} number of removed tracks</comment>
+  </data>
+  <data name="Notice_RemoveManyFailed" xml:space="preserve">
+    <value>{0} removed, {1} could not be removed: {2}</value>
+    <comment>Error line after removing several tracks; {0} removed, {1} failed, {2} first errors</comment>
+  </data>
+  <data name="Notice_RemoveWhileDownloading_One" xml:space="preserve">
+    <value>“{0}” is downloading and was not removed. Cancel the download first.</value>
+    <comment>Error line; {0} track title</comment>
+  </data>
+  <data name="Notice_RemoveWhileDownloading_Other" xml:space="preserve">
+    <value>{0} tracks are downloading and were not removed. Cancel the downloads first.</value>
+    <comment>Error line; {0} number of tracks</comment>
+  </data>
+  <data name="Playlist_RemoveSelected_Other" xml:space="preserve">
+    <value>Remove {0} from playlist</value>
+    <comment>Header button on a playlist page, shown when more than one track is selected; {0} number of selected tracks</comment>
+  </data>
+  <data name="Playlist_RemoveSelectedHint" xml:space="preserve">
+    <value>Takes the selected tracks out of this playlist; they stay in the library. Select more with Ctrl+click or Shift+click, or press Delete.</value>
+    <comment>Tooltip of the remove button on a playlist page</comment>
+  </data>
+  <data name="Confirm_PlaylistRemoved_One" xml:space="preserve">
+    <value>1 track taken out of the playlist</value>
+    <comment>Activity toast after removing tracks from a playlist</comment>
+  </data>
+  <data name="Confirm_PlaylistRemoved_Other" xml:space="preserve">
+    <value>{0} tracks taken out of the playlist</value>
+    <comment>Activity toast; {0} number of tracks</comment>
+  </data>
 </root>

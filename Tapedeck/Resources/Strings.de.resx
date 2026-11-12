@@ -1662,4 +1662,55 @@
   <data name="Spotify_PlaylistFailed" xml:space="preserve">
     <value>Die Playlist konnte nicht gelesen werden: {0}</value>
   </data>
+  <data name="Library_RemoveSelected_Other" xml:space="preserve">
+    <value>{0} Titel entfernen</value>
+  </data>
+  <data name="Library_RemoveSelectedHint" xml:space="preserve">
+    <value>Entfernt die ausgewählten Titel aus der Bibliothek. Mehr auswählen mit Strg+Klick oder Umschalt+Klick, oder Entf drücken.</value>
+  </data>
+  <data name="RemoveMany_Title_Other" xml:space="preserve">
+    <value>{0} Titel entfernen?</value>
+  </data>
+  <data name="RemoveMany_Message" xml:space="preserve">
+    <value>Die Titel verschwinden aus der Bibliothek, mit ihren Korrekturen, Bewertungen und Genres.</value>
+  </data>
+  <data name="RemoveMany_Skipped_One" xml:space="preserve">
+    <value>Ein Titel wird gerade geladen und bleibt.</value>
+  </data>
+  <data name="RemoveMany_Skipped_Other" xml:space="preserve">
+    <value>{0} Titel werden gerade geladen und bleiben.</value>
+  </data>
+  <data name="RemoveMany_DeleteFiles" xml:space="preserve">
+    <value>Audio-Dateien ebenfalls löschen</value>
+  </data>
+  <data name="Activity_Removing" xml:space="preserve">
+    <value>Titel werden entfernt …</value>
+  </data>
+  <data name="Confirm_RemovedMany_One" xml:space="preserve">
+    <value>1 Titel entfernt</value>
+  </data>
+  <data name="Confirm_RemovedMany_Other" xml:space="preserve">
+    <value>{0} Titel entfernt</value>
+  </data>
+  <data name="Notice_RemoveManyFailed" xml:space="preserve">
+    <value>{0} entfernt, {1} konnten nicht entfernt werden: {2}</value>
+  </data>
+  <data name="Notice_RemoveWhileDownloading_One" xml:space="preserve">
+    <value>„{0}“ wird gerade geladen und wurde nicht entfernt. Brich den Download zuerst ab.</value>
+  </data>
+  <data name="Notice_RemoveWhileDownloading_Other" xml:space="preserve">
+    <value>{0} Titel werden gerade geladen und wurden nicht entfernt. Brich die Downloads zuerst ab.</value>
+  </data>
+  <data name="Playlist_RemoveSelected_Other" xml:space="preserve">
+    <value>{0} aus Playlist entfernen</value>
+  </data>
+  <data name="Playlist_RemoveSelectedHint" xml:space="preserve">
+    <value>Nimmt die ausgewählten Titel aus dieser Playlist, in der Bibliothek bleiben sie. Mehr auswählen mit Strg+Klick oder Umschalt+Klick, oder Entf drücken.</value>
+  </data>
+  <data name="Confirm_PlaylistRemoved_One" xml:space="preserve">
+    <value>1 Titel aus der Playlist genommen</value>
+  </data>
+  <data name="Confirm_PlaylistRemoved_Other" xml:space="preserve">
+    <value>{0} Titel aus der Playlist genommen</value>
+  </data>
 </root>
