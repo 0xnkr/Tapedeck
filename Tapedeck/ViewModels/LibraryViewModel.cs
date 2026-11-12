@@ -103,8 +103,17 @@ public partial class LibraryViewModel(
     [ObservableProperty]
     public partial bool HasMissing { get; private set; }
 
+    /// <summary>The focused row (the first selected one); the detail page and "back" scroll to it.</summary>
     [ObservableProperty]
     public partial TrackRowViewModel? SelectedTrack { get; set; }
+
+    /// <summary>All selected rows (Ctrl+click, Shift+click), kept in sync by the list.</summary>
+    public ObservableCollection<TrackRowViewModel> SelectedTracks { get; } = [];
+
+    /// <summary>More than one row is selected; the toolbar offers to remove them together.</summary>
+    public bool HasMultipleSelected => this.SelectedTracks.Count > 1;
+
+    public string RemoveSelectedText => string.Format(Strings.Library_RemoveSelected_Other, this.SelectedTracks.Count);
 
     /// <summary>The MusicBrainz run is going; the toolbar offers to stop it.</summary>
     [ObservableProperty]
@@ -327,6 +336,7 @@ public partial class LibraryViewModel(
             return;
         this.listening = true;
 
+        this.SelectedTracks.CollectionChanged += (_, _) => this.OnSelectionChanged();
         player.Failed += message => this.Notice = message;
         player.PropertyChanged += (_, e) =>
         {
@@ -618,7 +628,7 @@ public partial class LibraryViewModel(
     {
         var sequence = navigation.Current is PlaylistDetailViewModel playlist
             ? new TrackSequence(playlist.Entries.Select(e => e.Row).ToList(), playlist.SelectRow)
-            : new TrackSequence(this.Tracks.ToList(), r => this.SelectedTrack = r);
+            : new TrackSequence(this.Tracks.ToList(), this.SelectOnly);
         sequence.Select(row);
         navigation.Open(createDetail(row, this, sequence));
     }
@@ -732,6 +742,103 @@ public partial class LibraryViewModel(
         // the playlists lose the track, so their counts and .m3u8 files change
         await playlists.ChangedAsync();
         return true;
+    }
+
+    /// <summary>
+    /// Removes the selected tracks (toolbar, Delete key) after one confirmation. A single track gets the usual dialog;
+    /// tracks that are downloading are skipped, and a file that cannot be deleted does not stop the others.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private async Task RemoveSelectedAsync()
+    {
+        var selected = this.SelectedTracks.ToList();
+        if (selected.Count == 1)
+        {
+            if (selected[0].IsDownloading)
+                this.Notice = string.Format(Strings.Notice_RemoveWhileDownloading_One, selected[0].Title);
+            else
+                await ((ITrackActions)this).RemoveAsync(selected[0]);
+            return;
+        }
+
+        // cancel first, so no half written file stays behind
+        var rows = selected.Where(r => !r.IsDownloading).ToList();
+        var skipped = selected.Count - rows.Count;
+        if (rows.Count == 0)
+        {
+            this.Notice = string.Format(Strings.Notice_RemoveWhileDownloading_Other, skipped);
+            return;
+        }
+
+        var message = rows.Count == 1 ? Strings.Remove_Message : Strings.RemoveMany_Message;
+        if (skipped > 0)
+            message += " " + (skipped == 1 ? Strings.RemoveMany_Skipped_One : string.Format(Strings.RemoveMany_Skipped_Other, skipped));
+        var answer = await dialogs.ConfirmAsync(new ConfirmRequest(
+            rows.Count == 1 ? string.Format(Strings.Remove_Title, rows[0].Title) : string.Format(Strings.RemoveMany_Title_Other, rows.Count),
+            message,
+            Strings.Remove_Confirm,
+            OptionText: !rows.Any(r => r.FilePath is not null) ? null
+                : rows.Count == 1 ? Strings.Remove_DeleteFile
+                : Strings.RemoveMany_DeleteFiles,
+            OptionDefault: true,
+            IsDestructive: true));
+        if (answer is null)
+            return;
+
+        this.Notice = null;
+        RemoveManyResult result;
+        using (activity.Begin(Strings.Activity_Removing))
+        {
+            // a playing file is open and could not be deleted
+            foreach (var row in rows)
+                await player.StopIfLoadedAsync(row.Id);
+            result = await files.RemoveManyAsync(rows.Select(r => r.Id).ToList(), deleteFiles: answer.Option);
+        }
+
+        var removed = result.Removed.ToHashSet();
+        this.all.RemoveAll(r => removed.Contains(r.Id));
+        for (var i = 0; i < this.all.Count; i++)
+            this.all[i].Number = i + 1;
+        this.OnTracksChanged();
+
+        if (result.Failed.Count > 0)
+        {
+            var failures = result.Failed
+                .Select(f => $"{rows.Find(r => r.Id == f.TrackId)?.Title}: {f.Message}")
+                .ToList();
+            var shown = string.Join("; ", failures.Take(3)) + (failures.Count > 3 ? " …" : string.Empty);
+            this.Notice = string.Format(Strings.Notice_RemoveManyFailed, removed.Count, failures.Count, shown);
+        }
+        else if (skipped > 0)
+        {
+            this.Notice = skipped == 1
+                ? string.Format(Strings.Notice_RemoveWhileDownloading_One, selected.First(r => r.IsDownloading).Title)
+                : string.Format(Strings.Notice_RemoveWhileDownloading_Other, skipped);
+        }
+        if (removed.Count > 0)
+            activity.Confirm(removed.Count == 1 ? Strings.Confirm_RemovedMany_One : string.Format(Strings.Confirm_RemovedMany_Other, removed.Count));
+        // the playlists lose the tracks, so their counts and .m3u8 files change
+        playlistSync.Request();
+        await playlists.ChangedAsync();
+    }
+
+    private bool HasSelection() => this.SelectedTracks.Count > 0;
+
+    /// <summary>Selects just this row, e.g. the one last shown on the detail page, so going back finds it.</summary>
+    private void SelectOnly(TrackRowViewModel row)
+    {
+        this.SelectedTracks.Clear();
+        this.SelectedTrack = row;
+        // the list adds it itself while it is shown; otherwise the selection waits here for it
+        if (!this.SelectedTracks.Contains(row))
+            this.SelectedTracks.Add(row);
+    }
+
+    private void OnSelectionChanged()
+    {
+        this.OnPropertyChanged(nameof(this.HasMultipleSelected));
+        this.OnPropertyChanged(nameof(this.RemoveSelectedText));
+        this.RemoveSelectedCommand.NotifyCanExecuteChanged();
     }
 
     async Task ITrackActions.KeepAsync(TrackRowViewModel row)
@@ -929,11 +1036,17 @@ public partial class LibraryViewModel(
         if (this.Filter == TrackFilter.Duplicates)
             visible = visible.OrderBy(r => this.duplicates[r.Id].Index).ThenBy(r => r.Number);
 
-        var selected = this.SelectedTrack;
+        // rebuilding the list clears its selection; the rows still shown stay selected
+        var focused = this.SelectedTrack;
+        var selected = this.SelectedTracks.ToList();
         this.Tracks.Clear();
         foreach (var row in visible)
             this.Tracks.Add(row);
-        this.SelectedTrack = selected is not null && this.Tracks.Contains(selected) ? selected : null;
+        this.SelectedTracks.Clear();
+        // setting the focused row selects it alone, so the others are added after it
+        this.SelectedTrack = focused is not null && this.Tracks.Contains(focused) ? focused : null;
+        foreach (var row in selected.Where(r => this.Tracks.Contains(r) && !this.SelectedTracks.Contains(r)))
+            this.SelectedTracks.Add(row);
 
         this.EmptyText = this.Tracks.Count > 0 ? null
             : this.all.Count == 0 ? Strings.Library_EmptyNoTracks

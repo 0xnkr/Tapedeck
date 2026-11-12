@@ -54,6 +54,12 @@
                 <DockPanel DockPanel.Dock="Top" Margin="4,4,4,8">
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="{StaticResource Space.1}"
                                 VerticalAlignment="Top" Margin="8,0,0,0">
+                        <Button Classes="danger"
+                                Content="{Binding RemoveSelectedText}"
+                                ToolTip.Tip="{x:Static res:Strings.Library_RemoveSelectedHint}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Trash}"
+                                Command="{Binding RemoveSelectedCommand}"
+                                IsVisible="{Binding HasMultipleSelected}" />
                         <Button Classes="text"
                                 Content="{Binding WriteAllTagsText}"
                                 ToolTip.Tip="{x:Static res:Strings.Library_WriteAllTagsHint}"
@@ -135,10 +141,13 @@
                              Theme="{StaticResource PlainList}"
                              ItemContainerTheme="{StaticResource TableRow}"
                              ItemsSource="{Binding Tracks}"
+                             SelectionMode="Multiple"
                              SelectedItem="{Binding SelectedTrack}"
+                             SelectedItems="{Binding SelectedTracks}"
                              AutomationProperties.Name="{x:Static res:Strings.Library_TrackList}">
                         <ListBox.KeyBindings>
                             <KeyBinding Gesture="Enter" Command="{Binding SelectedTrack.OpenDetailsCommand, FallbackValue={x:Null}}" />
+                            <KeyBinding Gesture="Delete" Command="{Binding RemoveSelectedCommand}" />
                         </ListBox.KeyBindings>
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="vm:TrackRowViewModel">
