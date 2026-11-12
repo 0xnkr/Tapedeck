@@ -1,10 +1,12 @@
 using System.Data.Common;
+using System.Globalization;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Tapedeck.Core;
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
+using Tapedeck.Core.Recommendations;
 
 namespace Tapedeck.Data;
 
@@ -12,6 +14,8 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
 {
     // Milliseconds, so an edit right after writing the tags still counts as newer
     private const string NOW = "strftime('%Y-%m-%dT%H:%M:%fZ', 'now')";
+
+    private const string HISTORY_DATE_FORMAT = "yyyy-MM-dd";
 
     public async Task<long> AddAsync(string videoId, string url)
     {
@@ -209,6 +213,97 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         await connection.ExecuteAsync(
             $"UPDATE tracks SET lastfm_checked_at = {NOW}{edited} WHERE id = @trackId;", new { trackId }, transaction);
         await transaction.CommitAsync();
+    }
+
+    public async Task<IReadOnlyList<ArtistTag>> GetArtistTagsAsync(string artistKey)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(string Tag, long Count)>(
+            "SELECT tag, count FROM artist_tags WHERE artist_key = @artistKey ORDER BY count DESC, tag;", new { artistKey });
+        return rows.Select(r => new ArtistTag(r.Tag, (int)r.Count)).ToList();
+    }
+
+    public async Task<IReadOnlySet<string>> ListCheckedArtistKeysAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var keys = await connection.QueryAsync<string>("SELECT artist_key FROM artist_tags_checked;");
+        return keys.ToHashSet(StringComparer.Ordinal);
+    }
+
+    public async Task<bool> SaveArtistTagsAsync(string artistKey, IReadOnlyList<ArtistTag> tags, IReadOnlyList<long> trackIds)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        var before = (await connection.QueryAsync<(string Tag, long Count)>(
+                "SELECT tag, count FROM artist_tags WHERE artist_key = @artistKey;", new { artistKey }, transaction))
+            .Select(r => (r.Tag, (int)r.Count))
+            .OrderBy(r => r.Tag, StringComparer.Ordinal)
+            .ToList();
+        var after = tags.Select(t => (t.Tag, t.Count)).OrderBy(r => r.Tag, StringComparer.Ordinal).ToList();
+        var changed = !before.SequenceEqual(after);
+
+        await connection.ExecuteAsync(
+            $"""
+            INSERT INTO artist_tags_checked (artist_key, fetched_at) VALUES (@artistKey, {NOW})
+            ON CONFLICT (artist_key) DO UPDATE SET fetched_at = excluded.fetched_at;
+            """,
+            new { artistKey }, transaction);
+        if (changed)
+        {
+            await connection.ExecuteAsync("DELETE FROM artist_tags WHERE artist_key = @artistKey;", new { artistKey }, transaction);
+            foreach (var tag in tags)
+                await connection.ExecuteAsync(
+                    $"INSERT INTO artist_tags (artist_key, tag, count, fetched_at) VALUES (@artistKey, @tag, @count, {NOW});",
+                    new { artistKey, tag = tag.Tag, count = tag.Count }, transaction);
+            foreach (var trackId in trackIds)
+                await connection.ExecuteAsync(
+                    $"UPDATE tracks SET edited_at = {NOW} WHERE id = @trackId;", new { trackId }, transaction);
+        }
+        await transaction.CommitAsync();
+        return changed;
+    }
+
+    public async Task<ListeningHistory?> GetListeningHistoryAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var row = await connection.QuerySingleOrDefaultAsync<(long? Plays, long? Skips, string? Last)>(
+            "SELECT spotify_plays, spotify_early_skips, spotify_last_played FROM tracks WHERE id = @id;", new { id });
+        if (row.Plays is null && row.Skips is null)
+            return null;
+        DateOnly? last = DateOnly.TryParseExact(row.Last, HISTORY_DATE_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out var day)
+            ? day
+            : null;
+        return new ListeningHistory((int)(row.Plays ?? 0), (int)(row.Skips ?? 0), last);
+    }
+
+    public async Task<IReadOnlyList<long>> SetListeningHistoryAsync(IReadOnlyDictionary<long, ListeningHistory> byTrack)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
+        var ids = await connection.QueryAsync<long>("SELECT id FROM tracks;", transaction: transaction);
+        var changed = new List<long>();
+        foreach (var id in ids)
+        {
+            var history = byTrack.GetValueOrDefault(id);
+            long? plays = history?.Plays;
+            long? skips = history?.EarlySkips;
+            var last = history?.LastPlayed?.ToString(HISTORY_DATE_FORMAT, CultureInfo.InvariantCulture);
+            var rows = await connection.ExecuteAsync(
+                $"""
+                UPDATE tracks SET
+                    spotify_plays       = @plays,
+                    spotify_early_skips = @skips,
+                    spotify_last_played = @last,
+                    edited_at           = {NOW}
+                WHERE id = @id
+                  AND NOT (spotify_plays IS @plays AND spotify_early_skips IS @skips AND spotify_last_played IS @last);
+                """,
+                new { id, plays, skips, last }, transaction);
+            if (rows > 0)
+                changed.Add(id);
+        }
+        await transaction.CommitAsync();
+        return changed;
     }
 
     public async Task MarkTagsWrittenAsync(long id)

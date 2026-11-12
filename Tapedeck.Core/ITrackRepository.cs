@@ -1,6 +1,7 @@
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
+using Tapedeck.Core.Recommendations;
 
 namespace Tapedeck.Core;
 
@@ -61,6 +62,29 @@ public interface ITrackRepository
     /// New genres mark the file's tags as outdated.
     /// </summary>
     Task SetLastFmTagsAsync(long trackId, IReadOnlyList<string> names);
+
+    /// <summary>The stored Last.fm tags of an artist (<see cref="RecommendationTags.ArtistKey"/>), strongest first.</summary>
+    Task<IReadOnlyList<ArtistTag>> GetArtistTagsAsync(string artistKey);
+
+    /// <summary>The artists Last.fm was asked for already, also the ones it had no tags for.</summary>
+    Task<IReadOnlySet<string>> ListCheckedArtistKeysAsync();
+
+    /// <summary>
+    /// Replaces an artist's Last.fm tags and remembers that Last.fm was asked. When the tags changed, the tags of
+    /// <paramref name="trackIds"/> (the artist's tracks) are marked as outdated, because the tags go into the files.
+    /// </summary>
+    /// <returns>Whether the tags changed.</returns>
+    Task<bool> SaveArtistTagsAsync(string artistKey, IReadOnlyList<ArtistTag> tags, IReadOnlyList<long> trackIds);
+
+    /// <summary>What the Spotify history says about the track; <c>null</c> when it says nothing.</summary>
+    Task<ListeningHistory?> GetListeningHistoryAsync(long id);
+
+    /// <summary>
+    /// Replaces the Spotify history of all tracks: the given ones get theirs, every other track none.
+    /// A change marks the file's tags as outdated.
+    /// </summary>
+    /// <returns>The tracks whose history changed.</returns>
+    Task<IReadOnlyList<long>> SetListeningHistoryAsync(IReadOnlyDictionary<long, ListeningHistory> byTrack);
 
     /// <summary>Records that the tags in the file now match the displayed values.</summary>
     Task MarkTagsWrittenAsync(long id);
