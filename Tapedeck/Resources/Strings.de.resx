@@ -1438,7 +1438,7 @@
     <value>Die feinen Genres werden auf wenige feste Hauptgenres abgebildet, damit das Handy die Bibliothek in klare Gruppen sortiert. Nur diese kommen in die Datei.</value>
   </data>
   <data name="Activity_LastFmGenres" xml:space="preserve">
-    <value>Genres von Last.fm {0}/{1} …</value>
+    <value>Genres und Tags von Last.fm {0}/{1} …</value>
   </data>
   <data name="Notice_LastFmInvalidKey" xml:space="preserve">
     <value>Last.fm akzeptiert den API-Key nicht. Prüfe ihn in den Einstellungen.</value>
@@ -1465,7 +1465,7 @@
     <value>Genres holen ({0})</value>
   </data>
   <data name="Settings_LastFmFetchHint" xml:space="preserve">
-    <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
+    <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben, und nach den Tags aller Artists, mit denen ein Player auf dem Handy ähnliche Songs findet. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
   </data>
   <data name="Activity_DownloadingMany" xml:space="preserve">
     <value>Lade herunter {0}/{1} ({2} gleichzeitig) …</value>
@@ -1610,5 +1610,23 @@
   </data>
   <data name="Detail_LyricsEditHint" xml:space="preserve">
     <value>Lyrics einfügen oder korrigieren; mit Zeiten wie [01:23.45] laufen sie mit dem Song mit.</value>
+  </data>
+  <data name="Spotify_TasteTitle" xml:space="preserve">
+    <value>Für Empfehlungen</value>
+  </data>
+  <data name="Spotify_TasteHint" xml:space="preserve">
+    <value>Speichert pro Song der Bibliothek, wie oft du ihn bei Spotify gehört und in den ersten 10 Sekunden übersprungen hast. Ein Player auf dem Handy startet seine Empfehlungen mit diesem Geschmack. „Tags schreiben“ schreibt diese Zahlen in die Dateien (TAPEDECK_HISTORY): Wer deine Dateien bekommt, bekommt sie mit.</value>
+  </data>
+  <data name="Spotify_TasteButton" xml:space="preserve">
+    <value>Spotify-Verlauf für Empfehlungen übernehmen</value>
+  </data>
+  <data name="Spotify_TasteApplying" xml:space="preserve">
+    <value>Spotify-Verlauf wird übernommen …</value>
+  </data>
+  <data name="Spotify_TasteDone" xml:space="preserve">
+    <value>Spotify-Verlauf für {0} Songs übernommen, {1} geändert</value>
+  </data>
+  <data name="Spotify_TasteFailed" xml:space="preserve">
+    <value>Der Spotify-Verlauf konnte nicht übernommen werden: {0}</value>
   </data>
 </root>

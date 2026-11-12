@@ -4144,6 +4144,60 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to For recommendations.
+        /// </summary>
+        public static string Spotify_TasteTitle {
+            get {
+                return ResourceManager.GetString("Spotify_TasteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A phone player starts its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too..
+        /// </summary>
+        public static string Spotify_TasteHint {
+            get {
+                return ResourceManager.GetString("Spotify_TasteHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Spotify history for recommendations.
+        /// </summary>
+        public static string Spotify_TasteButton {
+            get {
+                return ResourceManager.GetString("Spotify_TasteButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taking over the Spotify history ….
+        /// </summary>
+        public static string Spotify_TasteApplying {
+            get {
+                return ResourceManager.GetString("Spotify_TasteApplying", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify history taken over for {0} songs, {1} changed.
+        /// </summary>
+        public static string Spotify_TasteDone {
+            get {
+                return ResourceManager.GetString("Spotify_TasteDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not take over the Spotify history: {0}.
+        /// </summary>
+        public static string Spotify_TasteFailed {
+            get {
+                return ResourceManager.GetString("Spotify_TasteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds the ready songs to the library and creates the playlist with them and the ticked songs already there, most played first. Downloads start on the playlist page..
         /// </summary>
         public static string Spotify_ImportHint {
@@ -4333,7 +4387,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Genres from Last.fm {0}/{1} ….
+        ///   Looks up a localized string similar to Genres and tags from Last.fm {0}/{1} ….
         /// </summary>
         public static string Activity_LastFmGenres {
             get {
@@ -4414,7 +4468,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Asks Last.fm for the genres of all tracks that have none yet. New tracks are asked on their own after MusicBrainz..
+        ///   Looks up a localized string similar to Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which a phone player uses for similar songs. New tracks are asked on their own after MusicBrainz..
         /// </summary>
         public static string Settings_LastFmFetchHint {
             get {

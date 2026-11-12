@@ -1913,8 +1913,8 @@
     <comment>Tooltip of Genre_Main</comment>
   </data>
   <data name="Activity_LastFmGenres" xml:space="preserve">
-    <value>Genres from Last.fm {0}/{1} …</value>
-    <comment>Activity toast while Last.fm is asked for genres; {0} done, {1} total</comment>
+    <value>Genres and tags from Last.fm {0}/{1} …</value>
+    <comment>Activity toast while Last.fm is asked for genres and artist tags; {0} done, {1} total (tracks and artists)</comment>
   </data>
   <data name="Notice_LastFmInvalidKey" xml:space="preserve">
     <value>Last.fm does not accept the API key. Check it in the settings.</value>
@@ -1946,10 +1946,10 @@
   </data>
   <data name="Settings_LastFmFetch" xml:space="preserve">
     <value>Fetch genres ({0})</value>
-    <comment>Button; {0} number of tracks without genres Last.fm was not asked for yet</comment>
+    <comment>Button; {0} number of tracks without genres or without artist tags Last.fm was not asked for yet</comment>
   </data>
   <data name="Settings_LastFmFetchHint" xml:space="preserve">
-    <value>Asks Last.fm for the genres of all tracks that have none yet. New tracks are asked on their own after MusicBrainz.</value>
+    <value>Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which a phone player uses for similar songs. New tracks are asked on their own after MusicBrainz.</value>
     <comment>Tooltip of Settings_LastFmFetch</comment>
   </data>
   <data name="Activity_DownloadingMany" xml:space="preserve">
@@ -2143,5 +2143,29 @@
   <data name="Detail_LyricsEditHint" xml:space="preserve">
     <value>Paste or correct the lyrics; with times like [01:23.45] they follow the song.</value>
     <comment>Tooltip of Detail_LyricsEdit</comment>
+  </data>
+  <data name="Spotify_TasteTitle" xml:space="preserve">
+    <value>For recommendations</value>
+    <comment>Title of the island that takes over the Spotify history for the phone app's recommendations</comment>
+  </data>
+  <data name="Spotify_TasteHint" xml:space="preserve">
+    <value>Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A phone player starts its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too.</value>
+    <comment>Explains taking over the Spotify history and that the counts end up in the audio files</comment>
+  </data>
+  <data name="Spotify_TasteButton" xml:space="preserve">
+    <value>Use Spotify history for recommendations</value>
+    <comment>Button that stores plays and skips of the chosen Spotify history for the library songs</comment>
+  </data>
+  <data name="Spotify_TasteApplying" xml:space="preserve">
+    <value>Taking over the Spotify history …</value>
+    <comment>Activity toast while the Spotify history is taken over for recommendations</comment>
+  </data>
+  <data name="Spotify_TasteDone" xml:space="preserve">
+    <value>Spotify history taken over for {0} songs, {1} changed</value>
+    <comment>Confirmation; {0} library songs with plays or skips, {1} songs whose counts changed</comment>
+  </data>
+  <data name="Spotify_TasteFailed" xml:space="preserve">
+    <value>Could not take over the Spotify history: {0}</value>
+    <comment>Notice; {0} error message</comment>
   </data>
 </root>
