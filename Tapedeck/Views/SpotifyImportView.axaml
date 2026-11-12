@@ -46,7 +46,38 @@
                         </StackPanel>
                     </controls:Island>
 
-                    <controls:Island IsEnabled="{Binding HasHistory}">
+                    <controls:Island>
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_PlaylistSource}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Spotify_PlaylistSourceHint}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                <TextBox Text="{Binding PlaylistLink}"
+                                         PlaceholderText="{x:Static res:Strings.Spotify_PlaylistLinkPlaceholder}"
+                                         VerticalContentAlignment="Center"
+                                         AutomationProperties.Name="{x:Static res:Strings.Spotify_PlaylistSource}">
+                                    <TextBox.KeyBindings>
+                                        <KeyBinding Gesture="Enter" Command="{Binding LoadPlaylistCommand}" />
+                                    </TextBox.KeyBindings>
+                                </TextBox>
+                                <Button Grid.Column="1"
+                                        Classes="secondary"
+                                        Content="{x:Static res:Strings.Spotify_LoadPlaylist}"
+                                        controls:ButtonAssist.Icon="{StaticResource Icon.Link}"
+                                        IsEnabled="{Binding !IsLoadingPlaylist}"
+                                        Command="{Binding LoadPlaylistCommand}" />
+                            </Grid>
+                            <TextBlock Classes="body" Text="{Binding PlaylistSummary}" TextWrapping="Wrap"
+                                       IsVisible="{Binding HasPlaylist}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Pending}" TextWrapping="Wrap"
+                                       Text="{Binding PlaylistCutNotice}"
+                                       IsVisible="{Binding PlaylistCutNotice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <TextBlock Classes="body-strong" Text="{Binding SelectionSummary}" TextWrapping="Wrap"
+                                       IsVisible="{Binding HasPlaylist}" />
+                        </StackPanel>
+                    </controls:Island>
+
+                    <controls:Island IsEnabled="{Binding HasHistory}" IsVisible="{Binding !HasPlaylist}">
                         <StackPanel Spacing="{StaticResource Space.3}">
                             <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_Selection}" />
                             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}"
@@ -79,7 +110,7 @@
                         </StackPanel>
                     </controls:Island>
 
-                    <controls:Island IsEnabled="{Binding HasHistory}">
+                    <controls:Island IsEnabled="{Binding HasSource}">
                         <StackPanel Spacing="{StaticResource Space.2}">
                             <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_SearchTitle}" />
                             <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
@@ -101,7 +132,7 @@
                         </StackPanel>
                     </controls:Island>
 
-                    <controls:Island IsEnabled="{Binding HasHistory}">
+                    <controls:Island IsEnabled="{Binding HasSource}">
                         <StackPanel Spacing="{StaticResource Space.2}">
                             <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_ImportTitle}" />
                             <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}"

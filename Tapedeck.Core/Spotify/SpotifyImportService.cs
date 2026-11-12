@@ -14,7 +14,8 @@ public sealed record SpotifyImportResult(long PlaylistId, int Added, int NewTrac
 
 /// <summary>
 /// Adds the chosen videos of Spotify songs to the library and puts all songs of the import, including the ones
-/// that were in the library before, into a new playlist in the order of the entries (most played first).
+/// that were in the library before, into a new playlist in the order of the entries (most played first, or the
+/// order of the Spotify playlist).
 /// </summary>
 public sealed class SpotifyImportService(
     ITrackRepository tracks,

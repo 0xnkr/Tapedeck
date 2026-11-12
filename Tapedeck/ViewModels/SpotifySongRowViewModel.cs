@@ -60,7 +60,10 @@ public partial class SpotifySongRowViewModel : ViewModelBase
 
     public string Artist => this.Song.Artist;
 
-    public string Plays => string.Format(this.Song.RealPlays == 1 ? Strings.Spotify_Plays_One : Strings.Spotify_Plays_Other, this.Song.RealPlays);
+    /// <summary>The real plays of a history song; the length of a playlist song, which has no plays.</summary>
+    public string Plays => this.Song.Streams == 0
+        ? this.Song.EstimatedDurationMs is { } ms ? string.Format(CultureInfo.InvariantCulture, "{0}:{1:00}", ms / 60000, ms / 1000 % 60) : string.Empty
+        : string.Format(this.Song.RealPlays == 1 ? Strings.Spotify_Plays_One : Strings.Spotify_Plays_Other, this.Song.RealPlays);
 
     /// <summary>The video that will be imported, on ready rows.</summary>
     public SpotifyCandidateViewModel? Video { get; }

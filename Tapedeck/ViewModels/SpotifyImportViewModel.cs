@@ -18,9 +18,10 @@ namespace Tapedeck.ViewModels;
 public delegate SpotifyImportViewModel SpotifyImportFactory();
 
 /// <summary>
-/// Imports the most played songs of a Spotify streaming history: choose the history, narrow the selection, search
-/// the songs on YouTube (stored, so it continues after a stop or restart), check the unsure ones and add the rest
-/// as a new playlist. Nothing is downloaded here; the playlist page does that as for every import.
+/// Imports the most played songs of a Spotify streaming history or the songs of a public Spotify playlist: choose
+/// the source, narrow the selection (history only), search the songs on YouTube (stored, so it continues after a stop
+/// or restart), check the unsure ones and add the rest as a new playlist. Nothing is downloaded here; the playlist
+/// page does that as for every import.
 /// </summary>
 public partial class SpotifyImportViewModel(
     IPlatformService platform,
@@ -29,6 +30,7 @@ public partial class SpotifyImportViewModel(
     SpotifySearchService search,
     SpotifyImportService importer,
     SpotifyTasteService taste,
+    SpotifyPlaylistClient playlistClient,
     ToolSetup toolSetup,
     ActivityService activity,
     NavigationService navigation,
@@ -39,6 +41,9 @@ public partial class SpotifyImportViewModel(
     private const int REFRESH_EVERY = 10;
 
     private SpotifyHistory? history;
+    // the other source: a Spotify playlist, its songs in its order
+    private IReadOnlyList<SpotifySong>? playlistSongs;
+    private string? playlistName;
     private IReadOnlyList<SpotifySongRowViewModel> rows = [];
     private IReadOnlyList<SpotifySong> pending = [];
     // songs the user unticked; they stay unticked when the lists are rebuilt
@@ -52,7 +57,31 @@ public partial class SpotifyImportViewModel(
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSearch))]
+    [NotifyPropertyChangedFor(nameof(HasSource))]
     public partial bool HasHistory { get; private set; }
+
+    /// <summary>The link of a Spotify playlist, typed or pasted.</summary>
+    [ObservableProperty]
+    public partial string PlaylistLink { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanSearch))]
+    [NotifyPropertyChangedFor(nameof(HasSource))]
+    public partial bool HasPlaylist { get; private set; }
+
+    /// <summary>"Rock Party" by someone · 100 songs.</summary>
+    [ObservableProperty]
+    public partial string? PlaylistSummary { get; private set; }
+
+    /// <summary>That Spotify left out songs; <c>null</c> when the playlist is complete.</summary>
+    [ObservableProperty]
+    public partial string? PlaylistCutNotice { get; private set; }
+
+    [ObservableProperty]
+    public partial bool IsLoadingPlaylist { get; private set; }
+
+    /// <summary>A history or a playlist is chosen; search and import work the same for both.</summary>
+    public bool HasSource => this.HasHistory || this.HasPlaylist;
 
     [ObservableProperty]
     public partial string MinPlaysText { get; set; } = SpotifySelection.DEFAULT.MinRealPlays!.Value.ToString(CultureInfo.InvariantCulture);
@@ -100,7 +129,7 @@ public partial class SpotifyImportViewModel(
     [NotifyPropertyChangedFor(nameof(CanSearch))]
     public partial int PendingCount { get; private set; }
 
-    public bool CanSearch => this.HasHistory && !this.IsSearching && this.PendingCount > 0;
+    public bool CanSearch => this.HasSource && !this.IsSearching && this.PendingCount > 0;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ReadyTab))]
@@ -179,6 +208,54 @@ public partial class SpotifyImportViewModel(
     {
         if (await platform.PickOpenFileAsync(Strings.Spotify_PickZipTitle, new FileFilter(Strings.Spotify_ZipFileType, "zip")) is { } path)
             await this.LoadAsync(path);
+    }
+
+    /// <summary>Reads the songs of the playlist behind <see cref="PlaylistLink"/>; it replaces a chosen history.</summary>
+    [RelayCommand]
+    private async Task LoadPlaylistAsync()
+    {
+        this.Notice = null;
+        if (SpotifyPlaylistParser.PlaylistId(this.PlaylistLink) is null)
+        {
+            this.Notice = Strings.Spotify_NoPlaylistLink;
+            return;
+        }
+
+        SpotifyPlaylist playlist;
+        this.IsLoadingPlaylist = true;
+        try
+        {
+            using (activity.Begin(Strings.Spotify_ReadingPlaylist))
+                playlist = await playlistClient.FetchAsync(this.PlaylistLink);
+        }
+        catch (InvalidOperationException)
+        {
+            this.Notice = Strings.Spotify_PlaylistNotFound;
+            return;
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Spotify_PlaylistFailed, ex.Message);
+            return;
+        }
+        finally
+        {
+            this.IsLoadingPlaylist = false;
+        }
+
+        this.history = null;
+        this.HasHistory = false;
+        this.SourceSummary = Strings.Spotify_NoSource;
+        this.playlistSongs = SpotifyPlaylistParser.Songs(playlist);
+        this.playlistName = playlist.Name.Length > 0 ? playlist.Name : Strings.Spotify_PlaylistSource;
+        this.PlaylistSummary = string.Format(Strings.Spotify_PlaylistSummary, this.playlistName, playlist.Owner ?? "?", playlist.Tracks.Count);
+        this.PlaylistCutNotice = !playlist.IsCut ? null
+            : playlist.TotalTracks is { } total
+                ? string.Format(Strings.Spotify_PlaylistCut, playlist.Tracks.Count, total)
+                : string.Format(Strings.Spotify_PlaylistCutUnknown, playlist.Tracks.Count);
+        this.HasPlaylist = true;
+        this.excluded.Clear();
+        await this.RefreshAsync();
     }
 
     /// <summary>Searches the songs of the selection that have no stored search yet, until done, stopped or throttled.</summary>
@@ -345,13 +422,28 @@ public partial class SpotifyImportViewModel(
                 streams[0].EndedAt.ToLocalTime().ToString("d", CultureInfo.CurrentCulture),
                 streams[^1].EndedAt.ToLocalTime().ToString("d", CultureInfo.CurrentCulture));
         this.HasHistory = streams.Count > 0;
+        this.ForgetPlaylist();
         this.excluded.Clear();
         await this.RefreshAsync();
     }
 
-    /// <summary>Rebuilds the selection and the result lists from the history, the library and the stored searches.</summary>
+    private void ForgetPlaylist()
+    {
+        this.playlistSongs = null;
+        this.playlistName = null;
+        this.PlaylistSummary = null;
+        this.PlaylistCutNotice = null;
+        this.HasPlaylist = false;
+    }
+
+    /// <summary>Rebuilds the selection and the result lists from the source, the library and the stored searches.</summary>
     private async Task RefreshAsync()
     {
+        if (this.playlistSongs is { } fromPlaylist)
+        {
+            await this.BuildRowsAsync(fromPlaylist, await playlists.FreeNameAsync(this.playlistName ?? Strings.Spotify_PlaylistSource));
+            return;
+        }
         if (this.history is null)
             return;
 
@@ -360,6 +452,17 @@ public partial class SpotifyImportViewModel(
         var selection = new SpotifySelection(MinRealPlays: minPlays, MaxRealPlays: maxPlays,
             MaxSkipShare: this.LeaveOutSkipped ? SpotifySelection.DEFAULT.MaxSkipShare : null);
         var songs = selection.Apply(this.history.Streams);
+        // a name the user did not change follows the selection
+        var suggestion = await playlists.FreeNameAsync(maxPlays is { } upper
+            ? string.Format(Strings.Spotify_RangePlaylistName, minPlays, upper)
+            : string.Format(Strings.Spotify_DefaultPlaylistName, minPlays));
+        await this.BuildRowsAsync(songs, suggestion);
+    }
+
+    /// <param name="songs">The songs of the source, in the order of the playlist to create.</param>
+    /// <param name="suggestion">A free playlist name; it replaces the name unless the user changed it.</param>
+    private async Task BuildRowsAsync(IReadOnlyList<SpotifySong> songs, string suggestion)
+    {
         var searches = await matches.ListAsync();
         var inLibrary = SpotifyLibraryMatch.TracksBySongKey(await tracks.ListDisplayAsync(), searches);
 
@@ -412,10 +515,6 @@ public partial class SpotifyImportViewModel(
         foreach (var name in new[] { nameof(this.ReadyTab), nameof(this.ReviewTab), nameof(this.NotFoundTab), nameof(this.InLibraryTab), nameof(this.VisibleRows), nameof(this.IsListEmpty), nameof(this.CanToggleAll) })
             this.OnPropertyChanged(name);
 
-        // a name the user did not change follows the selection
-        var suggestion = await playlists.FreeNameAsync(maxPlays is { } upper
-            ? string.Format(Strings.Spotify_RangePlaylistName, minPlays, upper)
-            : string.Format(Strings.Spotify_DefaultPlaylistName, minPlays));
         if (this.PlaylistName.Length == 0 || this.PlaylistName == this.suggestedName)
             this.PlaylistName = suggestion;
         this.suggestedName = suggestion;
