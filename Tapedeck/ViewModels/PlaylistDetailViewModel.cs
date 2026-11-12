@@ -38,6 +38,7 @@ public partial class PlaylistDetailViewModel(
 {
     // the playlist's YouTube source, null when it was made in the app
     private string? sourceUrl;
+    private bool listening;
 
     public ObservableCollection<PlaylistEntryViewModel> Entries { get; } = [];
 
@@ -47,8 +48,17 @@ public partial class PlaylistDetailViewModel(
     [ObservableProperty]
     public partial string Summary { get; private set; } = string.Empty;
 
+    /// <summary>The focused entry (the first selected one); moving and "back" use it.</summary>
     [ObservableProperty]
     public partial PlaylistEntryViewModel? SelectedEntry { get; set; }
+
+    /// <summary>All selected entries (Ctrl+click, Shift+click), kept in sync by the list.</summary>
+    public ObservableCollection<PlaylistEntryViewModel> SelectedEntries { get; } = [];
+
+    /// <summary>More than one entry is selected in a playlist made by hand; the header offers to take them out.</summary>
+    public bool CanRemoveMany => this.IsEditable && this.SelectedEntries.Count > 1;
+
+    public string RemoveSelectedText => string.Format(Strings.Playlist_RemoveSelected_Other, this.SelectedEntries.Count);
 
     public bool IsEmpty => this.Entries.Count == 0;
 
@@ -59,7 +69,8 @@ public partial class PlaylistDetailViewModel(
 
     /// <summary>Fills itself by rules: no reordering, removing or renaming here, "Edit rules" instead.</summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsEditable), nameof(EmptyText))]
+    [NotifyPropertyChangedFor(nameof(IsEditable), nameof(EmptyText), nameof(CanRemoveMany))]
+    [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
     public partial bool IsSmart { get; private set; }
 
     /// <summary>Tracks can be reordered and removed by hand.</summary>
@@ -84,7 +95,15 @@ public partial class PlaylistDetailViewModel(
             return;
         }
 
+        if (!this.listening)
+        {
+            this.listening = true;
+            this.SelectedEntries.CollectionChanged += (_, _) => this.OnSelectionChanged();
+        }
+
+        // rebuilding the list clears its selection; the tracks still in it stay selected
         var selectedTrack = this.SelectedEntry?.Row.Id;
+        var selectedTracks = this.SelectedEntries.Select(e => e.Row.Id).ToHashSet();
         var rows = (await repository.GetTracksAsync(playlistId))
             .Select(track => library.RowFor(track.Id))
             .OfType<TrackRowViewModel>()
@@ -97,7 +116,11 @@ public partial class PlaylistDetailViewModel(
         this.Entries.Clear();
         for (var i = 0; i < rows.Count; i++)
             this.Entries.Add(new PlaylistEntryViewModel(i, rows[i]));
+        this.SelectedEntries.Clear();
+        // setting the focused entry selects it alone, so the others are added after it
         this.SelectedEntry = this.Entries.FirstOrDefault(e => e.Row.Id == selectedTrack);
+        foreach (var entry in this.Entries.Where(e => selectedTracks.Contains(e.Row.Id) && !this.SelectedEntries.Contains(e)))
+            this.SelectedEntries.Add(entry);
         this.Summary = PlaylistsViewModel.SummaryOf(rows.Count, rows.Count(r => r.Status == DownloadStatus.Done), this.IsLinked, this.IsSmart);
         this.OnPropertyChanged(nameof(this.IsEmpty));
     }
@@ -106,7 +129,15 @@ public partial class PlaylistDetailViewModel(
     private void Back() => navigation.Back();
 
     /// <summary>Marks a track, e.g. the one last shown on the detail page, so going back finds it.</summary>
-    public void SelectRow(TrackRowViewModel row) => this.SelectedEntry = this.Entries.FirstOrDefault(e => e.Row == row);
+    public void SelectRow(TrackRowViewModel row)
+    {
+        var entry = this.Entries.FirstOrDefault(e => e.Row == row);
+        this.SelectedEntries.Clear();
+        this.SelectedEntry = entry;
+        // the list adds it itself while it is shown; otherwise the selection waits here for it
+        if (entry is not null && !this.SelectedEntries.Contains(entry))
+            this.SelectedEntries.Add(entry);
+    }
 
     /// <summary>Reads the YouTube playlist again and adds its new videos.</summary>
     [RelayCommand(CanExecute = nameof(CanSync))]
@@ -258,6 +289,33 @@ public partial class PlaylistDetailViewModel(
             return;
         await repository.RemoveTrackAsync(playlistId, entry.Row.Id);
         await this.ChangedAsync();
+    }
+
+    /// <summary>
+    /// Takes the selected tracks out of the playlist (header button, Delete key); they stay in the library.
+    /// Smart playlists pick their tracks by rules, so nothing can be taken out by hand.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanRemoveSelected))]
+    private async Task RemoveSelectedAsync()
+    {
+        var entries = this.SelectedEntries.ToList();
+        if (this.IsSmart || entries.Count == 0)
+            return;
+        foreach (var entry in entries)
+            await repository.RemoveTrackAsync(playlistId, entry.Row.Id);
+        await this.ChangedAsync();
+        activity.Confirm(entries.Count == 1
+            ? Strings.Confirm_PlaylistRemoved_One
+            : string.Format(Strings.Confirm_PlaylistRemoved_Other, entries.Count));
+    }
+
+    private bool CanRemoveSelected() => this.IsEditable && this.SelectedEntries.Count > 0;
+
+    private void OnSelectionChanged()
+    {
+        this.OnPropertyChanged(nameof(this.CanRemoveMany));
+        this.OnPropertyChanged(nameof(this.RemoveSelectedText));
+        this.RemoveSelectedCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>Moves a track to another place (drag and drop or Alt+Up/Down).</summary>

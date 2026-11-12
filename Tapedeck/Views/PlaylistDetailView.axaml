@@ -15,6 +15,12 @@
                              Subtitle="{Binding Summary}"
                              BackCommand="{Binding BackCommand}">
             <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <Button Classes="secondary lg"
+                        Content="{Binding RemoveSelectedText}"
+                        ToolTip.Tip="{x:Static res:Strings.Playlist_RemoveSelectedHint}"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                        Command="{Binding RemoveSelectedCommand}"
+                        IsVisible="{Binding CanRemoveMany}" />
                 <Button Classes="lg danger"
                         Content="{x:Static res:Strings.Playlist_Delete}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Trash}"
@@ -75,13 +81,16 @@
                              Theme="{StaticResource PlainList}"
                              ItemContainerTheme="{StaticResource TableRow}"
                              ItemsSource="{Binding Entries}"
+                             SelectionMode="Multiple"
                              SelectedItem="{Binding SelectedEntry}"
+                             SelectedItems="{Binding SelectedEntries}"
                              DragDrop.AllowDrop="True"
                              AutomationProperties.Name="{Binding Name}">
                         <ListBox.KeyBindings>
                             <KeyBinding Gesture="Alt+Up" Command="{Binding MoveUpCommand}" />
                             <KeyBinding Gesture="Alt+Down" Command="{Binding MoveDownCommand}" />
                             <KeyBinding Gesture="Enter" Command="{Binding SelectedEntry.Row.OpenDetailsCommand, FallbackValue={x:Null}}" />
+                            <KeyBinding Gesture="Delete" Command="{Binding RemoveSelectedCommand}" />
                         </ListBox.KeyBindings>
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="vm:PlaylistEntryViewModel">
