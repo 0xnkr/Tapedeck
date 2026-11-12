@@ -94,8 +94,9 @@ public sealed class LastFmTests : IAsyncLifetime
 
         var summary = await service.FetchAsync("key");
 
-        Assert.Equal(["Coolio"], lastFm.Asked);
-        Assert.Equal((2, 2), (summary.Asked, summary.WithGenres));
+        // Kendrick Lamar only for the artist tags in the files (TAPEDECK_TAGS), after the tracks waiting for genres
+        Assert.Equal(["Coolio", "Kendrick Lamar"], lastFm.Asked);
+        Assert.Equal((2, 2, 1), (summary.Asked, summary.WithGenres, summary.ArtistsAsked));
         Assert.Equal([first, second], summary.Tagged.Order());
         var track = (await this.repo.GetDisplayAsync(first))!;
         Assert.Equal(("Gangsta Rap;Hip-Hop;Rap", FieldSource.Lastfm), (track.Genres, track.GenresFrom));
