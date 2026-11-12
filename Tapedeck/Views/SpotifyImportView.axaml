@@ -120,6 +120,19 @@
                                     Command="{Binding ImportCommand}" />
                         </StackPanel>
                     </controls:Island>
+
+                    <controls:Island IsEnabled="{Binding HasHistory}">
+                        <StackPanel Spacing="{StaticResource Space.2}">
+                            <TextBlock Classes="title" Text="{x:Static res:Strings.Spotify_TasteTitle}" />
+                            <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text3}" TextWrapping="Wrap"
+                                       Text="{x:Static res:Strings.Spotify_TasteHint}" />
+                            <Button Classes="secondary"
+                                    HorizontalAlignment="Left"
+                                    Content="{x:Static res:Strings.Spotify_TasteButton}"
+                                    IsEnabled="{Binding CanTakeOverTaste}"
+                                    Command="{Binding TakeOverTasteCommand}" />
+                        </StackPanel>
+                    </controls:Island>
                 </StackPanel>
             </ScrollViewer>
 

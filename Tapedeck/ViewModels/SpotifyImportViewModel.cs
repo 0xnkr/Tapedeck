@@ -28,6 +28,7 @@ public partial class SpotifyImportViewModel(
     ISpotifyMatchRepository matches,
     SpotifySearchService search,
     SpotifyImportService importer,
+    SpotifyTasteService taste,
     ToolSetup toolSetup,
     ActivityService activity,
     NavigationService navigation,
@@ -232,6 +233,44 @@ public partial class SpotifyImportViewModel(
 
     [RelayCommand]
     private void StopSearch() => this.searchCancel?.Cancel();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanTakeOverTaste))]
+    public partial bool IsTakingOverTaste { get; private set; }
+
+    public bool CanTakeOverTaste => this.HasHistory && !this.IsTakingOverTaste;
+
+    partial void OnHasHistoryChanged(bool value) => this.OnPropertyChanged(nameof(this.CanTakeOverTaste));
+
+    /// <summary>
+    /// Stores plays and early skips of the whole history for the library tracks, the starting taste of the phone
+    /// app's recommendations; "Write tags" puts them into the files.
+    /// </summary>
+    [RelayCommand]
+    private async Task TakeOverTasteAsync()
+    {
+        if (this.history is not { } chosen)
+            return;
+        this.Notice = null;
+        this.IsTakingOverTaste = true;
+        try
+        {
+            SpotifyTasteResult result;
+            using (activity.Begin(Strings.Spotify_TasteApplying))
+                result = await Task.Run(() => taste.ApplyAsync(chosen));
+            if (result.Changed.Count > 0)
+                await library.RefreshTracksAsync(result.Changed);
+            activity.Confirm(string.Format(Strings.Spotify_TasteDone, result.Tracks, result.Changed.Count));
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Spotify_TasteFailed, ex.Message);
+        }
+        finally
+        {
+            this.IsTakingOverTaste = false;
+        }
+    }
 
     /// <summary>Adds the ready songs to the library and creates the playlist with them and the ticked library songs.</summary>
     [RelayCommand]

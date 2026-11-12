@@ -67,6 +67,7 @@ public static class AppServices
         services.AddSingleton<ISpotifyMatchRepository, SpotifyMatchRepository>();
         services.AddSingleton<SpotifySearchService>();
         services.AddSingleton<SpotifyImportService>();
+        services.AddSingleton<SpotifyTasteService>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
