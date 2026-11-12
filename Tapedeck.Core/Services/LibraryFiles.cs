@@ -81,4 +81,37 @@ public sealed class LibraryFiles(ITrackRepository repository, AppPaths paths, IL
         this.log.LogInformation("Removed track {TrackId} ({VideoId}, {Artist} - {Title}), file deleted: {Deleted}",
             trackId, track.VideoId, track.Artist, track.Title, deleteFile && track.FilePath is not null);
     }
+
+    /// <summary>
+    /// Removes several tracks one after another, like <see cref="RemoveAsync"/>. A track whose file cannot be deleted
+    /// stays in the library and does not stop the others.
+    /// </summary>
+    /// <param name="deleteFiles">Also delete the audio files.</param>
+    public async Task<RemoveManyResult> RemoveManyAsync(IReadOnlyList<long> trackIds, bool deleteFiles)
+    {
+        var removed = new List<long>();
+        var failed = new List<RemoveFailure>();
+        foreach (var id in trackIds.Distinct())
+        {
+            try
+            {
+                await this.RemoveAsync(id, deleteFiles);
+                removed.Add(id);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                this.log.LogWarning(ex, "Could not remove track {TrackId}", id);
+                failed.Add(new RemoveFailure(id, ex.Message));
+            }
+        }
+        this.log.LogInformation("Removed {Removed} of {Count} tracks (files deleted: {DeleteFiles}), {Failed} failed",
+            removed.Count, removed.Count + failed.Count, deleteFiles, failed.Count);
+        return new RemoveManyResult(removed, failed);
+    }
 }
+
+/// <summary>A track that <see cref="LibraryFiles.RemoveManyAsync"/> could not remove, and why.</summary>
+public sealed record RemoveFailure(long TrackId, string Message);
+
+/// <summary>What <see cref="LibraryFiles.RemoveManyAsync"/> removed and what stayed.</summary>
+public sealed record RemoveManyResult(IReadOnlyList<long> Removed, IReadOnlyList<RemoveFailure> Failed);

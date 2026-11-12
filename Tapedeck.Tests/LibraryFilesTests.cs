@@ -32,10 +32,11 @@ public sealed class LibraryFilesTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private async Task<long> AddDownloadedAsync(string fileName, string artist = "Rick Astley", string title = "Never Gonna Give You Up")
+    private async Task<long> AddDownloadedAsync(string fileName, string artist = "Rick Astley", string title = "Never Gonna Give You Up",
+        string videoId = "dQw4w9WgXcQ")
     {
-        var id = await this.repository.AddAsync("dQw4w9WgXcQ", "u");
-        await this.repository.UpdateYtMetadataAsync(id, new YtMetadata("dQw4w9WgXcQ", $"{artist} - {title}", "Channel",
+        var id = await this.repository.AddAsync(videoId, "u");
+        await this.repository.UpdateYtMetadataAsync(id, new YtMetadata(videoId, $"{artist} - {title}", "Channel",
             "20091025", 213, title, artist, null, null, artist, title, [], "{}"));
         await this.repository.UpdateDownloadStateAsync(id, DownloadStatus.Done, fileName, "opus");
         await File.WriteAllTextAsync(this.paths.ToLibraryPath(fileName), "audio");
@@ -116,6 +117,41 @@ public sealed class LibraryFilesTests : IAsyncLifetime
 
         Assert.Null(await this.repository.GetDisplayAsync(id));
         Assert.Equal(!deleteFile, File.Exists(this.paths.ToLibraryPath("Rick Astley - Never Gonna Give You Up.opus")));
+    }
+
+    [Fact]
+    public async Task Removing_many_goes_on_after_a_file_that_cannot_be_deleted()
+    {
+        var first = await this.AddDownloadedAsync("A - One.opus", "A", "One", "aaaaaaaaaaa");
+        var stuck = await this.AddDownloadedAsync("B - Two.opus", "B", "Two", "bbbbbbbbbbb");
+        var last = await this.AddDownloadedAsync("C - Three.opus", "C", "Three", "ccccccccccc");
+        // a folder in place of the file cannot be deleted as a file
+        File.Delete(this.paths.ToLibraryPath("B - Two.opus"));
+        Directory.CreateDirectory(this.paths.ToLibraryPath("B - Two.opus"));
+
+        var result = await this.files.RemoveManyAsync([first, stuck, last, first], deleteFiles: true);
+
+        Assert.Equal([first, last], result.Removed);
+        Assert.Equal(stuck, Assert.Single(result.Failed).TrackId);
+        Assert.Null(await this.repository.GetDisplayAsync(first));
+        Assert.Null(await this.repository.GetDisplayAsync(last));
+        Assert.NotNull(await this.repository.GetDisplayAsync(stuck));
+        Assert.False(File.Exists(this.paths.ToLibraryPath("A - One.opus")));
+        Assert.False(File.Exists(this.paths.ToLibraryPath("C - Three.opus")));
+    }
+
+    [Fact]
+    public async Task Removing_many_without_files_keeps_them()
+    {
+        var first = await this.AddDownloadedAsync("A - One.opus", "A", "One", "aaaaaaaaaaa");
+        var second = await this.AddDownloadedAsync("B - Two.opus", "B", "Two", "bbbbbbbbbbb");
+
+        var result = await this.files.RemoveManyAsync([first, second], deleteFiles: false);
+
+        Assert.Equal([first, second], result.Removed);
+        Assert.Empty(result.Failed);
+        Assert.True(File.Exists(this.paths.ToLibraryPath("A - One.opus")));
+        Assert.True(File.Exists(this.paths.ToLibraryPath("B - Two.opus")));
     }
 
     [Fact]
