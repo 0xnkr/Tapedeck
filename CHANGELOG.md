@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Import a Spotify playlist by its link: paste it on the Spotify page, and its songs are searched on YouTube and checked just like the songs of your streaming history, then added as a playlist in the same order. Any public playlist works, Spotify's own included, and you need no Spotify account. Without an account, Spotify shows only the first 100 songs of a playlist; the page tells you when songs are missing.
+- Select several tracks with Ctrl+click or Shift+click and remove them together: "Remove N tracks" in the library toolbar or the Delete key, with one confirmation and the choice to delete the files too. Tracks that are downloading are skipped, and a file that cannot be deleted does not stop the others. On a playlist page, the same selection takes tracks out of the playlist.
+
+### Fixed
+
+- A band with a slash in its name, like AC/DC, is no longer split into two artists. The Spotify search looked for "AC Thunderstruck", and MusicBrainz, Last.fm and LRCLIB were asked for "AC". Two artists separated by " / " with spaces are still told apart.
+
 ## [1.3.0] - 2026-11-12
 
 ### Added
