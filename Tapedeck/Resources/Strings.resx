@@ -1589,7 +1589,7 @@
     <comment>Page title</comment>
   </data>
   <data name="Spotify_Subtitle" xml:space="preserve">
-    <value>Finds your most played Spotify songs on YouTube and puts them into a playlist.</value>
+    <value>Finds the songs of your Spotify history or of a Spotify playlist on YouTube and puts them into a playlist.</value>
     <comment>Page subtitle</comment>
   </data>
   <data name="Spotify_Source" xml:space="preserve">
@@ -2167,5 +2167,49 @@
   <data name="Spotify_TasteFailed" xml:space="preserve">
     <value>Could not take over the Spotify history: {0}</value>
     <comment>Notice; {0} error message</comment>
+  </data>
+  <data name="Spotify_PlaylistSource" xml:space="preserve">
+    <value>Spotify playlist</value>
+    <comment>Island title; also the suggested name of a playlist without a name</comment>
+  </data>
+  <data name="Spotify_PlaylistSourceHint" xml:space="preserve">
+    <value>Paste the link of a public playlist (Share → Copy link to playlist). Without an account, Spotify shows only its first 100 songs.</value>
+    <comment>Explains where the link comes from and the limit</comment>
+  </data>
+  <data name="Spotify_PlaylistLinkPlaceholder" xml:space="preserve">
+    <value>https://open.spotify.com/playlist/…</value>
+    <comment>Placeholder of the link field</comment>
+  </data>
+  <data name="Spotify_LoadPlaylist" xml:space="preserve">
+    <value>Load</value>
+    <comment>Button that reads the playlist of the link</comment>
+  </data>
+  <data name="Spotify_ReadingPlaylist" xml:space="preserve">
+    <value>Reading Spotify playlist …</value>
+    <comment>Activity toast</comment>
+  </data>
+  <data name="Spotify_PlaylistSummary" xml:space="preserve">
+    <value>"{0}" by {1} · {2} songs</value>
+    <comment>{0} playlist name, {1} owner, {2} songs read</comment>
+  </data>
+  <data name="Spotify_PlaylistCut" xml:space="preserve">
+    <value>Spotify shows only the first {0} of {1} songs without an account; the others are missing.</value>
+    <comment>{0} songs read, {1} songs of the playlist</comment>
+  </data>
+  <data name="Spotify_PlaylistCutUnknown" xml:space="preserve">
+    <value>Spotify shows only the first {0} songs without an account; if the playlist is longer, the others are missing.</value>
+    <comment>{0} songs read; the length of the playlist is unknown</comment>
+  </data>
+  <data name="Spotify_NoPlaylistLink" xml:space="preserve">
+    <value>This is no link to a Spotify playlist.</value>
+    <comment>Error below the header</comment>
+  </data>
+  <data name="Spotify_PlaylistNotFound" xml:space="preserve">
+    <value>Spotify does not know this playlist, or it is private.</value>
+    <comment>Error below the header</comment>
+  </data>
+  <data name="Spotify_PlaylistFailed" xml:space="preserve">
+    <value>The playlist could not be read: {0}</value>
+    <comment>{0} error message</comment>
   </data>
 </root>

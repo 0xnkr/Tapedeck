@@ -3604,7 +3604,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finds your most played Spotify songs on YouTube and puts them into a playlist..
+        ///   Looks up a localized string similar to Finds the songs of your Spotify history or of a Spotify playlist on YouTube and puts them into a playlist..
         /// </summary>
         public static string Spotify_Subtitle {
             get {
@@ -4905,6 +4905,104 @@ namespace Tapedeck.Resources {
         public static string Detail_LyricsEditHint {
             get {
                 return ResourceManager.GetString("Detail_LyricsEditHint", resourceCulture);
+            }
+        }
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify playlist.
+        /// </summary>
+        public static string Spotify_PlaylistSource {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste the link of a public playlist (Share → Copy link to playlist). Without an account, Spotify shows only its first 100 songs..
+        /// </summary>
+        public static string Spotify_PlaylistSourceHint {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistSourceHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://open.spotify.com/playlist/….
+        /// </summary>
+        public static string Spotify_PlaylistLinkPlaceholder {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistLinkPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load.
+        /// </summary>
+        public static string Spotify_LoadPlaylist {
+            get {
+                return ResourceManager.GetString("Spotify_LoadPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading Spotify playlist ….
+        /// </summary>
+        public static string Spotify_ReadingPlaylist {
+            get {
+                return ResourceManager.GetString("Spotify_ReadingPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to "{0}" by {1} · {2} songs.
+        /// </summary>
+        public static string Spotify_PlaylistSummary {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify shows only the first {0} of {1} songs without an account; the others are missing..
+        /// </summary>
+        public static string Spotify_PlaylistCut {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistCut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify shows only the first {0} songs without an account; if the playlist is longer, the others are missing..
+        /// </summary>
+        public static string Spotify_PlaylistCutUnknown {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistCutUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is no link to a Spotify playlist..
+        /// </summary>
+        public static string Spotify_NoPlaylistLink {
+            get {
+                return ResourceManager.GetString("Spotify_NoPlaylistLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spotify does not know this playlist, or it is private..
+        /// </summary>
+        public static string Spotify_PlaylistNotFound {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The playlist could not be read: {0}.
+        /// </summary>
+        public static string Spotify_PlaylistFailed {
+            get {
+                return ResourceManager.GetString("Spotify_PlaylistFailed", resourceCulture);
             }
         }
     }

@@ -1195,7 +1195,7 @@
     <value>Aus Spotify importieren</value>
   </data>
   <data name="Spotify_Subtitle" xml:space="preserve">
-    <value>Sucht deine meistgehörten Spotify-Songs auf YouTube und legt sie als Playlist an.</value>
+    <value>Sucht die Songs aus deinem Spotify-Verlauf oder einer Spotify-Playlist auf YouTube und legt sie als Playlist an.</value>
   </data>
   <data name="Spotify_Source" xml:space="preserve">
     <value>Streamingverlauf</value>
@@ -1628,5 +1628,38 @@
   </data>
   <data name="Spotify_TasteFailed" xml:space="preserve">
     <value>Der Spotify-Verlauf konnte nicht übernommen werden: {0}</value>
+  </data>
+  <data name="Spotify_PlaylistSource" xml:space="preserve">
+    <value>Spotify-Playlist</value>
+  </data>
+  <data name="Spotify_PlaylistSourceHint" xml:space="preserve">
+    <value>Füge den Link einer öffentlichen Playlist ein (Teilen → Link zur Playlist kopieren). Ohne Konto zeigt Spotify nur ihre ersten 100 Songs.</value>
+  </data>
+  <data name="Spotify_PlaylistLinkPlaceholder" xml:space="preserve">
+    <value>https://open.spotify.com/playlist/…</value>
+  </data>
+  <data name="Spotify_LoadPlaylist" xml:space="preserve">
+    <value>Laden</value>
+  </data>
+  <data name="Spotify_ReadingPlaylist" xml:space="preserve">
+    <value>Lese Spotify-Playlist …</value>
+  </data>
+  <data name="Spotify_PlaylistSummary" xml:space="preserve">
+    <value>„{0}“ von {1} · {2} Songs</value>
+  </data>
+  <data name="Spotify_PlaylistCut" xml:space="preserve">
+    <value>Spotify zeigt ohne Konto nur die ersten {0} von {1} Songs, die übrigen fehlen.</value>
+  </data>
+  <data name="Spotify_PlaylistCutUnknown" xml:space="preserve">
+    <value>Spotify zeigt ohne Konto nur die ersten {0} Songs. Ist die Playlist länger, fehlen die übrigen.</value>
+  </data>
+  <data name="Spotify_NoPlaylistLink" xml:space="preserve">
+    <value>Das ist kein Link zu einer Spotify-Playlist.</value>
+  </data>
+  <data name="Spotify_PlaylistNotFound" xml:space="preserve">
+    <value>Spotify kennt diese Playlist nicht, oder sie ist privat.</value>
+  </data>
+  <data name="Spotify_PlaylistFailed" xml:space="preserve">
+    <value>Die Playlist konnte nicht gelesen werden: {0}</value>
   </data>
 </root>
