@@ -30,6 +30,14 @@ public class MbNormalizerTests
     }
 
     [Theory]
+    [InlineData("Kendrick Lamar, SZA", new[] { "Kendrick Lamar", "SZA" })]
+    [InlineData("Snoop Dogg & Wiz Khalifa", new[] { "Snoop Dogg", "Wiz Khalifa" })]
+    [InlineData("Artist A / Artist B", new[] { "Artist A", "Artist B" })]
+    [InlineData("AC/DC", new[] { "AC/DC" })]
+    [InlineData("AC/DC, Brian Johnson", new[] { "AC/DC", "Brian Johnson" })]
+    public void Splits_artists(string text, string[] artists) => Assert.Equal(artists, MbNormalizer.SplitArtists(text));
+
+    [Theory]
     [InlineData("Venom (Music From The Motion Picture)", "Venom")]
     [InlineData("All The Stars (From \"Black Panther: The Album\")", "All The Stars")]
     [InlineData("Money Trees - Live at Melkweg", "Money Trees")]

@@ -34,7 +34,8 @@ public static partial class MbNormalizer
     [GeneratedRegex(@"\s*[\(\[]?\s*\b(?:feat\.?|ft\.?|featuring|f\.)\s+([^\(\)\[\]]*)[\)\]]?", RegexOptions.IgnoreCase)]
     private static partial Regex FeaturingPattern();
 
-    [GeneratedRegex(@"\s*(?:,|&|\+|/|\band\b|\bx\b)\s*", RegexOptions.IgnoreCase)]
+    // a slash only between spaces: "AC/DC" is one band, "Artist A / Artist B" are two artists
+    [GeneratedRegex(@"\s*(?:,|&|\+|\band\b|\bx\b)\s*|\s+/\s+", RegexOptions.IgnoreCase)]
     private static partial Regex ArtistSeparator();
 
     [GeneratedRegex(@"[\(\[\{][^\)\]\}]*[\)\]\}]?")]
