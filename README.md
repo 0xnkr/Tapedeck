@@ -12,7 +12,7 @@ Paste a link, get a clean, tagged Opus file and a library your phone actually un
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dot.net)
 [![Avalonia 12](https://img.shields.io/badge/Avalonia-12-8B44AC)](https://avaloniaui.net)
 [![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
-[![Platform](https://img.shields.io/badge/platform-Windows%20x64-FFB86B?logo=windows&logoColor=white)](#build-it-yourself)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-FFB86B)](#build-it-yourself)
 [![License: MIT](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
 
 <br />
@@ -71,13 +71,13 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 Your music lands in `Music/Tapedeck` by default, and you can change that in the settings. App data (database, settings, tools, thumbnails) lives in the system's application data folder, `%APPDATA%\Tapedeck` on Windows.
 
 > [!TIP]
-> Something went wrong? **Settings → Tools** shows the exact version and build, and **Open log** opens `log.txt` with every download, import and error. Attach both to a bug report.
-
-> [!TIP]
 > Coming from Spotify? In your Spotify account, request the **Extended streaming history** under privacy. Spotify sends a zip file after a few days. Then open **Playlists → From Spotify**, choose the zip and search your most played songs on YouTube.
 
 > [!TIP]
 > Moving to a new computer? Export the library as CSV, copy the music folder, then import the CSV on the new machine. Tapedeck finds the existing files and marks them as downloaded.
+
+> [!TIP]
+> Something went wrong? **Settings → Tools** shows the exact version and build, and **Open log** opens `log.txt` with every download, import and error. Attach both to a bug report.
 
 ## Third-party tools and licenses
 
