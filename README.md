@@ -45,6 +45,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | 🎤 **Lyrics** | Lyrics come from [LRCLIB](https://lrclib.net) in the background, timed wherever the timing really fits the file. They go into the file and, when timed, also as a `.lrc` next to the song, so phone players show the lines along with the music. In Tapedeck the line sung now follows the song, and a click jumps to any line. Paste or correct your own at any time. |
 | 🧹 **No duplicates** | The same song from the music video, the Topic upload and a lyric video? The **Duplicates** filter puts them side by side, and **Keep this one** removes the rest without breaking your playlists. |
 | 🔊 **Even volume** | Every download is measured once with FFmpeg (EBU R 128), and the result goes into the file as an Opus track gain (`R128_TRACK_GAIN`). Loud music videos and quiet Topic uploads then play equally loud in Poweramp, Musicolet & co. Older tracks are measured in the background, and the built-in player levels them the same way. |
+| 🧭 **Ready for recommendations** | Every song gets its tempo, brightness, energy and dynamics measured, plus the Last.fm tags of its artist and, if you like, your Spotify plays. All of it goes into the file, so a player on the phone can play similar songs that match the mood, not only the genre. The fields and a reference recommender are described in [docs/recommendations.md](docs/recommendations.md). |
 | 🎶 **Playlists** | Drag to reorder, add from any track, and every playlist is auto-exported as `.m3u8` next to your music. |
 | ▶️ **Listen in** | Click a cover to play the downloaded file, click again to pause. A small player bar shows the progress and lets you jump to any spot, on Windows, Linux and macOS alike. |
 | ✨ **Smart playlists** | Playlists that fill themselves from rules, like "genre contains Trap and year 2012 to 2016" or "the 50 newest tracks". They stay up to date as your library changes and land on your phone as normal `.m3u8` playlists. |
@@ -140,6 +141,12 @@ dotnet run --project Tapedeck -- --spotify-report "path/to/my_spotify_data.zip"
 
 ```bash
 dotnet run --project Tapedeck -- --spotify-match "path/to/my_spotify_data.zip" 100
+```
+
+`--audio-report` measures the sound of every song that has no value yet and writes `audio-report.md` into the app data folder: how tempo, brightness and energy spread over your library, and for some songs the ones that sound most alike. See [docs/recommendations.md](docs/recommendations.md#checking-and-tuning):
+
+```bash
+dotnet run --project Tapedeck -- --audio-report 20
 ```
 
 ## Roadmap
