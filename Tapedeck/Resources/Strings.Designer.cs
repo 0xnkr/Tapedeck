@@ -4306,7 +4306,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A phone player starts its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too..
+        ///   Looks up a localized string similar to Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A player can start its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too..
         /// </summary>
         public static string Spotify_TasteHint {
             get {
@@ -4621,7 +4621,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which a phone player uses for similar songs. New tracks are asked on their own after MusicBrainz..
+        ///   Looks up a localized string similar to Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which players can use to find similar songs. New tracks are asked on their own after MusicBrainz..
         /// </summary>
         public static string Settings_LastFmFetchHint {
             get {

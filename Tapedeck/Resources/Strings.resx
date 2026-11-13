@@ -1949,7 +1949,7 @@
     <comment>Button; {0} number of tracks without genres or without artist tags Last.fm was not asked for yet</comment>
   </data>
   <data name="Settings_LastFmFetchHint" xml:space="preserve">
-    <value>Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which a phone player uses for similar songs. New tracks are asked on their own after MusicBrainz.</value>
+    <value>Asks Last.fm for the genres of all tracks that have none yet, and for the tags of all artists, which players can use to find similar songs. New tracks are asked on their own after MusicBrainz.</value>
     <comment>Tooltip of Settings_LastFmFetch</comment>
   </data>
   <data name="Activity_DownloadingMany" xml:space="preserve">
@@ -2149,7 +2149,7 @@
     <comment>Title of the island that takes over the Spotify history for the phone app's recommendations</comment>
   </data>
   <data name="Spotify_TasteHint" xml:space="preserve">
-    <value>Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A phone player starts its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too.</value>
+    <value>Stores per library song how often you played it on Spotify and skipped it within 10 seconds. A player can start its recommendations with this taste. "Write tags" puts these counts into the files (TAPEDECK_HISTORY): whoever gets your files gets them, too.</value>
     <comment>Explains taking over the Spotify history and that the counts end up in the audio files</comment>
   </data>
   <data name="Spotify_TasteButton" xml:space="preserve">

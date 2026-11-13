@@ -1465,7 +1465,7 @@
     <value>Genres holen ({0})</value>
   </data>
   <data name="Settings_LastFmFetchHint" xml:space="preserve">
-    <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben, und nach den Tags aller Artists, mit denen ein Player auf dem Handy ähnliche Songs findet. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
+    <value>Fragt Last.fm nach den Genres aller Titel, die noch keine haben, und nach den Tags aller Artists, mit denen Player ähnliche Songs finden können. Neue Titel werden nach MusicBrainz von selbst gefragt.</value>
   </data>
   <data name="Activity_DownloadingMany" xml:space="preserve">
     <value>Lade herunter {0}/{1} ({2} gleichzeitig) …</value>
@@ -1615,7 +1615,7 @@
     <value>Für Empfehlungen</value>
   </data>
   <data name="Spotify_TasteHint" xml:space="preserve">
-    <value>Speichert pro Song der Bibliothek, wie oft du ihn bei Spotify gehört und in den ersten 10 Sekunden übersprungen hast. Ein Player auf dem Handy startet seine Empfehlungen mit diesem Geschmack. „Tags schreiben“ schreibt diese Zahlen in die Dateien (TAPEDECK_HISTORY): Wer deine Dateien bekommt, bekommt sie mit.</value>
+    <value>Speichert pro Song der Bibliothek, wie oft du ihn bei Spotify gehört und in den ersten 10 Sekunden übersprungen hast. Ein Player kann seine Empfehlungen mit diesem Geschmack starten. „Tags schreiben“ schreibt diese Zahlen in die Dateien (TAPEDECK_HISTORY): Wer deine Dateien bekommt, bekommt sie mit.</value>
   </data>
   <data name="Spotify_TasteButton" xml:space="preserve">
     <value>Spotify-Verlauf für Empfehlungen übernehmen</value>
