@@ -84,6 +84,7 @@ public static class AppServices
         services.AddSingleton<MusicBrainzQueue>();
         services.AddSingleton<PlayerService>();
         services.AddSingleton<LoudnessQueue>();
+        services.AddSingleton<AudioFeatureQueue>();
         services.AddSingleton<CoverQueue>();
         services.AddSingleton<LastFmQueue>();
         services.AddSingleton<LyricsQueue>();

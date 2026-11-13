@@ -50,6 +50,7 @@ public partial class LibraryViewModel(
     TagWriter tagWriter,
     PlayerService player,
     LoudnessQueue loudness,
+    AudioFeatureQueue sound,
     CoverQueue covers,
     LastFmQueue lastFm,
     LyricsQueue lyrics,
@@ -346,6 +347,7 @@ public partial class LibraryViewModel(
 
         musicBrainz.TrackChanged += id => _ = this.OnMatchedAsync(id);
         loudness.Measured += ids => _ = this.RefreshRowsQuietlyAsync(ids);
+        sound.Measured += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         covers.Covered += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         lastFm.Tagged += ids => _ = this.RefreshRowsQuietlyAsync(ids);
         lastFm.Failed += message => this.Notice = message;
@@ -1020,6 +1022,8 @@ public partial class LibraryViewModel(
         playlistSync.Request();
         // downloads measure themselves; older and adopted files get their value in the background
         loudness.EnqueueMissing();
+        // and how they sound, for the phone's recommendations
+        sound.EnqueueMissing();
         // tracks without a Cover Art Archive cover get one cut from their thumbnail
         covers.EnqueueMissing();
         // tracks without genres ask Last.fm, with the user's key
