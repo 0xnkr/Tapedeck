@@ -28,6 +28,11 @@ abstract class Program
             RunCommand(logging => SpotifyReportCommand.RunAsync(spotifyHistory, logging), log);
             return;
         }
+        if (options.AudioReport is { } audioCount)
+        {
+            RunCommand(logging => AudioReportCommand.RunAsync(audioCount, logging), log);
+            return;
+        }
         if (options.SpotifyMatch is { } matchHistory)
         {
             RunCommand(logging => SpotifyMatchCommand.RunAsync(matchHistory, options.SpotifyMatchCount ?? SpotifyMatchCommand.DEFAULT_COUNT, logging), log);
