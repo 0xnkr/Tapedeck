@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **The sound of each song for recommendations.** Tapedeck now measures how a downloaded song sounds and writes it into the file as `TAPEDECK_AUDIO`, so a player on the phone can suggest songs that match the mood, not only the genre: a calm ballad after a calm ballad, a driving track after a driving one. It holds the tempo (BPM) and, each as an average and how much it varies over the song, brightness, noisiness, how busy the arrangement is, energy and dynamics, e.g. `v=1;bpm=123.4;bpmconf=0.62;centroid=2140/610;…`. Intro and outro are left out of the measurement, so verse and chorus decide.
+  - Every new download is measured right away; older and adopted files are measured in the background, about a second per song. "Write tags (N)" puts the values into the files.
+  - Like the other fields, it is a plain Vorbis comment that other players ignore.
+  - All three fields, how the sound is measured and a reference recommender built on them are described in [docs/recommendations.md](docs/recommendations.md).
+- `Tapedeck.exe --audio-report [count]` measures all songs that have no value yet and writes `audio-report.md` into the app data folder: how the values spread over your library, and for some songs the ones that sound most alike.
+
 ## [1.4.0] - 2026-11-13
 
 ### Added
