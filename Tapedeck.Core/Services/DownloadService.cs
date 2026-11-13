@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Tapedeck.Core.Audio;
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using YoutubeDLSharp.Options;
@@ -16,6 +17,7 @@ public sealed class DownloadService(
     ToolService tools,
     TagWriter tagWriter,
     LoudnessMeter loudness,
+    AudioFeatureExtractor sound,
     AppPaths paths,
     ILogger<DownloadService>? logger = null)
 {
@@ -80,6 +82,7 @@ public sealed class DownloadService(
 
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Downloading, fileName, FORMAT);
             await this.MeasureLoudnessAsync(trackId, fileName, ct);
+            await this.MeasureSoundAsync(trackId, fileName, ct);
             await tagWriter.WriteTagsAsync(trackId);
             await repository.UpdateDownloadStateAsync(trackId, DownloadStatus.Done);
             this.log.LogInformation("Downloaded {VideoId} as {File} ({Megabytes:0.0} MB in {Seconds:0.0} s)", track.VideoId,
@@ -117,6 +120,23 @@ public sealed class DownloadService(
         {
             // the background measurement (LoudnessQueue in the app) tries it again later
             this.log.LogWarning("Could not measure the loudness of {File}: {Error}", fileName, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Measures how the new file sounds for the phone's recommendations. A failed measurement does not fail the
+    /// download; the background queue (AudioFeatureQueue in the app) tries it again later.
+    /// </summary>
+    private async Task MeasureSoundAsync(long trackId, string fileName, CancellationToken ct)
+    {
+        try
+        {
+            var features = await sound.ExtractAsync(paths.ToLibraryPath(fileName), ct);
+            await repository.SetAudioFeaturesAsync(trackId, features?.Format(), AudioAnalysis.VERSION);
+        }
+        catch (InvalidOperationException ex)
+        {
+            this.log.LogWarning("Could not measure the sound of {File}: {Error}", fileName, ex.Message);
         }
     }
 

@@ -2,6 +2,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
+using Tapedeck.Core.Audio;
 using Tapedeck.Core.Csv;
 using Tapedeck.Core.LastFm;
 using Tapedeck.Core.Lyrics;
@@ -50,6 +51,7 @@ public static class AppServices
         services.AddSingleton<ThumbnailService>();
         services.AddSingleton<TagWriter>();
         services.AddSingleton<LoudnessMeter>();
+        services.AddSingleton<AudioFeatureExtractor>();
         services.AddSingleton<ThumbnailCoverService>();
         services.AddSingleton<DownloadService>();
         services.AddSingleton<TrackImportService>();
