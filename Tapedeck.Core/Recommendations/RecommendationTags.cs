@@ -16,8 +16,9 @@ public sealed record ArtistTag(string Tag, int Count);
 public sealed record ListeningHistory(int Plays, int EarlySkips, DateOnly? LastPlayed);
 
 /// <summary>
-/// The two Vorbis comments a phone player reads for its recommendations. Their format is a contract
-/// with that player: <c>TAPEDECK_TAGS=synthwave=0.82;chill=0.40</c> and <c>TAPEDECK_HISTORY=plays=57;skips=3;last=2025-03-14</c>.
+/// The Vorbis comments a phone player reads for its recommendations. Their format is a contract
+/// with that player: <c>TAPEDECK_TAGS=synthwave=0.82;chill=0.40</c>, <c>TAPEDECK_HISTORY=plays=57;skips=3;last=2025-03-14</c>
+/// and <c>TAPEDECK_AUDIO</c> (<see cref="Audio.AudioFeatures.Format"/>).
 /// </summary>
 public static class RecommendationTags
 {
@@ -26,6 +27,9 @@ public static class RecommendationTags
 
     /// <summary>Plays, early skips and the last day played from the Spotify streaming history.</summary>
     public const string HISTORY_FIELD = "TAPEDECK_HISTORY";
+
+    /// <summary>How the file sounds: tempo, timbre, energy and dynamics (<see cref="Audio.AudioFeatures"/>).</summary>
+    public const string AUDIO_FIELD = "TAPEDECK_AUDIO";
 
     /// <summary>Weaker tags (100 is the artist's strongest) are a few listeners' opinion.</summary>
     public const int MIN_COUNT = 10;

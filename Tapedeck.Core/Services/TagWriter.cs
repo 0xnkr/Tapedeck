@@ -42,9 +42,10 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
         var lyricsText = lyrics.Text?.Replace("\r\n", "\n").Trim();
         if (lyricsText is { Length: 0 })
             lyricsText = null;
-        // for the phone app's recommendations: the artist's Last.fm tags and the Spotify history
+        // for the phone app's recommendations: the artist's Last.fm tags, the Spotify history and the sound
         var artistTags = RecommendationTags.FormatTags(await repository.GetArtistTagsAsync(RecommendationTags.ArtistKey(track.Artist)));
         var history = RecommendationTags.FormatHistory(await repository.GetListeningHistoryAsync(trackId));
+        var sound = await repository.GetAudioFeaturesAsync(trackId);
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
@@ -102,6 +103,11 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
                         xiph.SetField(RecommendationTags.HISTORY_FIELD, plays);
                     else
                         xiph.RemoveField(RecommendationTags.HISTORY_FIELD);
+
+                    if (sound is { } features)
+                        xiph.SetField(RecommendationTags.AUDIO_FIELD, features);
+                    else
+                        xiph.RemoveField(RecommendationTags.AUDIO_FIELD);
                 }
                 file.Save();
             }
