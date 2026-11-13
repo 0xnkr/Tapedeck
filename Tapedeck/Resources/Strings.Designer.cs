@@ -5158,5 +5158,23 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Spotify_PlaylistFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analyzing sound {0}/{1} ….
+        /// </summary>
+        public static string Activity_AnalyzingSound {
+            get {
+                return ResourceManager.GetString("Activity_AnalyzingSound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sound analyzed for {0} tracks. “Write tags” takes it to the files..
+        /// </summary>
+        public static string Confirm_SoundAnalyzed {
+            get {
+                return ResourceManager.GetString("Confirm_SoundAnalyzed", resourceCulture);
+            }
+        }
     }
 }

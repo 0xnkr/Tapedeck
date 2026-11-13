@@ -1713,4 +1713,10 @@
   <data name="Confirm_PlaylistRemoved_Other" xml:space="preserve">
     <value>{0} Titel aus der Playlist genommen</value>
   </data>
+  <data name="Activity_AnalyzingSound" xml:space="preserve">
+    <value>Analysiere Klang {0}/{1} …</value>
+  </data>
+  <data name="Confirm_SoundAnalyzed" xml:space="preserve">
+    <value>Klang von {0} Titeln analysiert. „Tags schreiben“ überträgt ihn in die Dateien.</value>
+  </data>
 </root>

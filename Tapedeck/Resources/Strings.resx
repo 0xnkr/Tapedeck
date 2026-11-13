@@ -2280,4 +2280,12 @@
     <value>{0} tracks taken out of the playlist</value>
     <comment>Activity toast; {0} number of tracks</comment>
   </data>
+  <data name="Activity_AnalyzingSound" xml:space="preserve">
+    <value>Analyzing sound {0}/{1} …</value>
+    <comment>Activity toast while tempo, timbre and energy of downloaded files are measured in the background for the phone's recommendations; {0} done, {1} total</comment>
+  </data>
+  <data name="Confirm_SoundAnalyzed" xml:space="preserve">
+    <value>Sound analyzed for {0} tracks. “Write tags” takes it to the files.</value>
+    <comment>Activity toast after the background sound analysis; {0} track count; “Write tags” is the bulk action Library_WriteAllTags</comment>
+  </data>
 </root>
