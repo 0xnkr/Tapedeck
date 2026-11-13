@@ -17,7 +17,7 @@ public sealed record ListeningHistory(int Plays, int EarlySkips, DateOnly? LastP
 
 /// <summary>
 /// The two Vorbis comments a phone player reads for its recommendations. Their format is a contract
-/// with that app: <c>TAPEDECK_TAGS=synthwave=0.82;chill=0.40</c> and <c>TAPEDECK_HISTORY=plays=57;skips=3;last=2025-03-14</c>.
+/// with that player: <c>TAPEDECK_TAGS=synthwave=0.82;chill=0.40</c> and <c>TAPEDECK_HISTORY=plays=57;skips=3;last=2025-03-14</c>.
 /// </summary>
 public static class RecommendationTags
 {
