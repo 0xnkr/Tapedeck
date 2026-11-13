@@ -129,6 +129,24 @@ public interface ITrackRepository
     /// <summary>Downloaded tracks whose file was never measured, oldest first.</summary>
     Task<IReadOnlyList<long>> ListWithoutLoudnessAsync();
 
+    /// <summary>
+    /// The track's sound as <c>TAPEDECK_AUDIO</c> text (<see cref="Audio.AudioFeatures.Format"/>); <c>null</c> when not
+    /// measured yet or the file has too little sound.
+    /// </summary>
+    Task<string?> GetAudioFeaturesAsync(long id);
+
+    /// <summary>
+    /// Stores the measured sound with the version of the measurement; <c>null</c> remembers that the file has too
+    /// little sound. A changed value marks the file's tags as outdated.
+    /// </summary>
+    Task SetAudioFeaturesAsync(long id, string? features, int version);
+
+    /// <summary>Downloaded tracks never measured with the given version of the sound analysis, oldest first.</summary>
+    Task<IReadOnlyList<long>> ListWithoutAudioFeaturesAsync(int version);
+
+    /// <summary>All tracks with measured sound, with their shown artist and title.</summary>
+    Task<IReadOnlyList<(long Id, string Artist, string Title, string Features)>> ListAudioFeaturesAsync();
+
     /// <summary>The track a merged duplicate's video now belongs to; <c>null</c> when the video is no alias.</summary>
     Task<long?> GetAliasTargetAsync(string videoId);
 

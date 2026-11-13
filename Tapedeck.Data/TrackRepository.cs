@@ -439,6 +439,53 @@ public sealed class TrackRepository(SqliteConnectionFactory connectionFactory) :
         return rows.AsList();
     }
 
+    public async Task<string?> GetAudioFeaturesAsync(long id)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        return await connection.ExecuteScalarAsync<string?>("SELECT audio_features FROM tracks WHERE id = @id;", new { id });
+    }
+
+    public async Task SetAudioFeaturesAsync(long id, string? features, int version)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        await connection.ExecuteAsync(
+            $"""
+            UPDATE tracks SET
+                edited_at              = CASE WHEN audio_features IS @features THEN edited_at ELSE {NOW} END,
+                audio_features         = @features,
+                audio_features_version = @version
+            WHERE id = @id;
+            """,
+            new { id, features, version });
+    }
+
+    public async Task<IReadOnlyList<long>> ListWithoutAudioFeaturesAsync(int version)
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<long>(
+            """
+            SELECT id FROM tracks
+            WHERE status = 'done' AND file_path IS NOT NULL
+              AND (audio_features_version IS NULL OR audio_features_version < @version)
+            ORDER BY added_at, id;
+            """,
+            new { version });
+        return rows.AsList();
+    }
+
+    public async Task<IReadOnlyList<(long Id, string Artist, string Title, string Features)>> ListAudioFeaturesAsync()
+    {
+        await using var connection = await connectionFactory.OpenAsync();
+        var rows = await connection.QueryAsync<(long, string, string, string)>(
+            """
+            SELECT t.id, d.artist, d.title, t.audio_features
+            FROM tracks t JOIN tracks_display d ON d.id = t.id
+            WHERE t.audio_features IS NOT NULL
+            ORDER BY d.artist, d.title, t.id;
+            """);
+        return rows.AsList();
+    }
+
     public async Task<long?> GetAliasTargetAsync(string videoId)
     {
         await using var connection = await connectionFactory.OpenAsync();
