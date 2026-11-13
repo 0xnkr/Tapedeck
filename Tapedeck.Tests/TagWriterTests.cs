@@ -223,6 +223,24 @@ public sealed class TagWriterTests : IAsyncLifetime
         Assert.Empty(this.GainField(RecommendationTags.HISTORY_FIELD));
     }
 
+    [Fact]
+    public async Task Writes_the_measured_sound_and_removes_it_without_measurement()
+    {
+        var id = await this.AddWithFileAsync();
+        const string SOUND = "v=1;bpm=120.0;bpmconf=0.50;centroid=2000/500;flatness=0.100/0.050;flux=0.100/0.050;" +
+                             "rolloff=4000/1000;zcr=0.0500/0.0200;rms=-12.0/3.0;crest=10.0/2.0";
+        await this.repo.SetAudioFeaturesAsync(id, SOUND, 1);
+
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Equal([SOUND], this.GainField(RecommendationTags.AUDIO_FIELD));
+
+        await this.repo.SetAudioFeaturesAsync(id, null, 1);
+        await this.writer.WriteTagsAsync(id);
+
+        Assert.Empty(this.GainField(RecommendationTags.AUDIO_FIELD));
+    }
+
     private string[] GainField(string field = TagWriter.TRACK_GAIN_FIELD)
     {
         using var file = TagLib.File.Create(Path.Combine(this.dir, "song.opus"));
