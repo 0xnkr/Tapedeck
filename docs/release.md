@@ -5,7 +5,7 @@ the [`release.yml`](../.github/workflows/release.yml) workflow builds and publis
 
 ## Contents of a release
 
-Each release appears under [Releases](https://github.com/nilskruthoff/Tapedeck/releases) as "Tapedeck 1.2.3", with the
+Each release appears under [Releases](https://github.com/0xnkr/Tapedeck/releases) as "Tapedeck 1.2.3", with the
 matching changelog section as release notes and the following files:
 
 | File                  | Source        | Purpose                                                                |
@@ -47,7 +47,7 @@ git status
 dotnet test
 ```
 
-The working tree is clean and all tests pass. The [CI workflow](https://github.com/nilskruthoff/Tapedeck/actions/workflows/ci.yml)
+The working tree is clean and all tests pass. The [CI workflow](https://github.com/0xnkr/Tapedeck/actions/workflows/ci.yml)
 is green for the latest commit on `main`.
 
 ### 2. Finalize the changelog
@@ -70,8 +70,8 @@ section remains above it:
 The link references at the end of the file are updated accordingly:
 
 ```markdown
-[Unreleased]: https://github.com/nilskruthoff/Tapedeck/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/nilskruthoff/Tapedeck/compare/v1.0.0...v1.1.0
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/0xnkr/Tapedeck/compare/v1.0.0...v1.1.0
 ```
 
 The heading has to read exactly `## [1.1.0]`, the version without the `v` prefix. The workflow uses this section as the
@@ -103,7 +103,7 @@ git push origin main v1.1.0
 
 ### 5. Workflow run
 
-Pushing the tag starts [Actions → Release](https://github.com/nilskruthoff/Tapedeck/actions/workflows/release.yml),
+Pushing the tag starts [Actions → Release](https://github.com/0xnkr/Tapedeck/actions/workflows/release.yml),
 which runs these steps:
 
 1. Read the version from the tag and validate it.
@@ -112,7 +112,7 @@ which runs these steps:
 4. Build `Tapedeck.exe` with that version.
 5. Compute the checksum and create the release with the `.exe` and the `.sha256` file.
 
-A run takes a few minutes. Afterwards the release is listed under [Releases](https://github.com/nilskruthoff/Tapedeck/releases).
+A run takes a few minutes. Afterwards the release is listed under [Releases](https://github.com/0xnkr/Tapedeck/releases).
 
 ### 6. Verify the release
 

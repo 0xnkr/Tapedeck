@@ -168,6 +168,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/nilskruthoff/Tapedeck/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/nilskruthoff/Tapedeck/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/nilskruthoff/Tapedeck/releases/tag/v1.0.0
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/0xnkr/Tapedeck/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/0xnkr/Tapedeck/releases/tag/v1.0.0

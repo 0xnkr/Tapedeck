@@ -8,7 +8,7 @@
 
 Paste a link, get a clean, tagged Opus file and a library your phone actually understands.
 
-[![CI](https://github.com/nilskruthoff/Tapedeck/actions/workflows/ci.yml/badge.svg)](https://github.com/nilskruthoff/Tapedeck/actions/workflows/ci.yml)
+[![CI](https://github.com/0xnkr/Tapedeck/actions/workflows/ci.yml/badge.svg)](https://github.com/0xnkr/Tapedeck/actions/workflows/ci.yml)
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dot.net)
 [![Avalonia 12](https://img.shields.io/badge/Avalonia-12-8B44AC)](https://avaloniaui.net)
 [![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
@@ -64,7 +64,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 
 ## Getting started
 
-1. Grab `Tapedeck.exe` from the [releases](https://github.com/nilskruthoff/Tapedeck/releases) or [build it yourself](#build-it-yourself).
+1. Grab `Tapedeck.exe` from the [releases](https://github.com/0xnkr/Tapedeck/releases) or [build it yourself](#build-it-yourself).
 2. Start it. No installer and no .NET runtime needed.
 3. Paste a YouTube link into the link bar and press **Add**.
 4. Hit **Download pending** and watch the vinyl spin. 💿
@@ -106,7 +106,7 @@ Tapedeck is not affiliated with YouTube, Spotify, MusicBrainz or LRCLIB. Lyrics 
 You need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Any IDE works; the project is set up for JetBrains Rider.
 
 ```bash
-git clone https://github.com/nilskruthoff/Tapedeck.git
+git clone https://github.com/0xnkr/Tapedeck.git
 cd Tapedeck
 dotnet run --project Tapedeck
 ```
@@ -125,7 +125,7 @@ dotnet publish Tapedeck -p:PublishProfile=win-x64
 
 The executable bundles the .NET runtime and native libraries. Trimming is off on purpose because Dapper and the dependency injection rely on reflection. For Linux or macOS use `dotnet publish Tapedeck -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true` (or `osx-arm64`); those builds are not tested yet.
 
-Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/nilskruthoff/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging. Every step is in [docs/release.md](docs/release.md).
+Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/0xnkr/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging. Every step is in [docs/release.md](docs/release.md).
 
 Handy command line options for a single run:
 

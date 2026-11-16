@@ -21,8 +21,8 @@ public static class Credits
     private const string MIT = "mit";
     private const string APACHE = "apache-2.0";
 
-    public static Credit TAPEDECK => new("Tapedeck", Strings.Credit_Tapedeck, "MIT", "https://github.com/nilskruthoff/Tapedeck",
-        "Copyright (c) 2026 Nils Kruthoff", "tapedeck");
+    public static Credit TAPEDECK => new("Tapedeck", Strings.Credit_Tapedeck, "MIT", "https://github.com/0xnkr/Tapedeck",
+        "Copyright (c) 2026 0xnkr", "tapedeck");
 
     public static IReadOnlyList<Credit> ALL =>
     [

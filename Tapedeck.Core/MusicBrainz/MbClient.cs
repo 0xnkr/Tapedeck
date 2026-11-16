@@ -15,7 +15,7 @@ public sealed class MbClient(HttpClient http, ILogger<MbClient>? logger = null)
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
     private const string BASE_URL = "https://musicbrainz.org/ws/2/";
-    private const string CONTACT = "https://github.com/nilskruthoff/Tapedeck";
+    private const string CONTACT = "https://github.com/0xnkr/Tapedeck";
 
     /// <summary>The strict search reads this many recordings, so the album version of a much covered song is among them.</summary>
     public const int STRICT_LIMIT = 100;

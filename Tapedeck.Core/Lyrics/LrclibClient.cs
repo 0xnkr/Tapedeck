@@ -26,7 +26,7 @@ public sealed class LrclibClient(HttpClient http, ILogger<LrclibClient>? logger 
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
     private const string BASE_URL = "https://lrclib.net/api/";
-    private const string CONTACT = "https://github.com/nilskruthoff/Tapedeck";
+    private const string CONTACT = "https://github.com/0xnkr/Tapedeck";
     private const int MAX_RETRIES = 3;
 
     private static readonly TimeSpan MIN_INTERVAL = TimeSpan.FromSeconds(1);
