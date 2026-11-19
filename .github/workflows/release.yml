@@ -42,7 +42,7 @@ jobs:
         run: dotnet test Tapedeck.Tests --configuration Release
 
       - name: Publish Tapedeck.exe
-        run: dotnet publish Tapedeck -p:PublishProfile=win-x64 -p:Version=${{ env.VERSION }}
+        run: dotnet publish Tapedeck.Desktop -p:PublishProfile=win-x64 -p:Version=${{ env.VERSION }}
 
       - name: Create the release
         shell: pwsh
