@@ -98,8 +98,13 @@ public sealed class AndroidToolHost : IToolHost
         }
     }
 
-    public ProcessStartInfo YtDlp() => this.WithEnvironment(ToolProcess.StartInfo(this.PythonPath))
-        .With([this.YtDlpDir, "--js-runtimes", $"quickjs:{this.QuickJsPath}"]);
+    public ProcessStartInfo YtDlp(bool withJsRuntime = true) => this.WithEnvironment(ToolProcess.StartInfo(this.PythonPath))
+        .With(withJsRuntime
+            ? [this.YtDlpDir, "--js-runtimes", $"quickjs:{this.QuickJsPath}"]
+            : [this.YtDlpDir, "--no-js-runtimes"]);
+
+    // QuickJS interprets YouTube's player script: ~27 s per video instead of ~8 s without it
+    public bool PrefersWithoutJsRuntime => true;
 
     public ProcessStartInfo FFmpeg() => this.WithEnvironment(ToolProcess.StartInfo(this.FFmpegPath));
 

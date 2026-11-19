@@ -44,7 +44,11 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
         }
     }
 
-    public ProcessStartInfo YtDlp() => ToolProcess.StartInfo(this.YtDlpPath).With(this.JsRuntimeArgs);
+    public ProcessStartInfo YtDlp(bool withJsRuntime = true) =>
+        ToolProcess.StartInfo(this.YtDlpPath).With(withJsRuntime ? this.JsRuntimeArgs : ["--no-js-runtimes"]);
+
+    // Deno solves the challenge in about a second
+    public bool PrefersWithoutJsRuntime => false;
 
     public ProcessStartInfo FFmpeg() => ToolProcess.StartInfo(this.FFmpegPath);
 

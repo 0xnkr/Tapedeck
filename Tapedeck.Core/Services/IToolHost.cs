@@ -18,7 +18,17 @@ public interface IToolHost
     /// <summary>
     /// yt-dlp with output and errors redirected and the JS runtime already passed; the caller adds its arguments.
     /// </summary>
-    ProcessStartInfo YtDlp();
+    /// <param name="withJsRuntime">
+    /// <c>false</c> runs yt-dlp without any JS runtime: YouTube then answers only through clients without the JS
+    /// challenge, which yt-dlp calls deprecated, but which is much faster where the runtime is slow.
+    /// </param>
+    ProcessStartInfo YtDlp(bool withJsRuntime = true);
+
+    /// <summary>
+    /// The JS runtime takes long for YouTube's challenge (QuickJS on a phone: ~20 s per video), so downloads first try
+    /// without it and use it only when that fails.
+    /// </summary>
+    bool PrefersWithoutJsRuntime { get; }
 
     /// <summary>ffmpeg with output and errors redirected; the caller adds its arguments.</summary>
     ProcessStartInfo FFmpeg();
