@@ -2324,4 +2324,12 @@
     <value>Ready</value>
     <comment>Android: text of the background notification while the app is open but nothing runs</comment>
   </data>
+  <data name="Playlist_MoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Phone: row menu of a playlist's track, moves it one place up</comment>
+  </data>
+  <data name="Playlist_MoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Phone: row menu of a playlist's track, moves it one place down</comment>
+  </data>
 </root>

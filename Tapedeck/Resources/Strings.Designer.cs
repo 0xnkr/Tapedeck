@@ -2335,6 +2335,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string Playlist_MoveDown {
+            get {
+                return ResourceManager.GetString("Playlist_MoveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string Playlist_MoveUp {
+            get {
+                return ResourceManager.GetString("Playlist_MoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} ({1}).
         /// </summary>
         public static string Playlist_NumberedName {

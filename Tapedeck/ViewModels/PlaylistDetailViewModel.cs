@@ -334,6 +334,14 @@ public partial class PlaylistDetailViewModel(
     [RelayCommand]
     private Task MoveDownAsync() => this.SelectedEntry is { } entry ? this.MoveAsync(entry, entry.Position + 1) : Task.CompletedTask;
 
+    /// <summary>The phone's row menu: one place up, as dragging is unreliable with a finger.</summary>
+    [RelayCommand]
+    private Task MoveEntryUpAsync(PlaylistEntryViewModel entry) => this.MoveAsync(entry, entry.Position - 1);
+
+    /// <summary>The phone's row menu: one place down.</summary>
+    [RelayCommand]
+    private Task MoveEntryDownAsync(PlaylistEntryViewModel entry) => this.MoveAsync(entry, entry.Position + 1);
+
     private async Task ChangedAsync()
     {
         await this.LoadAsync();

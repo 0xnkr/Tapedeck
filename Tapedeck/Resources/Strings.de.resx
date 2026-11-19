@@ -1746,4 +1746,10 @@
   <data name="Notification_Ready" xml:space="preserve">
     <value>Bereit</value>
   </data>
+  <data name="Playlist_MoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+  </data>
+  <data name="Playlist_MoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+  </data>
 </root>
