@@ -30,7 +30,7 @@ The version is taken from the git tag only. Local builds carry the version `0.0.
 for a release.
 
 > [!NOTE]
-> No version or build number in the code is changed for a release. `Tapedeck.csproj` keeps `<Version>0.0.0-dev</Version>`;
+> No version or build number in the code is changed for a release. `Tapedeck.csproj` and `Tapedeck.Desktop.csproj` keep `<Version>0.0.0-dev</Version>`;
 > `release.yml` overrides it with the tag's version (`-p:Version=1.1.0`), and the .NET SDK appends the git commit to the
 > informational version (`1.1.0+2e02d19…`). `AppInfo` reads both, so the settings show `1.1.0 · 2e02d19` without any
 > manual step.
