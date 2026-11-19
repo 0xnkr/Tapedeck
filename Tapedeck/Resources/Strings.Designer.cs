@@ -2146,6 +2146,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        public static string Notification_Ready {
+            get {
+                return ResourceManager.GetString("Notification_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work in the background.
+        /// </summary>
+        public static string Notification_WorkChannel {
+            get {
+                return ResourceManager.GetString("Notification_WorkChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop and close the player.
         /// </summary>
         public static string Player_Close {

@@ -1740,4 +1740,10 @@
   <data name="Credit_YoutubedlAndroid" xml:space="preserve">
     <value>Python und FFmpeg, gebaut für Android</value>
   </data>
+  <data name="Notification_WorkChannel" xml:space="preserve">
+    <value>Arbeit im Hintergrund</value>
+  </data>
+  <data name="Notification_Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
 </root>

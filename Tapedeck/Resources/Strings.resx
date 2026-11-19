@@ -2316,4 +2316,12 @@
     <value>Python and FFmpeg built for Android</value>
     <comment>What the project does for Tapedeck</comment>
   </data>
+  <data name="Notification_WorkChannel" xml:space="preserve">
+    <value>Work in the background</value>
+    <comment>Android: name of the notification channel shown while downloads and other work run with the screen off</comment>
+  </data>
+  <data name="Notification_Ready" xml:space="preserve">
+    <value>Ready</value>
+    <comment>Android: text of the background notification while the app is open but nothing runs</comment>
+  </data>
 </root>
