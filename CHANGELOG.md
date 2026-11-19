@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-19
+
+### Added
+
+- **Tapedeck for Android.** The phone gets its own Tapedeck: share a link from the YouTube or YouTube Music app, and the song lands tagged in `Music/Tapedeck`, where every player on the phone finds it. Everything the desktop app does with a library works there too: playlists with `.m3u8`, corrections, MusicBrainz, covers, lyrics, genres, loudness and the sound analysis. Only the Spotify import stays on the computer.
+  - Install `Tapedeck-1.5.0.apk` from the release (Android 13 or newer, 64-bit ARM). The app asks once for access to all files, so it can write and rename the songs.
+  - It brings its own yt-dlp, Python, FFmpeg and QuickJS-ng, and updates yt-dlp from the settings like the desktop app.
+  - Downloads go on with the screen off, with a notification. New and changed songs are announced to Android, so players show them and their new tags right away.
+  - The library is separate from the computer's: export it as CSV, copy the folder and import the CSV to move it. Files already there are taken over instead of downloaded again, and the computer's playlists copied along stay.
+  - Changing the library folder uses Tapedeck's own folder browser, since Android's opens empty.
+- **Update hint.** When a newer version is out, the settings show it under Tools next to Tapedeck's version, with a link to the download. Tapedeck asks GitHub once per start, when the settings are opened.
+
+### Changed
+
+- Adding a link is faster: the metadata no longer asks YouTube for the audio formats, which the download fetches anyway. About a second on the computer; on the phone, seconds instead of almost half a minute.
+- The open source credits in the settings take as many columns as there is room for, and the license texts wrap to the width of the window.
+
+### Fixed
+
+- Each Tapedeck deletes only the playlist files it wrote itself. Playlists of another Tapedeck in the same folder (the computer's, copied to the phone) and your own stay.
+
 ## [1.5.0-beta.2] - 2026-11-19
 
 ### Fixed
@@ -190,7 +211,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0-beta.2...HEAD
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...v1.5.0
 [1.5.0-beta.2]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0-beta.1...v1.5.0-beta.2
 [1.5.0-beta.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...v1.5.0-beta.1
 [1.4.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.0...v1.4.1
