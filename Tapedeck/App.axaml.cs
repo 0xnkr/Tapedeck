@@ -15,6 +15,7 @@ using Tapedeck.Services;
 using Tapedeck.Theme;
 using Tapedeck.ViewModels;
 using Tapedeck.Views;
+using Tapedeck.Views.Mobile;
 
 namespace Tapedeck;
 
@@ -22,7 +23,7 @@ public partial class App : Application
 {
     private AccentService accent = null!;
     // the view Android created last; it asks for a new one whenever it creates the activity anew
-    private static MainView? activityView;
+    private static Control? activityView;
 
     /// <summary>The window on the desktop, the view's top level on a phone: what clipboard, launcher and pickers need.</summary>
     public static TopLevel? CurrentTopLevel => Current?.ApplicationLifetime switch
@@ -74,7 +75,10 @@ public partial class App : Application
                 // Android asks for a view whenever it creates the activity anew (e.g. after the app was in the
                 // background for long); the services and view models stay the same
                 var (_, main) = this.Start();
-                activity.MainViewFactory = () => activityView = new MainView { DataContext = main };
+                // a phone gets its own shell, with the navigation at the bottom
+                activity.MainViewFactory = () => activityView = OperatingSystem.IsAndroid()
+                    ? new MainMobileView { DataContext = main }
+                    : new MainView { DataContext = main };
                 Load(main);
                 break;
             }

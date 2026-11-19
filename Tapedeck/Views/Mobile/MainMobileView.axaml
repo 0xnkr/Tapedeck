@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             x:Class="Tapedeck.Views.Mobile.MainMobileView"
+             x:DataType="vm:MainViewModel"
+             Background="{DynamicResource Brush.Surface1}">
+
+    <!-- The phone's shell: the page, below it the player bar and the navigation bar.
+         The padding keeps clear of the status and navigation bars of the system (set in code). -->
+    <Grid>
+        <Grid RowDefinitions="*,Auto,Auto">
+
+            <Panel Margin="12,8,12,0">
+                <ContentControl Content="{Binding Navigation.Current}" />
+
+                <!-- Activity toast: spinning record while busy, resting record for the confirmation -->
+                <controls:Island Classes="toast"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Bottom"
+                                 Margin="0,0,0,12"
+                                 IsVisible="{Binding Activity.Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.3}">
+                        <controls:VinylSpinner IsSpinning="{Binding Activity.IsBusy}" />
+                        <TextBlock Classes="support"
+                                   Text="{Binding Activity.Text}"
+                                   Foreground="{DynamicResource Brush.Text}"
+                                   MaxWidth="280"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </controls:Island>
+            </Panel>
+
+            <!-- Player bar: cover, title and play/pause; the slider is on the track's page -->
+            <controls:Island Grid.Row="1"
+                             Margin="8,8,8,0"
+                             Padding="8"
+                             IsVisible="{Binding Player.HasTrack}">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{StaticResource Space.1}">
+                    <Button Classes="link"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding OpenPlayingCommand}"
+                            AutomationProperties.Name="{x:Static res:Strings.Player_OpenDetails}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space.3}">
+                            <Border Width="{StaticResource Control.Xl}" Height="{StaticResource Control.Xl}"
+                                    CornerRadius="{StaticResource Radius.Thumb}"
+                                    Background="{DynamicResource Brush.Surface3}"
+                                    ClipToBounds="True">
+                                <Image controls:ImageLoader.DecodeWidth="96" controls:ImageLoader.Path="{Binding Player.Cover}"
+                                       Stretch="UniformToFill" />
+                            </Border>
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Classes="body-strong" Text="{Binding Player.Title}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Classes="support" Text="{Binding Player.Artist}" Foreground="{DynamicResource Brush.Text2}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Panel Grid.Column="1" VerticalAlignment="Center">
+                        <Button Classes="icon"
+                                Command="{Binding Player.TogglePauseCommand}"
+                                AutomationProperties.Name="{x:Static res:Strings.Player_Pause}"
+                                IsVisible="{Binding Player.IsPlaying}">
+                            <controls:Glyph Data="{StaticResource Icon.Pause}" IsFilled="True" StrokeThickness="0" Width="24" Height="24" />
+                        </Button>
+                        <Button Classes="icon"
+                                Command="{Binding Player.TogglePauseCommand}"
+                                AutomationProperties.Name="{x:Static res:Strings.Player_Play}"
+                                IsVisible="{Binding !Player.IsPlaying}">
+                            <controls:Glyph Data="{StaticResource Icon.Play}" IsFilled="True" StrokeThickness="0" Width="24" Height="24" />
+                        </Button>
+                    </Panel>
+                    <Button Grid.Column="2"
+                            Classes="icon"
+                            VerticalAlignment="Center"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.Close}"
+                            Command="{Binding Player.StopCommand}"
+                            AutomationProperties.Name="{x:Static res:Strings.Player_Close}" />
+                </Grid>
+            </controls:Island>
+
+            <!-- Navigation bar, the rail's items side by side -->
+            <UniformGrid Grid.Row="2" Columns="3" Margin="0,8,0,8">
+                <RadioButton Theme="{StaticResource NavigationRailItem}"
+                             GroupName="Navigation"
+                             HorizontalAlignment="Center"
+                             Content="{x:Static res:Strings.Nav_Library}"
+                             controls:ButtonAssist.Icon="{StaticResource Icon.Library}"
+                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Library}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Library}" />
+                <RadioButton Theme="{StaticResource NavigationRailItem}"
+                             GroupName="Navigation"
+                             HorizontalAlignment="Center"
+                             Content="{x:Static res:Strings.Nav_Playlists}"
+                             controls:ButtonAssist.Icon="{StaticResource Icon.Playlists}"
+                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Playlists}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Playlists}" />
+                <RadioButton Theme="{StaticResource NavigationRailItem}"
+                             GroupName="Navigation"
+                             HorizontalAlignment="Center"
+                             Content="{x:Static res:Strings.Nav_Settings}"
+                             controls:ButtonAssist.Icon="{StaticResource Icon.Settings}"
+                             IsChecked="{Binding CurrentPage, Mode=OneWay, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:AppPage.Settings}}"
+                             Command="{Binding ShowPageCommand}"
+                             CommandParameter="{x:Static vm:AppPage.Settings}" />
+            </UniformGrid>
+        </Grid>
+
+        <!-- Dialogs over everything -->
+        <ContentControl Content="{Binding Dialogs.Current}"
+                        IsVisible="{Binding Dialogs.Current, Converter={x:Static ObjectConverters.IsNotNull}}" />
+    </Grid>
+</UserControl>
