@@ -23,6 +23,9 @@ public sealed class PlaylistSync(PlaylistExporter exporter)
         _ = this.SyncAfterDelayAsync(cts);
     }
 
+    /// <summary>Deletes the playlist files Tapedeck wrote into the old library folder after a move.</summary>
+    public void RemoveExported(string folder) => exporter.RemoveExported(folder);
+
     /// <summary>Syncs right away, e.g. after the library folder moved.</summary>
     public async Task SyncNowAsync()
     {
