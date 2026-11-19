@@ -53,7 +53,7 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
         }
 
         base.OnCreate();
-        // keeps the app running while it works, also with the screen off
+        // keeps the app running while it works, also with the screen off, and the media index up to date
         (Avalonia.Application.Current as App)?.Services?.GetService<WorkNotifier>();
     }
 
@@ -74,5 +74,6 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
         // registered after the shared one, so it wins
         services.AddSingleton<IPlatformService, AndroidPlatformService>();
         services.AddSingleton<WorkNotifier>();
+        services.AddSingleton<MediaIndex>();
     }
 }

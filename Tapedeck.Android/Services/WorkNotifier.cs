@@ -15,6 +15,7 @@ namespace Tapedeck.Android.Services;
 /// Work often begins seconds after the tap (looking for files, preparing the tools), when the user may have locked
 /// the phone already; so the service starts as soon as the app is visible, not when the work begins. Every long task
 /// shows the activity toast, so its busy state tells whether there is work; the notification shows the same text.
+/// When work ends or the app is left, the <see cref="MediaIndex"/> picks up the changed files for other players.
 /// </summary>
 public sealed class WorkNotifier
 {
@@ -22,16 +23,20 @@ public sealed class WorkNotifier
     private static readonly TimeSpan LINGER = TimeSpan.FromSeconds(30);
 
     private readonly ActivityService activity;
+    private readonly MediaIndex mediaIndex;
     private readonly ILogger log;
     private bool visible;
     private bool running;
     private CancellationTokenSource? stop;
 
-    public WorkNotifier(ActivityService activity, ILogger<WorkNotifier>? logger = null)
+    public WorkNotifier(ActivityService activity, MediaIndex mediaIndex, ILogger<WorkNotifier>? logger = null)
     {
         this.activity = activity;
+        this.mediaIndex = mediaIndex;
         this.log = (ILogger?)logger ?? NullLogger.Instance;
         activity.PropertyChanged += this.OnActivityChanged;
+        // files written in an earlier run, or copied onto the phone
+        mediaIndex.Request();
     }
 
     /// <summary>The activity was shown or hidden (<c>OnStart</c>/<c>OnStop</c>).</summary>
@@ -39,8 +44,13 @@ public sealed class WorkNotifier
     {
         this.visible = isVisible;
         if (isVisible)
+        {
             this.Start();
-        else if (!this.activity.IsBusy)
+            return;
+        }
+        // the user may switch to a player right now
+        this.mediaIndex.Request();
+        if (!this.activity.IsBusy)
             _ = this.StopLaterAsync();
     }
 
@@ -50,6 +60,8 @@ public sealed class WorkNotifier
     {
         if (e.PropertyName == nameof(ActivityService.IsBusy))
         {
+            if (!this.activity.IsBusy)
+                this.mediaIndex.Request();
             if (this.activity.IsBusy)
                 this.Start();
             else if (!this.visible)
