@@ -41,7 +41,7 @@ public sealed class DownloadService(
         try
         {
             var downloaded = await YtDlpDownload.RunAsync(tools, track.Url,
-                Path.Combine(paths.TempDir, $"{track.VideoId}.%(ext)s"), FORMAT, progress, ct);
+                Path.Combine(paths.TempDir, $"{track.VideoId}.%(ext)s"), FORMAT, progress, ct, this.log);
 
             string fileName;
             // parallel downloads of two songs with the same name must not pick the same free name

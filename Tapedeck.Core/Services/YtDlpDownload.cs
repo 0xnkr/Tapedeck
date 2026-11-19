@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace Tapedeck.Core.Services;
 
@@ -13,15 +14,29 @@ public static class YtDlpDownload
     public const string PROGRESS_PREFIX = "tapedeck-progress:";
     public const string FILE_PREFIX = "tapedeck-file:";
 
+    /// <summary>The best audio, whatever its format: ffmpeg converts it.</summary>
+    public const string ANY_AUDIO = "bestaudio/best";
+
+    /// <summary>
+    /// Only Opus audio (YouTube's format 251), for the try without a JS runtime: some formats may be missing then,
+    /// and a worse one is not taken just because the runtime was left out.
+    /// </summary>
+    public const string OPUS_AUDIO = "bestaudio[acodec=opus]";
+
+    // errors that a JS runtime does not change, so the slow second try is skipped
+    private static readonly string[] FINAL_ERRORS = ["Video unavailable", "Private video", "This video has been removed"];
+
     /// <summary>
     /// The arguments for one download: the best audio, converted to <paramref name="audioFormat"/>,
     /// the progress as plain percentages and the final file once it is moved into place.
     /// </summary>
     /// <param name="outputTemplate">yt-dlp output template, e.g. <c>…/tmp/&lt;id&gt;.%(ext)s</c>.</param>
-    public static IReadOnlyList<string> Arguments(string url, string outputTemplate, string ffmpegPath, string audioFormat) =>
+    /// <param name="format">yt-dlp format selection, <see cref="ANY_AUDIO"/> or <see cref="OPUS_AUDIO"/>.</param>
+    public static IReadOnlyList<string> Arguments(string url, string outputTemplate, string ffmpegPath, string audioFormat,
+        string format = ANY_AUDIO) =>
     [
         "--no-playlist",
-        "-f", "bestaudio/best",
+        "-f", format,
         "-x", "--audio-format", audioFormat,
         "--ffmpeg-location", ffmpegPath,
         "-o", outputTemplate,
@@ -57,13 +72,41 @@ public static class YtDlpDownload
         return path.Length > 0;
     }
 
-    /// <summary>Downloads and converts the audio.</summary>
+    /// <summary>
+    /// Downloads and converts the audio. Where the host's JS runtime is slow, first without it; only when that fails
+    /// (no Opus format, or YouTube insists on the challenge) again with it.
+    /// </summary>
     /// <returns>The converted file.</returns>
     /// <exception cref="InvalidOperationException">yt-dlp failed or left no file; the message has its errors.</exception>
     public static async Task<string> RunAsync(IToolHost tools, string url, string outputTemplate, string audioFormat,
-        IProgress<double>? progress, CancellationToken ct)
+        IProgress<double>? progress, CancellationToken ct, ILogger? log = null)
     {
-        var psi = tools.YtDlp().With(Arguments(url, outputTemplate, tools.FFmpegPath, audioFormat));
+        if (!tools.PrefersWithoutJsRuntime)
+            return await RunOnceAsync(tools.YtDlp(), tools, url, outputTemplate, audioFormat, ANY_AUDIO, progress, ct);
+
+        var watch = Stopwatch.StartNew();
+        try
+        {
+            return await RunOnceAsync(tools.YtDlp(withJsRuntime: false), tools, url, outputTemplate, audioFormat, OPUS_AUDIO,
+                progress, ct);
+        }
+        catch (InvalidOperationException ex) when (IsWorthRetrying(ex.Message))
+        {
+            log?.LogWarning("Download of {Url} without a JS runtime failed after {Seconds:0.0} s, trying with it: {Error}",
+                url, watch.Elapsed.TotalSeconds, ex.Message);
+            progress?.Report(0);
+            return await RunOnceAsync(tools.YtDlp(), tools, url, outputTemplate, audioFormat, ANY_AUDIO, progress, ct);
+        }
+    }
+
+    /// <summary>Whether a try with the JS runtime may succeed where the one without it failed.</summary>
+    public static bool IsWorthRetrying(string error) =>
+        !MetadataService.IsThrottled(error) && !FINAL_ERRORS.Any(e => error.Contains(e, StringComparison.OrdinalIgnoreCase));
+
+    private static async Task<string> RunOnceAsync(ProcessStartInfo psi, IToolHost tools, string url, string outputTemplate,
+        string audioFormat, string format, IProgress<double>? progress, CancellationToken ct)
+    {
+        psi.With(Arguments(url, outputTemplate, tools.FFmpegPath, audioFormat, format));
         using var process = Process.Start(psi) ?? throw new InvalidOperationException("Could not start yt-dlp.");
 
         string? file = null;

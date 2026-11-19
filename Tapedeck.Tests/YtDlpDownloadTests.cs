@@ -22,6 +22,34 @@ public sealed class YtDlpDownloadTests
         Assert.Equal(["--", "https://www.youtube.com/watch?v=abc"], args.TakeLast(2));
     }
 
+    [Fact]
+    public void The_try_without_a_JS_runtime_takes_only_opus()
+    {
+        var args = YtDlpDownload.Arguments("https://www.youtube.com/watch?v=abc", "/tmp/abc.%(ext)s", "/tools/ffmpeg", "opus",
+            YtDlpDownload.OPUS_AUDIO);
+
+        Assert.Equal(["-f", "bestaudio[acodec=opus]"], args.Skip(IndexOf(args, "-f")).Take(2));
+    }
+
+    [Theory]
+    [InlineData("ERROR: [youtube] abc: Requested format is not available. Use --list-formats for a list of available formats")]
+    [InlineData("ERROR: [youtube] abc: Sign in to confirm your age. This video may be inappropriate for some users.")]
+    [InlineData("yt-dlp ended with exit code 1 and left no file.")]
+    public void Errors_a_JS_runtime_may_solve_are_tried_again(string error)
+    {
+        Assert.True(YtDlpDownload.IsWorthRetrying(error));
+    }
+
+    [Theory]
+    [InlineData("ERROR: [youtube] abc: Video unavailable. This video is no longer available")]
+    [InlineData("ERROR: [youtube] abc: Private video. Sign in if you've been granted access to this video")]
+    [InlineData("ERROR: [youtube] abc: Sign in to confirm you're not a bot.")]
+    [InlineData("ERROR: unable to download video data: HTTP Error 429: Too Many Requests")]
+    public void Errors_a_JS_runtime_does_not_change_are_final(string error)
+    {
+        Assert.False(YtDlpDownload.IsWorthRetrying(error));
+    }
+
     [Theory]
     [InlineData("tapedeck-progress:0", 0)]
     [InlineData("tapedeck-progress:42.5", 0.425)]
