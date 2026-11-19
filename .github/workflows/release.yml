@@ -1,8 +1,10 @@
 # Publishes a release when a version tag is pushed:
 #   git tag v0.1.0 && git push origin v0.1.0
-# The tests run first, then the single-file Tapedeck.exe is built with the tag's version and attached to a
-# GitHub release. Its notes are the matching "## [0.1.0]" section of CHANGELOG.md, which must exist.
+# The tests run first, then the single-file Tapedeck.exe and the signed Android APK are built with the tag's version
+# and attached to a GitHub release. Its notes are the matching "## [0.1.0]" section of CHANGELOG.md, which must exist.
 # A version with a suffix (v0.2.0-beta.1) becomes a pre-release.
+# Signing the APK needs the repository secrets ANDROID_KEYSTORE (the .keystore file as Base64), ANDROID_KEY_ALIAS and
+# ANDROID_KEYSTORE_PASSWORD; see docs/release.md.
 name: Release
 
 on:
@@ -13,7 +15,71 @@ permissions:
   contents: write
 
 jobs:
+  android:
+    runs-on: windows-latest
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read the version from the tag
+        shell: pwsh
+        run: |
+          $version = $env:TAG.TrimStart('v')
+          if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+            Write-Error "Tag '$env:TAG' is no version like v1.2.3 or v1.2.3-beta.1"
+            exit 1
+          }
+          "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Install the Android workload
+        run: dotnet workload install android
+
+      - name: Fetch the bundled tools
+        shell: pwsh
+        run: ./tools/android-natives.ps1
+
+      - name: Restore the signing key
+        shell: pwsh
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: |
+          if (-not $env:ANDROID_KEYSTORE) {
+            Write-Error 'The secret ANDROID_KEYSTORE is missing; an unsigned APK is never published.'
+            exit 1
+          }
+          [IO.File]::WriteAllBytes("$env:RUNNER_TEMP/tapedeck.keystore", [Convert]::FromBase64String($env:ANDROID_KEYSTORE))
+
+      - name: Publish the APK
+        shell: pwsh
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          # the passwords are read from the environment (env:), so they never appear on a command line
+          dotnet publish Tapedeck.Android -c Release -p:Version=$env:VERSION `
+            -p:AndroidKeyStore=true `
+            -p:AndroidSigningKeyStore="$env:RUNNER_TEMP/tapedeck.keystore" `
+            -p:AndroidSigningKeyAlias=$env:ANDROID_KEY_ALIAS `
+            -p:AndroidSigningStorePass=env:ANDROID_KEYSTORE_PASSWORD `
+            -p:AndroidSigningKeyPass=env:ANDROID_KEYSTORE_PASSWORD `
+            -o publish/android
+          $apk = Get-ChildItem publish/android/*-Signed.apk | Select-Object -First 1
+          if (-not $apk) { Write-Error 'No signed APK was built.'; exit 1 }
+          Move-Item $apk.FullName "publish/android/Tapedeck-$env:VERSION.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: publish/android/Tapedeck-${{ env.VERSION }}.apk
+          if-no-files-found: error
+
   release:
+    needs: android
     runs-on: windows-latest
     env:
       TAG: ${{ github.ref_name }}
@@ -44,15 +110,23 @@ jobs:
       - name: Publish Tapedeck.exe
         run: dotnet publish Tapedeck.Desktop -p:PublishProfile=win-x64 -p:Version=${{ env.VERSION }}
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: apk
+          path: publish/android
+
       - name: Create the release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $exe = 'publish/win-x64/Tapedeck.exe'
-          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash.ToLowerInvariant()
-          "$hash  Tapedeck.exe" | Out-File -Encoding ascii -NoNewline publish/win-x64/Tapedeck.exe.sha256
-          $arguments = @($env:TAG, $exe, 'publish/win-x64/Tapedeck.exe.sha256',
-                         '--title', "Tapedeck $env:VERSION", '--notes-file', 'release-notes.md', '--verify-tag')
+          $files = @('publish/win-x64/Tapedeck.exe', "publish/android/Tapedeck-$env:VERSION.apk")
+          foreach ($file in @($files)) {
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            $name = Split-Path $file -Leaf
+            "$hash  $name" | Out-File -Encoding ascii -NoNewline "$file.sha256"
+            $files += "$file.sha256"
+          }
+          $arguments = @($env:TAG) + $files + @('--title', "Tapedeck $env:VERSION", '--notes-file', 'release-notes.md', '--verify-tag')
           if ($env:VERSION.Contains('-')) { $arguments += '--prerelease' }
           gh release create @arguments
