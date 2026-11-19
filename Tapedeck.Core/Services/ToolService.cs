@@ -48,13 +48,6 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
 
     public ProcessStartInfo FFmpeg() => ToolProcess.StartInfo(this.FFmpegPath);
 
-    public YoutubeDL CreateClient() => new()
-    {
-        YoutubeDLPath = this.YtDlpPath,
-        FFmpegPath = this.FFmpegPath,
-        OutputFolder = paths.TempDir,
-    };
-
     public async Task<string> UpdateYtDlpAsync()
     {
         using var process = Process.Start(ToolProcess.StartInfo(this.YtDlpPath).With(["-U"]))
@@ -103,6 +96,6 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
     }
 
     /// <summary>Arguments that make yt-dlp use the bundled Deno runtime.</summary>
-    public IReadOnlyList<string> JsRuntimeArgs =>
+    private IReadOnlyList<string> JsRuntimeArgs =>
         File.Exists(this.DenoPath) ? ["--js-runtimes", $"deno:{this.DenoPath}"] : [];
 }
