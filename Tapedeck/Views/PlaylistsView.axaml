@@ -6,15 +6,39 @@
              x:Class="Tapedeck.Views.PlaylistsView"
              x:DataType="vm:PlaylistsViewModel">
 
-    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+    <UserControl.Styles>
+        <!-- The header's actions as buttons when there is room, else in a menu; the playlists in one column -->
+        <Style Selector="Button#MoreActions">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="UniformGrid.playlist-grid">
+            <Setter Property="Columns" Value="3" />
+        </Style>
+        <ContainerQuery Name="page" Query="max-width:720">
+            <Style Selector="StackPanel#Actions">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="Button#MoreActions">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="UniformGrid.playlist-grid">
+                <Setter Property="Columns" Value="1" />
+            </Style>
+        </ContainerQuery>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}"
+          Container.Name="page" Container.Sizing="Width">
 
         <controls:PageHeader Title="{x:Static res:Strings.Playlists_Title}"
                              Subtitle="{x:Static res:Strings.Playlists_Hint}">
-            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+            <Panel>
+            <StackPanel Name="Actions" Orientation="Horizontal" Spacing="{StaticResource Space.2}">
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlists_FromSpotify}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Star}"
                         ToolTip.Tip="{x:Static res:Strings.Playlists_FromSpotifyHint}"
+                        IsVisible="{Binding CanImportFromSpotify}"
                         Command="{Binding ImportFromSpotifyCommand}" />
                 <Button Classes="secondary lg"
                         Content="{x:Static res:Strings.Playlists_FromCsv}"
@@ -36,6 +60,25 @@
                         controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
                         Command="{Binding CreateCommand}" />
             </StackPanel>
+
+            <!-- Narrow (a phone): the same actions in a menu -->
+            <Button Name="MoreActions"
+                    Classes="icon"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}">
+                <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuItem Header="{x:Static res:Strings.Playlists_New}" Command="{Binding CreateCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlists_NewSmart}" Command="{Binding CreateSmartCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlists_FromLink}" Command="{Binding ImportFromLinkCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlists_FromCsv}" Command="{Binding ImportFromCsvCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlists_FromSpotify}" Command="{Binding ImportFromSpotifyCommand}"
+                                  IsVisible="{Binding CanImportFromSpotify}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+            </Panel>
         </controls:PageHeader>
 
         <TextBlock Grid.Row="1"
@@ -52,7 +95,7 @@
                     <ItemsControl ItemsSource="{Binding Playlists}" Margin="4" VerticalAlignment="Top">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                                <UniformGrid Classes="playlist-grid" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
