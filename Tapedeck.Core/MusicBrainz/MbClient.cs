@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection;
 
 namespace Tapedeck.Core.MusicBrainz;
 
@@ -26,9 +25,6 @@ public sealed class MbClient(HttpClient http, ILogger<MbClient>? logger = null)
 
     private static readonly TimeSpan MIN_INTERVAL = TimeSpan.FromMilliseconds(1100);
     private static readonly TimeSpan[] RETRY_DELAYS = [TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8), TimeSpan.FromSeconds(16)];
-
-    private static readonly ProductInfoHeaderValue USER_AGENT = new(
-        "Tapedeck", (Assembly.GetEntryAssembly()?.GetName().Version ?? new Version(1, 0)).ToString(3));
 
     // shared by all instances: the limit applies per app, not per client
     private static readonly SemaphoreSlim GATE = new(1, 1);
@@ -83,7 +79,7 @@ public sealed class MbClient(HttpClient http, ILogger<MbClient>? logger = null)
                 await Task.Delay(wait, ct);
 
             using var request = new HttpRequestMessage(HttpMethod.Get, BASE_URL + relativeUrl);
-            request.Headers.UserAgent.Add(USER_AGENT);
+            request.Headers.UserAgent.Add(UserAgent.PRODUCT);
             request.Headers.UserAgent.Add(new ProductInfoHeaderValue($"( {CONTACT} )"));
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             try
