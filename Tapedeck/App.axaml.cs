@@ -29,8 +29,9 @@ public partial class App : Application
     public static TopLevel? CurrentTopLevel => Current?.ApplicationLifetime switch
     {
         IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow,
-        ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+        // before the single view: Android's lifetime is both, and its MainView stays empty
         IActivityApplicationLifetime => TopLevel.GetTopLevel(activityView),
+        ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
         _ => null,
     };
 
