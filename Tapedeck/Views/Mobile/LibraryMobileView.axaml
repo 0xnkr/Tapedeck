@@ -1,0 +1,144 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:converters="using:Tapedeck.Converters"
+             xmlns:mobile="using:Tapedeck.Views.Mobile"
+             x:Class="Tapedeck.Views.Mobile.LibraryMobileView"
+             x:DataType="vm:LibraryViewModel">
+
+    <!-- The library on a phone: one column, the table's columns folded into two lines per track,
+         the toolbar's actions in the header's menu -->
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Spacing="2" VerticalAlignment="Center" Margin="4,0,0,0">
+                <TextBlock Classes="headline" Text="{x:Static res:Strings.Library_Title}" />
+                <TextBlock Classes="support" Text="{Binding Summary}" Foreground="{DynamicResource Brush.Text2}"
+                           TextWrapping="Wrap" />
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Classes="icon"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}">
+                <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuItem Header="{x:Static res:Strings.Library_DownloadPending}"
+                                  Command="{Binding DownloadPendingCommand}"
+                                  IsVisible="{Binding !IsDownloading}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_CancelDownloads}"
+                                  Command="{Binding CancelDownloadsCommand}"
+                                  IsVisible="{Binding IsDownloading}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_DownloadMissing}"
+                                  Command="{Binding DownloadMissingCommand}"
+                                  IsVisible="{Binding HasMissing}" />
+                        <MenuItem Header="{Binding WriteAllTagsText}"
+                                  Command="{Binding WriteAllTagsCommand}"
+                                  IsVisible="{Binding HasStaleTags}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static res:Strings.Library_MatchMusicBrainz}"
+                                  Command="{Binding MatchMusicBrainzCommand}"
+                                  IsVisible="{Binding !IsMatching}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_CancelMatching}"
+                                  Command="{Binding CancelMatchingCommand}"
+                                  IsVisible="{Binding IsMatching}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_ExportCsv}"
+                                  Command="{Binding ExportCsvCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_ImportCsv}"
+                                  Command="{Binding ImportCsvCommand}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!-- Link row; on a phone links mostly come through "Share", so only the field and "Add" -->
+        <controls:Island Grid.Row="1" Classes="bar">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <controls:Glyph Data="{StaticResource Icon.Link}"
+                                Foreground="{DynamicResource Brush.Text2}"
+                                VerticalAlignment="Center" />
+                <TextBox Grid.Column="1"
+                         Classes="bare"
+                         Text="{Binding NewLink}"
+                         PlaceholderText="{x:Static res:Strings.Library_LinkPlaceholder}"
+                         AutomationProperties.Name="{x:Static res:Strings.Library_LinkLabel}">
+                    <TextBox.KeyBindings>
+                        <KeyBinding Gesture="Enter" Command="{Binding AddLinkCommand}" />
+                    </TextBox.KeyBindings>
+                </TextBox>
+                <Button Grid.Column="2"
+                        Classes="tonal icon"
+                        controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                        AutomationProperties.Name="{x:Static res:Strings.Library_Add}"
+                        Command="{Binding AddLinkCommand}" />
+            </Grid>
+        </controls:Island>
+
+        <TextBlock Grid.Row="2"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="8,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <TextBox Grid.Row="3"
+                 Classes="search"
+                 Text="{Binding SearchText}"
+                 PlaceholderText="{x:Static res:Strings.Library_Search}"
+                 AutomationProperties.Name="{x:Static res:Strings.Library_Search}">
+            <TextBox.InnerLeftContent>
+                <controls:Glyph Data="{StaticResource Icon.Search}"
+                                Width="18" Height="18"
+                                Margin="16,0,0,0"
+                                Foreground="{DynamicResource Brush.Text3}" />
+            </TextBox.InnerLeftContent>
+        </TextBox>
+
+        <!-- Filter chips in one line that scrolls sideways -->
+        <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_All}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.All}}" />
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_Done}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Done}}" />
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_Pending}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Pending}}" />
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_Error}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Error}}" />
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_Suggested}"
+                             IsVisible="{Binding HasSuggestions}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Suggested}}" />
+                <RadioButton Theme="{StaticResource FilterChip}" GroupName="TrackFilterMobile" Content="{x:Static res:Strings.Filter_Duplicates}"
+                             IsVisible="{Binding HasDuplicates}"
+                             IsChecked="{Binding Filter, Converter={x:Static converters:EqualsConverter.INSTANCE}, ConverterParameter={x:Static vm:TrackFilter.Duplicates}}" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Panel Grid.Row="5">
+            <ListBox Name="TrackList"
+                     Theme="{StaticResource PlainList}"
+                     ItemContainerTheme="{StaticResource ListRow}"
+                     ItemsSource="{Binding Tracks}"
+                     SelectedItem="{Binding SelectedTrack}"
+                     AutomationProperties.Name="{x:Static res:Strings.Library_TrackList}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TrackRowViewModel">
+                        <mobile:TrackRowMobileView />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Classes="body"
+                       Text="{Binding EmptyText}"
+                       Foreground="{DynamicResource Brush.Text2}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Margin="24,0"
+                       IsVisible="{Binding EmptyText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </Panel>
+    </Grid>
+</UserControl>

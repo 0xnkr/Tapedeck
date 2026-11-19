@@ -29,7 +29,7 @@ public class ViewLocator : IDataTemplate
             return cached;
 
         var name = param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
-        var type = Type.GetType(name);
+        var type = MobileView(param.GetType()) ?? Type.GetType(name);
 
         if (type != null)
         {
@@ -40,6 +40,15 @@ public class ViewLocator : IDataTemplate
 
         return new TextBlock { Text = "Not Found: " + name };
     }
+
+    /// <summary>
+    /// On a phone the view built for it, where there is one: <c>Tapedeck.Views.Mobile.LibraryMobileView</c> for the
+    /// <c>LibraryViewModel</c>. The other pages use the same view everywhere.
+    /// </summary>
+    private static Type? MobileView(Type viewModel) =>
+        OperatingSystem.IsAndroid()
+            ? Type.GetType($"Tapedeck.Views.Mobile.{viewModel.Name.Replace("ViewModel", "MobileView", StringComparison.Ordinal)}")
+            : null;
 
     public bool Match(object? data)
     {

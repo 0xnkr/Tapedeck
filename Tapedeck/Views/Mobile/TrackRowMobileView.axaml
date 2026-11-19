@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:library="using:Tapedeck.Views.Library"
+             x:Class="Tapedeck.Views.Mobile.TrackRowMobileView"
+             x:DataType="vm:TrackRowViewModel">
+
+    <!-- A track on a phone: the cover plays it, the text opens its page, the menu has the rest -->
+    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource Space.3}" Margin="0,4">
+
+        <library:CoverButton Width="72" Height="40" VerticalAlignment="Center" />
+
+        <Button Grid.Column="1"
+                Classes="link"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Command="{Binding OpenDetailsCommand}">
+            <StackPanel Spacing="2">
+                <TextBlock Classes="body-strong" Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Classes="support" Text="{Binding Artist}" Foreground="{DynamicResource Brush.Text2}"
+                           TextTrimming="CharacterEllipsis" />
+                <controls:StatusChip Status="{Binding Status}" Progress="{Binding Progress}"
+                                     HorizontalAlignment="Left" Margin="0,4,0,0"
+                                     IsVisible="{Binding !IsDone}" />
+            </StackPanel>
+        </Button>
+
+        <Button Grid.Column="2"
+                Classes="icon"
+                AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}"
+                VerticalAlignment="Center">
+            <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+            <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedRight" Opening="OnMenuOpening">
+                    <MenuItem Header="{x:Static res:Strings.Track_Details}"
+                              Command="{Binding OpenDetailsCommand}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_AddToPlaylist}"
+                              Classes="playlist-menu"
+                              ItemsSource="{Binding PlaylistMenu}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_Download}"
+                              Command="{Binding DownloadCommand}"
+                              IsVisible="{Binding !IsDownloading}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_CancelDownload}"
+                              Command="{Binding CancelDownloadCommand}"
+                              IsVisible="{Binding IsDownloading}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_ShowInFolder}"
+                              Command="{Binding ShowInFolderCommand}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_OpenOnYoutube}"
+                              Command="{Binding OpenOnYoutubeCommand}" />
+                    <Separator />
+                    <MenuItem Header="{x:Static res:Strings.Track_Keep}"
+                              Command="{Binding KeepCommand}"
+                              IsVisible="{Binding IsDuplicate}" />
+                    <MenuItem Header="{x:Static res:Strings.Track_Remove}"
+                              Command="{Binding RemoveCommand}" />
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+    </Grid>
+</UserControl>
