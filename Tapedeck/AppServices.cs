@@ -12,6 +12,7 @@ using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Core.Spotify;
+using Tapedeck.Core.Updates;
 using Tapedeck.Data;
 using Tapedeck.Services;
 using Tapedeck.Theme;
@@ -73,6 +74,7 @@ public static class AppServices
         services.AddSingleton<SpotifyImportService>();
         services.AddSingleton<SpotifyPlaylistClient>();
         services.AddSingleton<SpotifyTasteService>();
+        services.AddSingleton<UpdateChecker>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();

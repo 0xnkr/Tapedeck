@@ -72,7 +72,7 @@ public class PlatformService : IPlatformService
             await window.Launcher.LaunchFileInfoAsync(new FileInfo(path));
     }
 
-    public async Task<string?> PickFolderAsync(string title, string? startFolder)
+    public virtual async Task<string?> PickFolderAsync(string title, string? startFolder)
     {
         if (MainWindow?.StorageProvider is not { } storage)
             return null;

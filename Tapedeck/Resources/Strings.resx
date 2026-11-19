@@ -1576,6 +1576,14 @@
     <value>Opens log.txt with every download, import and error. Attach it to a bug report.</value>
     <comment>Tooltip of Tools_OpenLog; log.txt is a file name</comment>
   </data>
+  <data name="Settings_UpdateAvailable" xml:space="preserve">
+    <value>Version {0} available</value>
+    <comment>Link below the app's version in Settings → Tools when GitHub has a newer release; {0} = version like 1.5.0</comment>
+  </data>
+  <data name="Settings_UpdateAvailableHint" xml:space="preserve">
+    <value>Opens the download of the new version</value>
+    <comment>Tooltip of Settings_UpdateAvailable</comment>
+  </data>
   <data name="Playlists_FromSpotify" xml:space="preserve">
     <value>From Spotify</value>
     <comment>Header button on the playlists page; opens the Spotify import</comment>
@@ -2331,5 +2339,53 @@
   <data name="Playlist_MoveDown" xml:space="preserve">
     <value>Move down</value>
     <comment>Phone: row menu of a playlist's track, moves it one place down</comment>
+  </data>
+  <data name="FolderBrowser_Storage" xml:space="preserve">
+    <value>Phone storage</value>
+    <comment>Name of the topmost folder in the folder browser (the phone's own storage)</comment>
+  </data>
+  <data name="FolderBrowser_Up" xml:space="preserve">
+    <value>Up</value>
+    <comment>Tooltip of the back arrow in the folder browser that opens the parent folder</comment>
+  </data>
+  <data name="FolderBrowser_Empty" xml:space="preserve">
+    <value>No folders here</value>
+    <comment>Shown in the folder browser when the open folder has no subfolders</comment>
+  </data>
+  <data name="FolderBrowser_NewFolder" xml:space="preserve">
+    <value>New folder</value>
+    <comment>Button in the folder browser that opens a field for a new folder's name</comment>
+  </data>
+  <data name="FolderBrowser_NewFolderName" xml:space="preserve">
+    <value>Name of the new folder</value>
+    <comment>Placeholder of the name field in the folder browser</comment>
+  </data>
+  <data name="FolderBrowser_Create" xml:space="preserve">
+    <value>Create</value>
+    <comment>Button next to the name field that creates the new folder</comment>
+  </data>
+  <data name="FolderBrowser_Choose" xml:space="preserve">
+    <value>Use this folder</value>
+    <comment>Confirms the folder browser with the open folder</comment>
+  </data>
+  <data name="FolderBrowser_InvalidName" xml:space="preserve">
+    <value>A folder cannot have this name.</value>
+    <comment>Error in the folder browser: empty name or characters a folder name cannot contain</comment>
+  </data>
+  <data name="FolderBrowser_Exists" xml:space="preserve">
+    <value>There is already a folder with this name.</value>
+    <comment>Error in the folder browser when the new folder's name is taken</comment>
+  </data>
+  <data name="FolderBrowser_CreateFailed" xml:space="preserve">
+    <value>Could not create the folder: {0}</value>
+    <comment>Error in the folder browser; {0} = system error message</comment>
+  </data>
+  <data name="FolderBrowser_ReadFailed" xml:space="preserve">
+    <value>Could not read this folder: {0}</value>
+    <comment>Error in the folder browser; {0} = system error message</comment>
+  </data>
+  <data name="Settings_LibraryHintPhone" xml:space="preserve">
+    <value>The audio files are saved here, where every music player on the phone finds them.</value>
+    <comment>Hint below the library island's title on the phone, instead of Settings_LibraryHint (which tells to copy the folder to the phone)</comment>
   </data>
 </root>

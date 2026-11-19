@@ -28,7 +28,7 @@
                 <Border Grid.Row="1" Classes="code" MaxHeight="420">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                         <SelectableTextBlock Classes="mono"
-                                             Text="{Binding Text}"
+                                             Text="{Binding DisplayText}"
                                              TextWrapping="Wrap" />
                     </ScrollViewer>
                 </Border>

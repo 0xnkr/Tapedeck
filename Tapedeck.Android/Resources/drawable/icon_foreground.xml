@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The cassette of the app icon (Icon.Cassette in Theme/Icons.axaml, a 24 unit grid) on the 108 dp layer of an
+     adaptive icon: 2.475 times as large and centred, so it stays inside the 66 dp every launcher shows. Also the
+     monochrome layer for themed icons, where the system replaces the colour. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="108"
+        android:viewportHeight="108">
+    <group android:translateX="24.3"
+           android:translateY="24.3"
+           android:scaleX="2.475"
+           android:scaleY="2.475">
+        <path android:pathData="M6,5.5 H18 A3.5,3.5 0 0 1 21.5,9 V15 A3.5,3.5 0 0 1 18,18.5 H6 A3.5,3.5 0 0 1 2.5,15 V9 A3.5,3.5 0 0 1 6,5.5 Z M6.5,11 A2,2 0 1 0 10.5,11 A2,2 0 1 0 6.5,11 Z M13.5,11 A2,2 0 1 0 17.5,11 A2,2 0 1 0 13.5,11 Z M7,18.5 l1.5,-3 h7 l1.5,3"
+              android:strokeColor="#FFB870"
+              android:strokeWidth="1.8"
+              android:strokeLineCap="round"
+              android:strokeLineJoin="round" />
+        <!-- the hubs of the two reels -->
+        <path android:pathData="M7.75,11 a0.75,0.75 0 1 0 1.5,0 a0.75,0.75 0 1 0 -1.5,0 Z M14.75,11 a0.75,0.75 0 1 0 1.5,0 a0.75,0.75 0 1 0 -1.5,0 Z"
+              android:fillColor="#FFB870" />
+    </group>
+</vector>

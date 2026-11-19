@@ -5,7 +5,9 @@ using Avalonia.Platform.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Tapedeck.Core;
+using Tapedeck.Resources;
 using Tapedeck.Services;
+using Tapedeck.ViewModels;
 using AndroidApplication = Android.App.Application;
 using AndroidEnvironment = Android.OS.Environment;
 using AndroidUri = Android.Net.Uri;
@@ -16,25 +18,21 @@ namespace Tapedeck.Android.Services;
 /// <summary>
 /// The phone's file dialogs answer with <c>content://</c> links instead of paths. With the access to all files a file
 /// or folder in the phone's own storage is a path again; a file from elsewhere (a cloud drive) is copied into the temp
-/// folder to be read. Showing a folder opens the Files app, opening a file (the log) shares it.
+/// folder to be read. Folders are chosen in Tapedeck's own browser. Showing a folder opens the Files app, opening a
+/// file (the log) shares it.
 /// </summary>
-public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatformService>? logger = null) : PlatformService
+public sealed class AndroidPlatformService(AppPaths paths, DialogService dialogs, ILogger<AndroidPlatformService>? logger = null)
+    : PlatformService
 {
     private const string EXTERNAL_STORAGE = "com.android.externalstorage.documents";
     private const string DOWNLOADS = "com.android.providers.downloads.documents";
-    // declared in AndroidManifest.xml, shares files of the app's own storage
-    private const string FILE_PROVIDER = "app.tapedeck.files";
 
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
     public override Task OpenFolderAsync(string path)
     {
-        var root = AndroidEnvironment.ExternalStorageDirectory!.AbsolutePath;
-        var full = Path.GetFullPath(path);
-        if (!full.StartsWith(root, StringComparison.Ordinal))
-            full = Path.GetFullPath(paths.LibraryDir);
-        var relative = Path.GetRelativePath(root, full).Replace('\\', '/');
-        var folder = DocumentsContract.BuildDocumentUri(EXTERNAL_STORAGE, relative == "." ? "primary:" : $"primary:{relative}");
+        var folder = DocumentLink(path) ?? DocumentLink(paths.LibraryDir)
+                     ?? DocumentsContract.BuildDocumentUri(EXTERNAL_STORAGE, "primary:");
         var intent = new Intent(Intent.ActionView)
             .SetDataAndType(folder, DocumentsContract.Document.MimeTypeDir)
             .AddFlags(ActivityFlags.NewTask | ActivityFlags.GrantReadUriPermission);
@@ -45,7 +43,8 @@ public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatfo
     public override Task OpenFileAsync(string path)
     {
         var context = AndroidApplication.Context;
-        var uri = FileProvider.GetUriForFile(context, FILE_PROVIDER, new JavaFile(path));
+        // declared in AndroidManifest.xml after the package name, shares files of the app's own storage
+        var uri = FileProvider.GetUriForFile(context, $"{context.PackageName}.files", new JavaFile(path));
         var send = new Intent(Intent.ActionSend)
             .SetType("text/plain")
             .PutExtra(Intent.ExtraStream, uri)
@@ -55,6 +54,36 @@ public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatfo
     }
 
     protected override string? ToLocalPath(IStorageItem item) => item.TryGetLocalPath() ?? Resolve(item.Path);
+
+    /// <summary>
+    /// Tapedeck's own folder browser instead of the system picker: that one opens at the storage's root, where it shows
+    /// nothing and lets the user choose nothing. With the access to all files the app lists the folders itself.
+    /// </summary>
+    public override async Task<string?> PickFolderAsync(string title, string? startFolder)
+    {
+        // the browser works on the real path (/storage/emulated/0/…); the library keeps the form it was set in
+        // (/sdcard/…), else one folder would look like two when moving
+        var shown = Environment.GetEnvironmentVariable("EXTERNAL_STORAGE") ?? AndroidEnvironment.ExternalStorageDirectory!.AbsolutePath;
+        var root = new JavaFile(shown).CanonicalPath;
+        var start = startFolder is null ? null : new JavaFile(startFolder).CanonicalPath;
+        var chosen = await dialogs.PickFolderAsync(new FolderBrowserRequest(title, root, Strings.FolderBrowser_Storage, start));
+        if (chosen is null)
+            return null;
+        var relative = Path.GetRelativePath(root, chosen);
+        return relative == "." ? shown : Path.Join(shown, relative);
+    }
+
+    /// <summary>The external storage's document link of a folder in the phone's own storage; <c>null</c> elsewhere.</summary>
+    private static AndroidUri? DocumentLink(string path)
+    {
+        var root = AndroidEnvironment.ExternalStorageDirectory!.AbsolutePath;
+        var full = new JavaFile(path).CanonicalPath;
+        var canonicalRoot = new JavaFile(root).CanonicalPath;
+        if (!full.StartsWith(canonicalRoot, StringComparison.Ordinal))
+            return null;
+        var relative = Path.GetRelativePath(canonicalRoot, full);
+        return DocumentsContract.BuildDocumentUri(EXTERNAL_STORAGE, relative == "." ? "primary:" : $"primary:{relative}");
+    }
 
     protected override async Task<string?> ToLocalPathAsync(IStorageFile file)
     {

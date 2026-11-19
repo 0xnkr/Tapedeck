@@ -6,12 +6,14 @@
              xmlns:converters="using:Tapedeck.Converters"
              x:Class="Tapedeck.Views.Mobile.MainMobileView"
              x:DataType="vm:MainViewModel"
-             Background="{DynamicResource Brush.Surface1}">
+             Background="{DynamicResource Brush.Surface1}"
+             TopLevel.AutoSafeAreaPadding="False">
 
     <!-- The phone's shell: the page, below it the player bar and the navigation bar.
-         The padding keeps clear of the status and navigation bars of the system (set in code). -->
+         Its margin keeps clear of the status and navigation bars of the system (set in code, so Avalonia's own
+         padding is off); the dialogs cover the bars too, so their scrim darkens the whole screen. -->
     <Grid>
-        <Grid RowDefinitions="*,Auto,Auto">
+        <Grid Name="Shell" RowDefinitions="*,Auto,Auto">
 
             <Panel Margin="12,8,12,0">
                 <ContentControl Content="{Binding Navigation.Current}" />

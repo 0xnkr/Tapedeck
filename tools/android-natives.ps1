@@ -59,6 +59,19 @@ function Copy-FromAar([string] $aar, [string[]] $names) {
 }
 
 Copy-FromAar 'library-0.18.1.aar' @('libpython.so', 'libpython.zip.so')
+
+# Leaves out what yt-dlp never loads: the interactive line editing (readline) and the dbm database modules (gdbm),
+# both GPL-3.0, and a static QuickJS archive nothing links. The rest of the Python package is permissively licensed.
+$unused = '(libreadline|libhistory|libgdbm|/readline\.cpython|/_gdbm\.cpython|/_dbm\.cpython|etc/inputrc|/quickjs/)'
+$zip = [IO.Compression.ZipFile]::Open((Join-Path $native 'libpython.zip.so'), 'Update')
+try {
+    $entries = @($zip.Entries | Where-Object { $_.FullName -match $unused })
+    foreach ($entry in $entries) { $entry.Delete() }
+    Write-Host "Removed $($entries.Count) unused files from libpython.zip.so"
+}
+finally {
+    $zip.Dispose()
+}
 Copy-FromAar 'ffmpeg-0.18.1.aar' @('libffmpeg.so', 'libffmpeg.zip.so')
 Copy-Item (Join-Path $cache 'qjs-linux-aarch64') (Join-Path $native 'libqjs.so') -Force
 Copy-Item (Join-Path $cache 'yt-dlp') (Join-Path $assets 'yt-dlp') -Force

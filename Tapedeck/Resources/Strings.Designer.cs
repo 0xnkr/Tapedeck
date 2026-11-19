@@ -3694,11 +3694,137 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phone storage.
+        /// </summary>
+        public static string FolderBrowser_Storage {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Storage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Up.
+        /// </summary>
+        public static string FolderBrowser_Up {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Up", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to No folders here.
+        /// </summary>
+        public static string FolderBrowser_Empty {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Empty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to New folder.
+        /// </summary>
+        public static string FolderBrowser_NewFolder {
+            get {
+                return ResourceManager.GetString("FolderBrowser_NewFolder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the new folder.
+        /// </summary>
+        public static string FolderBrowser_NewFolderName {
+            get {
+                return ResourceManager.GetString("FolderBrowser_NewFolderName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string FolderBrowser_Create {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Create", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Use this folder.
+        /// </summary>
+        public static string FolderBrowser_Choose {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Choose", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to A folder cannot have this name..
+        /// </summary>
+        public static string FolderBrowser_InvalidName {
+            get {
+                return ResourceManager.GetString("FolderBrowser_InvalidName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to There is already a folder with this name..
+        /// </summary>
+        public static string FolderBrowser_Exists {
+            get {
+                return ResourceManager.GetString("FolderBrowser_Exists", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not create the folder: {0}.
+        /// </summary>
+        public static string FolderBrowser_CreateFailed {
+            get {
+                return ResourceManager.GetString("FolderBrowser_CreateFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read this folder: {0}.
+        /// </summary>
+        public static string FolderBrowser_ReadFailed {
+            get {
+                return ResourceManager.GetString("FolderBrowser_ReadFailed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The audio files are saved here, where every music player on the phone finds them..
+        /// </summary>
+        public static string Settings_LibraryHintPhone {
+            get {
+                return ResourceManager.GetString("Settings_LibraryHintPhone", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Opens log.txt with every download, import and error. Attach it to a bug report..
         /// </summary>
         public static string Tools_OpenLogHint {
             get {
                 return ResourceManager.GetString("Tools_OpenLogHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0} available.
+        /// </summary>
+        public static string Settings_UpdateAvailable {
+            get {
+                return ResourceManager.GetString("Settings_UpdateAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the download of the new version.
+        /// </summary>
+        public static string Settings_UpdateAvailableHint {
+            get {
+                return ResourceManager.GetString("Settings_UpdateAvailableHint", resourceCulture);
             }
         }
         
