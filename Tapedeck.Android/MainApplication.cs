@@ -61,10 +61,15 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
     protected override AppBuilder CustomizeAppBuilder(AppBuilder builder) =>
         base.CustomizeAppBuilder(builder).WithInterFont();
 
-    /// <summary>What the phone does its own way: the tools inside the APK, AudioTrack for playback.</summary>
+    /// <summary>
+    /// What the phone does its own way: the tools inside the APK, AudioTrack for playback, file dialogs with content
+    /// links.
+    /// </summary>
     private static void ConfigurePlatform(IServiceCollection services)
     {
         services.AddSingleton<IToolHost, AndroidToolHost>();
         services.AddSingleton<PlayerService, AndroidPlayerService>();
+        // registered after the shared one, so it wins
+        services.AddSingleton<IPlatformService, AndroidPlatformService>();
     }
 }

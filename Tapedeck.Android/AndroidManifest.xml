@@ -10,5 +10,14 @@
     <!-- extractNativeLibs: the bundled programs must exist as files to be started -->
     <application android:label="Tapedeck"
                  android:icon="@mipmap/icon"
-                 android:extractNativeLibs="true" />
+                 android:extractNativeLibs="true">
+        <!-- shares the log with other apps (AndroidPlatformService.OpenFileAsync) -->
+        <provider android:name="androidx.core.content.FileProvider"
+                  android:authorities="app.tapedeck.files"
+                  android:exported="false"
+                  android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                       android:resource="@xml/file_paths" />
+        </provider>
+    </application>
 </manifest>
