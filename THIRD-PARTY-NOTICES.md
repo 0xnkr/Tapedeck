@@ -1,6 +1,6 @@
 # Third-party notices
 
-Tapedeck is licensed under the [MIT License](LICENSE). The published `Tapedeck.exe` bundles the open source components below. Their copyright notices and license texts follow.
+Tapedeck is licensed under the [MIT License](LICENSE). The published `Tapedeck.exe` and the Android APK bundle the open source components below; the APK also ships the programs listed under [Android app](#android-app). Their copyright notices and license texts follow.
 
 > [!NOTE]
 > **yt-dlp**, **FFmpeg** and **Deno** are not part of Tapedeck. Tapedeck downloads them on first use, and they keep their own licenses: [yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE) (Unlicense), [FFmpeg](https://ffmpeg.org/legal.html) (LGPL / GPL; the Windows build is GPL v3) and [Deno](https://github.com/denoland/deno/blob/main/LICENSE.md) (MIT).
@@ -38,6 +38,109 @@ The native `libSkiaSharp` library also contains further open source libraries (s
 **TagLibSharp** is used as an unmodified library under the LGPL 2.1. Because Tapedeck is open source, you can rebuild it with a modified version of TagLibSharp at any time.
 
 **OpenAL Soft** is licensed under the LGPL 2.0 or any later version; Tapedeck uses it under the LGPL 2.1. It is an unmodified native library (`soft_oal.dll`) that Tapedeck loads at runtime, and its source code is available at [github.com/kcat/openal-soft](https://github.com/kcat/openal-soft). You can replace it with your own build of OpenAL Soft.
+
+## Android app
+
+The APK (`Tapedeck-<version>.apk`) contains the libraries above that run on Android, and the programs Tapedeck starts on the phone. Unlike the desktop app, which downloads its tools, the phone cannot download programs, so they ship inside the APK:
+
+- **yt-dlp** ([Unlicense](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE)), its official zipapp.
+- **QuickJS-ng** ([MIT](https://github.com/quickjs-ng/quickjs/blob/master/LICENSE)), the static `qjs-linux-aarch64` build of its release 0.18.0.
+- **Python** and **FFmpeg**, the Termux builds that [youtubedl-android](https://github.com/JunkFood02/youtubedl-android) 0.18.1 publishes on Maven Central (`library` and `ffmpeg`), with the shared libraries they need (`libpython.zip.so`, `libffmpeg.zip.so`). They are separate programs that Tapedeck starts; Tapedeck does not link to them. They are listed below with the license their Termux package declares.
+
+`tools/android-natives.ps1` fetches exactly these files, each pinned by version and SHA-256.
+
+> [!IMPORTANT]
+> This FFmpeg build is configured with `--enable-gpl --enable-version3` and links the GPL libraries x264, x265, Xvid, vid.stab and Rubber Band, so the bundled FFmpeg as a whole is licensed under the [GNU General Public License version 3](https://www.gnu.org/licenses/gpl-3.0.html). GNU Readline and GNU dbm in the Python package are GPL-3.0 as well.
+>
+> **Source code.** The corresponding source code of these programs and libraries is the source of the respective Termux packages: the upstream release named in each package's `build.sh` together with the Termux patches in the same folder of [termux-packages](https://github.com/termux/termux-packages), packaged as described in youtubedl-android's [BUILD_PYTHON.md](https://github.com/JunkFood02/youtubedl-android/blob/master/BUILD_PYTHON.md) and [BUILD_FFMPEG.md](https://github.com/JunkFood02/youtubedl-android/blob/master/BUILD_FFMPEG.md). The bundled versions include Python 3.12.11, OpenSSL 3.5.2, SQLite 3.50.4, FFmpeg 7.1 and GLib 2.86.0.
+
+License texts not reproduced in this file: [GPL-2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html), [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html), [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.html), [MPL-2.0](https://www.mozilla.org/MPL/2.0/), [PSF-2.0](https://docs.python.org/3/license.html), [NCSA](https://opensource.org/license/uoi-ncsa-php), [ISC](https://opensource.org/license/isc-license-txt), [Zlib](https://zlib.net/zlib_license.html), [Libpng](http://www.libpng.org/pub/png/src/libpng-LICENSE.txt), [WTFPL](http://www.wtfpl.net/about/), [AOM Patent License 1.0](https://aomedia.org/license/patent-license/). The BSD and MIT texts name their copyright holders and come with each package's source.
+
+### Python package (`libpython.zip.so`)
+
+| Component | Termux package | License | Upstream |
+|---|---|---|---|
+| Python 3.12 | [`python`](https://github.com/termux/termux-packages/tree/master/packages/python) | PSF-2.0 | https://www.python.org |
+| OpenSSL 3.5 (libssl, libcrypto, engines, modules) | [`openssl`](https://github.com/termux/termux-packages/tree/master/packages/openssl) | Apache-2.0 | https://www.openssl.org |
+| CA certificates (`cert.pem`) | [`ca-certificates`](https://github.com/termux/termux-packages/tree/master/packages/ca-certificates) | MPL-2.0 | https://curl.se/docs/caextract.html |
+| libandroid-support | [`libandroid-support`](https://github.com/termux/termux-packages/tree/master/packages/libandroid-support) | Apache-2.0, MIT | https://github.com/termux/libandroid-support |
+| libandroid-posix-semaphore | [`libandroid-posix-semaphore`](https://github.com/termux/termux-packages/tree/master/packages/libandroid-posix-semaphore) | MIT | https://github.com/termux/termux-packages |
+| bzip2 (libbz2) | [`libbz2`](https://github.com/termux/termux-packages/tree/master/packages/libbz2) | bzip2 license (BSD-style) | https://sourceware.org/bzip2/ |
+| LLVM libc++ (`libc++_shared`) | [`libc++`](https://github.com/termux/termux-packages/tree/master/packages/libc++) | NCSA / Apache-2.0 WITH LLVM-exception | https://libcxx.llvm.org |
+| libcrypt | [`libcrypt`](https://github.com/termux/termux-packages/tree/master/packages/libcrypt) | BSD-2-Clause | http://michael.dipperstein.com/crypt/ |
+| Expat | [`libexpat`](https://github.com/termux/termux-packages/tree/master/packages/libexpat) | MIT | https://libexpat.github.io |
+| libffi | [`libffi`](https://github.com/termux/termux-packages/tree/master/packages/libffi) | MIT | https://sourceware.org/libffi/ |
+| ncurses (ncursesw, form, menu, panel, tinfo, tic) | [`ncurses`](https://github.com/termux/termux-packages/tree/master/packages/ncurses) | MIT | https://invisible-island.net/ncurses/ |
+| GNU dbm (libgdbm, libgdbm_compat) | [`gdbm`](https://github.com/termux/termux-packages/tree/master/packages/gdbm) | GPL-3.0 | https://www.gnu.org.ua/software/gdbm/ |
+| GNU Readline (libreadline, libhistory) | [`readline`](https://github.com/termux/termux-packages/tree/master/packages/readline) | GPL-3.0 | https://tiswww.case.edu/php/chet/readline/rltop.html |
+| XZ Utils (liblzma) | [`liblzma`](https://github.com/termux/termux-packages/tree/master/packages/liblzma) | 0BSD / public domain (library) | https://tukaani.org/xz/ |
+| SQLite | [`libsqlite`](https://github.com/termux/termux-packages/tree/master/packages/libsqlite) | Public Domain | https://www.sqlite.org |
+| zlib | [`zlib`](https://github.com/termux/termux-packages/tree/master/packages/zlib) | Zlib | https://www.zlib.net |
+| QuickJS (`libquickjs.a`, unused) | [`quickjs`](https://github.com/termux/termux-packages/tree/master/packages/quickjs) | MIT | https://bellard.org/quickjs/ |
+
+### FFmpeg package (`libffmpeg.zip.so`)
+
+| Component | Termux package | License | Upstream |
+|---|---|---|---|
+| FFmpeg 7.1 (libavcodec, libavdevice, libavfilter, libavformat, libavutil, libpostproc, libswresample, libswscale, `ffmpeg`) | [`ffmpeg`](https://github.com/termux/termux-packages/tree/master/packages/ffmpeg) | GPL-3.0-or-later (`--enable-gpl --enable-version3`) | https://ffmpeg.org |
+| x264 | [`libx264`](https://github.com/termux/termux-packages/tree/master/packages/libx264) | GPL-2.0-or-later | https://www.videolan.org/developers/x264.html |
+| x265 | [`libx265`](https://github.com/termux/termux-packages/tree/master/packages/libx265) | GPL-2.0-or-later | https://www.x265.org |
+| Xvid (libxvidcore) | [`xvidcore`](https://github.com/termux/termux-packages/tree/master/packages/xvidcore) | GPL-2.0-or-later | https://www.xvid.com |
+| vid.stab | [`libvidstab`](https://github.com/termux/termux-packages/tree/master/packages/libvidstab) | GPL-2.0-or-later | https://github.com/georgmartius/vid.stab |
+| Rubber Band | [`rubberband`](https://github.com/termux/termux-packages/tree/master/packages/rubberband) | GPL-2.0-or-later | https://breakfastquay.com/rubberband/ |
+| FFTW | [`fftw`](https://github.com/termux/termux-packages/tree/master/packages/fftw) | GPL-2.0-or-later | https://www.fftw.org |
+| FreeType | [`freetype`](https://github.com/termux/termux-packages/tree/master/packages/freetype) | FTL or GPL-2.0 | https://freetype.org |
+| GLib (glib, gio, gobject, gmodule, gthread, girepository) | [`glib`](https://github.com/termux/termux-packages/tree/master/packages/glib) | LGPL-2.1-or-later | https://gitlab.gnome.org/GNOME/glib |
+| libbluray | [`libbluray`](https://github.com/termux/termux-packages/tree/master/packages/libbluray) | LGPL-2.1-or-later | https://code.videolan.org/videolan/libbluray |
+| libudfread | [`libudfread`](https://github.com/termux/termux-packages/tree/master/packages/libudfread) | LGPL-2.1-or-later | https://code.videolan.org/videolan/libudfread |
+| Game Music Emu | [`game-music-emu`](https://github.com/termux/termux-packages/tree/master/packages/game-music-emu) | LGPL-2.1-or-later | https://github.com/libgme/game-music-emu |
+| mpg123 (libmpg123, libout123, libsyn123) | [`libmpg123`](https://github.com/termux/termux-packages/tree/master/packages/libmpg123) | LGPL-2.1 | https://mpg123.org |
+| SoX Resampler (libsoxr, libsoxr-lsr) | [`libsoxr`](https://github.com/termux/termux-packages/tree/master/packages/libsoxr) | LGPL-2.1-or-later | https://sourceforge.net/projects/soxr/ |
+| libssh | [`libssh`](https://github.com/termux/termux-packages/tree/master/packages/libssh) | LGPL-2.1 | https://www.libssh.org |
+| GnuTLS (libgnutls, libgnutlsxx, libgnutls-dane) | [`libgnutls`](https://github.com/termux/termux-packages/tree/master/packages/libgnutls) | LGPL-2.1-or-later | https://www.gnutls.org |
+| GNU libiconv (libiconv, libcharset) | [`libiconv`](https://github.com/termux/termux-packages/tree/master/packages/libiconv) | LGPL-2.1-or-later | https://www.gnu.org/software/libiconv/ |
+| v4l-utils (libv4l1, libv4l2, libv4l2rds, libv4lconvert, plugins) | [`libv4l`](https://github.com/termux/termux-packages/tree/master/packages/libv4l) | LGPL-2.1-or-later | https://git.linuxtv.org/v4l-utils.git |
+| GNU FriBidi | [`fribidi`](https://github.com/termux/termux-packages/tree/master/packages/fribidi) | LGPL-2.1-or-later | https://github.com/fribidi/fribidi |
+| Graphite2 | [`libgraphite`](https://github.com/termux/termux-packages/tree/master/packages/libgraphite) | LGPL-2.1-or-later / MPL-2.0 / GPL-2.0-or-later | https://github.com/silnrsi/graphite |
+| LAME (libmp3lame) | [`libmp3lame`](https://github.com/termux/termux-packages/tree/master/packages/libmp3lame) | LGPL-2.0-or-later | https://lame.sourceforge.io |
+| ZeroMQ (libzmq) | [`libzmq`](https://github.com/termux/termux-packages/tree/master/packages/libzmq) | LGPL-3.0 with static linking exception / MPL-2.0 | https://zeromq.org |
+| GMP (libgmp, libgmpxx) | [`libgmp`](https://github.com/termux/termux-packages/tree/master/packages/libgmp) | LGPL-3.0-or-later or GPL-2.0-or-later | https://gmplib.org |
+| Nettle (libnettle, libhogweed) | [`libnettle`](https://github.com/termux/termux-packages/tree/master/packages/libnettle) | LGPL-3.0-or-later or GPL-2.0-or-later | https://www.lysator.liu.se/~nisse/nettle/ |
+| libunistring | [`libunistring`](https://github.com/termux/termux-packages/tree/master/packages/libunistring) | LGPL-3.0-or-later or GPL-2.0-or-later | https://www.gnu.org/software/libunistring/ |
+| libidn2 | [`libidn2`](https://github.com/termux/termux-packages/tree/master/packages/libidn2) | LGPL-3.0-or-later or GPL-2.0-or-later | https://www.gnu.org/software/libidn/#libidn2 |
+| SRT (libsrt) | [`libsrt`](https://github.com/termux/termux-packages/tree/master/packages/libsrt) | MPL-2.0 | https://github.com/Haivision/srt |
+| SVT-AV1 (libSvtAv1Enc) | [`svt-av1`](https://github.com/termux/termux-packages/tree/master/packages/svt-av1) | BSD-3-Clause-Clear + AOM Patent License 1.0 | https://gitlab.com/AOMediaCodec/SVT-AV1 |
+| libaom | [`libaom`](https://github.com/termux/termux-packages/tree/master/packages/libaom) | BSD-2-Clause + AOM Patent License 1.0 | https://aomedia.org |
+| libvmaf | [`libvmaf`](https://github.com/termux/termux-packages/tree/master/packages/libvmaf) | BSD-2-Clause-Patent | https://github.com/Netflix/vmaf |
+| dav1d | [`libdav1d`](https://github.com/termux/termux-packages/tree/master/packages/libdav1d) | BSD-2-Clause | https://code.videolan.org/videolan/dav1d |
+| rav1e | [`librav1e`](https://github.com/termux/termux-packages/tree/master/packages/librav1e) | BSD-2-Clause | https://github.com/xiph/rav1e |
+| libvpx | [`libvpx`](https://github.com/termux/termux-packages/tree/master/packages/libvpx) | BSD-3-Clause | https://www.webmproject.org |
+| libass | [`libass`](https://github.com/termux/termux-packages/tree/master/packages/libass) | ISC | https://github.com/libass/libass |
+| Brotli | [`brotli`](https://github.com/termux/termux-packages/tree/master/packages/brotli) | MIT | https://github.com/google/brotli |
+| bzip2 (libbz2) | [`libbz2`](https://github.com/termux/termux-packages/tree/master/packages/libbz2) | bzip2 license (BSD-style) | https://sourceware.org/bzip2/ |
+| libffi | [`libffi`](https://github.com/termux/termux-packages/tree/master/packages/libffi) | MIT | https://sourceware.org/libffi/ |
+| Fontconfig | [`fontconfig`](https://github.com/termux/termux-packages/tree/master/packages/fontconfig) | MIT | https://www.freedesktop.org/wiki/Software/fontconfig/ |
+| HarfBuzz (harfbuzz, subset, gobject, cairo) | [`harfbuzz`](https://github.com/termux/termux-packages/tree/master/packages/harfbuzz) | Old MIT | https://harfbuzz.github.io |
+| Little CMS (liblcms2) | [`littlecms`](https://github.com/termux/termux-packages/tree/master/packages/littlecms) | MIT | https://www.littlecms.com |
+| XZ Utils (liblzma) | [`liblzma`](https://github.com/termux/termux-packages/tree/master/packages/liblzma) | 0BSD / public domain (library) | https://tukaani.org/xz/ |
+| Ogg (libogg) | [`libogg`](https://github.com/termux/termux-packages/tree/master/packages/libogg) | BSD-3-Clause | https://xiph.org/ogg/ |
+| Vorbis (libvorbis, libvorbisenc, libvorbisfile) | [`libvorbis`](https://github.com/termux/termux-packages/tree/master/packages/libvorbis) | BSD-3-Clause | https://xiph.org/vorbis/ |
+| Theora (libtheora, libtheoradec, libtheoraenc) | [`libtheora`](https://github.com/termux/termux-packages/tree/master/packages/libtheora) | BSD-3-Clause | https://www.theora.org |
+| Opus (libopus) | [`libopus`](https://github.com/termux/termux-packages/tree/master/packages/libopus) | BSD-3-Clause | https://opus-codec.org |
+| OpenCORE AMR (amrnb, amrwb) | [`libopencore-amr`](https://github.com/termux/termux-packages/tree/master/packages/libopencore-amr) | Apache-2.0 | https://sourceforge.net/projects/opencore-amr/ |
+| VisualOn AMR-WB encoder | [`libvo-amrwbenc`](https://github.com/termux/termux-packages/tree/master/packages/libvo-amrwbenc) | Apache-2.0 | https://sourceforge.net/projects/opencore-amr/ |
+| libopenmpt | [`libopenmpt`](https://github.com/termux/termux-packages/tree/master/packages/libopenmpt) | BSD-3-Clause | https://lib.openmpt.org/libopenmpt/ |
+| PCRE2 (8, 16, 32, posix) | [`pcre2`](https://github.com/termux/termux-packages/tree/master/packages/pcre2) | BSD-3-Clause | https://pcre2project.github.io/pcre2/ |
+| libpng | [`libpng`](https://github.com/termux/termux-packages/tree/master/packages/libpng) | Libpng | http://www.libpng.org/pub/png/libpng.html |
+| libsamplerate | [`libsamplerate`](https://github.com/termux/termux-packages/tree/master/packages/libsamplerate) | BSD-2-Clause | https://libsndfile.github.io/libsamplerate/ |
+| WebP (libwebp, decoder, demux, mux, sharpyuv) | [`libwebp`](https://github.com/termux/termux-packages/tree/master/packages/libwebp) | BSD-3-Clause | https://github.com/webmproject/libwebp |
+| libsodium | [`libsodium`](https://github.com/termux/termux-packages/tree/master/packages/libsodium) | ISC | https://libsodium.org |
+| libxml2 | [`libxml2`](https://github.com/termux/termux-packages/tree/master/packages/libxml2) | MIT | https://gitlab.gnome.org/GNOME/libxml2 |
+| zimg | [`libzimg`](https://github.com/termux/termux-packages/tree/master/packages/libzimg) | WTFPL | https://github.com/sekrit-twc/zimg |
+| zlib | [`zlib`](https://github.com/termux/termux-packages/tree/master/packages/zlib) | Zlib | https://www.zlib.net |
+| OpenCL ICD loader (libOpenCL) | [`ocl-icd`](https://github.com/termux/termux-packages/tree/master/packages/ocl-icd) | BSD-2-Clause | https://github.com/OCL-dev/ocl-icd |
+| Android system wrappers (libandroid, libmediandk, libOpenSLES) | [`libandroid-stub`](https://github.com/termux/termux-packages/tree/master/packages/libandroid-stub) | NCSA | https://github.com/termux/termux-packages |
+| libandroid-glob | [`libandroid-glob`](https://github.com/termux/termux-packages/tree/master/packages/libandroid-glob) | BSD-3-Clause | https://github.com/termux/termux-packages |
 
 ## License texts
 
