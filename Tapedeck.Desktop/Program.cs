@@ -2,6 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
 using Tapedeck.Core.Settings;
@@ -42,7 +43,13 @@ abstract class Program
         // Before any window or resource lookup, so every text uses the chosen language
         var settings = new SettingsStore(AppPaths.DefaultDataDir()).Load();
         options.ApplyLanguage(settings.Language);
-        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        BuildAvaloniaApp(options).StartWithClassicDesktopLifetime(args);
+    }
+
+    /// <summary>What the desktop does its own way: OpenAL for playback.</summary>
+    private static void ConfigurePlatform(IServiceCollection services)
+    {
+        services.AddSingleton<PlayerService, OpenAlPlayerService>();
     }
 
     /// <summary>The first lines of a run: what runs where, and every error nobody caught.</summary>
@@ -80,8 +87,10 @@ abstract class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    private static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    private static AppBuilder BuildAvaloniaApp() => BuildAvaloniaApp(StartupOptions.Parse([]));
+
+    private static AppBuilder BuildAvaloniaApp(StartupOptions options)
+        => AppBuilder.Configure(() => new App { StartupAccent = options.Accent, ConfigurePlatform = ConfigurePlatform })
             .UsePlatformDetect()
 #if DEBUG
             .WithDeveloperTools()
