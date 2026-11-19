@@ -195,6 +195,13 @@ public abstract partial class PlayerService(ILogger log) : ObservableObject, IDi
         }
     }
 
+    /// <summary>For the platform: something else wants the sound (a call, another app, unplugged headphones), so pause.</summary>
+    protected void PauseForSystem() => this.Post(() =>
+    {
+        if (this.IsPlaying)
+            this.TogglePause();
+    });
+
     /// <summary>For the loop: the length the file itself tells.</summary>
     protected void ReportDuration(TimeSpan duration) => this.Post(() => this.Duration = duration);
 
