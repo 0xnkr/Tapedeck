@@ -1,4 +1,4 @@
-# Builds Tapedeck and runs the tests on every push and pull request.
+# Builds Tapedeck and runs the tests on every push and pull request; the Android app is built alongside.
 name: CI
 
 on:
@@ -34,3 +34,29 @@ jobs:
 
       - name: Test
         run: dotnet test Tapedeck.Tests --configuration Release --no-build --logger "console;verbosity=normal"
+
+  android:
+    # a build only: it needs no signing key and has no tests of its own (Core and Data are tested above)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install the Android workload
+        run: dotnet workload install android
+
+      # the downloads are pinned by the script, so its content is the cache key
+      - uses: actions/cache@v4
+        with:
+          path: Tapedeck.Android/natives-cache
+          key: android-natives-${{ hashFiles('tools/android-natives.ps1') }}
+
+      - name: Fetch the bundled tools
+        shell: pwsh
+        run: ./tools/android-natives.ps1
+
+      - name: Build
+        run: dotnet build Tapedeck.Android --configuration Debug
