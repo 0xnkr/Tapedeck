@@ -36,7 +36,10 @@ public sealed class MetadataService(IToolHost tools, ILogger<MetadataService>? l
 
     public async Task<YtMetadata> FetchAsync(string url, CancellationToken ct = default)
     {
-        var json = await this.RunYtDlpAsync(["--no-playlist", "--", url], ct);
+        // the metadata needs no formats; without the player JavaScript the phone answers in seconds instead of ~27 s,
+        // and the stored info_json differs only in the format fields (measured on 2026-11-19)
+        var json = await this.RunYtDlpAsync(["--no-playlist", "--extractor-args", SKIP_FORMATS, "--ignore-no-formats-error",
+            "--", url], ct);
         return Parse(json);
     }
 
