@@ -17,7 +17,6 @@ namespace Tapedeck.Android;
 /// (Music/Tapedeck) cannot be written.
 /// </summary>
 [Activity(
-    Label = "Tapedeck",
     Theme = "@style/Tapedeck.Theme",
     Icon = "@mipmap/icon",
     MainLauncher = true,

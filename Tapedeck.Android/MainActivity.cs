@@ -16,7 +16,6 @@ namespace Tapedeck.Android;
 /// Also takes links shared from other apps ("Share" → Tapedeck in the YouTube app) and adds them to the library.
 /// </summary>
 [Activity(
-    Label = "Tapedeck",
     Theme = "@style/Tapedeck.Theme",
     Icon = "@mipmap/icon",
     Exported = true,

@@ -22,8 +22,6 @@ public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatfo
 {
     private const string EXTERNAL_STORAGE = "com.android.externalstorage.documents";
     private const string DOWNLOADS = "com.android.providers.downloads.documents";
-    // declared in AndroidManifest.xml, shares files of the app's own storage
-    private const string FILE_PROVIDER = "app.tapedeck.files";
 
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
@@ -45,7 +43,8 @@ public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatfo
     public override Task OpenFileAsync(string path)
     {
         var context = AndroidApplication.Context;
-        var uri = FileProvider.GetUriForFile(context, FILE_PROVIDER, new JavaFile(path));
+        // declared in AndroidManifest.xml after the package name, shares files of the app's own storage
+        var uri = FileProvider.GetUriForFile(context, $"{context.PackageName}.files", new JavaFile(path));
         var send = new Intent(Intent.ActionSend)
             .SetType("text/plain")
             .PutExtra(Intent.ExtraStream, uri)

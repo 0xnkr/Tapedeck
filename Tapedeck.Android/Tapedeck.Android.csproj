@@ -11,6 +11,7 @@
         <RootNamespace>Tapedeck.Android</RootNamespace>
         <ApplicationId>app.tapedeck</ApplicationId>
         <ApplicationTitle>Tapedeck</ApplicationTitle>
+        <AndroidManifestPlaceholders>appLabel=Tapedeck</AndroidManifestPlaceholders>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>0.0.0</ApplicationDisplayVersion>
         <!-- Local builds; a release gets its version from the git tag -->
@@ -23,6 +24,14 @@
         <PublishTrimmed>false</PublishTrimmed>
         <!-- AOT needs trimming; without it the release runs on the JIT like the debug build -->
         <RunAOTCompilation>false</RunAOTCompilation>
+    </PropertyGroup>
+
+    <!-- A debug build is an app of its own next to the release (other key, so it could not replace it): own package,
+         own app data and database, the same library folder. -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <ApplicationId>app.tapedeck.debug</ApplicationId>
+        <ApplicationTitle>Tapedeck Debug</ApplicationTitle>
+        <AndroidManifestPlaceholders>appLabel=Tapedeck Debug</AndroidManifestPlaceholders>
     </PropertyGroup>
 
     <!-- A release passes its tag's version (-p:Version=1.5.0-beta.1): the phone shows 1.5.0-beta.1, and the version
