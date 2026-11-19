@@ -1,0 +1,4 @@
+# fetched by tools/android-natives.ps1, pinned by SHA-256
+native/
+natives-cache/
+Assets/tools/

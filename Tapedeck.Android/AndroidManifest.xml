@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- the library is a plain folder in the shared storage (Music/Tapedeck) with .opus, .lrc and .m3u8 files that
+         are renamed and moved; Google Play would not allow this permission, Tapedeck is installed from GitHub -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+                     tools:ignore="ScopedStorage" />
+    <!-- extractNativeLibs: the bundled programs must exist as files to be started -->
+    <application android:label="Tapedeck"
+                 android:icon="@mipmap/icon"
+                 android:extractNativeLibs="true" />
+</manifest>
