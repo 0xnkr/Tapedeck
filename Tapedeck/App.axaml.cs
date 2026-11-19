@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -20,6 +21,20 @@ namespace Tapedeck;
 public partial class App : Application
 {
     private AccentService accent = null!;
+    // the view Android created last; it asks for a new one whenever it creates the activity anew
+    private static MainView? activityView;
+
+    /// <summary>The window on the desktop, the view's top level on a phone: what clipboard, launcher and pickers need.</summary>
+    public static TopLevel? CurrentTopLevel => Current?.ApplicationLifetime switch
+    {
+        IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow,
+        ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+        IActivityApplicationLifetime => TopLevel.GetTopLevel(activityView),
+        _ => null,
+    };
+
+    /// <summary>The services of this run, for a head that has to reach them from outside the views (e.g. a shared link).</summary>
+    public IServiceProvider? Services { get; private set; }
 
     /// <summary>Accent for this run only (the desktop's <c>--accent</c>); wins over the saved one.</summary>
     public Color? StartupAccent { get; init; }
@@ -59,7 +74,7 @@ public partial class App : Application
                 // Android asks for a view whenever it creates the activity anew (e.g. after the app was in the
                 // background for long); the services and view models stay the same
                 var (_, main) = this.Start();
-                activity.MainViewFactory = () => new MainView { DataContext = main };
+                activity.MainViewFactory = () => activityView = new MainView { DataContext = main };
                 Load(main);
                 break;
             }
@@ -87,6 +102,7 @@ public partial class App : Application
             this.accent.TryApply(savedAccent);
 
         var services = AppServices.Build(this.accent, store, settings, this.ConfigurePlatform);
+        this.Services = services;
         var log = services.GetRequiredService<ILogger<App>>();
         // errors in UI code (commands, bindings, event handlers) that nobody caught
         Dispatcher.UIThread.UnhandledException += (_, e) => log.LogCritical(e.Exception, "Unhandled error on the UI thread");

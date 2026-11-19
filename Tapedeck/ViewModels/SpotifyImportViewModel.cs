@@ -206,7 +206,7 @@ public partial class SpotifyImportViewModel(
     [RelayCommand]
     private async Task PickZipAsync()
     {
-        if (await platform.PickOpenFileAsync(Strings.Spotify_PickZipTitle, new FileFilter(Strings.Spotify_ZipFileType, "zip")) is { } path)
+        if (await platform.PickOpenFileAsync(Strings.Spotify_PickZipTitle, new FileFilter(Strings.Spotify_ZipFileType, "zip", "application/zip")) is { } path)
             await this.LoadAsync(path);
     }
 

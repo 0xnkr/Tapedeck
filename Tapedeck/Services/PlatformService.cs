@@ -9,10 +9,11 @@ using Avalonia.Platform.Storage;
 
 namespace Tapedeck.Services;
 
-/// <summary>A file type for open and save dialogs, e.g. <c>new FileFilter("CSV", "csv")</c>.</summary>
-public sealed record FileFilter(string Name, string Extension);
+/// <summary>A file type for open and save dialogs, e.g. <c>new FileFilter("CSV", "csv", "text/csv")</c>.</summary>
+/// <param name="MimeType">What a phone's file picker filters by; the desktop goes by the extension.</param>
+public sealed record FileFilter(string Name, string Extension, string MimeType);
 
-/// <summary>Desktop functions that need the window (clipboard, links, folders, file dialogs), kept out of the view models.</summary>
+/// <summary>Functions that need the window or the system (clipboard, links, folders, file dialogs), kept out of the view models.</summary>
 public interface IPlatformService
 {
     Task<string?> GetClipboardTextAsync();
@@ -36,10 +37,13 @@ public interface IPlatformService
     Task<string?> PickSaveFileAsync(string title, string suggestedName, FileFilter filter);
 }
 
-public sealed class PlatformService : IPlatformService
+/// <summary>
+/// Through Avalonia's top level: the window on the desktop, the view on a phone. A phone's head derives from it where
+/// the system works differently (picked files are no paths there).
+/// </summary>
+public class PlatformService : IPlatformService
 {
-    private static TopLevel? MainWindow =>
-        (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+    private static TopLevel? MainWindow => App.CurrentTopLevel;
 
     public async Task<string?> GetClipboardTextAsync() =>
         MainWindow?.Clipboard is { } clipboard ? await clipboard.TryGetTextAsync() : null;
@@ -56,13 +60,13 @@ public sealed class PlatformService : IPlatformService
             await window.Launcher.LaunchUriAsync(new Uri(url));
     }
 
-    public async Task OpenFolderAsync(string path)
+    public virtual async Task OpenFolderAsync(string path)
     {
         if (MainWindow is { } window)
             await window.Launcher.LaunchDirectoryInfoAsync(new DirectoryInfo(path));
     }
 
-    public async Task OpenFileAsync(string path)
+    public virtual async Task OpenFileAsync(string path)
     {
         if (MainWindow is { } window)
             await window.Launcher.LaunchFileInfoAsync(new FileInfo(path));
@@ -79,7 +83,7 @@ public sealed class PlatformService : IPlatformService
             AllowMultiple = false,
             SuggestedStartLocation = startFolder is null ? null : await storage.TryGetFolderFromPathAsync(startFolder),
         });
-        return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
+        return folders.Count > 0 ? this.ToLocalPath(folders[0]) : null;
     }
 
     public async Task<string?> PickOpenFileAsync(string title, FileFilter filter)
@@ -93,7 +97,7 @@ public sealed class PlatformService : IPlatformService
             AllowMultiple = false,
             FileTypeFilter = [ToFileType(filter)],
         });
-        return files.Count > 0 ? files[0].TryGetLocalPath() : null;
+        return files.Count > 0 ? await this.ToLocalPathAsync(files[0]) : null;
     }
 
     public async Task<string?> PickSaveFileAsync(string title, string suggestedName, FileFilter filter)
@@ -108,9 +112,15 @@ public sealed class PlatformService : IPlatformService
             DefaultExtension = filter.Extension,
             FileTypeChoices = [ToFileType(filter)],
         });
-        return file?.TryGetLocalPath();
+        return file is null ? null : this.ToLocalPath(file);
     }
 
+    /// <summary>The folder or the file to write to as local path; <c>null</c> when it has none.</summary>
+    protected virtual string? ToLocalPath(IStorageItem item) => item.TryGetLocalPath();
+
+    /// <summary>A file to read as local path; <c>null</c> when it has none.</summary>
+    protected virtual Task<string?> ToLocalPathAsync(IStorageFile file) => Task.FromResult(file.TryGetLocalPath());
+
     private static FilePickerFileType ToFileType(FileFilter filter) =>
-        new(filter.Name) { Patterns = [$"*.{filter.Extension}"] };
+        new(filter.Name) { Patterns = [$"*.{filter.Extension}"], MimeTypes = [filter.MimeType] };
 }
