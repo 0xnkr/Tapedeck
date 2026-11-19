@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What the FileProvider may share: the app's own files, where the log lives -->
+<paths>
+    <files-path name="files" path="." />
+</paths>

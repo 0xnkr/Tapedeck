@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Tapedeck.Core.Audio;
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
-using YoutubeDLSharp.Options;
 
 namespace Tapedeck.Core.Services;
 
@@ -14,7 +13,7 @@ namespace Tapedeck.Core.Services;
 /// </summary>
 public sealed class DownloadService(
     ITrackRepository repository,
-    ToolService tools,
+    IToolHost tools,
     TagWriter tagWriter,
     LoudnessMeter loudness,
     AudioFeatureExtractor sound,
@@ -41,22 +40,8 @@ public sealed class DownloadService(
 
         try
         {
-            var options = new OptionSet
-            {
-                Output = Path.Combine(paths.TempDir, $"{track.VideoId}.%(ext)s"),
-                NoPlaylist = true,
-            };
-            if (tools.JsRuntimeArgs is [var flag, var value])
-                options.AddCustomOption(flag, value);
-
-            var ytProgress = progress is null
-                ? null
-                : new Progress<YoutubeDLSharp.DownloadProgress>(p => progress.Report(p.Progress));
-
-            var result = await tools.CreateClient()
-                .RunAudioDownload(track.Url, AudioConversionFormat.Opus, ct, ytProgress, overrideOptions: options);
-            if (!result.Success)
-                throw new InvalidOperationException(string.Join(Environment.NewLine, result.ErrorOutput));
+            var downloaded = await YtDlpDownload.RunAsync(tools, track.Url,
+                Path.Combine(paths.TempDir, $"{track.VideoId}.%(ext)s"), FORMAT, progress, ct, this.log);
 
             string fileName;
             // parallel downloads of two songs with the same name must not pick the same free name
@@ -66,7 +51,7 @@ public sealed class DownloadService(
                 fileName = FileNaming.ChooseForTrack(track.FilePath, track.Artist, track.Title, track.VideoId, FORMAT,
                     name => File.Exists(paths.ToLibraryPath(name)));
                 // overwrite only ever hits the track's own file from an earlier download
-                File.Move(result.Data, paths.ToLibraryPath(fileName), overwrite: true);
+                File.Move(downloaded, paths.ToLibraryPath(fileName), overwrite: true);
                 // a correction since the last download gave the file a new name; drop the outdated copy
                 if (track.FilePath is { } oldFile && !string.Equals(oldFile, fileName, StringComparison.OrdinalIgnoreCase))
                 {

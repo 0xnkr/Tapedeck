@@ -1,0 +1,12 @@
+{
+  "solution": {
+    "path": "Tapedeck.sln",
+    "projects": [
+      "Tapedeck\\Tapedeck.csproj",
+      "Tapedeck.Core\\Tapedeck.Core.csproj",
+      "Tapedeck.Data\\Tapedeck.Data.csproj",
+      "Tapedeck.Desktop\\Tapedeck.Desktop.csproj",
+      "Tapedeck.Tests\\Tapedeck.Tests.csproj"
+    ]
+  }
+}

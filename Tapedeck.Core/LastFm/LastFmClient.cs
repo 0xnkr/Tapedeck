@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -19,9 +18,6 @@ public sealed class LastFmClient(HttpClient http, ILogger<LastFmClient>? logger 
 
     private static readonly TimeSpan MIN_INTERVAL = TimeSpan.FromMilliseconds(250);
     private static readonly TimeSpan[] RETRY_DELAYS = [TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(8)];
-
-    private static readonly ProductInfoHeaderValue USER_AGENT = new(
-        "Tapedeck", (Assembly.GetEntryAssembly()?.GetName().Version ?? new Version(1, 0)).ToString(3));
 
     // shared by all instances: the limit applies per app, not per client
     private static readonly SemaphoreSlim GATE = new(1, 1);
@@ -72,7 +68,7 @@ public sealed class LastFmClient(HttpClient http, ILogger<LastFmClient>? logger 
                 await Task.Delay(wait, ct);
 
             using var request = new HttpRequestMessage(HttpMethod.Get, BASE_URL + query);
-            request.Headers.UserAgent.Add(USER_AGENT);
+            request.Headers.UserAgent.Add(UserAgent.PRODUCT);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             try
             {

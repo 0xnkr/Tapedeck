@@ -2288,4 +2288,48 @@
     <value>Sound analyzed for {0} tracks. “Write tags” takes it to the files.</value>
     <comment>Activity toast after the background sound analysis; {0} track count; “Write tags” is the bulk action Library_WriteAllTags</comment>
   </data>
+  <data name="Activity_PreparingTools" xml:space="preserve">
+    <value>Preparing yt-dlp and ffmpeg (one time) …</value>
+    <comment>Activity toast on the phone, where the tools ship with the app and are only unpacked on first use</comment>
+  </data>
+  <data name="StorageAccess_Title" xml:space="preserve">
+    <value>Tapedeck needs access to your music</value>
+    <comment>Android: heading of the screen shown before the app starts when the access to all files is missing</comment>
+  </data>
+  <data name="StorageAccess_Text" xml:space="preserve">
+    <value>Tapedeck saves your songs in Music/Tapedeck, where every music player finds them, and keeps their tags, lyrics and playlists up to date there. For that, Android asks you once to allow access to all files.</value>
+    <comment>Android: explanation below StorageAccess_Title; Music/Tapedeck is the folder name</comment>
+  </data>
+  <data name="StorageAccess_Grant" xml:space="preserve">
+    <value>Allow access</value>
+    <comment>Android: button that opens the system screen for the access to all files</comment>
+  </data>
+  <data name="Credit_Python" xml:space="preserve">
+    <value>Runs yt-dlp on Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_QuickJs" xml:space="preserve">
+    <value>JavaScript runtime for yt-dlp on Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_YoutubedlAndroid" xml:space="preserve">
+    <value>Python and FFmpeg built for Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Notification_WorkChannel" xml:space="preserve">
+    <value>Work in the background</value>
+    <comment>Android: name of the notification channel shown while downloads and other work run with the screen off</comment>
+  </data>
+  <data name="Notification_Ready" xml:space="preserve">
+    <value>Ready</value>
+    <comment>Android: text of the background notification while the app is open but nothing runs</comment>
+  </data>
+  <data name="Playlist_MoveUp" xml:space="preserve">
+    <value>Move up</value>
+    <comment>Phone: row menu of a playlist's track, moves it one place up</comment>
+  </data>
+  <data name="Playlist_MoveDown" xml:space="preserve">
+    <value>Move down</value>
+    <comment>Phone: row menu of a playlist's track, moves it one place down</comment>
+  </data>
 </root>

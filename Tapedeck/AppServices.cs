@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,9 @@ namespace Tapedeck;
 /// <summary>Composition root: wires backend, platform services and view models.</summary>
 public static class AppServices
 {
-    public static ServiceProvider Build(IAccentService accent, SettingsStore store, AppSettings settings)
+    /// <param name="configurePlatform">What the head registers for its platform, at least the <see cref="PlayerService"/>.</param>
+    public static ServiceProvider Build(IAccentService accent, SettingsStore store, AppSettings settings,
+        Action<IServiceCollection>? configurePlatform)
     {
         var paths = AppPaths.Default(settings.LibraryDir);
         paths.EnsureDirectories();
@@ -46,7 +49,6 @@ public static class AppServices
         services.AddSingleton<PlaylistExporter>();
 
         services.AddSingleton<HttpClient>();
-        services.AddSingleton<ToolService>();
         services.AddSingleton<MetadataService>();
         services.AddSingleton<ThumbnailService>();
         services.AddSingleton<TagWriter>();
@@ -82,7 +84,6 @@ public static class AppServices
         services.AddSingleton<ExistingFileFinder>();
         services.AddSingleton<PlaylistSync>();
         services.AddSingleton<MusicBrainzQueue>();
-        services.AddSingleton<PlayerService>();
         services.AddSingleton<LoudnessQueue>();
         services.AddSingleton<AudioFeatureQueue>();
         services.AddSingleton<CoverQueue>();
@@ -108,6 +109,7 @@ public static class AppServices
             return detail;
         });
 
+        configurePlatform?.Invoke(services);
         return services.BuildServiceProvider();
     }
 }

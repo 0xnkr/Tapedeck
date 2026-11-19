@@ -72,7 +72,7 @@
 
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Spacing="{StaticResource Space.3}">
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="{StaticResource Space.3}">
+                <controls:AdaptiveColumns Spacing="{StaticResource Space.3}">
 
                     <!-- Left: library and appearance -->
                     <StackPanel Spacing="{StaticResource Space.3}">
@@ -320,9 +320,9 @@
 
                             <Border Classes="row">
                                 <StackPanel Spacing="2">
-                                    <TextBlock Classes="body-strong" Text="Deno" />
+                                    <TextBlock Classes="body-strong" Text="{Binding JsRuntimeName}" />
                                     <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
-                                               Text="{Binding DenoVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
+                                               Text="{Binding JsRuntimeVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
                                 </StackPanel>
                             </Border>
 
@@ -394,7 +394,7 @@
                             </Border>
                         </StackPanel>
                     </controls:Island>
-                </Grid>
+                </controls:AdaptiveColumns>
 
                 <!-- Credits: the open source projects Tapedeck builds on -->
                 <controls:Island Classes="large">

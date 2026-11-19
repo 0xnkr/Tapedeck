@@ -411,4 +411,11 @@
         </Style>
     </ControlTheme>
 
+    <!-- List row on a phone: like the table row, but as high as its content (two or three lines of text). -->
+    <ControlTheme x:Key="ListRow" TargetType="ListBoxItem" BasedOn="{StaticResource TableRow}">
+        <Setter Property="Height" Value="NaN" />
+        <Setter Property="MinHeight" Value="{StaticResource Size.Row}" />
+        <Setter Property="Padding" Value="8,6" />
+    </ControlTheme>
+
 </ResourceDictionary>

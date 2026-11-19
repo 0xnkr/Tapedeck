@@ -9,9 +9,11 @@
     <!-- Scrim over the window, the license text on an island in the middle -->
     <Panel>
         <Border Background="{DynamicResource Brush.Bg}" Opacity="0.7" />
+        <!-- as wide as it may be, narrower on a phone -->
         <controls:Island Classes="large"
-                         Width="640"
-                         HorizontalAlignment="Center"
+                         MaxWidth="640"
+                         Margin="16"
+                         HorizontalAlignment="Stretch"
                          VerticalAlignment="Center">
             <Grid RowDefinitions="Auto,*,Auto" RowSpacing="{StaticResource Space.4}">
                 <StackPanel Spacing="{StaticResource Space.1}">

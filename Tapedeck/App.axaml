@@ -12,15 +12,15 @@
         <!-- Top level stays empty in XAML: AccentService writes its derived colors here at runtime. -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://Tapedeck/Theme/TapedeckResources.axaml" />
+                <ResourceInclude Source="/Theme/TapedeckResources.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://Tapedeck/Theme/TapedeckStyles.axaml" />
-        <StyleInclude Source="avares://Tapedeck/Views/PlaylistMenuStyles.axaml" />
-        <StyleInclude Source="avares://Tapedeck/Views/ChoiceMenuStyles.axaml" />
+        <StyleInclude Source="/Theme/TapedeckStyles.axaml" />
+        <StyleInclude Source="/Views/PlaylistMenuStyles.axaml" />
+        <StyleInclude Source="/Views/ChoiceMenuStyles.axaml" />
     </Application.Styles>
 </Application>

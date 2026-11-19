@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -10,9 +9,6 @@ namespace Tapedeck.Core.Spotify;
 public sealed class SpotifyPlaylistClient(HttpClient http, ILogger<SpotifyPlaylistClient>? logger = null)
 {
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
-
-    private static readonly ProductInfoHeaderValue USER_AGENT = new(
-        "Tapedeck", (Assembly.GetEntryAssembly()?.GetName().Version ?? new Version(1, 0)).ToString(3));
 
     /// <exception cref="ArgumentException">The text is no playlist link.</exception>
     /// <exception cref="InvalidOperationException">The playlist does not exist or is private.</exception>
@@ -47,7 +43,7 @@ public sealed class SpotifyPlaylistClient(HttpClient http, ILogger<SpotifyPlayli
     private async Task<string?> GetAsync(string url, CancellationToken ct)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.UserAgent.Add(USER_AGENT);
+        request.Headers.UserAgent.Add(UserAgent.PRODUCT);
         using var response = await http.SendAsync(request, ct);
         if (response.StatusCode == HttpStatusCode.NotFound)
             return null;

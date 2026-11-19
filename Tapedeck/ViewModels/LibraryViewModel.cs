@@ -469,7 +469,7 @@ public partial class LibraryViewModel(
             activity.Confirm(downloaded == 1 ? Strings.Confirm_DownloadedMany_One : string.Format(Strings.Confirm_DownloadedMany_Other, downloaded));
     }
 
-    public static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv");
+    public static FileFilter CsvFilter => new(Strings.Csv_FileType, "csv", "text/csv");
 
     [RelayCommand]
     private async Task ExportCsvAsync()

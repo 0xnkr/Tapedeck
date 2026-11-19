@@ -10,7 +10,7 @@ namespace Tapedeck.Core.Services;
 /// the Opus track gain. YouTube uploads differ a lot in loudness, music videos are often much louder than
 /// "Topic" uploads; players on the phone level them out with the gain tag.
 /// </summary>
-public sealed partial class LoudnessMeter(ToolService tools)
+public sealed partial class LoudnessMeter(IToolHost tools)
 {
     /// <summary>The reference loudness of Opus gain tags (RFC 7845, section 5.2.1).</summary>
     public const double R128_REFERENCE_LUFS = -23;
@@ -28,7 +28,7 @@ public sealed partial class LoudnessMeter(ToolService tools)
     private const double MAX_PLAYBACK_BOOST_DB = 6;
 
     /// <summary>ffmpeg can run; without it nothing is measured.</summary>
-    public bool IsAvailable => File.Exists(tools.FFmpegPath);
+    public bool IsAvailable => tools.HasFFmpeg;
 
     /// <summary>
     /// Decodes the whole file once with ffmpeg's <c>ebur128</c> filter, which takes well under a second
@@ -38,13 +38,7 @@ public sealed partial class LoudnessMeter(ToolService tools)
     /// <exception cref="InvalidOperationException">ffmpeg is missing, failed, or printed no summary.</exception>
     public async Task<double> MeasureAsync(string filePath, CancellationToken cancellation = default)
     {
-        var psi = new ProcessStartInfo(tools.FFmpegPath)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+        var psi = tools.FFmpeg();
         foreach (var argument in new[]
                  {
                      "-hide_banner", "-nostats", "-nostdin",

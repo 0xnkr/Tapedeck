@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Tapedeck for Android.** The phone gets its own Tapedeck: share a link from the YouTube or YouTube Music app, and the song lands tagged in `Music/Tapedeck`, where every player on the phone finds it. Everything the desktop app does with a library works there too: playlists with `.m3u8`, corrections, MusicBrainz, covers, lyrics, genres, loudness and the sound analysis. Only the Spotify import stays on the computer.
+  - Install `Tapedeck-<version>.apk` from the release (Android 13 or newer, 64-bit ARM). The app asks once for access to all files, so it can write and rename the songs.
+  - It brings its own yt-dlp, Python, FFmpeg and QuickJS-ng, and updates yt-dlp from the settings like the desktop app.
+  - Downloads go on with the screen off, with a notification. New and changed songs are announced to Android, so players show them and their new tags right away.
+  - The library is separate from the computer's: export it as CSV, copy the folder and import the CSV to move it. Files already there are taken over instead of downloaded again.
+
+### Changed
+
+- Adding a link is faster: the metadata no longer asks YouTube for the audio formats, which the download fetches anyway. About a second on the computer; on the phone, seconds instead of almost half a minute.
+
 ## [1.4.1] - 2026-11-14
 
 ### Added
@@ -168,6 +182,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/0xnkr/Tapedeck/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/0xnkr/Tapedeck/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/0xnkr/Tapedeck/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/0xnkr/Tapedeck/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/0xnkr/Tapedeck/releases/tag/v1.0.0

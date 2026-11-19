@@ -25,11 +25,12 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # without the Android app: it needs the Android workload and the natives (tools/android-natives.ps1)
       - name: Restore
-        run: dotnet restore Tapedeck.sln
+        run: dotnet restore Tapedeck.Desktop.slnf
 
       - name: Build
-        run: dotnet build Tapedeck.sln --configuration Release --no-restore
+        run: dotnet build Tapedeck.Desktop.slnf --configuration Release --no-restore
 
       - name: Test
         run: dotnet test Tapedeck.Tests --configuration Release --no-build --logger "console;verbosity=normal"

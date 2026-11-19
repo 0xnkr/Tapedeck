@@ -9,7 +9,7 @@ namespace Tapedeck.Core.Services;
 /// show the album cover there, and a 4:3 thumbnail with black bars (hqdefault) is cut inside the bars.
 /// Uses the bundled ffmpeg, no image library.
 /// </summary>
-public sealed class ThumbnailCoverService(ToolService tools, AppPaths paths)
+public sealed class ThumbnailCoverService(IToolHost tools, AppPaths paths)
 {
     /// <summary>File names of cut covers start with this, next to the release covers from the Cover Art Archive.</summary>
     public const string FILE_PREFIX = "yt-";
@@ -18,7 +18,7 @@ public sealed class ThumbnailCoverService(ToolService tools, AppPaths paths)
     private const string FILTER = "crop=w='min(ih\\,iw*9/16)':h='min(ih\\,iw*9/16)',scale=w='min(500\\,iw)':h=-1";
 
     /// <summary>ffmpeg can run; without it no cover is cut.</summary>
-    public bool IsAvailable => File.Exists(tools.FFmpegPath);
+    public bool IsAvailable => tools.HasFFmpeg;
 
     /// <summary>The cover file of a video, whether it exists or not.</summary>
     public string PathFor(string videoId) => Path.Combine(paths.CoversDir, FILE_PREFIX + videoId + ".jpg");
@@ -37,13 +37,7 @@ public sealed class ThumbnailCoverService(ToolService tools, AppPaths paths)
         Directory.CreateDirectory(paths.CoversDir);
         // the extension tells ffmpeg the format; a cancelled run never leaves half a cover under the real name
         var temp = Path.Combine(paths.CoversDir, FILE_PREFIX + videoId + ".tmp.jpg");
-        var psi = new ProcessStartInfo(tools.FFmpegPath)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+        var psi = tools.FFmpeg();
         foreach (var argument in new[] { "-hide_banner", "-v", "error", "-nostdin", "-y", "-i", thumbPath, "-vf", FILTER, "-q:v", "3", temp })
             psi.ArgumentList.Add(argument);
 

@@ -1,0 +1,123 @@
+using Android.Content;
+using Android.Provider;
+using AndroidX.Core.Content;
+using Avalonia.Platform.Storage;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Tapedeck.Core;
+using Tapedeck.Services;
+using AndroidApplication = Android.App.Application;
+using AndroidEnvironment = Android.OS.Environment;
+using AndroidUri = Android.Net.Uri;
+using JavaFile = Java.IO.File;
+
+namespace Tapedeck.Android.Services;
+
+/// <summary>
+/// The phone's file dialogs answer with <c>content://</c> links instead of paths. With the access to all files a file
+/// or folder in the phone's own storage is a path again; a file from elsewhere (a cloud drive) is copied into the temp
+/// folder to be read. Showing a folder opens the Files app, opening a file (the log) shares it.
+/// </summary>
+public sealed class AndroidPlatformService(AppPaths paths, ILogger<AndroidPlatformService>? logger = null) : PlatformService
+{
+    private const string EXTERNAL_STORAGE = "com.android.externalstorage.documents";
+    private const string DOWNLOADS = "com.android.providers.downloads.documents";
+    // declared in AndroidManifest.xml, shares files of the app's own storage
+    private const string FILE_PROVIDER = "app.tapedeck.files";
+
+    private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
+
+    public override Task OpenFolderAsync(string path)
+    {
+        var root = AndroidEnvironment.ExternalStorageDirectory!.AbsolutePath;
+        var full = Path.GetFullPath(path);
+        if (!full.StartsWith(root, StringComparison.Ordinal))
+            full = Path.GetFullPath(paths.LibraryDir);
+        var relative = Path.GetRelativePath(root, full).Replace('\\', '/');
+        var folder = DocumentsContract.BuildDocumentUri(EXTERNAL_STORAGE, relative == "." ? "primary:" : $"primary:{relative}");
+        var intent = new Intent(Intent.ActionView)
+            .SetDataAndType(folder, DocumentsContract.Document.MimeTypeDir)
+            .AddFlags(ActivityFlags.NewTask | ActivityFlags.GrantReadUriPermission);
+        this.Start(intent, "folder");
+        return Task.CompletedTask;
+    }
+
+    public override Task OpenFileAsync(string path)
+    {
+        var context = AndroidApplication.Context;
+        var uri = FileProvider.GetUriForFile(context, FILE_PROVIDER, new JavaFile(path));
+        var send = new Intent(Intent.ActionSend)
+            .SetType("text/plain")
+            .PutExtra(Intent.ExtraStream, uri)
+            .AddFlags(ActivityFlags.GrantReadUriPermission);
+        this.Start(Intent.CreateChooser(send, (string?)null)!.AddFlags(ActivityFlags.NewTask), "share");
+        return Task.CompletedTask;
+    }
+
+    protected override string? ToLocalPath(IStorageItem item) => item.TryGetLocalPath() ?? Resolve(item.Path);
+
+    protected override async Task<string?> ToLocalPathAsync(IStorageFile file)
+    {
+        if (this.ToLocalPath(file) is { } path && File.Exists(path))
+            return path;
+
+        // not in the phone's storage: read a copy
+        var folder = Path.Combine(paths.TempDir, "picked");
+        Directory.CreateDirectory(folder);
+        var copy = Path.Combine(folder, Path.GetFileName(file.Name));
+        await using (var source = await file.OpenReadAsync())
+        await using (var target = File.Create(copy))
+            await source.CopyToAsync(target);
+        this.log.LogInformation("Copied the picked file {Name} to read it", file.Name);
+        return copy;
+    }
+
+    /// <summary>
+    /// The path behind a link of the phone's own storage: documents and folder trees of the external storage
+    /// (<c>primary:Music/Tapedeck</c>) and downloads that name their file (<c>raw:/storage/…</c>).
+    /// </summary>
+    private static string? Resolve(Uri link)
+    {
+        if (link.IsFile)
+            return link.LocalPath;
+        if (link.Scheme != ContentResolver.SchemeContent)
+            return null;
+
+        var uri = AndroidUri.Parse(link.OriginalString)!;
+        var context = AndroidApplication.Context;
+        var documentId = DocumentsContract.IsDocumentUri(context, uri) ? DocumentsContract.GetDocumentId(uri)
+            : DocumentsContract.IsTreeUri(uri) ? DocumentsContract.GetTreeDocumentId(uri)
+            : null;
+        if (documentId is null)
+            return null;
+
+        switch (uri.Authority)
+        {
+            case EXTERNAL_STORAGE:
+            {
+                var parts = documentId.Split(':', 2);
+                var root = parts[0].Equals("primary", StringComparison.OrdinalIgnoreCase)
+                    ? AndroidEnvironment.ExternalStorageDirectory!.AbsolutePath
+                    // a memory card: /storage/1234-5678
+                    : Path.Combine("/storage", parts[0]);
+                return parts.Length > 1 && parts[1].Length > 0 ? Path.Combine(root, parts[1]) : root;
+            }
+            case DOWNLOADS when documentId.StartsWith("raw:", StringComparison.Ordinal):
+                return documentId[4..];
+            default:
+                return null;
+        }
+    }
+
+    private void Start(Intent intent, string what)
+    {
+        try
+        {
+            AndroidApplication.Context.StartActivity(intent);
+        }
+        catch (ActivityNotFoundException ex)
+        {
+            this.log.LogWarning("No app to open the {What}: {Error}", what, ex.Message);
+        }
+    }
+}

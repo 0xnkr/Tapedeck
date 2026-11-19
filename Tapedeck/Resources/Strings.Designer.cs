@@ -139,6 +139,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preparing yt-dlp and ffmpeg (one time) ….
+        /// </summary>
+        public static string Activity_PreparingTools {
+            get {
+                return ResourceManager.GetString("Activity_PreparingTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading playlist ….
         /// </summary>
         public static string Activity_ReadingPlaylist {
@@ -652,6 +661,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Runs yt-dlp on Android.
+        /// </summary>
+        public static string Credit_Python {
+            get {
+                return ResourceManager.GetString("Credit_Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JavaScript runtime for yt-dlp on Android.
+        /// </summary>
+        public static string Credit_QuickJs {
+            get {
+                return ResourceManager.GetString("Credit_QuickJs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stores the library.
         /// </summary>
         public static string Credit_SQLite {
@@ -720,6 +747,15 @@ namespace Tapedeck.Resources {
         public static string Credit_TmdsDBus {
             get {
                 return ResourceManager.GetString("Credit_TmdsDBus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Python and FFmpeg built for Android.
+        /// </summary>
+        public static string Credit_YoutubedlAndroid {
+            get {
+                return ResourceManager.GetString("Credit_YoutubedlAndroid", resourceCulture);
             }
         }
         
@@ -2110,6 +2146,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        public static string Notification_Ready {
+            get {
+                return ResourceManager.GetString("Notification_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work in the background.
+        /// </summary>
+        public static string Notification_WorkChannel {
+            get {
+                return ResourceManager.GetString("Notification_WorkChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop and close the player.
         /// </summary>
         public static string Player_Close {
@@ -2277,6 +2331,24 @@ namespace Tapedeck.Resources {
         public static string Playlist_Linked {
             get {
                 return ResourceManager.GetString("Playlist_Linked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move down.
+        /// </summary>
+        public static string Playlist_MoveDown {
+            get {
+                return ResourceManager.GetString("Playlist_MoveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string Playlist_MoveUp {
+            get {
+                return ResourceManager.GetString("Playlist_MoveUp", resourceCulture);
             }
         }
         
@@ -3573,6 +3645,33 @@ namespace Tapedeck.Resources {
         public static string Status_Pending {
             get {
                 return ResourceManager.GetString("Status_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow access.
+        /// </summary>
+        public static string StorageAccess_Grant {
+            get {
+                return ResourceManager.GetString("StorageAccess_Grant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck saves your songs in Music/Tapedeck, where every music player finds them, and keeps their tags, lyrics and playlists up to date there. For that, Android asks you once to allow access to all files..
+        /// </summary>
+        public static string StorageAccess_Text {
+            get {
+                return ResourceManager.GetString("StorageAccess_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck needs access to your music.
+        /// </summary>
+        public static string StorageAccess_Title {
+            get {
+                return ResourceManager.GetString("StorageAccess_Title", resourceCulture);
             }
         }
         

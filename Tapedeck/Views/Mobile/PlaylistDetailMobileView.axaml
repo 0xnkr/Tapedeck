@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             xmlns:library="using:Tapedeck.Views.Library"
+             x:Class="Tapedeck.Views.Mobile.PlaylistDetailMobileView"
+             x:DataType="vm:PlaylistDetailViewModel">
+
+    <!-- A playlist on a phone: its tracks as a list, the actions in the header's menu,
+         moving and removing in each track's menu instead of dragging -->
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+
+        <controls:PageHeader Title="{Binding Name}"
+                             Subtitle="{Binding Summary}"
+                             BackCommand="{Binding BackCommand}">
+            <Button Classes="icon"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}">
+                <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuItem Header="{x:Static res:Strings.Playlist_Download}" Command="{Binding DownloadCommand}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlist_Sync}" Command="{Binding SyncCommand}"
+                                  IsVisible="{Binding IsLinked}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlist_EditRules}" Command="{Binding EditRulesCommand}"
+                                  IsVisible="{Binding IsSmart}" />
+                        <MenuItem Header="{x:Static res:Strings.Playlist_Rename}" Command="{Binding RenameCommand}"
+                                  IsVisible="{Binding IsEditable}" />
+                        <MenuItem Header="{x:Static res:Strings.Library_ExportCsv}" Command="{Binding ExportCsvCommand}" />
+                        <Separator />
+                        <MenuItem Header="{x:Static res:Strings.Playlist_Delete}" Command="{Binding DeleteCommand}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </controls:PageHeader>
+
+        <TextBlock Grid.Row="1"
+                   Classes="support"
+                   Text="{Binding Notice}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="8,0"
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding Notice, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <Panel Grid.Row="2">
+            <ListBox Name="EntryList"
+                     Theme="{StaticResource PlainList}"
+                     ItemContainerTheme="{StaticResource ListRow}"
+                     ItemsSource="{Binding Entries}"
+                     SelectedItem="{Binding SelectedEntry}"
+                     AutomationProperties.Name="{Binding Name}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PlaylistEntryViewModel">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{StaticResource Space.3}" Margin="0,4">
+                            <library:CoverButton Width="72" Height="40" VerticalAlignment="Center" DataContext="{Binding Row}" />
+
+                            <Button Grid.Column="1"
+                                    Classes="link"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    Command="{Binding Row.OpenDetailsCommand}">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Classes="body-strong" Text="{Binding Row.Title}" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="support" Text="{Binding Row.Artist}" Foreground="{DynamicResource Brush.Text2}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <controls:StatusChip Status="{Binding Row.Status}" Progress="{Binding Row.Progress}"
+                                                         HorizontalAlignment="Left" Margin="0,4,0,0"
+                                                         IsVisible="{Binding !Row.IsDone}" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Grid.Column="2"
+                                    Classes="icon"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}">
+                                <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                        <MenuItem Header="{x:Static res:Strings.Track_Details}" Command="{Binding Row.OpenDetailsCommand}" />
+                                        <MenuItem Header="{x:Static res:Strings.Track_Download}" Command="{Binding Row.DownloadCommand}"
+                                                  IsVisible="{Binding !Row.IsDownloading}" />
+                                        <MenuItem Header="{x:Static res:Strings.Playlist_MoveUp}"
+                                                  Command="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).MoveEntryUpCommand, FallbackValue={x:Null}}"
+                                                  CommandParameter="{Binding}"
+                                                  IsVisible="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).IsEditable, FallbackValue=False}" />
+                                        <MenuItem Header="{x:Static res:Strings.Playlist_MoveDown}"
+                                                  Command="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).MoveEntryDownCommand, FallbackValue={x:Null}}"
+                                                  CommandParameter="{Binding}"
+                                                  IsVisible="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).IsEditable, FallbackValue=False}" />
+                                        <MenuItem Header="{x:Static res:Strings.Playlist_RemoveTrack}"
+                                                  Command="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).RemoveTrackCommand, FallbackValue={x:Null}}"
+                                                  CommandParameter="{Binding}"
+                                                  IsVisible="{Binding $parent[ListBox].((vm:PlaylistDetailViewModel)DataContext).IsEditable, FallbackValue=False}" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Classes="body"
+                       Text="{Binding EmptyText}"
+                       Foreground="{DynamicResource Brush.Text2}"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Margin="24,0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding IsEmpty}" />
+        </Panel>
+    </Grid>
+</UserControl>

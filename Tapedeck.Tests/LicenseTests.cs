@@ -9,8 +9,9 @@ namespace Tapedeck.Tests;
 /// </summary>
 public sealed partial class LicenseTests
 {
-    // the downloaded tools are credited in the app, but they are not part of Tapedeck.exe and not in the notices
-    private static readonly string[] TOOL_LICENSES = ["gpl-3.0", "unlicense"];
+    // the tools (downloaded on the desktop, inside the APK on Android) are credited in the app,
+    // but they are not part of Tapedeck.exe and not in the notices
+    private static readonly string[] TOOL_LICENSES = ["gpl-3.0", "unlicense", "psf-2.0"];
 
     // the last argument of each Credit: a license text id or one of the constants MIT and APACHE
     [GeneratedRegex(@",\s*(?:""(?<id>[a-z0-9.\-]+)""|(?<constant>MIT|APACHE))\)[,;]?\s*$", RegexOptions.Multiline)]

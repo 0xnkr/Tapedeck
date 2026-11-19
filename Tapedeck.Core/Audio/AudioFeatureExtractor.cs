@@ -10,13 +10,13 @@ namespace Tapedeck.Core.Audio;
 /// it with <see cref="AudioAnalysis"/>. The features go into the file as <c>TAPEDECK_AUDIO</c> for a phone player's
 /// recommendations.
 /// </summary>
-public sealed class AudioFeatureExtractor(ToolService tools)
+public sealed class AudioFeatureExtractor(IToolHost tools)
 {
     // a long DJ mix would need hundreds of MB; the first quarter hour says enough about it
     private const int MAX_SECONDS = 900;
 
     /// <summary>ffmpeg can run; without it nothing is measured.</summary>
-    public bool IsAvailable => File.Exists(tools.FFmpegPath);
+    public bool IsAvailable => tools.HasFFmpeg;
 
     /// <returns>The features; <c>null</c> when the file has only a few seconds of sound.</returns>
     /// <exception cref="InvalidOperationException">ffmpeg is missing or failed.</exception>
@@ -28,13 +28,7 @@ public sealed class AudioFeatureExtractor(ToolService tools)
 
     private async Task<float[]> DecodeAsync(string filePath, CancellationToken cancellation)
     {
-        var psi = new ProcessStartInfo(tools.FFmpegPath)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
+        var psi = tools.FFmpeg();
         foreach (var argument in new[]
                  {
                      "-hide_banner", "-nostats", "-nostdin", "-loglevel", "error",

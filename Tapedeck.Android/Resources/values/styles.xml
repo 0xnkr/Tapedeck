@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- surface-1 of the design system (Palette.axaml, Color.Surface1), so the start shows no white flash -->
+    <color name="tapedeck_surface">#111113</color>
+
+    <style name="Tapedeck.Theme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/tapedeck_surface</item>
+        <item name="android:statusBarColor">@color/tapedeck_surface</item>
+        <item name="android:navigationBarColor">@color/tapedeck_surface</item>
+    </style>
+</resources>

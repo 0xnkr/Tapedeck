@@ -11,7 +11,7 @@ namespace Tapedeck.Core.Services;
 /// Fetches metadata via <c>yt-dlp -J</c>. yt-dlp is invoked directly instead of through YoutubeDLSharp
 /// because we need the raw JSON for <c>info_json</c>.
 /// </summary>
-public sealed class MetadataService(ToolService tools, ILogger<MetadataService>? logger = null) : IYtSearch
+public sealed class MetadataService(IToolHost tools, ILogger<MetadataService>? logger = null) : IYtSearch
 {
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
@@ -36,7 +36,10 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
 
     public async Task<YtMetadata> FetchAsync(string url, CancellationToken ct = default)
     {
-        var json = await this.RunYtDlpAsync(["--no-playlist", "--", url], ct);
+        // the metadata needs no formats; without the player JavaScript the phone answers in seconds instead of ~27 s,
+        // and the stored info_json differs only in the format fields (measured on 2026-11-19)
+        var json = await this.RunYtDlpAsync(["--no-playlist", "--extractor-args", SKIP_FORMATS, "--ignore-no-formats-error",
+            "--", url], ct);
         return Parse(json);
     }
 
@@ -165,17 +168,7 @@ public sealed class MetadataService(ToolService tools, ILogger<MetadataService>?
 
     private async Task<string> RunYtDlpAsync(IReadOnlyList<string> args, CancellationToken ct)
     {
-        var psi = new ProcessStartInfo(tools.YtDlpPath)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
-        foreach (var arg in tools.JsRuntimeArgs)
-            psi.ArgumentList.Add(arg);
-        foreach (var arg in (string[])["-J", "--no-warnings", .. args])
-            psi.ArgumentList.Add(arg);
+        var psi = tools.YtDlp().With(["-J", "--no-warnings", .. args]);
 
         using var process = Process.Start(psi) ?? throw new InvalidOperationException("Could not start yt-dlp.");
         var stdout = process.StandardOutput.ReadToEndAsync(ct);

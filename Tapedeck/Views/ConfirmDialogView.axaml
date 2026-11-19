@@ -9,9 +9,11 @@
     <!-- Scrim over the window, the question on an island in the middle -->
     <Panel>
         <Border Background="{DynamicResource Brush.Bg}" Opacity="0.7" />
+        <!-- as wide as it may be, narrower on a phone -->
         <controls:Island Classes="large"
-                         Width="440"
-                         HorizontalAlignment="Center"
+                         MaxWidth="440"
+                         Margin="16"
+                         HorizontalAlignment="Stretch"
                          VerticalAlignment="Center">
             <StackPanel Spacing="{StaticResource Space.4}">
                 <TextBlock Classes="title" Text="{Binding Request.Title}" TextWrapping="Wrap" />

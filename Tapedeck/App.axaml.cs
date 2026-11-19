@@ -1,7 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,12 +15,36 @@ using Tapedeck.Services;
 using Tapedeck.Theme;
 using Tapedeck.ViewModels;
 using Tapedeck.Views;
+using Tapedeck.Views.Mobile;
 
 namespace Tapedeck;
 
 public partial class App : Application
 {
     private AccentService accent = null!;
+    // the view Android created last; it asks for a new one whenever it creates the activity anew
+    private static Control? activityView;
+
+    /// <summary>The window on the desktop, the view's top level on a phone: what clipboard, launcher and pickers need.</summary>
+    public static TopLevel? CurrentTopLevel => Current?.ApplicationLifetime switch
+    {
+        IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow,
+        ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+        IActivityApplicationLifetime => TopLevel.GetTopLevel(activityView),
+        _ => null,
+    };
+
+    /// <summary>The services of this run, for a head that has to reach them from outside the views (e.g. a shared link).</summary>
+    public IServiceProvider? Services { get; private set; }
+
+    /// <summary>Accent for this run only (the desktop's <c>--accent</c>); wins over the saved one.</summary>
+    public Color? StartupAccent { get; init; }
+
+    /// <summary>
+    /// Registers what each platform does its own way, set by the head that starts the app.
+    /// It has to register at least the <see cref="PlayerService"/>.
+    /// </summary>
+    public Action<IServiceCollection>? ConfigurePlatform { get; init; }
 
     public override void Initialize()
     {
@@ -28,43 +55,80 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (this.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        switch (this.ApplicationLifetime)
         {
-            var store = new SettingsStore(AppPaths.DefaultDataDir());
-            var settings = store.Load();
-            // --accent for this run, else the saved accent, else the palette
-            if (StartupOptions.Parse(desktop.Args ?? []).Accent is { } accent)
-                this.accent.Apply(accent);
-            else if (settings.Accent is { } savedAccent)
-                this.accent.TryApply(savedAccent);
-
-            var services = AppServices.Build(this.accent, store, settings);
-            var log = services.GetRequiredService<ILogger<App>>();
-            // errors in UI code (commands, bindings, event handlers) that nobody caught
-            Dispatcher.UIThread.UnhandledException += (_, e) => log.LogCritical(e.Exception, "Unhandled error on the UI thread");
-            log.LogInformation("Library in {LibraryDir}", services.GetRequiredService<AppPaths>().LibraryDir);
-            // Off the UI thread: blocking on an await that resumes on the dispatcher would deadlock
-            Task.Run(async () =>
+            case IClassicDesktopStyleApplicationLifetime desktop:
             {
-                await services.GetRequiredService<Migrator>().MigrateAsync();
-                // downloads cut off by closing the app would otherwise stay "downloading" forever
-                await services.GetRequiredService<ITrackRepository>().ResetInterruptedDownloadsAsync();
-            }).GetAwaiter().GetResult();
-
-            var main = services.GetRequiredService<MainViewModel>();
-            desktop.MainWindow = new MainWindow { DataContext = main };
-            desktop.Exit += (_, e) =>
+                var (services, main) = this.Start();
+                var log = services.GetRequiredService<ILogger<App>>();
+                desktop.MainWindow = new MainWindow { DataContext = main };
+                Load(main);
+                desktop.Exit += (_, e) =>
+                {
+                    log.LogInformation("Tapedeck closed (exit code {ExitCode})", e.ApplicationExitCode);
+                    services.Dispose();
+                };
+                break;
+            }
+            case IActivityApplicationLifetime activity:
             {
-                log.LogInformation("Tapedeck closed (exit code {ExitCode})", e.ApplicationExitCode);
-                services.Dispose();
-            };
-            main.Library.LoadCommand.Execute(null);
-            // opens the audio device in the background, so the first click on a cover plays at once
-            main.Player.WarmUp();
-            // the "add to playlist" menus need the playlists before the page is opened
-            main.Playlists.LoadCommand.Execute(null);
+                // Android asks for a view whenever it creates the activity anew (e.g. after the app was in the
+                // background for long); the services and view models stay the same
+                var (_, main) = this.Start();
+                // a phone gets its own shell, with the navigation at the bottom
+                activity.MainViewFactory = () => activityView = OperatingSystem.IsAndroid()
+                    ? new MainMobileView { DataContext = main }
+                    : new MainView { DataContext = main };
+                Load(main);
+                break;
+            }
+            case ISingleViewApplicationLifetime singleView:
+            {
+                var (_, main) = this.Start();
+                singleView.MainView = new MainView { DataContext = main };
+                Load(main);
+                break;
+            }
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>Settings, accent, services and database.</summary>
+    private (ServiceProvider Services, MainViewModel Main) Start()
+    {
+        var store = new SettingsStore(AppPaths.DefaultDataDir());
+        var settings = store.Load();
+        // --accent for this run, else the saved accent, else the palette
+        if (this.StartupAccent is { } startupAccent)
+            this.accent.Apply(startupAccent);
+        else if (settings.Accent is { } savedAccent)
+            this.accent.TryApply(savedAccent);
+
+        var services = AppServices.Build(this.accent, store, settings, this.ConfigurePlatform);
+        this.Services = services;
+        var log = services.GetRequiredService<ILogger<App>>();
+        // errors in UI code (commands, bindings, event handlers) that nobody caught
+        Dispatcher.UIThread.UnhandledException += (_, e) => log.LogCritical(e.Exception, "Unhandled error on the UI thread");
+        log.LogInformation("Library in {LibraryDir}", services.GetRequiredService<AppPaths>().LibraryDir);
+        // Off the UI thread: blocking on an await that resumes on the dispatcher would deadlock
+        Task.Run(async () =>
+        {
+            await services.GetRequiredService<Migrator>().MigrateAsync();
+            // downloads cut off by closing the app would otherwise stay "downloading" forever
+            await services.GetRequiredService<ITrackRepository>().ResetInterruptedDownloadsAsync();
+        }).GetAwaiter().GetResult();
+
+        return (services, services.GetRequiredService<MainViewModel>());
+    }
+
+    /// <summary>Loads what the first page shows, once the view is there.</summary>
+    private static void Load(MainViewModel main)
+    {
+        main.Library.LoadCommand.Execute(null);
+        // opens the audio device in the background, so the first click on a cover plays at once
+        main.Player.WarmUp();
+        // the "add to playlist" menus need the playlists before the page is opened
+        main.Playlists.LoadCommand.Execute(null);
     }
 }

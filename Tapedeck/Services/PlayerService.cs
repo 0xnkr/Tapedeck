@@ -1,18 +1,10 @@
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Silk.NET.Core.Contexts;
-using Silk.NET.OpenAL;
-using Tapedeck.Core.Playback;
-using Tapedeck.Core.Services;
-using Tapedeck.Resources;
 
 namespace Tapedeck.Services;
 
@@ -25,44 +17,27 @@ public sealed record PlayRequest(
     long TrackId, string FilePath, string Title, string Artist, string? Cover, TimeSpan Duration, double? LoudnessLufs = null);
 
 /// <summary>
-/// Plays one track at a time, for listening in: Opus is decoded by <see cref="OpusPcmReader"/> and streamed
-/// in short blocks to OpenAL Soft, which brings its own native library for Windows, Linux and macOS.
-/// A background task owns all OpenAL calls; pause, seek and stop are requests it picks up.
+/// Plays one track at a time, for listening in. This part holds what the views see (track, position, playing)
+/// and the requests from the UI; each platform plays the audio in its own loop on a background thread
+/// (<see cref="Play"/>), which picks up pause and seek through <see cref="TakeRequests"/>.
 /// The audio file is open while a track is loaded, so callers stop it before writing or moving the file.
 /// </summary>
-public sealed partial class PlayerService(ILogger<PlayerService> log) : ObservableObject, IDisposable
+public abstract partial class PlayerService(ILogger log) : ObservableObject, IDisposable
 {
-    private const int BUFFER_COUNT = 4;
-    // a quarter second per buffer: a second of audio queued, short enough for a quick pause and seek
-    private const int BLOCK_SAMPLES = OpusPcmReader.SAMPLE_RATE / 4 * OpusPcmReader.CHANNELS;
-    private static readonly TimeSpan TICK = TimeSpan.FromMilliseconds(30);
     // often enough that a lyrics line changes with the singing, not a beat late
-    private static readonly TimeSpan POSITION_INTERVAL = TimeSpan.FromMilliseconds(100);
-    // asking for the default device enumerates all devices, so not on every tick
-    private static readonly TimeSpan DEVICE_CHECK_INTERVAL = TimeSpan.FromSeconds(2);
-
-    // ALC constants Silk.NET has no names for
-    private const int ALC_DEFAULT_ALL_DEVICES_SPECIFIER = 0x1012;
-    private const int ALC_ALL_DEVICES_SPECIFIER = 0x1013;
-    private const int ALC_CONNECTED = 0x313;
+    protected static readonly TimeSpan POSITION_INTERVAL = TimeSpan.FromMilliseconds(100);
 
     // property changes are raised on the UI thread the service was created on
     private readonly SynchronizationContext? ui = SynchronizationContext.Current;
     private readonly object requests = new();
-    // opening the device happens once, from the warm-up or the first play, whichever comes first
-    private readonly object openAl = new();
-    private AL? al;
-    private ALContext? alc;
-    private unsafe Device* device;
-    private unsafe Context* context;
-    // alcReopenDeviceSOFT (ALC_SOFT_reopen_device); null when OpenAL has no such function
-    private unsafe delegate* unmanaged[Cdecl]<Device*, byte*, int*, byte> reopenDevice;
 
     private CancellationTokenSource? run;
     private Task? loop;
     // requests from the UI thread to the loop
     private bool pauseRequested;
     private TimeSpan? seekRequest;
+
+    protected ILogger Log => log;
 
     /// <summary>The track loaded in the player, playing or paused; <c>null</c> hides the player bar.</summary>
     [ObservableProperty]
@@ -174,18 +149,17 @@ public sealed partial class PlayerService(ILogger<PlayerService> log) : Observab
     public Task StopIfLoadedAsync(long trackId) =>
         this.CurrentTrackId == trackId ? this.StopAsync() : Task.CompletedTask;
 
-    public unsafe void Dispose()
+    /// <summary>
+    /// Opens the audio output in the background, so the first click plays right away instead of after a second.
+    /// A missing output is reported only when the user actually plays.
+    /// </summary>
+    public abstract void WarmUp();
+
+    public virtual void Dispose()
     {
         this.run?.Cancel();
         this.loop?.Wait(TimeSpan.FromSeconds(1));
-        if (this.alc is { } alc)
-        {
-            alc.MakeContextCurrent((Context*)null);
-            if (this.context != null)
-                alc.DestroyContext(this.context);
-            if (this.device != null)
-                alc.CloseDevice(this.device);
-        }
+        GC.SuppressFinalize(this);
     }
 
     private void Start(PlayRequest request)
@@ -208,270 +182,51 @@ public sealed partial class PlayerService(ILogger<PlayerService> log) : Observab
     }
 
     /// <summary>The loop on a background thread: decode, queue, play, until the end or a stop.</summary>
-    private void Play(PlayRequest request, CancellationToken ct)
+    protected abstract void Play(PlayRequest request, CancellationToken ct);
+
+    /// <summary>For the loop: whether the user wants it paused, and a seek target it has not handled yet.</summary>
+    protected (bool Pause, TimeSpan? Seek) TakeRequests()
     {
-        try
+        lock (this.requests)
         {
-            this.EnsureOpenAl();
-        }
-        catch (Exception ex)
-        {
-            // no native library, no audio device
-            this.Fail(request.TrackId, string.Format(Strings.Player_NoDevice, ex.Message));
-            return;
-        }
-
-        OpusPcmReader reader;
-        try
-        {
-            reader = new OpusPcmReader(request.FilePath);
-        }
-        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException)
-        {
-            this.Fail(request.TrackId, string.Format(Strings.Player_Unreadable, ex.Message));
-            return;
-        }
-
-        // a Bluetooth speaker connected since the device was opened is the default output now
-        this.FollowDefaultDevice();
-
-        var al = this.al!;
-        using (reader)
-        {
-            if (reader.Duration > TimeSpan.Zero)
-                this.Post(() => this.Duration = reader.Duration);
-
-            var source = al.GenSource();
-            // the same leveling the phone does with the track gain in the tags
-            var gain = LoudnessMeter.PlaybackGain(request.LoudnessLufs);
-            al.SetSourceProperty(source, SourceFloat.MaxGain, Math.Max(gain, 1));
-            al.SetSourceProperty(source, SourceFloat.Gain, gain);
-            var buffers = al.GenBuffers(BUFFER_COUNT);
-            // sample frames of each queued buffer, to tell the position
-            var queued = new Queue<int>();
-            var start = TimeSpan.Zero;
-            long playedFrames = 0;
-            var paused = false;
-            var lastPosition = DateTime.MinValue;
-            var lastDeviceCheck = DateTime.UtcNow;
-            var finished = false;
-
-            try
-            {
-                foreach (var buffer in buffers)
-                    this.Fill(al, source, buffer, reader, queued);
-                al.SourcePlay(source);
-
-                while (!ct.IsCancellationRequested)
-                {
-                    bool wantPause;
-                    TimeSpan? seek;
-                    lock (this.requests)
-                    {
-                        wantPause = this.pauseRequested;
-                        seek = this.seekRequest;
-                        this.seekRequest = null;
-                    }
-
-                    if (seek is { } target)
-                    {
-                        al.SourceStop(source);
-                        Unqueue(al, source, queued.Count);
-                        queued.Clear();
-                        start = reader.Seek(target);
-                        playedFrames = 0;
-                        foreach (var buffer in buffers)
-                            this.Fill(al, source, buffer, reader, queued);
-                        if (!wantPause)
-                            al.SourcePlay(source);
-                    }
-
-                    if (wantPause != paused)
-                    {
-                        if (wantPause)
-                            al.SourcePause(source);
-                        else
-                            al.SourcePlay(source);
-                        paused = wantPause;
-                    }
-
-                    // refill the buffers the device has played
-                    al.GetSourceProperty(source, GetSourceInteger.BuffersProcessed, out var processed);
-                    for (var i = 0; i < processed; i++)
-                    {
-                        var done = Unqueue(al, source, 1);
-                        if (queued.TryDequeue(out var frames))
-                            playedFrames += frames;
-                        this.Fill(al, source, done, reader, queued);
-                    }
-
-                    if (queued.Count == 0)
-                    {
-                        finished = true;
-                        break;
-                    }
-
-                    // the device ran dry for a moment (slow disk, busy CPU): carry on
-                    al.GetSourceProperty(source, GetSourceInteger.SourceState, out var state);
-                    if (!paused && (SourceState)state == SourceState.Stopped)
-                        al.SourcePlay(source);
-
-                    if (DateTime.UtcNow - lastPosition >= POSITION_INTERVAL)
-                    {
-                        al.GetSourceProperty(source, GetSourceInteger.SampleOffset, out var offset);
-                        var position = start + TimeSpan.FromSeconds((double)(playedFrames + offset) / OpusPcmReader.SAMPLE_RATE);
-                        this.Post(() =>
-                        {
-                            if (this.CurrentTrackId == request.TrackId)
-                                this.Position = position;
-                        });
-                        lastPosition = DateTime.UtcNow;
-                    }
-
-                    // the output may change while playing, e.g. when the speaker connects or goes away
-                    if (DateTime.UtcNow - lastDeviceCheck >= DEVICE_CHECK_INTERVAL)
-                    {
-                        this.FollowDefaultDevice();
-                        lastDeviceCheck = DateTime.UtcNow;
-                    }
-
-                    Thread.Sleep(TICK);
-                }
-            }
-            finally
-            {
-                al.SourceStop(source);
-                al.GetSourceProperty(source, GetSourceInteger.BuffersQueued, out var left);
-                Unqueue(al, source, left);
-                al.DeleteSource(source);
-                al.DeleteBuffers(buffers);
-            }
-
-            if (finished)
-            {
-                // played to the end: unload, the bar disappears
-                this.Post(() =>
-                {
-                    if (this.CurrentTrackId != request.TrackId)
-                        return;
-                    this.run?.Dispose();
-                    this.run = null;
-                    this.loop = null;
-                    this.CurrentTrackId = null;
-                    this.IsPlaying = false;
-                    this.Position = TimeSpan.Zero;
-                });
-            }
+            var seek = this.seekRequest;
+            this.seekRequest = null;
+            return (this.pauseRequested, seek);
         }
     }
 
-    /// <summary>Decodes the next block into the buffer and queues it; at the end of the file nothing is queued.</summary>
-    private void Fill(AL al, uint source, uint buffer, OpusPcmReader reader, Queue<int> queued)
+    /// <summary>For the platform: something else wants the sound (a call, another app, unplugged headphones), so pause.</summary>
+    protected void PauseForSystem() => this.Post(() =>
     {
-        if (reader.Read(BLOCK_SAMPLES) is not { } block)
-            return;
-        al.BufferData(buffer, BufferFormat.Stereo16, block, OpusPcmReader.SAMPLE_RATE);
-        al.SourceQueueBuffers(source, [buffer]);
-        queued.Enqueue(block.Length / OpusPcmReader.CHANNELS);
-    }
-
-    /// <returns>The last buffer taken off the queue.</returns>
-    private static uint Unqueue(AL al, uint source, int count)
-    {
-        var ids = new uint[1];
-        for (var i = 0; i < count; i++)
-            al.SourceUnqueueBuffers(source, ids);
-        return ids[0];
-    }
-
-    /// <summary>
-    /// Opens the audio device in the background, so the first click plays right away instead of after a second.
-    /// A missing device is reported only when the user actually plays.
-    /// </summary>
-    public void WarmUp() => _ = Task.Run(() =>
-    {
-        try
-        {
-            this.EnsureOpenAl();
-        }
-        catch (Exception)
-        {
-            // reported on the first play
-        }
+        if (this.IsPlaying)
+            this.TogglePause();
     });
 
-    /// <summary>Opens the default audio device once.</summary>
-    private unsafe void EnsureOpenAl()
+    /// <summary>For the loop: the length the file itself tells.</summary>
+    protected void ReportDuration(TimeSpan duration) => this.Post(() => this.Duration = duration);
+
+    /// <summary>For the loop: where playback is now.</summary>
+    protected void ReportPosition(long trackId, TimeSpan position) => this.Post(() =>
     {
-        lock (this.openAl)
-        {
-            if (this.al is not null)
-                return;
+        if (this.CurrentTrackId == trackId)
+            this.Position = position;
+    });
 
-            var (alc, al) = LoadOpenAl();
-            var device = alc.OpenDevice(string.Empty);
-            if (device == null)
-                throw new InvalidOperationException(Strings.Player_NoDeviceFound);
-            var context = alc.CreateContext(device, null);
-            alc.MakeContextCurrent(context);
-            if (alc.IsExtensionPresent(device, "ALC_SOFT_reopen_device"))
-                this.reopenDevice = (delegate* unmanaged[Cdecl]<Device*, byte*, int*, byte>)alc.GetProcAddress(device, "alcReopenDeviceSOFT");
-
-            this.alc = alc;
-            this.device = device;
-            this.context = context;
-            this.al = al;
-            log.LogInformation("Audio output: {Device}", alc.GetContextProperty(device, (GetContextString)ALC_ALL_DEVICES_SPECIFIER));
-        }
-    }
-
-    /// <summary>
-    /// Moves playback to the system's default output when that is another device than the open one, or when the
-    /// open one was disconnected. Without this the player keeps the device it opened at startup: a Bluetooth
-    /// speaker connected later stays silent while other apps play on it. Reopening keeps the source and its
-    /// queued buffers, so a playing track just carries on on the new device.
-    /// </summary>
-    private unsafe void FollowDefaultDevice()
+    /// <summary>For the loop: played to the end, so unload; the bar disappears.</summary>
+    protected void ReportFinished(long trackId) => this.Post(() =>
     {
-        lock (this.openAl)
-        {
-            if (this.alc is not { } alc || this.device == null || this.reopenDevice == null)
-                return;
+        if (this.CurrentTrackId != trackId)
+            return;
+        this.run?.Dispose();
+        this.run = null;
+        this.loop = null;
+        this.CurrentTrackId = null;
+        this.IsPlaying = false;
+        this.Position = TimeSpan.Zero;
+    });
 
-            // OpenAL Soft answers the default from the device list it built first; asking for the whole list
-            // enumerates the devices again (a few milliseconds), so the default is the current one
-            alc.GetContextProperty((Device*)null, (GetContextString)ALC_ALL_DEVICES_SPECIFIER);
-            var wanted = alc.GetContextProperty((Device*)null, (GetContextString)ALC_DEFAULT_ALL_DEVICES_SPECIFIER);
-            var current = alc.GetContextProperty(this.device, (GetContextString)ALC_ALL_DEVICES_SPECIFIER);
-            var connected = 1;
-            alc.GetContextProperty(this.device, (GetContextInteger)ALC_CONNECTED, 1, &connected);
-            if (connected != 0 && (string.IsNullOrEmpty(wanted) || wanted == current))
-                return;
-
-            // null opens the default device; on failure the old one stays
-            var moved = this.reopenDevice(this.device, null, null) != 0;
-            log.LogInformation("Audio output {Result} from {From} to {To} (connected: {Connected})",
-                moved ? "moved" : "could not move", current, wanted, connected != 0);
-        }
-    }
-
-    /// <summary>
-    /// Loads the bundled OpenAL Soft. .NET's own lookup finds it next to the app, under <c>runtimes/</c> and in the folder
-    /// a single-file Tapedeck.exe extracts it to; Silk.NET's lookup misses the latter, so it is only the fallback.
-    /// </summary>
-    private static (ALContext Alc, AL Al) LoadOpenAl()
-    {
-        var name = OperatingSystem.IsWindows() ? "soft_oal.dll"
-            : OperatingSystem.IsMacOS() ? "libopenal.dylib"
-            : "libopenal.so";
-        if (!NativeLibrary.TryLoad(name, typeof(PlayerService).Assembly, null, out var handle))
-            return (ALContext.GetApi(true), AL.GetApi(true));
-
-        var exports = new LamdaNativeContext(symbol => NativeLibrary.TryGetExport(handle, symbol, out var address) ? address : 0);
-        return (new ALContext(exports), new AL(exports));
-    }
-
-    private void Fail(long trackId, string message)
+    /// <summary>For the loop: the track cannot be played; the text says why.</summary>
+    protected void Fail(long trackId, string message)
     {
         log.LogWarning("Playback of track {TrackId} failed: {Message}", trackId, message);
         this.Post(() => this.OnFailed(trackId, message));

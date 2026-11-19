@@ -320,7 +320,7 @@ Tapedeck has a test bench for the sound analysis. It measures every song without
 ten that sound most alike, by sound alone:
 
 ```bash
-dotnet run --project Tapedeck -- --audio-report 20
+dotnet run --project Tapedeck.Desktop -- --audio-report 20
 ```
 
 Good signs: ballads find ballads, bangers find bangers, and the farthest songs of the same genre are the opposite

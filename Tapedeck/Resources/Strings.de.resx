@@ -1719,4 +1719,37 @@
   <data name="Confirm_SoundAnalyzed" xml:space="preserve">
     <value>Klang von {0} Titeln analysiert. „Tags schreiben“ überträgt ihn in die Dateien.</value>
   </data>
+  <data name="Activity_PreparingTools" xml:space="preserve">
+    <value>Bereitet yt-dlp und ffmpeg vor (einmalig) …</value>
+  </data>
+  <data name="StorageAccess_Title" xml:space="preserve">
+    <value>Tapedeck braucht Zugriff auf deine Musik</value>
+  </data>
+  <data name="StorageAccess_Text" xml:space="preserve">
+    <value>Tapedeck speichert deine Songs in Music/Tapedeck, wo jeder Musikplayer sie findet, und hält dort Tags, Lyrics und Playlists aktuell. Dafür fragt Android einmal nach dem Zugriff auf alle Dateien.</value>
+  </data>
+  <data name="StorageAccess_Grant" xml:space="preserve">
+    <value>Zugriff erlauben</value>
+  </data>
+  <data name="Credit_Python" xml:space="preserve">
+    <value>Führt yt-dlp unter Android aus</value>
+  </data>
+  <data name="Credit_QuickJs" xml:space="preserve">
+    <value>JavaScript-Runtime für yt-dlp unter Android</value>
+  </data>
+  <data name="Credit_YoutubedlAndroid" xml:space="preserve">
+    <value>Python und FFmpeg, gebaut für Android</value>
+  </data>
+  <data name="Notification_WorkChannel" xml:space="preserve">
+    <value>Arbeit im Hintergrund</value>
+  </data>
+  <data name="Notification_Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="Playlist_MoveUp" xml:space="preserve">
+    <value>Nach oben</value>
+  </data>
+  <data name="Playlist_MoveDown" xml:space="preserve">
+    <value>Nach unten</value>
+  </data>
 </root>

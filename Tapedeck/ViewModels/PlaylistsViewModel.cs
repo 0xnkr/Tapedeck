@@ -89,6 +89,9 @@ public partial class PlaylistsViewModel(
     [RelayCommand]
     private void CreateSmart() => this.OpenSmartEditor(0);
 
+    /// <summary>The Spotify page is not part of the phone app (yet).</summary>
+    public bool CanImportFromSpotify { get; } = !OperatingSystem.IsAndroid();
+
     /// <summary>Opens the page that imports the most played songs of a Spotify streaming history.</summary>
     [RelayCommand]
     private void ImportFromSpotify() => navigation.Open(openSpotifyImport());

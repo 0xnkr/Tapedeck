@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Android head: starts the shared app on the phone with the tools that ship inside the APK.
+         Before the first build: powershell -ExecutionPolicy Bypass -File tools/android-natives.ps1 -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0-android</TargetFramework>
+        <!-- Android 13: the audio permissions and scoped storage behave the same from here on -->
+        <SupportedOSPlatformVersion>33</SupportedOSPlatformVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Tapedeck.Android</RootNamespace>
+        <ApplicationId>app.tapedeck</ApplicationId>
+        <ApplicationTitle>Tapedeck</ApplicationTitle>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>0.0.0</ApplicationDisplayVersion>
+        <!-- Local builds; a release gets its version from the git tag -->
+        <Version>0.0.0-dev</Version>
+        <!-- the bundled Python, ffmpeg and QuickJS exist only for arm64 -->
+        <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+        <!-- Dapper and the DI container use reflection, so trimming would break at runtime -->
+        <PublishTrimmed>false</PublishTrimmed>
+        <!-- AOT needs trimming; without it the release runs on the JIT like the debug build -->
+        <RunAOTCompilation>false</RunAOTCompilation>
+    </PropertyGroup>
+
+    <!-- A release passes its tag's version (-p:Version=1.5.0-beta.1): the phone shows 1.5.0-beta.1, and the version
+         code Android compares for updates becomes 10500 (MAJOR·10000 + MINOR·100 + PATCH). -->
+    <PropertyGroup Condition="'$(Version)' != '0.0.0-dev'">
+        <VersionCore>$([System.Text.RegularExpressions.Regex]::Replace($(Version), '[-+].*$', ''))</VersionCore>
+        <ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
+        <ApplicationVersion>$([MSBuild]::Add($([MSBuild]::Add($([MSBuild]::Multiply($([System.Version]::Parse($(VersionCore)).Major), 10000)), $([MSBuild]::Multiply($([System.Version]::Parse($(VersionCore)).Minor), 100)))), $([System.Version]::Parse($(VersionCore)).Build)))</ApplicationVersion>
+    </PropertyGroup>
+
+    <!-- Python, ffmpeg and QuickJS as lib*.so in native/arm64-v8a: an app may only start programs from its native
+         library folder. The SDK takes them in by the folder name. The *.zip.so files hold their shared libraries and
+         are no ELF files, hence the SDK's warnings about them are expected. -->
+    <ItemGroup>
+        <None Remove="native/**" />
+        <!-- the downloaded AARs are only unpacked by the script, never bound as Java libraries -->
+        <None Remove="natives-cache/**" />
+        <AndroidLibrary Remove="natives-cache/**" />
+        <AndroidAarLibrary Remove="natives-cache/**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Android" Version="12.1.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tapedeck\Tapedeck.csproj" />
+    </ItemGroup>
+
+    <Target Name="CheckNatives" BeforeTargets="Build">
+        <Error Condition="!Exists('native/arm64-v8a/libpython.so') Or !Exists('Assets/tools/yt-dlp')"
+               Text="The bundled tools are missing. Run: powershell -ExecutionPolicy Bypass -File tools/android-natives.ps1" />
+    </Target>
+</Project>
