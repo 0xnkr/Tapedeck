@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Services;
@@ -95,6 +96,21 @@ public partial class MainViewModel : ViewModelBase
             this.Playlists.LoadCommand.Execute(null);
         else if (page == AppPage.Library)
             this.Library.RecheckFiles();
+    }
+
+    /// <summary>
+    /// A link shared with Tapedeck, e.g. from the YouTube app: shows the library with the link in its link row and adds
+    /// it, as if it had been pasted there. Share texts may carry a title before the link.
+    /// </summary>
+    public void AddSharedLink(string text)
+    {
+        // null splits at any whitespace
+        var link = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault(word => word.StartsWith("http", StringComparison.OrdinalIgnoreCase)) ?? text.Trim();
+        this.ShowPage(AppPage.Library);
+        this.Library.NewLink = link;
+        if (this.Library.AddLinkCommand.CanExecute(null))
+            this.Library.AddLinkCommand.Execute(null);
     }
 
     /// <summary>Escape and the mouse back button: close an open dialog first, else go back.</summary>
