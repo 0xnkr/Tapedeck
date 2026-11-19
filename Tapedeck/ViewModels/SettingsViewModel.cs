@@ -269,8 +269,10 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial int ParallelDownloads { get; set; }
 
+    // the default is stored as null, so it keeps following the platform (a phone takes fewer) instead of being frozen
+    // the first time the settings are opened
     partial void OnParallelDownloadsChanged(int value) =>
-        this.store.Update(s => s with { ParallelDownloads = value });
+        this.store.Update(s => s with { ParallelDownloads = value == AppSettings.DEFAULT_PARALLEL_DOWNLOADS ? null : value });
 
     /// <summary>The phone player the tags are written for.</summary>
     [ObservableProperty]

@@ -29,8 +29,11 @@ public sealed record AppSettings(
     string? TargetPlayer = null,
     bool? LyricsAuto = null)
 {
-    /// <summary>Clearly faster than one at a time, and still below what makes YouTube refuse.</summary>
-    public const int DEFAULT_PARALLEL_DOWNLOADS = 3;
+    /// <summary>
+    /// Clearly faster than one at a time, and still below what makes YouTube refuse. A phone takes two: each download
+    /// also starts Python and ffmpeg.
+    /// </summary>
+    public static readonly int DEFAULT_PARALLEL_DOWNLOADS = OperatingSystem.IsAndroid() ? 2 : 3;
 
     public const int MAX_PARALLEL_DOWNLOADS = 4;
 }
