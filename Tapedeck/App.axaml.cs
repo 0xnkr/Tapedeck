@@ -54,6 +54,15 @@ public partial class App : Application
                 };
                 break;
             }
+            case IActivityApplicationLifetime activity:
+            {
+                // Android asks for a view whenever it creates the activity anew (e.g. after the app was in the
+                // background for long); the services and view models stay the same
+                var (_, main) = this.Start();
+                activity.MainViewFactory = () => new MainView { DataContext = main };
+                Load(main);
+                break;
+            }
             case ISingleViewApplicationLifetime singleView:
             {
                 var (_, main) = this.Start();
