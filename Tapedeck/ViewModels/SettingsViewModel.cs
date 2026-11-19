@@ -65,7 +65,7 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly SettingsStore store;
     private readonly AppPaths paths;
     private readonly LibraryMover mover;
-    private readonly ToolService tools;
+    private readonly IToolHost tools;
     private readonly IAccentService accent;
     private readonly ActivityService activity;
     private readonly IPlatformService platform;
@@ -81,7 +81,7 @@ public partial class SettingsViewModel : ViewModelBase
 
     private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
-    public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, ToolService tools,
+    public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, IToolHost tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
         DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres,
         ITrackRepository repository, LibraryViewModel library, LyricsQueue lyrics, LyricsService lyricsService)
@@ -179,7 +179,10 @@ public partial class SettingsViewModel : ViewModelBase
     public partial string? FFmpegVersion { get; private set; }
 
     [ObservableProperty]
-    public partial string? DenoVersion { get; private set; }
+    public partial string? JsRuntimeVersion { get; private set; }
+
+    /// <summary>The JS runtime yt-dlp uses on this platform, e.g. Deno.</summary>
+    public string JsRuntimeName => this.tools.JsRuntimeName;
 
     /// <summary>The user's own Last.fm API key; empty turns Last.fm off.</summary>
     [ObservableProperty]
@@ -208,7 +211,7 @@ public partial class SettingsViewModel : ViewModelBase
         var versions = await this.tools.GetVersionsAsync();
         this.YtDlpVersion = versions.YtDlp;
         this.FFmpegVersion = versions.FFmpeg;
-        this.DenoVersion = versions.Deno;
+        this.JsRuntimeVersion = versions.JsRuntime;
         await this.CountLastFmPendingAsync();
         await this.CountLyricsPendingAsync();
     }

@@ -320,9 +320,9 @@
 
                             <Border Classes="row">
                                 <StackPanel Spacing="2">
-                                    <TextBlock Classes="body-strong" Text="Deno" />
+                                    <TextBlock Classes="body-strong" Text="{Binding JsRuntimeName}" />
                                     <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
-                                               Text="{Binding DenoVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
+                                               Text="{Binding JsRuntimeVersion, TargetNullValue={x:Static res:Strings.Tools_NotInstalled}}" />
                                 </StackPanel>
                             </Border>
 

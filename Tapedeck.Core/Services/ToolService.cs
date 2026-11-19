@@ -1,16 +1,15 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System.ComponentModel;
 using System.Diagnostics;
 using YoutubeDLSharp;
 
 namespace Tapedeck.Core.Services;
 
 /// <summary>
-/// Manages yt-dlp, ffmpeg and Deno in the app's tools folder.
+/// The desktop's tools: yt-dlp, ffmpeg and Deno downloaded into the app's tools folder.
 /// yt-dlp needs Deno as its JS runtime to fully extract YouTube.
 /// </summary>
-public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = null)
+public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = null) : IToolHost
 {
     private readonly ILogger log = (ILogger?)logger ?? NullLogger.Instance;
 
@@ -18,11 +17,14 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
     public string FFmpegPath => Path.Combine(paths.ToolsDir, Utils.FfmpegBinaryName);
     public string DenoPath => Path.Combine(paths.ToolsDir, OperatingSystem.IsWindows() ? "deno.exe" : "deno");
 
-    /// <summary>All binaries are present, so <see cref="EnsureToolsAsync"/> has nothing to download.</summary>
-    public bool HasAllTools => File.Exists(this.YtDlpPath) && File.Exists(this.FFmpegPath) && File.Exists(this.DenoPath);
+    public string JsRuntimeName => "Deno";
+
+    public bool IsReady => File.Exists(this.YtDlpPath) && File.Exists(this.FFmpegPath) && File.Exists(this.DenoPath);
+
+    public bool HasFFmpeg => File.Exists(this.FFmpegPath);
 
     /// <summary>Downloads missing binaries. Existing ones are left untouched.</summary>
-    public async Task EnsureToolsAsync()
+    public async Task SetupAsync()
     {
         Directory.CreateDirectory(paths.ToolsDir);
         if (!File.Exists(this.YtDlpPath))
@@ -42,13 +44,9 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
         }
     }
 
-    /// <summary><c>yt-dlp -U</c>. Without regular updates yt-dlp breaks whenever YouTube changes.</summary>
-    public async Task<string> UpdateYtDlpAsync()
-    {
-        var output = await this.CreateClient().RunUpdate();
-        this.log.LogInformation("yt-dlp update: {Output}", output.Trim());
-        return output;
-    }
+    public ProcessStartInfo YtDlp() => ToolProcess.StartInfo(this.YtDlpPath).With(this.JsRuntimeArgs);
+
+    public ProcessStartInfo FFmpeg() => ToolProcess.StartInfo(this.FFmpegPath);
 
     public YoutubeDL CreateClient() => new()
     {
@@ -57,7 +55,25 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
         OutputFolder = paths.TempDir,
     };
 
-    /// <summary>Installed versions; <c>null</c> for a tool that is missing or does not start.</summary>
+    public async Task<string> UpdateYtDlpAsync()
+    {
+        using var process = Process.Start(ToolProcess.StartInfo(this.YtDlpPath).With(["-U"]))
+                            ?? throw new InvalidOperationException("Could not start yt-dlp.");
+        var output = process.StandardOutput.ReadToEndAsync();
+        var errors = process.StandardError.ReadToEndAsync();
+        await process.WaitForExitAsync();
+        var text = (await output).Trim();
+        var error = (await errors).Trim();
+        this.log.LogInformation("yt-dlp update: {Output}", text);
+        // a failed update ends with exit code 100 (seen when GitHub timed out)
+        if (process.ExitCode != 0)
+        {
+            this.log.LogWarning("yt-dlp update failed with exit code {ExitCode}: {Error}", process.ExitCode, error);
+            throw new InvalidOperationException(error.Length > 0 ? error : text);
+        }
+        return text;
+    }
+
     public async Task<ToolVersions> GetVersionsAsync() => new(
         await FirstLineAsync(this.YtDlpPath, "--version"),
         await FirstLineAsync(this.FFmpegPath, "-version"),
@@ -82,34 +98,11 @@ public sealed class ToolService(AppPaths paths, ILogger<ToolService>? logger = n
     {
         if (!File.Exists(exe))
             return null;
-
-        var psi = new ProcessStartInfo(exe)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
-        psi.ArgumentList.Add(argument);
-        try
-        {
-            using var process = Process.Start(psi);
-            if (process is null)
-                return null;
-            var line = await process.StandardOutput.ReadLineAsync();
-            await process.WaitForExitAsync();
-            return string.IsNullOrWhiteSpace(line) ? null : ShortVersion(line);
-        }
-        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
-        {
-            return null;
-        }
+        var line = await ToolProcess.FirstLineAsync(ToolProcess.StartInfo(exe).With([argument]));
+        return line is null ? null : ShortVersion(line);
     }
 
     /// <summary>Arguments that make yt-dlp use the bundled Deno runtime.</summary>
     public IReadOnlyList<string> JsRuntimeArgs =>
         File.Exists(this.DenoPath) ? ["--js-runtimes", $"deno:{this.DenoPath}"] : [];
 }
-
-/// <summary>Versions of the bundled tools; <c>null</c> when a tool is missing.</summary>
-public sealed record ToolVersions(string? YtDlp, string? FFmpeg, string? Deno);
