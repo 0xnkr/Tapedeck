@@ -1,3 +1,4 @@
+using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -5,6 +6,7 @@ using Android.OS;
 using Avalonia.Android;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Tapedeck.Android.Services;
 using Tapedeck.ViewModels;
 
 namespace Tapedeck.Android;
@@ -24,13 +26,33 @@ namespace Tapedeck.Android;
 [IntentFilter([Intent.ActionSend], Categories = [Intent.CategoryDefault], DataMimeType = "text/plain")]
 public sealed class MainActivity : AvaloniaMainActivity
 {
+    private const int NOTIFICATION_REQUEST = 1;
+
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
+        // the notification of the work in the background; without it the work still runs, just unseen
+        if (this.CheckSelfPermission(Manifest.Permission.PostNotifications) != Permission.Granted)
+            this.RequestPermissions([Manifest.Permission.PostNotifications], NOTIFICATION_REQUEST);
         // a recreated activity got its shared link already
         if (savedInstanceState is null)
             this.TakeSharedLink(this.Intent);
     }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+        // while the app is visible Android lets it start the work service; later it may be too late
+        Notifier?.SetVisible(true);
+    }
+
+    protected override void OnStop()
+    {
+        Notifier?.SetVisible(false);
+        base.OnStop();
+    }
+
+    private static WorkNotifier? Notifier => (Avalonia.Application.Current as App)?.Services?.GetService<WorkNotifier>();
 
     protected override void OnNewIntent(Intent? intent)
     {

@@ -53,6 +53,8 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
         }
 
         base.OnCreate();
+        // keeps the app running while it works, also with the screen off
+        (Avalonia.Application.Current as App)?.Services?.GetService<WorkNotifier>();
     }
 
     protected override AppBuilder CreateAppBuilder() =>
@@ -63,7 +65,7 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
 
     /// <summary>
     /// What the phone does its own way: the tools inside the APK, AudioTrack for playback, file dialogs with content
-    /// links.
+    /// links, the foreground service while working.
     /// </summary>
     private static void ConfigurePlatform(IServiceCollection services)
     {
@@ -71,5 +73,6 @@ public sealed class MainApplication(nint javaReference, JniHandleOwnership trans
         services.AddSingleton<PlayerService, AndroidPlayerService>();
         // registered after the shared one, so it wins
         services.AddSingleton<IPlatformService, AndroidPlatformService>();
+        services.AddSingleton<WorkNotifier>();
     }
 }

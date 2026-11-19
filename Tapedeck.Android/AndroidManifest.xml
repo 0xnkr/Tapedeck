@@ -3,6 +3,11 @@
           xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- downloads and imports keep running with the screen off (WorkService) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- the library is a plain folder in the shared storage (Music/Tapedeck) with .opus, .lrc and .m3u8 files that
          are renamed and moved; Google Play would not allow this permission, Tapedeck is installed from GitHub -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
