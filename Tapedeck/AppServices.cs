@@ -82,7 +82,7 @@ public static class AppServices
         services.AddSingleton<ExistingFileFinder>();
         services.AddSingleton<PlaylistSync>();
         services.AddSingleton<MusicBrainzQueue>();
-        services.AddSingleton<PlayerService>();
+        services.AddSingleton<PlayerService, OpenAlPlayerService>();
         services.AddSingleton<LoudnessQueue>();
         services.AddSingleton<AudioFeatureQueue>();
         services.AddSingleton<CoverQueue>();
