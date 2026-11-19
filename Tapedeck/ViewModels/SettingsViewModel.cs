@@ -397,7 +397,7 @@ public partial class SettingsViewModel : ViewModelBase
 
             this.store.Update(s => s with { LibraryDir = folder });
             // the .m3u8 files are written anew next to the moved tracks
-            PlaylistExporter.RemoveExported(oldDir);
+            this.playlistSync.RemoveExported(oldDir);
             await this.playlistSync.SyncNowAsync();
             this.LibraryDir = folder;
             this.activity.Confirm(string.Format(Strings.Confirm_LibraryMoved, moved));

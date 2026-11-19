@@ -139,4 +139,34 @@ public sealed class PlaylistTests : IAsyncLifetime
         Assert.False(File.Exists(this.paths.ToLibraryPath("New.m3u8")));
         Assert.True(File.Exists(foreign));
     }
+
+    [Fact]
+    public async Task Playlists_another_installation_wrote_stay()
+    {
+        // the computer's playlists, copied to the phone next to the phone app's own library
+        var copied = this.paths.ToLibraryPath("From The Computer.m3u8");
+        await File.WriteAllTextAsync(copied, "#EXTM3U\n#PLAYLIST:From The Computer\n#TAPEDECK\nA - One.opus\n");
+        var list = await this.playlists.CreateAsync("Phone");
+
+        await this.exporter.SyncAsync();
+        await this.playlists.DeleteAsync(list);
+        await this.exporter.SyncAsync();
+
+        Assert.True(File.Exists(copied));
+        Assert.False(File.Exists(this.paths.ToLibraryPath("Phone.m3u8")));
+    }
+
+    [Fact]
+    public async Task Moving_the_library_removes_only_the_own_playlists_from_the_old_folder()
+    {
+        await this.playlists.CreateAsync("Mine");
+        var copied = this.paths.ToLibraryPath("Copied.m3u8");
+        await File.WriteAllTextAsync(copied, "#EXTM3U\n#TAPEDECK\n");
+        await this.exporter.SyncAsync();
+
+        this.exporter.RemoveExported(this.paths.LibraryDir);
+
+        Assert.False(File.Exists(this.paths.ToLibraryPath("Mine.m3u8")));
+        Assert.True(File.Exists(copied));
+    }
 }
