@@ -50,6 +50,15 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        // touch sizes for a phone; global, so they also reach the menus' popups
+        if (OperatingSystem.IsAndroid())
+        {
+            var assembly = new Uri($"avares://{typeof(App).Assembly.GetName().Name}/");
+            this.Styles.Add(new Avalonia.Markup.Xaml.Styling.StyleInclude(assembly)
+            {
+                Source = new Uri("/Theme/MobileStyles.axaml", UriKind.Relative),
+            });
+        }
         // Before any window exists, so the accent resources are there for the first layout and the previewer
         this.accent = new AccentService(this.Resources);
     }
