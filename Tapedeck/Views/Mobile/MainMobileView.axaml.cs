@@ -62,7 +62,7 @@ public partial class MainMobileView : UserControl
     /// <summary>Keeps clear of the bars only when the app really draws behind them; otherwise the system already does.</summary>
     private void ApplySafeArea(Thickness padding)
     {
-        this.Padding = this.topLevel?.InsetsManager is { DisplaysEdgeToEdge: true } ? padding : default;
+        this.Shell.Margin = this.topLevel?.InsetsManager is { DisplaysEdgeToEdge: true } ? padding : default;
     }
 
     private void OnBackRequested(object? sender, RoutedEventArgs e)
