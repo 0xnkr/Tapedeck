@@ -113,6 +113,25 @@ public partial class MainViewModel : ViewModelBase
             this.Library.AddLinkCommand.Execute(null);
     }
 
+    /// <summary>
+    /// The phone's back gesture: closes a dialog, goes back to the list a page came from, else to the library.
+    /// </summary>
+    /// <returns><c>false</c> on the library itself, so the system may leave the app.</returns>
+    public bool TryGoBack()
+    {
+        if (this.Dialogs.CancelCurrent())
+            return true;
+        if (this.Navigation.CanGoBack)
+        {
+            this.Navigation.Back();
+            return true;
+        }
+        if (this.CurrentPage == AppPage.Library)
+            return false;
+        this.ShowPage(AppPage.Library);
+        return true;
+    }
+
     /// <summary>Escape and the mouse back button: close an open dialog first, else go back.</summary>
     [RelayCommand]
     private void Back()
