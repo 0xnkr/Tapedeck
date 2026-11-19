@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0-beta.1] - 2026-11-19
+
 ### Added
 
 - **Tapedeck for Android.** The phone gets its own Tapedeck: share a link from the YouTube or YouTube Music app, and the song lands tagged in `Music/Tapedeck`, where every player on the phone finds it. Everything the desktop app does with a library works there too: playlists with `.m3u8`, corrections, MusicBrainz, covers, lyrics, genres, loudness and the sound analysis. Only the Spotify import stays on the computer.
@@ -182,7 +184,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0-beta.1...HEAD
+[1.5.0-beta.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...v1.5.0-beta.1
 [1.4.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/0xnkr/Tapedeck/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/0xnkr/Tapedeck/compare/v1.2.0...v1.3.0
