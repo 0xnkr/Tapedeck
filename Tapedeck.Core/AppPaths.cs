@@ -25,6 +25,11 @@ public sealed class AppPaths(string dataDir, string libraryDir)
 
     public static string DefaultLibraryDir()
     {
+        // the phone's shared storage, where every music player finds the files (Music/Tapedeck);
+        // .NET's MyMusic would be a folder inside the app that nobody else can read
+        if (OperatingSystem.IsAndroid())
+            return Path.Combine(Environment.GetEnvironmentVariable("EXTERNAL_STORAGE") ?? "/storage/emulated/0", "Music", "Tapedeck");
+
         var music = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         if (string.IsNullOrEmpty(music))
             music = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Music");
@@ -37,8 +42,27 @@ public sealed class AppPaths(string dataDir, string libraryDir)
 
     public void EnsureDirectories()
     {
-        foreach (var dir in new[] { this.DataDir, this.LibraryDir, this.ToolsDir, this.ThumbsDir, this.CoversDir, this.TempDir })
+        foreach (var dir in new[] { this.DataDir, this.ToolsDir, this.ThumbsDir, this.CoversDir, this.TempDir })
             Directory.CreateDirectory(dir);
+        this.TryCreateLibraryDir();
+    }
+
+    /// <summary>
+    /// Creates the library folder if it can. On a phone it needs the access to all files, which the user may not
+    /// have granted yet; downloads create it again when they need it.
+    /// </summary>
+    /// <returns>Whether the folder exists now.</returns>
+    public bool TryCreateLibraryDir()
+    {
+        try
+        {
+            Directory.CreateDirectory(this.LibraryDir);
+            return true;
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or IOException)
+        {
+            return false;
+        }
     }
 
     /// <summary>Points the library to another folder; moving the files is up to the caller (<c>LibraryMover</c>).</summary>
