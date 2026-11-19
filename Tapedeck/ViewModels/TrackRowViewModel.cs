@@ -93,11 +93,14 @@ public partial class TrackRowViewModel : ViewModelBase
     public partial int? Rating { get; private set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsDownloading), nameof(CanPlay), nameof(PlayTooltip))]
+    [NotifyPropertyChangedFor(nameof(IsDownloading), nameof(IsDone), nameof(CanPlay), nameof(PlayTooltip))]
     [NotifyCanExecuteChangedFor(nameof(RemoveCommand), nameof(KeepCommand))]
     public partial DownloadStatus Status { get; set; }
 
     public bool IsDownloading => this.Status == DownloadStatus.Downloading;
+
+    /// <summary>The file is there; the phone's list shows the status only when it is not.</summary>
+    public bool IsDone => this.Status == DownloadStatus.Done;
 
     /// <summary>Download progress from 0 to 1 while <see cref="Status"/> is downloading.</summary>
     [ObservableProperty]
