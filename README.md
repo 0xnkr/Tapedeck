@@ -12,7 +12,7 @@ Paste a link, get a clean, tagged Opus file and a library your phone actually un
 [![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dot.net)
 [![Avalonia 12](https://img.shields.io/badge/Avalonia-12-8B44AC)](https://avaloniaui.net)
 [![Powered by yt-dlp](https://img.shields.io/badge/powered%20by-yt--dlp-FF0000?logo=youtube&logoColor=white)](https://github.com/yt-dlp/yt-dlp)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-FFB86B)](#build-it-yourself)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android-FFB86B)](#build-it-yourself)
 [![License: MIT](https://img.shields.io/badge/license-MIT-3DA639)](LICENSE)
 
 <br />
@@ -37,7 +37,7 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 | | |
 |---|---|
 | 🔗 **Add anything** | Paste a video or playlist link: `watch?v=`, `youtu.be`, Shorts, YouTube Music. Metadata comes in via `yt-dlp -J`. |
-| ⬇️ **Download as Opus** | Several tracks at once (3 by default), live progress, cancel at any time, and missing files are detected and fetched again. |
+| ⬇️ **Download as Opus** | Several tracks at once (3 by default, 2 on the phone), live progress, cancel at any time, and missing files are detected and fetched again. |
 | 🧠 **MusicBrainz matching** | New tracks are looked up on MusicBrainz in the background: proper album, album artist, release year, track number, genres and a square cover from the Cover Art Archive (or, without one, cut from the middle of the video thumbnail). Music videos get the album they belong to, and uncertain matches wait for you to confirm them. |
 | ✏️ **Fix the metadata** | Correct artist, title, album, album artist and year. Changes save while you type, and source chips show where each value comes from. |
 | 🎼 **Stable genres** | Fine genres like *G-Funk*, *Deep House* or *Dance-Pop* are mapped to a few main genres such as Hip-Hop, Electronic or Pop, and only those go into the file, so your phone sorts a mixed library into clear groups. Tracks MusicBrainz has no genres for can get them from [Last.fm](https://www.last.fm) with your own free API key. |
@@ -71,6 +71,16 @@ Most of the music you love is on YouTube, but a list of browser tabs isn't a lib
 
 Your music lands in `Music/Tapedeck` by default, and you can change that in the settings. App data (database, settings, tools, thumbnails) lives in the system's application data folder, `%APPDATA%\Tapedeck` on Windows.
 
+### On your phone (Android)
+
+Tapedeck also runs on Android phones (Android 13 or newer, 64-bit ARM). It is a standalone app with its own library in `Music/Tapedeck`, which every music player on the phone picks up. Share a link from the YouTube or YouTube Music app to Tapedeck to add it.
+
+1. Download `Tapedeck-<version>.apk` from the [releases](https://github.com/0xnkr/Tapedeck/releases) on the phone and open it. Android asks you once to allow installing apps from your browser or file manager.
+2. On first start, Tapedeck asks for **access to all files**. It needs it to write the songs, lyrics and playlists into `Music/Tapedeck` and to rename them when you correct a title. Without it, the app starts, but cannot download.
+3. Downloads keep running with the screen off; a notification shows the progress.
+
+The app is not on Google Play: Play does not allow apps that download from YouTube or that ask for access to all files. Updates are installed the same way, over the old version; your library stays. The Spotify import and the command line options are desktop-only. To move between computer and phone, export the library as CSV, copy the music folder and import the CSV on the other side.
+
 > [!TIP]
 > Coming from Spotify? In your Spotify account, request the **Extended streaming history** under privacy. Spotify sends a zip file after a few days. Then open **Playlists → From Spotify**, choose the zip and search your most played songs on YouTube. For a single playlist, paste its link there instead.
 
@@ -83,7 +93,9 @@ Your music lands in `Music/Tapedeck` by default, and you can change that in the 
 ## Third-party tools and licenses
 
 > [!IMPORTANT]
-> Tapedeck does **not** ship these tools. On first use it downloads them from the official release channels into its app data folder (`tools/`). **By downloading and using Tapedeck you agree to the licenses of these tools.**
+> The desktop app does **not** ship these tools. On first use it downloads them from the official release channels into its app data folder (`tools/`). **By downloading and using Tapedeck you agree to the licenses of these tools.**
+>
+> The Android app cannot download programs, so its APK ships yt-dlp, Python, FFmpeg and [QuickJS-ng](https://github.com/quickjs-ng/quickjs) (instead of Deno). Python and FFmpeg are the Termux builds published by [youtubedl-android](https://github.com/JunkFood02/youtubedl-android), with the libraries they need; all of them are listed with their licenses in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md#android-app).
 
 | Tool | What it does | License |
 |---|---|---|
@@ -125,7 +137,21 @@ dotnet publish Tapedeck.Desktop -p:PublishProfile=win-x64
 
 The executable bundles the .NET runtime and native libraries. Trimming is off on purpose because Dapper and the dependency injection rely on reflection. For Linux or macOS use `dotnet publish Tapedeck.Desktop -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true` (or `osx-arm64`); those builds are not tested yet.
 
-Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` (with its SHA-256) as a [release](https://github.com/0xnkr/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging. Every step is in [docs/release.md](docs/release.md).
+The Android app needs the Android workload and, once, the tools it ships (Python, FFmpeg, QuickJS-ng and yt-dlp, each pinned by version and SHA-256). Then build or install it on a connected phone:
+
+```bash
+dotnet workload install android
+```
+
+```bash
+powershell -ExecutionPolicy Bypass -File tools/android-natives.ps1
+```
+
+```bash
+dotnet build Tapedeck.Android -t:Install
+```
+
+Releases are built by GitHub Actions: every push runs the tests, and a version tag such as `v0.1.0` publishes `Tapedeck.exe` and the signed APK (each with its SHA-256) as a [release](https://github.com/0xnkr/Tapedeck/releases). The release notes are the tag's section of the [changelog](CHANGELOG.md), so rename `## [Unreleased]` to `## [0.1.0] - <date>` before tagging. Every step is in [docs/release.md](docs/release.md).
 
 Handy command line options for a single run:
 
@@ -170,7 +196,7 @@ See the [changelog](CHANGELOG.md) for what changed.
 
 Tapedeck is released under the [MIT License](LICENSE). Use it, fork it, ship it.
 
-The published `Tapedeck.exe` bundles a few open source libraries. Their copyright notices and license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and built into the app: click any license under **Settings → Open source** to read it, even offline. The downloaded tools keep their own licenses, see [Third-party tools and licenses](#third-party-tools-and-licenses).
+The published `Tapedeck.exe` and the APK bundle a few open source libraries. Their copyright notices and license texts are collected in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) and built into the app: click any license under **Settings → Open source** to read it, even offline. The downloaded tools keep their own licenses, see [Third-party tools and licenses](#third-party-tools-and-licenses).
 
 ## Credits
 
