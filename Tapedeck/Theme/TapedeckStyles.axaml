@@ -2,9 +2,9 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:Tapedeck.Controls">
-    <StyleInclude Source="avares://Tapedeck/Theme/Tokens/Typography.axaml" />
-    <StyleInclude Source="avares://Tapedeck/Theme/Controls/Inputs.axaml" />
-    <StyleInclude Source="avares://Tapedeck/Theme/Controls/RatingStyles.axaml" />
+    <StyleInclude Source="/Theme/Tokens/Typography.axaml" />
+    <StyleInclude Source="/Theme/Controls/Inputs.axaml" />
+    <StyleInclude Source="/Theme/Controls/RatingStyles.axaml" />
 
     <!-- Mouse wheel notches glide instead of jumping, in every list and page -->
     <Style Selector="ScrollViewer">
