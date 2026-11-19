@@ -1719,4 +1719,16 @@
   <data name="Confirm_SoundAnalyzed" xml:space="preserve">
     <value>Klang von {0} Titeln analysiert. „Tags schreiben“ überträgt ihn in die Dateien.</value>
   </data>
+  <data name="Activity_PreparingTools" xml:space="preserve">
+    <value>Bereitet yt-dlp und ffmpeg vor (einmalig) …</value>
+  </data>
+  <data name="StorageAccess_Title" xml:space="preserve">
+    <value>Tapedeck braucht Zugriff auf deine Musik</value>
+  </data>
+  <data name="StorageAccess_Text" xml:space="preserve">
+    <value>Tapedeck speichert deine Songs in Music/Tapedeck, wo jeder Musikplayer sie findet, und hält dort Tags, Lyrics und Playlists aktuell. Dafür fragt Android einmal nach dem Zugriff auf alle Dateien.</value>
+  </data>
+  <data name="StorageAccess_Grant" xml:space="preserve">
+    <value>Zugriff erlauben</value>
+  </data>
 </root>

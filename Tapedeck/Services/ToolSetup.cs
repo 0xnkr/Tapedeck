@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Tapedeck.Core.Services;
 using Tapedeck.Resources;
@@ -15,7 +16,8 @@ public sealed class ToolSetup(IToolHost tools, ActivityService activity)
         {
             if (tools.IsReady)
                 return;
-            using (activity.Begin(Strings.Activity_InstallingTools))
+            // the phone only unpacks what ships with the app, the desktop downloads it
+            using (activity.Begin(OperatingSystem.IsAndroid() ? Strings.Activity_PreparingTools : Strings.Activity_InstallingTools))
                 await (this.ready ??= tools.SetupAsync());
         }
         catch

@@ -139,6 +139,15 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preparing yt-dlp and ffmpeg (one time) ….
+        /// </summary>
+        public static string Activity_PreparingTools {
+            get {
+                return ResourceManager.GetString("Activity_PreparingTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reading playlist ….
         /// </summary>
         public static string Activity_ReadingPlaylist {
@@ -3573,6 +3582,33 @@ namespace Tapedeck.Resources {
         public static string Status_Pending {
             get {
                 return ResourceManager.GetString("Status_Pending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow access.
+        /// </summary>
+        public static string StorageAccess_Grant {
+            get {
+                return ResourceManager.GetString("StorageAccess_Grant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck saves your songs in Music/Tapedeck, where every music player finds them, and keeps their tags, lyrics and playlists up to date there. For that, Android asks you once to allow access to all files..
+        /// </summary>
+        public static string StorageAccess_Text {
+            get {
+                return ResourceManager.GetString("StorageAccess_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck needs access to your music.
+        /// </summary>
+        public static string StorageAccess_Title {
+            get {
+                return ResourceManager.GetString("StorageAccess_Title", resourceCulture);
             }
         }
         
