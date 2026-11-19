@@ -1,3 +1,4 @@
+using Android.Content;
 using Android.Media;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core.Playback;
@@ -10,6 +11,8 @@ namespace Tapedeck.Android.Services;
 /// <summary>
 /// The phone's player: Opus decoded by <see cref="OpusPcmReader"/>, streamed to an <see cref="AudioTrack"/> in short
 /// blocks. The background loop owns the track; it writes a block, then looks at pause, seek and stop.
+/// It asks for the audio focus while it plays and pauses when it loses it (a call, another app) or when the
+/// headphones are unplugged, like every music app.
 /// </summary>
 public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : PlayerService(log)
 {
@@ -37,10 +40,14 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
             return;
         }
 
+        var attributes = new AudioAttributes.Builder()
+            .SetUsage(AudioUsageKind.Media)!
+            .SetContentType(AudioContentType.Music)!
+            .Build()!;
         AudioTrack track;
         try
         {
-            track = CreateTrack();
+            track = CreateTrack(attributes);
         }
         catch (Exception ex) when (ex is Java.Lang.Exception or InvalidOperationException)
         {
@@ -48,6 +55,16 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
             this.Fail(request.TrackId, string.Format(Strings.Player_NoDevice, ex.Message));
             return;
         }
+
+        var context = global::Android.App.Application.Context;
+        var audio = (AudioManager)context.GetSystemService(Context.AudioService)!;
+        var focus = new AudioFocusRequestClass.Builder(AudioFocus.Gain)
+            .SetAudioAttributes(attributes)
+            .SetOnAudioFocusChangeListener(new FocusListener(this.PauseForSystem))
+            .Build()!;
+        var noisy = new NoisyReceiver(this.PauseForSystem);
+        context.RegisterReceiver(noisy, new IntentFilter(AudioManager.ActionAudioBecomingNoisy), ReceiverFlags.NotExported);
+        audio.RequestAudioFocus(focus);
 
         using (reader)
         using (track)
@@ -91,9 +108,15 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
                     if (wantPause != paused)
                     {
                         if (wantPause)
+                        {
                             track.Pause();
+                        }
                         else
+                        {
+                            // the focus may have gone to another app while paused
+                            audio.RequestAudioFocus(focus);
                             track.Play();
+                        }
                         paused = wantPause;
                     }
 
@@ -133,6 +156,8 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
             {
                 track.Stop();
                 track.Release();
+                audio.AbandonAudioFocusRequest(focus);
+                context.UnregisterReceiver(noisy);
             }
 
             if (finished)
@@ -140,14 +165,11 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
         }
     }
 
-    private static AudioTrack CreateTrack()
+    private static AudioTrack CreateTrack(AudioAttributes attributes)
     {
         var minimum = AudioTrack.GetMinBufferSize(OpusPcmReader.SAMPLE_RATE, ChannelOut.Stereo, Encoding.Pcm16bit);
         return new AudioTrack.Builder()
-            .SetAudioAttributes(new AudioAttributes.Builder()
-                .SetUsage(AudioUsageKind.Media)!
-                .SetContentType(AudioContentType.Music)!
-                .Build()!)
+            .SetAudioAttributes(attributes)
             .SetAudioFormat(new AudioFormat.Builder()
                 .SetSampleRate(OpusPcmReader.SAMPLE_RATE)!
                 .SetEncoding(Encoding.Pcm16bit)!
@@ -156,6 +178,26 @@ public sealed class AndroidPlayerService(ILogger<AndroidPlayerService> log) : Pl
             .SetBufferSizeInBytes(Math.Max(minimum, BUFFER_BYTES))
             .SetTransferMode(AudioTrackMode.Stream)
             .Build();
+    }
+
+    /// <summary>Pauses when another app takes the sound, for a moment or for good; ducking is left to the system.</summary>
+    private sealed class FocusListener(Action pause) : Java.Lang.Object, AudioManager.IOnAudioFocusChangeListener
+    {
+        public void OnAudioFocusChange(AudioFocus focusChange)
+        {
+            if (focusChange is AudioFocus.Loss or AudioFocus.LossTransient)
+                pause();
+        }
+    }
+
+    /// <summary>Unplugged headphones or a disconnected Bluetooth headset: pause instead of playing out loud.</summary>
+    private sealed class NoisyReceiver(Action pause) : BroadcastReceiver
+    {
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            if (intent?.Action == AudioManager.ActionAudioBecomingNoisy)
+                pause();
+        }
     }
 
     /// <summary>Raises quiet tracks; samples beyond the range are clipped instead of wrapping around.</summary>
