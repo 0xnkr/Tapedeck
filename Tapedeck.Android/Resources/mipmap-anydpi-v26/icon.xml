@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon: the launcher cuts the background to its own shape (circle, squircle) and puts the cassette on top.
+     Without it Android shrinks the old square icon onto a white disc. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/tapedeck_surface" />
+    <foreground android:drawable="@drawable/icon_foreground" />
+    <monochrome android:drawable="@drawable/icon_foreground" />
+</adaptive-icon>
