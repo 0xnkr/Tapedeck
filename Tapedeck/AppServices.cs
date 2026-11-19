@@ -49,8 +49,6 @@ public static class AppServices
         services.AddSingleton<PlaylistExporter>();
 
         services.AddSingleton<HttpClient>();
-        services.AddSingleton<ToolService>();
-        services.AddSingleton<IToolHost>(sp => sp.GetRequiredService<ToolService>());
         services.AddSingleton<MetadataService>();
         services.AddSingleton<ThumbnailService>();
         services.AddSingleton<TagWriter>();

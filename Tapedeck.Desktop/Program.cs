@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
+using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
 using Tapedeck.Services;
 
@@ -46,9 +47,10 @@ abstract class Program
         BuildAvaloniaApp(options).StartWithClassicDesktopLifetime(args);
     }
 
-    /// <summary>What the desktop does its own way: OpenAL for playback.</summary>
+    /// <summary>What the desktop does its own way: downloaded tools, OpenAL for playback.</summary>
     private static void ConfigurePlatform(IServiceCollection services)
     {
+        services.AddSingleton<IToolHost, ToolService>();
         services.AddSingleton<PlayerService, OpenAlPlayerService>();
     }
 
