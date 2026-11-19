@@ -2304,4 +2304,16 @@
     <value>Allow access</value>
     <comment>Android: button that opens the system screen for the access to all files</comment>
   </data>
+  <data name="Credit_Python" xml:space="preserve">
+    <value>Runs yt-dlp on Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_QuickJs" xml:space="preserve">
+    <value>JavaScript runtime for yt-dlp on Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
+  <data name="Credit_YoutubedlAndroid" xml:space="preserve">
+    <value>Python and FFmpeg built for Android</value>
+    <comment>What the project does for Tapedeck</comment>
+  </data>
 </root>

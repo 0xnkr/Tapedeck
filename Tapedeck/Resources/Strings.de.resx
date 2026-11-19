@@ -1731,4 +1731,13 @@
   <data name="StorageAccess_Grant" xml:space="preserve">
     <value>Zugriff erlauben</value>
   </data>
+  <data name="Credit_Python" xml:space="preserve">
+    <value>Führt yt-dlp unter Android aus</value>
+  </data>
+  <data name="Credit_QuickJs" xml:space="preserve">
+    <value>JavaScript-Runtime für yt-dlp unter Android</value>
+  </data>
+  <data name="Credit_YoutubedlAndroid" xml:space="preserve">
+    <value>Python und FFmpeg, gebaut für Android</value>
+  </data>
 </root>

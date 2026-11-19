@@ -661,6 +661,24 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Runs yt-dlp on Android.
+        /// </summary>
+        public static string Credit_Python {
+            get {
+                return ResourceManager.GetString("Credit_Python", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JavaScript runtime for yt-dlp on Android.
+        /// </summary>
+        public static string Credit_QuickJs {
+            get {
+                return ResourceManager.GetString("Credit_QuickJs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stores the library.
         /// </summary>
         public static string Credit_SQLite {
@@ -729,6 +747,15 @@ namespace Tapedeck.Resources {
         public static string Credit_TmdsDBus {
             get {
                 return ResourceManager.GetString("Credit_TmdsDBus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Python and FFmpeg built for Android.
+        /// </summary>
+        public static string Credit_YoutubedlAndroid {
+            get {
+                return ResourceManager.GetString("Credit_YoutubedlAndroid", resourceCulture);
             }
         }
         

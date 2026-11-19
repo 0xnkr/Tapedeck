@@ -30,6 +30,13 @@ public static class Credits
         new("FFmpeg", Strings.Credit_FFmpeg, "LGPL / GPL", "https://ffmpeg.org",
             "Copyright (c) 2000-2023 the FFmpeg developers", "gpl-3.0"),
         new("Deno", Strings.Credit_Deno, "MIT", "https://deno.com", "Copyright 2018-2026 the Deno authors", MIT),
+        // the tools of the Android app, inside the APK
+        new("Python", Strings.Credit_Python, "PSF-2.0", "https://www.python.org",
+            "Copyright (c) 2001 Python Software Foundation", "psf-2.0"),
+        new("QuickJS-ng", Strings.Credit_QuickJs, "MIT", "https://github.com/quickjs-ng/quickjs",
+            "Copyright (c) 2017-2026 Fabrice Bellard, Charlie Gordon, Ben Noordhuis, Saúl Ibarra Corretgé", MIT),
+        new("youtubedl-android", Strings.Credit_YoutubedlAndroid, "GPL-3.0", "https://github.com/JunkFood02/youtubedl-android",
+            null, "gpl-3.0"),
         new("Avalonia", Strings.Credit_Avalonia, "MIT", "https://avaloniaui.net",
             "Copyright 2013-2026 © The AvaloniaUI Project", MIT),
         new("YoutubeDLSharp", Strings.Credit_YoutubeDLSharp, "BSD-3-Clause", "https://github.com/Bluegrams/YoutubeDLSharp",
