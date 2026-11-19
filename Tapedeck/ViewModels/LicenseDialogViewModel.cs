@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Tapedeck.Core;
 using Tapedeck.Resources;
 using Tapedeck.Services;
 
@@ -25,6 +26,10 @@ public partial class LicenseDialogViewModel(Credit credit, IPlatformService plat
     [NotifyCanExecuteChangedFor(nameof(CopyCommand))]
     public partial string? Text { get; private set; }
 
+    /// <summary>The text with each paragraph in one line, so it wraps to any width; copied is the original.</summary>
+    [ObservableProperty]
+    public partial string? DisplayText { get; private set; }
+
     /// <summary>Completes when the dialog is closed.</summary>
     public Task<object?> Closed => this.closed.Task;
 
@@ -39,6 +44,7 @@ public partial class LicenseDialogViewModel(Credit credit, IPlatformService plat
         {
             this.Text = string.Format(Strings.License_ReadFailed, ex.Message);
         }
+        this.DisplayText = LicenseText.Reflow(this.Text);
     }
 
     /// <summary>Copies the copyright notice and the license text, e.g. to pass them on with the app.</summary>
