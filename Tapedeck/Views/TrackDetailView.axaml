@@ -8,6 +8,25 @@
              x:DataType="vm:TrackDetailViewModel">
 
     <UserControl.Styles>
+        <!-- The header's actions as buttons when there is room, else in a menu -->
+        <Style Selector="Button#MoreActions">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="UniformGrid#Facts">
+            <Setter Property="Columns" Value="4" />
+        </Style>
+        <ContainerQuery Name="page" Query="max-width:720">
+            <Style Selector="StackPanel#Actions">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="Button#MoreActions">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="UniformGrid#Facts">
+                <Setter Property="Columns" Value="2" />
+            </Style>
+        </ContainerQuery>
+
         <!-- Labels and values of the small fact grids (file, YouTube) -->
         <Style Selector="TextBlock.fact-label">
             <Setter Property="FontSize" Value="12" />
@@ -21,7 +40,8 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}"
+          Container.Name="page" Container.Sizing="Width">
 
         <controls:PageHeader Title="{Binding Title}"
                              Subtitle="{Binding Subtitle}"
@@ -45,6 +65,7 @@
                             ToolTip.Tip="{x:Static res:Strings.Detail_NextHint}"
                             AutomationProperties.Name="{x:Static res:Strings.Detail_Next}" />
                 </StackPanel>
+                <StackPanel Name="Actions" Orientation="Horizontal" Spacing="{StaticResource Space.2}">
                 <Button Classes="lg"
                         Content="{x:Static res:Strings.Track_OpenOnYoutube}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.ExternalLink}"
@@ -67,6 +88,25 @@
                         Content="{x:Static res:Strings.Detail_WriteTags}"
                         controls:ButtonAssist.Icon="{StaticResource Icon.Tag}"
                         Command="{Binding WriteTagsCommand}" />
+                </StackPanel>
+
+                <!-- Narrow (a phone): the same actions in a menu -->
+                <Button Name="MoreActions"
+                        Classes="icon"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static res:Strings.Track_MoreActions}">
+                    <controls:Glyph Data="{StaticResource Icon.More}" IsFilled="True" StrokeThickness="0" Width="20" Height="20" />
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight" Opening="OnPlaylistMenuOpening">
+                            <MenuItem Header="{x:Static res:Strings.Detail_WriteTags}" Command="{Binding WriteTagsCommand}" />
+                            <MenuItem Header="{x:Static res:Strings.Detail_Redownload}" Command="{Binding RedownloadCommand}" />
+                            <MenuItem Header="{x:Static res:Strings.Track_AddToPlaylist}"
+                                      Classes="playlist-menu"
+                                      ItemsSource="{Binding Row.PlaylistMenu}" />
+                            <MenuItem Header="{x:Static res:Strings.Track_OpenOnYoutube}" Command="{Binding OpenOnYoutubeCommand}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
             </StackPanel>
         </controls:PageHeader>
 
@@ -85,7 +125,8 @@
 
         <!-- The islands scroll below the fixed header when the window is too low for them -->
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <Grid ColumnDefinitions="400,*" ColumnSpacing="{StaticResource Space.3}" Margin="0,0,0,4">
+        <!-- Two columns, one below the other on a phone -->
+        <controls:AdaptiveColumns FirstWidth="400" Spacing="{StaticResource Space.3}" Margin="0,0,0,4">
 
             <!-- Left: preview and file -->
             <Grid RowDefinitions="Auto,*" RowSpacing="{StaticResource Space.3}">
@@ -221,7 +262,7 @@
 
                         <Grid ColumnDefinitions="112,*,96" ColumnSpacing="{StaticResource Space.3}" MinHeight="{StaticResource Control.Lg}">
                             <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" Text="{x:Static res:Strings.Field_Rating}" VerticalAlignment="Center" />
-                            <controls:RatingView Grid.Column="1" Value="{Binding Rating}" StarSize="22" VerticalAlignment="Center" />
+                            <controls:RatingView Grid.Column="1" Grid.ColumnSpan="2" Value="{Binding Rating}" StarSize="22" VerticalAlignment="Center" />
                         </Grid>
                     </StackPanel>
                 </controls:Island>
@@ -302,17 +343,28 @@
                 </controls:Island>
 
                 <controls:Island Grid.Row="3">
-                    <Grid ColumnDefinitions="*,*,*,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="16" VerticalAlignment="Top">
-                        <TextBlock Grid.ColumnSpan="4" Classes="title" Text="{x:Static res:Strings.Detail_YouTube}" Margin="0,0,0,8" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" Classes="fact-label" Text="{x:Static res:Strings.Detail_Channel}" />
-                        <TextBlock Grid.Row="1" Grid.Column="1" Classes="fact-label" Text="{x:Static res:Strings.Detail_Uploaded}" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Classes="fact-label" Text="{x:Static res:Strings.Detail_VideoId}" />
-                        <TextBlock Grid.Row="1" Grid.Column="3" Classes="fact-label" Text="{x:Static res:Strings.Detail_Added}" />
-                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="body" Text="{Binding Channel}" TextTrimming="CharacterEllipsis" />
-                        <TextBlock Grid.Row="2" Grid.Column="1" Classes="body" Text="{Binding UploadedAt}" />
-                        <TextBlock Grid.Row="2" Grid.Column="2" Classes="mono" Text="{Binding VideoId}" />
-                        <TextBlock Grid.Row="2" Grid.Column="3" Classes="body" Text="{Binding AddedAt}" />
-                    </Grid>
+                    <StackPanel VerticalAlignment="Top">
+                        <TextBlock Classes="title" Text="{x:Static res:Strings.Detail_YouTube}" Margin="0,0,0,14" />
+                        <!-- Four facts side by side, two by two when narrow -->
+                        <UniformGrid Name="Facts" ColumnSpacing="16" RowSpacing="12">
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="fact-label" Text="{x:Static res:Strings.Detail_Channel}" />
+                                <TextBlock Classes="body" Text="{Binding Channel}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="fact-label" Text="{x:Static res:Strings.Detail_Uploaded}" />
+                                <TextBlock Classes="body" Text="{Binding UploadedAt}" />
+                            </StackPanel>
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="fact-label" Text="{x:Static res:Strings.Detail_VideoId}" />
+                                <TextBlock Classes="mono" Text="{Binding VideoId}" />
+                            </StackPanel>
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="fact-label" Text="{x:Static res:Strings.Detail_Added}" />
+                                <TextBlock Classes="body" Text="{Binding AddedAt}" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </StackPanel>
                 </controls:Island>
 
                 <!--
@@ -404,7 +456,7 @@
                     </StackPanel>
                 </controls:Island>
             </Grid>
-        </Grid>
+        </controls:AdaptiveColumns>
         </ScrollViewer>
     </Grid>
 </UserControl>
