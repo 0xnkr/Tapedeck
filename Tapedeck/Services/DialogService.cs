@@ -4,10 +4,13 @@ using Tapedeck.ViewModels;
 
 namespace Tapedeck.Services;
 
-/// <summary>Shows confirmations and text prompts as overlay in the main window, one at a time.</summary>
+/// <summary>Shows confirmations, text prompts and the folder browser as overlay in the main window, one at a time.</summary>
 public sealed partial class DialogService : ObservableObject
 {
-    /// <summary>The open dialog (<see cref="ConfirmDialogViewModel"/>, <see cref="PromptDialogViewModel"/> or <see cref="LicenseDialogViewModel"/>), or <c>null</c>.</summary>
+    /// <summary>
+    /// The open dialog (<see cref="ConfirmDialogViewModel"/>, <see cref="PromptDialogViewModel"/>,
+    /// <see cref="FolderBrowserDialogViewModel"/> or <see cref="LicenseDialogViewModel"/>), or <c>null</c>.
+    /// </summary>
     [ObservableProperty]
     public partial ViewModelBase? Current { get; private set; }
 
@@ -22,6 +25,13 @@ public sealed partial class DialogService : ObservableObject
     public Task<string?> PromptAsync(PromptRequest request)
     {
         var dialog = new PromptDialogViewModel(request);
+        return this.ShowAsync(dialog, dialog.Answer);
+    }
+
+    /// <returns>The chosen folder, or <c>null</c> when cancelled or another dialog is already open.</returns>
+    public Task<string?> PickFolderAsync(FolderBrowserRequest request)
+    {
+        var dialog = new FolderBrowserDialogViewModel(request);
         return this.ShowAsync(dialog, dialog.Answer);
     }
 

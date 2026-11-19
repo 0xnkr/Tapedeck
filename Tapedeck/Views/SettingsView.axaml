@@ -51,6 +51,21 @@
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="{DynamicResource Brush.Text2}" />
         </Style>
+        <!-- The open source cards: three side by side, fewer as the page narrows (set here, not on the grid, so the
+             container queries below can change it) -->
+        <Style Selector="UniformGrid.credits">
+            <Setter Property="Columns" Value="3" />
+        </Style>
+        <ContainerQuery Name="page" Query="max-width:1000">
+            <Style Selector="UniformGrid.credits">
+                <Setter Property="Columns" Value="2" />
+            </Style>
+        </ContainerQuery>
+        <ContainerQuery Name="page" Query="max-width:720">
+            <Style Selector="UniformGrid.credits">
+                <Setter Property="Columns" Value="1" />
+            </Style>
+        </ContainerQuery>
         <!-- Setting title with its hint on the left, control on the right -->
         <Style Selector="TextBlock.setting-hint">
             <Setter Property="FontSize" Value="12" />
@@ -59,7 +74,8 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{StaticResource Space.3}"
+          Container.Name="page" Container.Sizing="Width">
 
         <controls:PageHeader Title="{x:Static res:Strings.Settings_Title}" />
 
@@ -81,7 +97,7 @@
                                 <StackPanel Classes="heading">
                                     <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_Library}" />
                                     <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
-                                               Text="{x:Static res:Strings.Settings_LibraryHint}" />
+                                               Text="{Binding LibraryHint}" />
                                 </StackPanel>
 
                                 <StackPanel Spacing="{StaticResource Space.2}">
@@ -284,6 +300,13 @@
                                         <TextBlock Classes="body-strong" Text="Tapedeck" />
                                         <TextBlock Classes="mono" FontSize="12" Foreground="{DynamicResource Brush.Text2}"
                                                    Text="{Binding AppVersion}" />
+                                        <!-- a newer release on GitHub; there is no app store to tell -->
+                                        <Button Classes="link"
+                                                HorizontalAlignment="Left"
+                                                Content="{Binding UpdateLabel}"
+                                                ToolTip.Tip="{x:Static res:Strings.Settings_UpdateAvailableHint}"
+                                                Command="{Binding OpenUpdateCommand}"
+                                                IsVisible="{Binding Update, Converter={x:Static ObjectConverters.IsNotNull}}" />
                                     </StackPanel>
                                     <Button Grid.Column="1"
                                             Classes="secondary"
@@ -408,7 +431,7 @@
                         <ItemsControl ItemsSource="{Binding Credits}" ItemTemplate="{StaticResource CreditCard}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                                    <UniformGrid Classes="credits" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
@@ -420,7 +443,7 @@
                         <ItemsControl ItemsSource="{Binding AlsoIncluded}" ItemTemplate="{StaticResource CreditCard}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="3" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
+                                    <UniformGrid Classes="credits" ColumnSpacing="{StaticResource Space.2}" RowSpacing="{StaticResource Space.2}" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>

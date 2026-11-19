@@ -1185,6 +1185,12 @@
   <data name="Tools_OpenLogHint" xml:space="preserve">
     <value>Öffnet log.txt mit allen Downloads, Importen und Fehlern. Hänge sie an einen Fehlerbericht an.</value>
   </data>
+  <data name="Settings_UpdateAvailable" xml:space="preserve">
+    <value>Version {0} verfügbar</value>
+  </data>
+  <data name="Settings_UpdateAvailableHint" xml:space="preserve">
+    <value>Öffnet den Download der neuen Version</value>
+  </data>
   <data name="Playlists_FromSpotify" xml:space="preserve">
     <value>Aus Spotify</value>
   </data>
@@ -1751,5 +1757,41 @@
   </data>
   <data name="Playlist_MoveDown" xml:space="preserve">
     <value>Nach unten</value>
+  </data>
+  <data name="FolderBrowser_Storage" xml:space="preserve">
+    <value>Interner Speicher</value>
+  </data>
+  <data name="FolderBrowser_Up" xml:space="preserve">
+    <value>Nach oben</value>
+  </data>
+  <data name="FolderBrowser_Empty" xml:space="preserve">
+    <value>Hier gibt es keine Ordner</value>
+  </data>
+  <data name="FolderBrowser_NewFolder" xml:space="preserve">
+    <value>Neuer Ordner</value>
+  </data>
+  <data name="FolderBrowser_NewFolderName" xml:space="preserve">
+    <value>Name des neuen Ordners</value>
+  </data>
+  <data name="FolderBrowser_Create" xml:space="preserve">
+    <value>Anlegen</value>
+  </data>
+  <data name="FolderBrowser_Choose" xml:space="preserve">
+    <value>Diesen Ordner verwenden</value>
+  </data>
+  <data name="FolderBrowser_InvalidName" xml:space="preserve">
+    <value>So kann ein Ordner nicht heißen.</value>
+  </data>
+  <data name="FolderBrowser_Exists" xml:space="preserve">
+    <value>Einen Ordner mit diesem Namen gibt es schon.</value>
+  </data>
+  <data name="FolderBrowser_CreateFailed" xml:space="preserve">
+    <value>Der Ordner ließ sich nicht anlegen: {0}</value>
+  </data>
+  <data name="FolderBrowser_ReadFailed" xml:space="preserve">
+    <value>Dieser Ordner ließ sich nicht lesen: {0}</value>
+  </data>
+  <data name="Settings_LibraryHintPhone" xml:space="preserve">
+    <value>Hier landen die Audio-Dateien. Jeder Musikplayer auf dem Handy findet sie hier.</value>
   </data>
 </root>

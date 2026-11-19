@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:res="using:Tapedeck.Resources"
+             xmlns:vm="using:Tapedeck.ViewModels"
+             xmlns:controls="using:Tapedeck.Controls"
+             x:Class="Tapedeck.Views.FolderBrowserDialogView"
+             x:DataType="vm:FolderBrowserDialogViewModel">
+
+    <!-- Scrim over the window, the folder list on an island in the middle -->
+    <Panel>
+        <Border Background="{DynamicResource Brush.Bg}" Opacity="0.7" />
+        <!-- as wide as it may be, narrower on a phone -->
+        <controls:Island Classes="large"
+                         MaxWidth="480"
+                         Margin="16"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center">
+            <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" RowSpacing="{StaticResource Space.3}">
+                <TextBlock Classes="title" Text="{Binding Request.Title}" TextWrapping="Wrap" />
+
+                <!-- where we are, and the way up -->
+                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource Space.2}">
+                    <Button Classes="icon"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.ChevronLeft}"
+                            ToolTip.Tip="{x:Static res:Strings.FolderBrowser_Up}"
+                            AutomationProperties.Name="{x:Static res:Strings.FolderBrowser_Up}"
+                            Command="{Binding UpCommand}" />
+                    <TextBlock Grid.Column="1"
+                               Classes="support"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource Brush.Text2}"
+                               Text="{Binding Location}" />
+                </Grid>
+
+                <!-- the subfolders; a tap opens one -->
+                <ScrollViewer Grid.Row="2" MaxHeight="380">
+                    <Panel>
+                        <ItemsControl ItemsSource="{Binding Folders}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:FolderEntry">
+                                    <Button Classes="text"
+                                            HorizontalAlignment="Stretch"
+                                            HorizontalContentAlignment="Left"
+                                            MinHeight="{StaticResource Control.Xl}"
+                                            controls:ButtonAssist.Icon="{StaticResource Icon.Folder}"
+                                            Content="{Binding Name}"
+                                            Command="{Binding $parent[ItemsControl].((vm:FolderBrowserDialogViewModel)DataContext).OpenCommand}"
+                                            CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Classes="support"
+                                   Foreground="{DynamicResource Brush.Text2}"
+                                   Text="{x:Static res:Strings.FolderBrowser_Empty}"
+                                   IsVisible="{Binding IsEmpty}" />
+                    </Panel>
+                </ScrollViewer>
+
+                <!-- a new folder in the open one -->
+                <StackPanel Grid.Row="3" Spacing="{StaticResource Space.2}">
+                    <Button Classes="dashed"
+                            HorizontalAlignment="Left"
+                            controls:ButtonAssist.Icon="{StaticResource Icon.Plus}"
+                            Content="{x:Static res:Strings.FolderBrowser_NewFolder}"
+                            Command="{Binding StartNamingCommand}"
+                            IsVisible="{Binding !IsNaming}" />
+                    <Grid Name="NamingRow" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="{StaticResource Space.2}" IsVisible="{Binding IsNaming}">
+                        <TextBox Name="NameBox"
+                                 Text="{Binding NewName}"
+                                 Watermark="{x:Static res:Strings.FolderBrowser_NewFolderName}"
+                                 AutomationProperties.Name="{x:Static res:Strings.FolderBrowser_NewFolderName}">
+                            <TextBox.KeyBindings>
+                                <KeyBinding Gesture="Enter" Command="{Binding CreateFolderCommand}" />
+                            </TextBox.KeyBindings>
+                        </TextBox>
+                        <Button Grid.Column="1"
+                                Content="{x:Static res:Strings.Dialog_Cancel}"
+                                Command="{Binding StopNamingCommand}" />
+                        <Button Grid.Column="2"
+                                Classes="tonal"
+                                Content="{x:Static res:Strings.FolderBrowser_Create}"
+                                Command="{Binding CreateFolderCommand}" />
+                    </Grid>
+                    <TextBlock Classes="support"
+                               Text="{Binding Error}"
+                               Foreground="{DynamicResource Brush.Error}"
+                               TextWrapping="Wrap"
+                               IsVisible="{Binding Error, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="{StaticResource Space.2}" HorizontalAlignment="Right">
+                    <Button Content="{x:Static res:Strings.Dialog_Cancel}"
+                            Command="{Binding CancelCommand}" />
+                    <Button Classes="tonal"
+                            Content="{x:Static res:Strings.FolderBrowser_Choose}"
+                            Command="{Binding ChooseCommand}" />
+                </StackPanel>
+            </Grid>
+        </controls:Island>
+    </Panel>
+</UserControl>

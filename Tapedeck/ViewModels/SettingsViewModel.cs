@@ -11,6 +11,7 @@ using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Playlists;
 using Tapedeck.Core.Services;
 using Tapedeck.Core.Settings;
+using Tapedeck.Core.Updates;
 using Tapedeck.Resources;
 using Tapedeck.Services;
 using Tapedeck.Theme;
@@ -78,14 +79,19 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly LibraryViewModel library;
     private readonly LyricsQueue lyrics;
     private readonly LyricsService lyricsService;
+    private readonly UpdateChecker updates;
+    // GitHub is asked once per start, when the settings are first shown
+    private bool updateChecked;
 
     private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, IToolHost tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
         DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres,
-        ITrackRepository repository, LibraryViewModel library, LyricsQueue lyrics, LyricsService lyricsService)
+        ITrackRepository repository, LibraryViewModel library, LyricsQueue lyrics, LyricsService lyricsService,
+        UpdateChecker updates)
     {
+        this.updates = updates;
         this.lyrics = lyrics;
         this.lyricsService = lyricsService;
         this.repository = repository;
@@ -165,8 +171,26 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     public partial string LibraryDir { get; private set; }
 
+    /// <summary>On the computer the folder is copied to the phone; on the phone the players find it right where it is.</summary>
+    public string LibraryHint { get; } = OperatingSystem.IsAndroid() ? Strings.Settings_LibraryHintPhone : Strings.Settings_LibraryHint;
+
     /// <summary>Version and build of the running app, e.g. <c>1.0.0 · 2e02d19</c>.</summary>
     public string AppVersion => AppInfo.DISPLAY;
+
+    /// <summary>A newer release on GitHub; <c>null</c> while up to date or not asked yet.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(UpdateLabel))]
+    public partial AvailableUpdate? Update { get; private set; }
+
+    public string UpdateLabel => this.Update is { } update ? string.Format(Strings.Settings_UpdateAvailable, update.Version) : string.Empty;
+
+    /// <summary>
+    /// The phone downloads the new APK right away (installed from the notification), the computer opens the release
+    /// page with its notes and the new .exe.
+    /// </summary>
+    [RelayCommand]
+    private Task OpenUpdateAsync() => this.Update is not { } update ? Task.CompletedTask
+        : this.platform.OpenUrlAsync(OperatingSystem.IsAndroid() && update.ApkUrl is { } apk ? apk : update.PageUrl);
 
     /// <summary>The log can be opened; without write access to the app data folder there is none.</summary>
     public bool HasLog => FileLog.Current is not null;
@@ -214,6 +238,11 @@ public partial class SettingsViewModel : ViewModelBase
         this.JsRuntimeVersion = versions.JsRuntime;
         await this.CountLastFmPendingAsync();
         await this.CountLyricsPendingAsync();
+        if (!this.updateChecked)
+        {
+            this.updateChecked = true;
+            this.Update = await this.updates.CheckAsync(AppInfo.VERSION);
+        }
     }
 
     private async Task CountLastFmPendingAsync() => this.LastFmPending = await this.lastFmGenres.CountPendingAsync();
@@ -365,11 +394,21 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(IsIdle))]
     private async Task ChangeLibraryAsync()
     {
-        var folder = await this.platform.PickFolderAsync(Strings.Settings_ChooseFolder, this.paths.LibraryDir);
+        this.Notice = null;
+        string? folder;
+        try
+        {
+            folder = await this.platform.PickFolderAsync(Strings.Settings_ChooseFolder, this.paths.LibraryDir);
+        }
+        catch (Exception ex)
+        {
+            // the command would swallow it, and the tap would seem to do nothing
+            this.Notice = string.Format(Strings.Notice_MoveFailed, ex.Message);
+            return;
+        }
         if (folder is null)
             return;
 
-        this.Notice = null;
         var check = await this.mover.CheckAsync(folder);
         if (!check.IsOk)
         {
