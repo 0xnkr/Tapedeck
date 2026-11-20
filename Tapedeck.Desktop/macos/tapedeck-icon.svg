@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The macOS app icon: the cassette (Icon.Cassette in Theme/Icons.axaml, a 24 unit grid) in the accent on surface-1,
+     on Apple's 1024 px grid (824 px rounded square with 100 px margin). tools/macos-bundle.sh renders it to the .icns. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="#111113" />
+  <g transform="translate(176 176) scale(28)">
+    <path d="M6,5.5 H18 A3.5,3.5 0 0 1 21.5,9 V15 A3.5,3.5 0 0 1 18,18.5 H6 A3.5,3.5 0 0 1 2.5,15 V9 A3.5,3.5 0 0 1 6,5.5 Z M6.5,11 A2,2 0 1 0 10.5,11 A2,2 0 1 0 6.5,11 Z M13.5,11 A2,2 0 1 0 17.5,11 A2,2 0 1 0 13.5,11 Z M7,18.5 l1.5,-3 h7 l1.5,3"
+          fill="none" stroke="#FFB870" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M7.75,11 a0.75,0.75 0 1 0 1.5,0 a0.75,0.75 0 1 0 -1.5,0 Z M14.75,11 a0.75,0.75 0 1 0 1.5,0 a0.75,0.75 0 1 0 -1.5,0 Z"
+          fill="#FFB870" />
+  </g>
+</svg>
