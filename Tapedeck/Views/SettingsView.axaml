@@ -178,7 +178,7 @@
                                 </Grid>
 
                                 <!-- Some phone players read the tags differently; switching rewrites the files with "Write tags" -->
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14" IsVisible="{Binding ShowTargetPlayer}">
                                     <StackPanel Spacing="2" VerticalAlignment="Center">
                                         <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Settings_TargetPlayer}" />
                                         <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_TargetPlayerHint}" />
@@ -216,6 +216,60 @@
                                                        Text="{x:Static res:Strings.Settings_FileNameCollision}" />
                                         </StackPanel>
                                     </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </controls:Island>
+
+                        <!-- Google keeps the Opus library, Apple also gets .m4a copies in a folder of their own -->
+                        <controls:Island Classes="large" IsVisible="{Binding ShowTargetSystem}">
+                            <StackPanel Spacing="{StaticResource Space.4}">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Classes="title" Text="{x:Static res:Strings.Settings_TargetSystem}" />
+                                        <TextBlock Classes="setting-hint" Text="{x:Static res:Strings.Settings_TargetSystemHint}" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Classes="tonal"
+                                            VerticalAlignment="Center"
+                                            Content="{Binding TargetSystemText}"
+                                            AutomationProperties.Name="{x:Static res:Strings.Settings_TargetSystem}">
+                                        <Button.Flyout>
+                                            <MenuFlyout Placement="BottomEdgeAlignedRight"
+                                                        FlyoutPresenterClasses="choice-menu"
+                                                        ItemsSource="{Binding TargetSystemChoices}" />
+                                        </Button.Flyout>
+                                    </Button>
+                                </Grid>
+
+                                <StackPanel Spacing="{StaticResource Space.4}" IsVisible="{Binding IsApple}">
+                                    <TextBlock Classes="support" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
+                                               Text="{x:Static res:Strings.Apple_Explanation}" />
+
+                                    <StackPanel Spacing="{StaticResource Space.2}">
+                                        <TextBlock Classes="field-label" Text="{x:Static res:Strings.Settings_AppleFolder}" />
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{StaticResource Space.2}">
+                                            <TextBox Text="{Binding AppleExportDir}"
+                                                     IsReadOnly="True"
+                                                     MinHeight="{StaticResource Control.Xl}"
+                                                     AutomationProperties.Name="{x:Static res:Strings.Settings_AppleFolder}" />
+                                            <Button Grid.Column="1"
+                                                    Classes="tonal xl"
+                                                    Content="{x:Static res:Strings.Settings_Change}"
+                                                    IsEnabled="{Binding AppleExport.CanChangeFolder}"
+                                                    Command="{Binding ChangeAppleFolderCommand}" />
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <TextBlock Classes="setting-hint" TextWrapping="Wrap" Text="{Binding AppleExport.DetailText}" />
+
+                                    <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                                        <Button Classes="tonal"
+                                                Content="{x:Static res:Strings.Apple_ExportNow}"
+                                                Command="{Binding ExportAppleNowCommand}" />
+                                        <Button Classes="secondary"
+                                                Content="{x:Static res:Strings.Apple_OpenFolder}"
+                                                Command="{Binding OpenAppleFolderCommand}" />
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
                         </controls:Island>
