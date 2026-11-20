@@ -30,22 +30,15 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
 
     public async Task WriteTagsAsync(long trackId)
     {
-        var track = await repository.GetDisplayAsync(trackId)
-                    ?? throw new InvalidOperationException($"Track {trackId} does not exist.");
-        if (track.FilePath is null)
-            throw new InvalidOperationException($"Track {trackId} has no file yet.");
-
-        var filePath = paths.ToLibraryPath(track.FilePath);
-        var loudness = await repository.GetLoudnessAsync(trackId);
+        var data = await TrackTagData.LoadAsync(repository, trackId);
+        var track = data.Track;
+        var filePath = paths.ToLibraryPath(track.FilePath!);
+        var loudness = data.Loudness;
         var quirks = PlayerQuirks.Of(TargetPlayerCode.Parse(settings?.Load().TargetPlayer));
-        var lyrics = await repository.GetLyricsAsync(trackId);
-        var lyricsText = lyrics.Text?.Replace("\r\n", "\n").Trim();
-        if (lyricsText is { Length: 0 })
-            lyricsText = null;
-        // for the phone app's recommendations: the artist's Last.fm tags, the Spotify history and the sound
-        var artistTags = RecommendationTags.FormatTags(await repository.GetArtistTagsAsync(RecommendationTags.ArtistKey(track.Artist)));
-        var history = RecommendationTags.FormatHistory(await repository.GetListeningHistoryAsync(trackId));
-        var sound = await repository.GetAudioFeaturesAsync(trackId);
+        var lyricsText = data.LyricsText;
+        var artistTags = data.ArtistTags;
+        var history = data.History;
+        var sound = data.Sound;
         await Task.Run(() =>
         {
             // files damaged by an earlier write could not even be opened
@@ -117,7 +110,7 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
                 this.log.LogWarning("Repaired the tags of {File} after writing (TagLib# had left out their end)", track.FilePath);
 
             // the .lrc next to the song serves players that do not read timed lyrics from the tags
-            if (lyricsText is { } timed && lyrics.IsSynced)
+            if (lyricsText is { } timed && data.LyricsSynced)
             {
                 if (!LrcSidecar.Write(filePath, timed))
                     this.log.LogInformation("Left the user's own lyrics file next to {File} as it is", track.FilePath);
@@ -130,6 +123,6 @@ public sealed class TagWriter(ITrackRepository repository, AppPaths paths, Setti
         await repository.MarkTagsWrittenAsync(trackId);
         this.log.LogInformation("Wrote tags to {File} ({Artist} - {Title}, album {Album}, loudness {Lufs} LUFS, lyrics {Lyrics})",
             track.FilePath, track.Artist, track.Title, track.Album, loudness?.ToString("0.0", CultureInfo.InvariantCulture) ?? "unknown",
-            lyricsText is null ? "none" : lyrics.IsSynced ? "timed" : "plain");
+            lyricsText is null ? "none" : data.LyricsSynced ? "timed" : "plain");
     }
 }
