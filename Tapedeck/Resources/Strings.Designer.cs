@@ -5401,5 +5401,230 @@ namespace Tapedeck.Resources {
                 return ResourceManager.GetString("Confirm_SoundAnalyzed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying for Apple {0}/{1} ….
+        /// </summary>
+        public static string Activity_AppleExport {
+            get {
+                return ResourceManager.GetString("Activity_AppleExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated {0} Apple copies.
+        /// </summary>
+        public static string Confirm_AppleExported {
+            get {
+                return ResourceManager.GetString("Confirm_AppleExported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple: {0}/{1}.
+        /// </summary>
+        public static string Apple_Status {
+            get {
+                return ResourceManager.GetString("Apple_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple: up to date.
+        /// </summary>
+        public static string Apple_StatusCurrent {
+            get {
+                return ResourceManager.GetString("Apple_StatusCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copies for Apple Music.
+        /// </summary>
+        public static string Apple_Title {
+            get {
+                return ResourceManager.GetString("Apple_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying now. {0} of {1} tracks are up to date..
+        /// </summary>
+        public static string Apple_DetailRunning {
+            get {
+                return ResourceManager.GetString("Apple_DetailRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All {0} downloaded tracks have an up-to-date copy..
+        /// </summary>
+        public static string Apple_DetailCurrent {
+            get {
+                return ResourceManager.GetString("Apple_DetailCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} tracks are up to date. The rest follows as soon as downloads and lookups are done..
+        /// </summary>
+        public static string Apple_DetailWaiting {
+            get {
+                return ResourceManager.GetString("Apple_DetailWaiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} failed, see the log..
+        /// </summary>
+        public static string Apple_DetailFailed {
+            get {
+                return ResourceManager.GetString("Apple_DetailFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your library stays Opus. Apple Music can't play Opus, so Tapedeck keeps an M4A copy (AAC) of every downloaded track in the Apple folder, with tags, cover and lyrics. It updates the copies when Tapedeck has nothing else to do. Add the Apple folder to Apple Music and import the .m3u8 files there as playlists..
+        /// </summary>
+        public static string Apple_Explanation {
+            get {
+                return ResourceManager.GetString("Apple_Explanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export now.
+        /// </summary>
+        public static string Apple_ExportNow {
+            get {
+                return ResourceManager.GetString("Apple_ExportNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open folder.
+        /// </summary>
+        public static string Apple_OpenFolder {
+            get {
+                return ResourceManager.GetString("Apple_OpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target system.
+        /// </summary>
+        public static string Settings_TargetSystem {
+            get {
+                return ResourceManager.GetString("Settings_TargetSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Android plays the Opus library, Apple gets M4A copies next to it.
+        /// </summary>
+        public static string Settings_TargetSystemHint {
+            get {
+                return ResourceManager.GetString("Settings_TargetSystemHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google (Android).
+        /// </summary>
+        public static string Settings_TargetSystemGoogle {
+            get {
+                return ResourceManager.GetString("Settings_TargetSystemGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple (Music, iPhone).
+        /// </summary>
+        public static string Settings_TargetSystemApple {
+            get {
+                return ResourceManager.GetString("Settings_TargetSystemApple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple folder.
+        /// </summary>
+        public static string Settings_AppleFolder {
+            get {
+                return ResourceManager.GetString("Settings_AppleFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create copies for Apple?.
+        /// </summary>
+        public static string AppleSwitch_Title {
+            get {
+                return ResourceManager.GetString("AppleSwitch_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tapedeck creates M4A copies of {0} downloaded tracks in {1}. This takes about {2} min in the background. Your Opus library stays as it is..
+        /// </summary>
+        public static string AppleSwitch_Message {
+            get {
+                return ResourceManager.GetString("AppleSwitch_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create copies.
+        /// </summary>
+        public static string AppleSwitch_Confirm {
+            get {
+                return ResourceManager.GetString("AppleSwitch_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Apple folder can't be the library, lie inside it or contain it..
+        /// </summary>
+        public static string AppleFolder_InsideLibrary {
+            get {
+                return ResourceManager.GetString("AppleFolder_InsideLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not change the Apple folder: {0}.
+        /// </summary>
+        public static string Notice_AppleFolderFailed {
+            get {
+                return ResourceManager.GetString("Notice_AppleFolderFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apple copy.
+        /// </summary>
+        public static string Detail_AppleCopy {
+            get {
+                return ResourceManager.GetString("Detail_AppleCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Up to date.
+        /// </summary>
+        public static string Detail_AppleCurrent {
+            get {
+                return ResourceManager.GetString("Detail_AppleCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Follows with the next export.
+        /// </summary>
+        public static string Detail_ApplePending {
+            get {
+                return ResourceManager.GetString("Detail_ApplePending", resourceCulture);
+            }
+        }
     }
 }
