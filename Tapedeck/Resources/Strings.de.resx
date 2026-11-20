@@ -730,7 +730,7 @@
     <value>Außerdem enthalten</value>
   </data>
   <data name="Settings_CreditsAlsoHint" xml:space="preserve">
-    <value>Diese Bibliotheken kommen mit den obigen und stecken ebenfalls in Tapedeck.exe.</value>
+    <value>Diese Bibliotheken kommen mit den obigen und stecken ebenfalls in Tapedeck.</value>
   </data>
   <data name="Settings_CreditLicense" xml:space="preserve">
     <value>{0}-Lizenz von {1} anzeigen</value>
@@ -1793,5 +1793,80 @@
   </data>
   <data name="Settings_LibraryHintPhone" xml:space="preserve">
     <value>Hier landen die Audio-Dateien. Jeder Musikplayer auf dem Handy findet sie hier.</value>
+  </data>
+  <data name="Activity_AppleExport" xml:space="preserve">
+    <value>Kopiere für Apple {0}/{1} …</value>
+  </data>
+  <data name="Confirm_AppleExported" xml:space="preserve">
+    <value>{0} Apple-Kopien aktualisiert</value>
+  </data>
+  <data name="Apple_Status" xml:space="preserve">
+    <value>Apple: {0}/{1}</value>
+  </data>
+  <data name="Apple_StatusCurrent" xml:space="preserve">
+    <value>Apple: aktuell</value>
+  </data>
+  <data name="Apple_Title" xml:space="preserve">
+    <value>Kopien für Apple Music</value>
+  </data>
+  <data name="Apple_DetailRunning" xml:space="preserve">
+    <value>Kopiert gerade. {0} von {1} Titeln sind aktuell.</value>
+  </data>
+  <data name="Apple_DetailCurrent" xml:space="preserve">
+    <value>Alle {0} geladenen Titel haben eine aktuelle Kopie.</value>
+  </data>
+  <data name="Apple_DetailWaiting" xml:space="preserve">
+    <value>{0} von {1} Titeln sind aktuell. Der Rest folgt, sobald Downloads und Abgleiche fertig sind.</value>
+  </data>
+  <data name="Apple_DetailFailed" xml:space="preserve">
+    <value>{0} fehlgeschlagen, siehe Protokoll.</value>
+  </data>
+  <data name="Apple_Explanation" xml:space="preserve">
+    <value>Deine Bibliothek bleibt Opus. Apple Music kann kein Opus abspielen, deshalb legt Tapedeck von jedem geladenen Titel eine M4A-Kopie (AAC) mit Tags, Cover und Lyrics im Apple-Ordner ab. Die Kopien werden aktualisiert, sobald Tapedeck sonst nichts zu tun hat. Füge den Apple-Ordner in Apple Music hinzu und importiere die .m3u8-Dateien dort als Playlists.</value>
+  </data>
+  <data name="Apple_ExportNow" xml:space="preserve">
+    <value>Jetzt exportieren</value>
+  </data>
+  <data name="Apple_OpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+  </data>
+  <data name="Settings_TargetSystem" xml:space="preserve">
+    <value>Ziel-System</value>
+  </data>
+  <data name="Settings_TargetSystemHint" xml:space="preserve">
+    <value>Android spielt die Opus-Bibliothek, Apple bekommt M4A-Kopien daneben</value>
+  </data>
+  <data name="Settings_TargetSystemGoogle" xml:space="preserve">
+    <value>Google (Android)</value>
+  </data>
+  <data name="Settings_TargetSystemApple" xml:space="preserve">
+    <value>Apple (Musik, iPhone)</value>
+  </data>
+  <data name="Settings_AppleFolder" xml:space="preserve">
+    <value>Apple-Ordner</value>
+  </data>
+  <data name="AppleSwitch_Title" xml:space="preserve">
+    <value>Kopien für Apple anlegen?</value>
+  </data>
+  <data name="AppleSwitch_Message" xml:space="preserve">
+    <value>Tapedeck legt M4A-Kopien von {0} geladenen Titeln in {1} an. Das dauert im Hintergrund etwa {2} min. Deine Opus-Bibliothek bleibt, wie sie ist.</value>
+  </data>
+  <data name="AppleSwitch_Confirm" xml:space="preserve">
+    <value>Kopien anlegen</value>
+  </data>
+  <data name="AppleFolder_InsideLibrary" xml:space="preserve">
+    <value>Der Apple-Ordner darf nicht die Bibliothek sein, nicht darin liegen und sie nicht enthalten.</value>
+  </data>
+  <data name="Notice_AppleFolderFailed" xml:space="preserve">
+    <value>Apple-Ordner konnte nicht geändert werden: {0}</value>
+  </data>
+  <data name="Detail_AppleCopy" xml:space="preserve">
+    <value>Apple-Kopie</value>
+  </data>
+  <data name="Detail_AppleCurrent" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
+  <data name="Detail_ApplePending" xml:space="preserve">
+    <value>Folgt mit dem nächsten Export</value>
   </data>
 </root>

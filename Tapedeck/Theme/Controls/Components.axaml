@@ -255,9 +255,9 @@
                 <Grid ColumnDefinitions="*,Auto"
                       Background="Transparent"
                       chrome:WindowDecorationProperties.ElementRole="TitleBar">
-                    <StackPanel Orientation="Horizontal"
+                    <StackPanel Name="PART_Brand"
+                                Orientation="Horizontal"
                                 Spacing="10"
-                                Margin="20,0,0,0"
                                 VerticalAlignment="Center"
                                 IsHitTestVisible="False">
                         <controls:Glyph Data="{StaticResource Icon.Cassette}"
@@ -268,7 +268,8 @@
                                    LetterSpacing="0.2"
                                    VerticalAlignment="Center" />
                     </StackPanel>
-                    <StackPanel Grid.Column="1"
+                    <StackPanel Name="PART_Buttons"
+                                Grid.Column="1"
                                 Orientation="Horizontal"
                                 Spacing="2"
                                 Margin="0,0,8,0"
@@ -292,6 +293,19 @@
                 </Grid>
             </ControlTemplate>
         </Setter>
+
+        <!-- as base styles, so the macOS style below can change them -->
+        <Style Selector="^ /template/ StackPanel#PART_Brand">
+            <Setter Property="Margin" Value="20,0,0,0" />
+        </Style>
+
+        <!-- macOS draws its own window buttons (traffic lights) at the left of the title bar -->
+        <Style Selector="^:macos /template/ StackPanel#PART_Brand">
+            <Setter Property="Margin" Value="{StaticResource Size.MacTrafficLights}" />
+        </Style>
+        <Style Selector="^:macos /template/ StackPanel#PART_Buttons">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
     </ControlTheme>
 
     <!-- Source chip next to a metadata field: YouTube in info, own values in the accent, the rest neutral. -->

@@ -17,6 +17,8 @@ namespace Tapedeck.Core.Settings;
 /// </param>
 /// <param name="TargetPlayer">The phone player the tags are written for, as <see cref="TargetPlayerCode"/>; <c>null</c> follows the Opus standard.</param>
 /// <param name="LyricsAuto">Ask LRCLIB in the background for the lyrics of downloaded tracks; <c>null</c> means on.</param>
+/// <param name="TargetSystem">Google or Apple as <see cref="TargetSystemCode"/>; <c>null</c> follows the system Tapedeck runs on.</param>
+/// <param name="AppleExportDir">Absolute folder of the <c>.m4a</c> copies; <c>null</c> uses <c>Music/Tapedeck (Apple)</c>.</param>
 public sealed record AppSettings(
     string? Language = null,
     string? Accent = null,
@@ -27,7 +29,9 @@ public sealed record AppSettings(
     string? LastFmApiKey = null,
     int? ParallelDownloads = null,
     string? TargetPlayer = null,
-    bool? LyricsAuto = null)
+    bool? LyricsAuto = null,
+    string? TargetSystem = null,
+    string? AppleExportDir = null)
 {
     /// <summary>
     /// Clearly faster than one at a time, and still below what makes YouTube refuse. A phone takes two: each download

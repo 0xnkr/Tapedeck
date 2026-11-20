@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template for Tapedeck.app/Contents/Info.plist; tools/macos-bundle.sh replaces __VERSION__ (the numeric part of the version, as macOS expects). -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>app.tapedeck</string>
+    <key>CFBundleName</key>
+    <string>Tapedeck</string>
+    <key>CFBundleDisplayName</key>
+    <string>Tapedeck</string>
+    <key>CFBundleExecutable</key>
+    <string>Tapedeck</string>
+    <key>CFBundleIconFile</key>
+    <string>tapedeck</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>__VERSION__</string>
+    <key>CFBundleVersion</key>
+    <string>__VERSION__</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.music</string>
+    <key>NSHighResolutionCapable</key>
+    <true />
+    <key>NSHumanReadableCopyright</key>
+    <string>Tapedeck is free software under the MIT License.</string>
+</dict>
+</plist>

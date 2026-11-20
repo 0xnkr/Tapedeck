@@ -969,7 +969,7 @@
     <comment>Credits: heading of the libraries that come along with the others</comment>
   </data>
   <data name="Settings_CreditsAlsoHint" xml:space="preserve">
-    <value>These libraries come along with the ones above and are part of Tapedeck.exe.</value>
+    <value>These libraries come along with the ones above and are part of Tapedeck.</value>
     <comment>Credits: hint below Settings_CreditsAlso</comment>
   </data>
   <data name="Settings_CreditLicense" xml:space="preserve">
@@ -2387,5 +2387,105 @@
   <data name="Settings_LibraryHintPhone" xml:space="preserve">
     <value>The audio files are saved here, where every music player on the phone finds them.</value>
     <comment>Hint below the library island's title on the phone, instead of Settings_LibraryHint (which tells to copy the folder to the phone)</comment>
+  </data>
+  <data name="Activity_AppleExport" xml:space="preserve">
+    <value>Copying for Apple {0}/{1} …</value>
+    <comment>Activity toast while M4A copies for Apple Music are written in the background; {0} done, {1} total</comment>
+  </data>
+  <data name="Confirm_AppleExported" xml:space="preserve">
+    <value>Updated {0} Apple copies</value>
+    <comment>Short confirmation after the Apple export wrote or retagged M4A copies; {0} count</comment>
+  </data>
+  <data name="Apple_Status" xml:space="preserve">
+    <value>Apple: {0}/{1}</value>
+    <comment>Pill in the library toolbar while not all tracks have an up-to-date M4A copy; {0} up to date, {1} downloaded tracks</comment>
+  </data>
+  <data name="Apple_StatusCurrent" xml:space="preserve">
+    <value>Apple: up to date</value>
+    <comment>Pill in the library toolbar when every downloaded track has an up-to-date M4A copy</comment>
+  </data>
+  <data name="Apple_Title" xml:space="preserve">
+    <value>Copies for Apple Music</value>
+    <comment>Heading of the flyout behind the Apple pill in the library toolbar</comment>
+  </data>
+  <data name="Apple_DetailRunning" xml:space="preserve">
+    <value>Copying now. {0} of {1} tracks are up to date.</value>
+    <comment>State of the Apple export while it runs; {0} up to date, {1} downloaded tracks</comment>
+  </data>
+  <data name="Apple_DetailCurrent" xml:space="preserve">
+    <value>All {0} downloaded tracks have an up-to-date copy.</value>
+    <comment>State of the Apple export when nothing is left to do; {0} downloaded tracks</comment>
+  </data>
+  <data name="Apple_DetailWaiting" xml:space="preserve">
+    <value>{0} of {1} tracks are up to date. The rest follows as soon as downloads and lookups are done.</value>
+    <comment>State of the Apple export while it waits for other work to finish; {0} up to date, {1} downloaded tracks</comment>
+  </data>
+  <data name="Apple_DetailFailed" xml:space="preserve">
+    <value>{0} failed, see the log.</value>
+    <comment>Appended to the Apple export state when tracks could not be copied; {0} count</comment>
+  </data>
+  <data name="Apple_Explanation" xml:space="preserve">
+    <value>Your library stays Opus. Apple Music can't play Opus, so Tapedeck keeps an M4A copy (AAC) of every downloaded track in the Apple folder, with tags, cover and lyrics. It updates the copies when Tapedeck has nothing else to do. Add the Apple folder to Apple Music and import the .m3u8 files there as playlists.</value>
+    <comment>Explanation of the Apple export, in the settings and in the flyout behind the Apple pill</comment>
+  </data>
+  <data name="Apple_ExportNow" xml:space="preserve">
+    <value>Export now</value>
+    <comment>Button that starts the Apple export right away and retries failed tracks</comment>
+  </data>
+  <data name="Apple_OpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+    <comment>Button that opens the Apple folder in the file manager</comment>
+  </data>
+  <data name="Settings_TargetSystem" xml:space="preserve">
+    <value>Target system</value>
+    <comment>Settings row: where the user plays the music, Google (Android) or Apple</comment>
+  </data>
+  <data name="Settings_TargetSystemHint" xml:space="preserve">
+    <value>Android plays the Opus library, Apple gets M4A copies next to it</value>
+    <comment>Hint below Settings_TargetSystem</comment>
+  </data>
+  <data name="Settings_TargetSystemGoogle" xml:space="preserve">
+    <value>Google (Android)</value>
+    <comment>Choice of Settings_TargetSystem</comment>
+  </data>
+  <data name="Settings_TargetSystemApple" xml:space="preserve">
+    <value>Apple (Music, iPhone)</value>
+    <comment>Choice of Settings_TargetSystem</comment>
+  </data>
+  <data name="Settings_AppleFolder" xml:space="preserve">
+    <value>Apple folder</value>
+    <comment>Label of the folder with the M4A copies for Apple Music</comment>
+  </data>
+  <data name="AppleSwitch_Title" xml:space="preserve">
+    <value>Create copies for Apple?</value>
+    <comment>Title of the confirmation when the target system changes to Apple</comment>
+  </data>
+  <data name="AppleSwitch_Message" xml:space="preserve">
+    <value>Tapedeck creates M4A copies of {0} downloaded tracks in {1}. This takes about {2} min in the background. Your Opus library stays as it is.</value>
+    <comment>Message of the confirmation when the target system changes to Apple; {0} tracks, {1} folder, {2} estimated minutes</comment>
+  </data>
+  <data name="AppleSwitch_Confirm" xml:space="preserve">
+    <value>Create copies</value>
+    <comment>Confirm button of AppleSwitch_Title</comment>
+  </data>
+  <data name="AppleFolder_InsideLibrary" xml:space="preserve">
+    <value>The Apple folder can't be the library, lie inside it or contain it.</value>
+    <comment>Error when the user picks an Apple folder that overlaps the library folder</comment>
+  </data>
+  <data name="Notice_AppleFolderFailed" xml:space="preserve">
+    <value>Could not change the Apple folder: {0}</value>
+    <comment>Error after changing the Apple folder failed; {0} reason</comment>
+  </data>
+  <data name="Detail_AppleCopy" xml:space="preserve">
+    <value>Apple copy</value>
+    <comment>Label on the track page for the state of the track's M4A copy</comment>
+  </data>
+  <data name="Detail_AppleCurrent" xml:space="preserve">
+    <value>Up to date</value>
+    <comment>State of a track's M4A copy: matches the library file and values</comment>
+  </data>
+  <data name="Detail_ApplePending" xml:space="preserve">
+    <value>Follows with the next export</value>
+    <comment>State of a track's M4A copy: missing or outdated, the background export will write it</comment>
   </data>
 </root>

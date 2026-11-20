@@ -54,6 +54,7 @@ public partial class LibraryViewModel(
     CoverQueue covers,
     LastFmQueue lastFm,
     LyricsQueue lyrics,
+    AppleExportQueue apple,
     SettingsStore settings,
     TrackDetailFactory createDetail) : ViewModelBase, ITrackActions
 {
@@ -133,6 +134,19 @@ public partial class LibraryViewModel(
     /// <summary>Some tracks wait for the user to confirm a MusicBrainz suggestion; shows the filter chip.</summary>
     [ObservableProperty]
     public partial bool HasSuggestions { get; private set; }
+
+    /// <summary>The Apple export, for the state pill in the toolbar.</summary>
+    public AppleExportQueue Apple => apple;
+
+    [RelayCommand]
+    private void ExportAppleNow() => apple.ExportNow();
+
+    [RelayCommand]
+    private Task OpenAppleFolderAsync()
+    {
+        System.IO.Directory.CreateDirectory(paths.AppleExportDir);
+        return platform.OpenFolderAsync(paths.AppleExportDir);
+    }
 
     /// <summary>Some songs are in the library more than once; shows the filter chip.</summary>
     [ObservableProperty]
@@ -640,6 +654,8 @@ public partial class LibraryViewModel(
         await this.RefreshRowAsync(row.Id);
         // writing tags may have renamed the file the .m3u8 files point to
         playlistSync.Request();
+        // corrections on the detail page reach the .m4a copy
+        apple.Request();
     }
 
     IReadOnlyList<PlaylistItemViewModel> ITrackActions.Playlists => playlists.Playlists;
@@ -1030,6 +1046,8 @@ public partial class LibraryViewModel(
         lastFm.EnqueueMissing();
         // downloaded tracks ask LRCLIB for their lyrics
         lyrics.EnqueueMissing();
+        // the .m4a copies follow once all of that is done
+        apple.Request();
     }
 
     private void ApplyFilter()

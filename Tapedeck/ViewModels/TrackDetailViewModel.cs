@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Apple;
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Models;
 using Tapedeck.Core.MusicBrainz;
@@ -50,6 +51,8 @@ public partial class TrackDetailViewModel : ViewModelBase
     private readonly MbEnrichmentService musicBrainz;
     private readonly IPlatformService platform;
     private readonly PlayerService player;
+    private readonly AppleExportQueue apple;
+    private readonly IAppleExportRepository appleExports;
     private readonly TrackSequence sequence;
     private readonly TrackDetailFactory createDetail;
 
@@ -65,8 +68,11 @@ public partial class TrackDetailViewModel : ViewModelBase
     public TrackDetailViewModel(TrackRowViewModel row, ITrackActions actions, TrackSequence sequence, TrackDetailFactory createDetail,
         ITrackRepository repository,
         TagWriter tagWriter, LibraryFiles files, ActivityService activity, NavigationService navigation,
-        MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player, LyricsService lyricsService)
+        MbEnrichmentService musicBrainz, IPlatformService platform, PlayerService player, LyricsService lyricsService,
+        AppleExportQueue apple, IAppleExportRepository appleExports)
     {
+        this.apple = apple;
+        this.appleExports = appleExports;
         this.lyricsService = lyricsService;
         this.LyricsPanel = new LyricsPanelViewModel(row, player);
         this.player = player;
@@ -151,6 +157,14 @@ public partial class TrackDetailViewModel : ViewModelBase
     [ObservableProperty]
     public partial string? FileFormat { get; private set; }
 
+    /// <summary>State of the track's .m4a copy, shown while the target system is Apple; <c>null</c> otherwise.</summary>
+    [ObservableProperty]
+    public partial string? AppleState { get; private set; }
+
+    /// <summary>The copy's file name in the Apple folder, if there is one.</summary>
+    [ObservableProperty]
+    public partial string? AppleFileName { get; private set; }
+
     [ObservableProperty]
     public partial string? DownloadedAt { get; private set; }
 
@@ -229,6 +243,19 @@ public partial class TrackDetailViewModel : ViewModelBase
     [NotifyCanExecuteChangedFor(nameof(SearchMusicBrainzCommand), nameof(RejectMusicBrainzCommand))]
     public partial bool IsMbBusy { get; private set; }
 
+    private async Task LoadAppleAsync(bool hasFile)
+    {
+        if (!this.apple.IsEnabled || !hasFile)
+        {
+            this.AppleState = null;
+            this.AppleFileName = null;
+            return;
+        }
+        var copy = await this.appleExports.GetAsync(this.Row.Id);
+        this.AppleFileName = copy?.FilePath;
+        this.AppleState = await this.appleExports.IsCurrentAsync(this.Row.Id) ? Strings.Detail_AppleCurrent : Strings.Detail_ApplePending;
+    }
+
     [RelayCommand]
     private async Task LoadAsync()
     {
@@ -246,6 +273,7 @@ public partial class TrackDetailViewModel : ViewModelBase
         this.FileName = track.FilePath;
         this.FileFormat = track.FileFormat;
         this.DownloadedAt = FormatTimestamp(track.DownloadedAt);
+        await this.LoadAppleAsync(track.FilePath is not null);
         this.ErrorMessage = track.ErrorMsg;
         this.TagsStale = track.TagsStale;
         this.Channel = track.Channel;

@@ -1,7 +1,7 @@
 # Publishes a release when a version tag is pushed:
 #   git tag v0.1.0 && git push origin v0.1.0
-# The tests run first, then the single-file Tapedeck.exe and the signed Android APK are built with the tag's version
-# and attached to a GitHub release. Its notes are the matching "## [0.1.0]" section of CHANGELOG.md, which must exist.
+# The tests run first, then the single-file Tapedeck.exe, the signed Android APK and the macOS apps (arm64 and x64,
+# zipped Tapedeck.app, signed ad hoc) are built with the tag's version and attached to a GitHub release. Its notes are the matching "## [0.1.0]" section of CHANGELOG.md, which must exist.
 # A version with a suffix (v0.2.0-beta.1) becomes a pre-release.
 # Signing the APK needs the repository secrets ANDROID_KEYSTORE (the .keystore file as Base64), ANDROID_KEY_ALIAS and
 # ANDROID_KEYSTORE_PASSWORD; see docs/release.md.
@@ -78,8 +78,49 @@ jobs:
           path: publish/android/Tapedeck-${{ env.VERSION }}.apk
           if-no-files-found: error
 
+  macos:
+    # codesign only runs on a Mac; both builds come from the same runner (x64 is cross-published)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [arm64, x64]
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read the version from the tag
+        run: |
+          version="${TAG#v}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Tag '$TAG' is no version like v1.2.3 or v1.2.3-beta.1" >&2
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Publish
+        run: dotnet publish Tapedeck.Desktop -p:PublishProfile=osx-${{ matrix.arch }} -p:Version=${{ env.VERSION }}
+
+      - name: Bundle Tapedeck.app
+        run: tools/macos-bundle.sh publish/osx-${{ matrix.arch }} ${{ matrix.arch }} ${{ env.VERSION }} publish
+
+      # the arm64 build runs on this runner; the x64 one would need Rosetta and is only bundled
+      - name: Self-check
+        if: matrix.arch == 'arm64'
+        run: publish/Tapedeck.app/Contents/MacOS/Tapedeck --self-check
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}
+          path: publish/Tapedeck-${{ env.VERSION }}-macos-${{ matrix.arch }}.zip
+          if-no-files-found: error
+
   release:
-    needs: android
+    needs: [android, macos]
     runs-on: windows-latest
     env:
       TAG: ${{ github.ref_name }}
@@ -115,12 +156,19 @@ jobs:
           name: apk
           path: publish/android
 
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: macos-*
+          path: publish/macos
+          merge-multiple: true
+
       - name: Create the release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $files = @('publish/win-x64/Tapedeck.exe', "publish/android/Tapedeck-$env:VERSION.apk")
+          $files = @('publish/win-x64/Tapedeck.exe', "publish/android/Tapedeck-$env:VERSION.apk",
+            "publish/macos/Tapedeck-$env:VERSION-macos-arm64.zip", "publish/macos/Tapedeck-$env:VERSION-macos-x64.zip")
           foreach ($file in @($files)) {
             $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
             $name = Split-Path $file -Leaf

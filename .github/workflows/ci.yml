@@ -1,4 +1,5 @@
-# Builds Tapedeck and runs the tests on every push and pull request; the Android app is built alongside.
+# Builds Tapedeck and runs the tests on every push and pull request; the Android app is built alongside, and the
+# macOS app is built, bundled and checked on a Mac (there is no other Mac to test on).
 name: CI
 
 on:
@@ -60,3 +61,43 @@ jobs:
 
       - name: Build
         run: dotnet build Tapedeck.Android --configuration Debug
+
+  macos:
+    # the only Mac Tapedeck is tested on: tests, the bundled app, and its self-check of the tools, OpenAL and the
+    # Apple export (Tapedeck --self-check)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test
+        run: dotnet test Tapedeck.Tests --configuration Release --logger "console;verbosity=normal"
+
+      - name: Publish
+        run: dotnet publish Tapedeck.Desktop -p:PublishProfile=osx-arm64 -p:Version=0.0.0-ci
+
+      - name: Bundle Tapedeck.app
+        run: tools/macos-bundle.sh publish/osx-arm64 arm64 0.0.0-ci publish
+
+      - name: Self-check
+        run: publish/Tapedeck.app/Contents/MacOS/Tapedeck --self-check
+
+      # a look at the window without a Mac; the runner may not allow screen capture, so this never fails the job
+      - name: Screenshot
+        continue-on-error: true
+        run: |
+          open publish/Tapedeck.app
+          sleep 20
+          screencapture -x publish/tapedeck-macos.png
+          pkill -f Tapedeck.app || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tapedeck-macos-arm64
+          path: |
+            publish/Tapedeck-0.0.0-ci-macos-arm64.zip
+            publish/tapedeck-macos.png
+          if-no-files-found: warn

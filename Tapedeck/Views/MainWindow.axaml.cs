@@ -11,6 +11,9 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
+        // macOS keeps its traffic lights only with the full decorations; they sit on top of the extended title bar
+        if (System.OperatingSystem.IsMacOS())
+            this.WindowDecorations = WindowDecorations.Full;
         // Tunnel so the mouse back button works wherever the pointer is
         this.AddHandler(PointerPressedEvent, this.OnPointerPressed, RoutingStrategies.Tunnel);
         this.AddHandler(KeyDownEvent, this.OnKeyDown, RoutingStrategies.Bubble);

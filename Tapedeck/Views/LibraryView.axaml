@@ -60,6 +60,35 @@
                                 controls:ButtonAssist.Icon="{StaticResource Icon.Trash}"
                                 Command="{Binding RemoveSelectedCommand}"
                                 IsVisible="{Binding HasMultipleSelected}" />
+                        <!-- the .m4a copies for Apple Music: state, explanation, export now -->
+                        <Button Classes="text"
+                                Content="{Binding Apple.StatusText}"
+                                controls:ButtonAssist.Icon="{StaticResource Icon.Upload}"
+                                AutomationProperties.Name="{x:Static res:Strings.Apple_Title}"
+                                IsVisible="{Binding Apple.IsEnabled}">
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedRight">
+                                    <StackPanel MaxWidth="380" Spacing="{StaticResource Space.3}">
+                                        <TextBlock Classes="body-strong" Text="{x:Static res:Strings.Apple_Title}" />
+                                        <TextBlock Classes="support" TextWrapping="Wrap" Text="{Binding Apple.DetailText}" />
+                                        <TextBlock Classes="caption" Foreground="{DynamicResource Brush.Text2}" TextWrapping="Wrap"
+                                                   Text="{x:Static res:Strings.Apple_Explanation}" />
+                                        <Border Classes="code">
+                                            <TextBlock Classes="mono" TextWrapping="Wrap" Text="{Binding Apple.ExportDir}" />
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal" Spacing="{StaticResource Space.2}">
+                                            <Button Classes="tonal"
+                                                    Content="{x:Static res:Strings.Apple_ExportNow}"
+                                                    Command="{Binding ExportAppleNowCommand}" />
+                                            <Button Classes="secondary"
+                                                    Content="{x:Static res:Strings.Apple_OpenFolder}"
+                                                    controls:ButtonAssist.Icon="{StaticResource Icon.Folder}"
+                                                    Command="{Binding OpenAppleFolderCommand}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
                         <Button Classes="text"
                                 Content="{Binding WriteAllTagsText}"
                                 ToolTip.Tip="{x:Static res:Strings.Library_WriteAllTagsHint}"

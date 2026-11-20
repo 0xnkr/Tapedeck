@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Tapedeck.Core;
+using Tapedeck.Core.Apple;
 using Tapedeck.Core.LastFm;
 using Tapedeck.Core.Lyrics;
 using Tapedeck.Core.Playlists;
@@ -80,18 +82,26 @@ public partial class SettingsViewModel : ViewModelBase
     private readonly LyricsQueue lyrics;
     private readonly LyricsService lyricsService;
     private readonly UpdateChecker updates;
+    private readonly AppleExportQueue apple;
     // GitHub is asked once per start, when the settings are first shown
     private bool updateChecked;
 
     private const string LASTFM_KEY_URL = "https://www.last.fm/api/account/create";
 
+    // encoding one track to AAC with ffmpeg, for the estimate when switching to Apple
+    private const double APPLE_SECONDS_PER_TRACK = 1.5;
+
     public SettingsViewModel(SettingsStore store, AppPaths paths, LibraryMover mover, IToolHost tools,
         IAccentService accent, ActivityService activity, IPlatformService platform, PlaylistSync playlistSync,
         DialogService dialogs, PlayerService player, LastFmQueue lastFm, LastFmGenreService lastFmGenres,
         ITrackRepository repository, LibraryViewModel library, LyricsQueue lyrics, LyricsService lyricsService,
-        UpdateChecker updates)
+        UpdateChecker updates, AppleExportQueue apple)
     {
         this.updates = updates;
+        this.apple = apple;
+        this.TargetSystemChoices = Enum.GetValues<TargetSystem>()
+            .Select(t => new MenuChoice(SystemName(t), new RelayCommand(() => this.TargetSystem = t)))
+            .ToList();
         this.lyrics = lyrics;
         this.lyricsService = lyricsService;
         this.repository = repository;
@@ -135,7 +145,9 @@ public partial class SettingsViewModel : ViewModelBase
             if (e.PropertyName == nameof(LyricsQueue.IsRunning) && !lyrics.IsRunning)
                 _ = this.CountLyricsPendingAsync();
         };
+        this.TargetSystem = TargetSystemCode.Parse(settings.TargetSystem);
         this.LibraryDir = paths.LibraryDir;
+        this.AppleExportDir = paths.AppleExportDir;
         this.MarkSelectedAccent();
         activity.PropertyChanged += this.OnActivityChanged;
     }
@@ -238,6 +250,7 @@ public partial class SettingsViewModel : ViewModelBase
         this.JsRuntimeVersion = versions.JsRuntime;
         await this.CountLastFmPendingAsync();
         await this.CountLyricsPendingAsync();
+        await this.apple.UpdateCountsAsync();
         if (!this.updateChecked)
         {
             this.updateChecked = true;
@@ -340,6 +353,126 @@ public partial class SettingsViewModel : ViewModelBase
             this.Notice = string.Format(Strings.Notice_TargetPlayerFailed, ex.Message);
         }
     }
+
+    /// <summary>A phone only plays its own library; the choice is for the computer.</summary>
+    public bool ShowTargetSystem { get; } = !OperatingSystem.IsAndroid();
+
+    /// <summary>Google keeps the Opus library as it is, Apple also gets the .m4a copies.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TargetSystemText), nameof(IsApple), nameof(ShowTargetPlayer))]
+    public partial TargetSystem TargetSystem { get; set; }
+
+    public string TargetSystemText => SystemName(this.TargetSystem);
+
+    public IReadOnlyList<MenuChoice> TargetSystemChoices { get; }
+
+    public bool IsApple => this.TargetSystem == TargetSystem.Apple;
+
+    /// <summary>The phone player only matters for the Opus files on Android.</summary>
+    public bool ShowTargetPlayer => !this.IsApple;
+
+    /// <summary>The Apple export, for its state and folder.</summary>
+    public AppleExportQueue AppleExport => this.apple;
+
+    [ObservableProperty]
+    public partial string AppleExportDir { get; private set; } = string.Empty;
+
+    partial void OnTargetSystemChanged(TargetSystem value) => _ = this.ChangeTargetSystemAsync(value);
+
+    /// <summary>
+    /// Stores the new target system. Switching to Apple first tells how many copies are made and how long it takes;
+    /// cancelling stays with Google.
+    /// </summary>
+    private async Task ChangeTargetSystemAsync(TargetSystem value)
+    {
+        // also reached when the constructor shows the stored choice, and when a cancelled switch goes back
+        if (TargetSystemCode.Parse(this.store.Load().TargetSystem) == value)
+            return;
+
+        if (value == TargetSystem.Apple)
+        {
+            var counts = await this.CountAppleAsync();
+            var minutes = Math.Max(1, (int)Math.Ceiling(counts.Pending * APPLE_SECONDS_PER_TRACK / 60));
+            var answer = counts.Pending == 0 ? new ConfirmResult(false) : await this.dialogs.ConfirmAsync(new ConfirmRequest(
+                Strings.AppleSwitch_Title,
+                string.Format(Strings.AppleSwitch_Message, counts.Pending, this.paths.AppleExportDir, minutes),
+                Strings.AppleSwitch_Confirm));
+            if (answer is null)
+            {
+                this.TargetSystem = TargetSystem.Google;
+                return;
+            }
+        }
+
+        this.store.Update(s => s with { TargetSystem = TargetSystemCode.Of(value) });
+        await this.apple.ApplySettingsAsync();
+    }
+
+    private async Task<AppleExportCounts> CountAppleAsync()
+    {
+        await this.apple.UpdateCountsAsync();
+        return this.apple.Counts;
+    }
+
+    [RelayCommand]
+    private void ExportAppleNow() => this.apple.ExportNow();
+
+    [RelayCommand]
+    private Task OpenAppleFolderAsync()
+    {
+        Directory.CreateDirectory(this.paths.AppleExportDir);
+        return this.platform.OpenFolderAsync(this.paths.AppleExportDir);
+    }
+
+    /// <summary>
+    /// Picks another Apple folder. It must not overlap the library, whose Opus files and playlists go to the phone.
+    /// The copies in the old folder are deleted and written anew into the new one.
+    /// </summary>
+    [RelayCommand]
+    private async Task ChangeAppleFolderAsync()
+    {
+        this.Notice = null;
+        if (!this.apple.CanChangeFolder)
+            return;
+        try
+        {
+            var folder = await this.platform.PickFolderAsync(Strings.Settings_ChooseFolder, this.paths.AppleExportDir);
+            if (folder is null || IsSameOrInside(folder, this.paths.AppleExportDir) && IsSameOrInside(this.paths.AppleExportDir, folder))
+                return;
+            if (IsSameOrInside(folder, this.paths.LibraryDir) || IsSameOrInside(this.paths.LibraryDir, folder))
+            {
+                this.Notice = Strings.AppleFolder_InsideLibrary;
+                return;
+            }
+
+            // fails early when the folder cannot be written, before the old copies are gone
+            Directory.CreateDirectory(folder);
+            var probe = Path.Combine(folder, $".tapedeck-{Guid.NewGuid():N}");
+            await File.WriteAllTextAsync(probe, string.Empty);
+            File.Delete(probe);
+
+            await this.apple.ChangeFolderAsync(folder);
+            this.AppleExportDir = folder;
+        }
+        catch (Exception ex)
+        {
+            this.Notice = string.Format(Strings.Notice_AppleFolderFailed, ex.Message);
+        }
+    }
+
+    private static bool IsSameOrInside(string folder, string parent)
+    {
+        var comparison = OperatingSystem.IsLinux() ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+        var a = Path.TrimEndingDirectorySeparator(Path.GetFullPath(folder)) + Path.DirectorySeparatorChar;
+        var b = Path.TrimEndingDirectorySeparator(Path.GetFullPath(parent)) + Path.DirectorySeparatorChar;
+        return a.StartsWith(b, comparison);
+    }
+
+    private static string SystemName(TargetSystem system) => system switch
+    {
+        TargetSystem.Apple => Strings.Settings_TargetSystemApple,
+        _ => Strings.Settings_TargetSystemGoogle,
+    };
 
     private static string PlayerName(TargetPlayer player) => player switch
     {

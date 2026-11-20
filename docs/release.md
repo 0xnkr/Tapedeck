@@ -14,6 +14,9 @@ matching changelog section as release notes and the following files:
 | `Tapedeck.exe.sha256` | `release.yml` | SHA-256 checksum of the `.exe` for verifying a download.               |
 | `Tapedeck-1.2.3.apk`  | `release.yml` | The Android app (arm64), signed with the release key.                  |
 | `Tapedeck-1.2.3.apk.sha256` | `release.yml` | SHA-256 checksum of the APK.                                     |
+| `Tapedeck-1.2.3-macos-arm64.zip` | `release.yml` | `Tapedeck.app` for Macs with Apple silicon, signed ad hoc, not notarized ([macOS](macos.md)). |
+| `Tapedeck-1.2.3-macos-x64.zip` | `release.yml` | `Tapedeck.app` for Intel Macs.                                  |
+| `….zip.sha256`        | `release.yml` | SHA-256 checksums of the two zips.                                     |
 | Source code (zip)     | GitHub        | The source code at the tagged commit.                                  |
 | Source code (tar.gz)  | GitHub        | The same source code as tar.gz.                                        |
 
@@ -144,10 +147,13 @@ which runs these steps:
 1. Read the version from the tag and validate it.
 2. Android job: install the Android workload, fetch the bundled tools (`tools/android-natives.ps1`), build and sign
    `Tapedeck-<version>.apk`.
-3. Extract the release notes from the changelog.
-4. Run the tests.
-5. Build `Tapedeck.exe` with that version.
-6. Compute the checksums and create the release with the `.exe`, the `.apk` and their `.sha256` files.
+3. macOS job (arm64 and x64 on a macOS runner): publish, bundle and sign `Tapedeck.app` ad hoc
+   (`tools/macos-bundle.sh`), run `Tapedeck --self-check` on the arm64 build, zip both.
+4. Extract the release notes from the changelog.
+5. Run the tests.
+6. Build `Tapedeck.exe` with that version.
+7. Compute the checksums and create the release with the `.exe`, the `.apk`, the two macOS zips and their `.sha256`
+   files.
 
 A run takes a few minutes; the Android job takes longest because of the workload install. Afterwards the release is listed under [Releases](https://github.com/0xnkr/Tapedeck/releases).
 

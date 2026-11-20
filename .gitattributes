@@ -4,3 +4,8 @@
 *.ico binary
 *.png binary
 *.jpg binary
+*.opus binary
+*.m4a binary
+
+# shell scripts run on macOS and Linux
+*.sh text eol=lf

@@ -29,7 +29,7 @@ public static class AudioReportCommand
     {
         var log = logging?.CreateLogger("AudioReport");
         var settings = new SettingsStore(AppPaths.DefaultDataDir()).Load();
-        var paths = AppPaths.Default(settings.LibraryDir);
+        var paths = AppPaths.Default(settings.LibraryDir, settings.AppleExportDir);
         var factory = new SqliteConnectionFactory(paths.DatabasePath);
         await new Migrator(factory, logging?.CreateLogger<Migrator>()).MigrateAsync();
         var repository = new TrackRepository(factory);

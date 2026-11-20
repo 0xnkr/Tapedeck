@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tapedeck.Core;
+using Tapedeck.Core.Apple;
 using Tapedeck.Core.Audio;
 using Tapedeck.Core.Csv;
 using Tapedeck.Core.LastFm;
@@ -27,7 +28,7 @@ public static class AppServices
     public static ServiceProvider Build(IAccentService accent, SettingsStore store, AppSettings settings,
         Action<IServiceCollection>? configurePlatform)
     {
-        var paths = AppPaths.Default(settings.LibraryDir);
+        var paths = AppPaths.Default(settings.LibraryDir, settings.AppleExportDir);
         paths.EnsureDirectories();
 
         var services = new ServiceCollection();
@@ -75,6 +76,9 @@ public static class AppServices
         services.AddSingleton<SpotifyPlaylistClient>();
         services.AddSingleton<SpotifyTasteService>();
         services.AddSingleton<UpdateChecker>();
+        services.AddSingleton<IAppleExportRepository, AppleExportRepository>();
+        services.AddSingleton<IAacEncoder, AacEncoder>();
+        services.AddSingleton<AppleExporter>();
 
         services.AddSingleton(accent);
         services.AddSingleton<IPlatformService, PlatformService>();
@@ -91,6 +95,7 @@ public static class AppServices
         services.AddSingleton<CoverQueue>();
         services.AddSingleton<LastFmQueue>();
         services.AddSingleton<LyricsQueue>();
+        services.AddSingleton<AppleExportQueue>();
 
         services.AddSingleton<LibraryViewModel>();
         services.AddSingleton<PlaylistsViewModel>();

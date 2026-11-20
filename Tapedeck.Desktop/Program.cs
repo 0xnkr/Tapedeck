@@ -25,6 +25,11 @@ abstract class Program
             LogStart(log);
 
         var options = StartupOptions.Parse(args);
+        if (options.SelfCheck)
+        {
+            RunCommand(SelfCheckCommand.RunAsync, log);
+            return;
+        }
         if (options.SpotifyReport is { } spotifyHistory)
         {
             RunCommand(logging => SpotifyReportCommand.RunAsync(spotifyHistory, logging), log);

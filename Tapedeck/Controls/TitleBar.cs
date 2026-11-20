@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -8,12 +9,16 @@ namespace Tapedeck.Controls;
 /// <summary>
 /// Custom title bar for a window with an extended client area: brand mark, app name and pill-shaped window buttons.
 /// The drag area and the buttons carry window decoration roles, so Windows treats them like native chrome (snap layouts).
+/// On macOS the system draws its own window buttons at the left; the pseudo class <c>:macos</c> hides these and makes room.
 /// </summary>
 [TemplatePart(MINIMIZE_PART_NAME, typeof(Button))]
 [TemplatePart(MAXIMIZE_PART_NAME, typeof(Button))]
 [TemplatePart(CLOSE_PART_NAME, typeof(Button))]
+[PseudoClasses(MAC_OS_CLASS)]
 public sealed class TitleBar : TemplatedControl
 {
+    private const string MAC_OS_CLASS = ":macos";
+
     private const string MINIMIZE_PART_NAME = "PART_Minimize";
     private const string MAXIMIZE_PART_NAME = "PART_Maximize";
     private const string CLOSE_PART_NAME = "PART_Close";
@@ -21,6 +26,8 @@ public sealed class TitleBar : TemplatedControl
     private Button? minimize;
     private Button? maximize;
     private Button? close;
+
+    public TitleBar() => this.PseudoClasses.Set(MAC_OS_CLASS, OperatingSystem.IsMacOS());
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
