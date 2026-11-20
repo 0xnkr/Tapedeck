@@ -10,10 +10,11 @@ namespace Tapedeck;
 /// They win over the saved settings for this run only.
 /// <c>--spotify-report &lt;folder|zip&gt;</c> writes a report of a Spotify streaming history and exits,
 /// <c>--spotify-match &lt;folder|zip&gt; [count]</c> searches its most played songs on YouTube and reports the matches,
-/// <c>--audio-report [count]</c> measures the sound of the library and reports the closest songs by sound.
+/// <c>--audio-report [count]</c> measures the sound of the library and reports the closest songs by sound,
+/// <c>--self-check</c> checks the tools, OpenAL and the Apple export in a temporary folder (for CI on macOS).
 /// </summary>
 public sealed record StartupOptions(CultureInfo? Language, Color? Accent, string? SpotifyReport = null,
-    string? SpotifyMatch = null, int? SpotifyMatchCount = null, int? AudioReport = null)
+    string? SpotifyMatch = null, int? SpotifyMatchCount = null, int? AudioReport = null, bool SelfCheck = false)
 {
     public static StartupOptions Parse(string[] args)
     {
@@ -23,12 +24,16 @@ public sealed record StartupOptions(CultureInfo? Language, Color? Accent, string
         string? spotifyMatch = null;
         int? spotifyMatchCount = null;
         int? audioReport = null;
+        var selfCheck = false;
 
         for (var i = 0; i < args.Length; i++)
         {
             switch (args[i])
             {
-                // the only option without a required value
+                case "--self-check":
+                    selfCheck = true;
+                    break;
+                // the only option with an optional value
                 case "--audio-report":
                     audioReport = AudioReportCount(args, ref i);
                     break;
@@ -55,7 +60,7 @@ public sealed record StartupOptions(CultureInfo? Language, Color? Accent, string
             }
         }
 
-        return new StartupOptions(language, accent, spotifyReport, spotifyMatch, spotifyMatchCount, audioReport);
+        return new StartupOptions(language, accent, spotifyReport, spotifyMatch, spotifyMatchCount, audioReport, selfCheck);
     }
 
     /// <summary>The count after <c>--audio-report</c>, or the default when none follows.</summary>

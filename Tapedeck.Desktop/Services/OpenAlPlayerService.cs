@@ -276,12 +276,23 @@ public sealed class OpenAlPlayerService(ILogger<OpenAlPlayerService> log) : Play
     /// Loads the bundled OpenAL Soft. .NET's own lookup finds it next to the app, under <c>runtimes/</c> and in the folder
     /// a single-file Tapedeck.exe extracts it to; Silk.NET's lookup misses the latter, so it is only the fallback.
     /// </summary>
+    /// <summary>Whether OpenAL Soft is found next to the app, without opening a device (for <c>--self-check</c>).</summary>
+    public static bool CanLoadOpenAl()
+    {
+        if (!NativeLibrary.TryLoad(OpenAlName, typeof(OpenAlPlayerService).Assembly, null, out var handle))
+            return false;
+        var found = NativeLibrary.TryGetExport(handle, "alcOpenDevice", out _);
+        NativeLibrary.Free(handle);
+        return found;
+    }
+
+    private static string OpenAlName => OperatingSystem.IsWindows() ? "soft_oal.dll"
+        : OperatingSystem.IsMacOS() ? "libopenal.dylib"
+        : "libopenal.so";
+
     private static (ALContext Alc, AL Al) LoadOpenAl()
     {
-        var name = OperatingSystem.IsWindows() ? "soft_oal.dll"
-            : OperatingSystem.IsMacOS() ? "libopenal.dylib"
-            : "libopenal.so";
-        if (!NativeLibrary.TryLoad(name, typeof(OpenAlPlayerService).Assembly, null, out var handle))
+        if (!NativeLibrary.TryLoad(OpenAlName, typeof(OpenAlPlayerService).Assembly, null, out var handle))
             return (ALContext.GetApi(true), AL.GetApi(true));
 
         var exports = new LamdaNativeContext(symbol => NativeLibrary.TryGetExport(handle, symbol, out var address) ? address : 0);
