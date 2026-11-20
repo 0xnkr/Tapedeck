@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0-beta.1] - 2026-11-20
+
 ### Added
 
 - **Tapedeck for macOS.** Each release has `Tapedeck.app` for Apple silicon and Intel Macs (macOS 12 or newer). It is not notarized: the first launch has to be allowed under Privacy & Security, see [macOS](docs/macos.md). Data lives in `~/Library/Application Support/Tapedeck`, the library in `~/Music/Tapedeck`. The window keeps the Mac's own buttons in the title bar.
@@ -221,7 +223,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Writing tags could leave a file that could not be tagged again ("Value cannot be null"). This happened when tags and cover together were an exact multiple of 255 bytes long. Such files are now repaired before and after writing tags.
 - A space typed at the end of a field on the detail page, as in "28 " on the way to "28 Grams", was removed when the page saved and reloaded.
 
-[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/0xnkr/Tapedeck/compare/v1.6.0-beta.1...HEAD
+[1.6.0-beta.1]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0...v1.6.0-beta.1
 [1.5.0]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...v1.5.0
 [1.5.0-beta.2]: https://github.com/0xnkr/Tapedeck/compare/v1.5.0-beta.1...v1.5.0-beta.2
 [1.5.0-beta.1]: https://github.com/0xnkr/Tapedeck/compare/v1.4.1...v1.5.0-beta.1
