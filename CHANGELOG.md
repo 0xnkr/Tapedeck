@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Tapedeck for macOS.** Each release has `Tapedeck.app` for Apple silicon and Intel Macs (macOS 12 or newer). It is not notarized: the first launch has to be allowed under Privacy & Security, see [macOS](docs/macos.md). Data lives in `~/Library/Application Support/Tapedeck`, the library in `~/Music/Tapedeck`. The window keeps the Mac's own buttons in the title bar.
+- **Copies for Apple Music.** A new setting "Target system" chooses between Google (Android) and Apple; a Mac starts with Apple. With Apple, Tapedeck keeps an M4A copy (AAC, 256 kbit/s) of every downloaded track in `Music/Tapedeck (Apple)`, with tags, cover and lyrics, plus the playlists as `.m3u8`. The library itself stays Opus. The copies are made in the background once downloads and lookups are done, follow corrections and renames, and go when a track is removed. The "Apple" pill in the library shows how far the copies are, the track page shows the state of its copy. See [Apple Music](docs/apple.md).
+- `Tapedeck --self-check` checks the tools, OpenAL and the Apple export without a window.
+
+### Changed
+
+- The credits list ANGLE only on Windows, where it is part of the app.
+
 ## [1.5.0] - 2026-11-19
 
 ### Added
