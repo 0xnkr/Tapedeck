@@ -1,7 +1,8 @@
 namespace Tapedeck.Core;
 
 /// <summary>Storage locations of the app. Cross-platform via <see cref="Environment.SpecialFolder"/>.</summary>
-public sealed class AppPaths(string dataDir, string libraryDir)
+/// <param name="appleExportDir">Folder of the Apple export, <c>null</c> for <see cref="DefaultAppleExportDir"/>.</param>
+public sealed class AppPaths(string dataDir, string libraryDir, string? appleExportDir = null)
 {
     /// <summary>App data: database, settings, tools, thumbnails.</summary>
     public string DataDir { get; } = dataDir;
@@ -11,6 +12,13 @@ public sealed class AppPaths(string dataDir, string libraryDir)
     /// Services read it on every use, so <see cref="ChangeLibraryDir"/> takes effect right away.
     /// </summary>
     public string LibraryDir { get; private set; } = libraryDir;
+
+    /// <summary>
+    /// The <c>.m4a</c> copies for Apple Music (<c>AppleExporter</c>), next to the library rather than inside it, so the
+    /// Opus library copied to a phone stays as it is. Changed with <see cref="ChangeAppleExportDir"/>.
+    /// </summary>
+    public string AppleExportDir { get; private set; } =
+        string.IsNullOrWhiteSpace(appleExportDir) ? DefaultAppleExportDir() : appleExportDir;
 
     public string DatabasePath => Path.Combine(this.DataDir, "tapedeck.db");
     public string ToolsDir => Path.Combine(this.DataDir, "tools");
@@ -36,9 +44,14 @@ public sealed class AppPaths(string dataDir, string libraryDir)
         return Path.Combine(music, "Tapedeck");
     }
 
+    /// <summary>Next to the default library: <c>Music/Tapedeck (Apple)</c>.</summary>
+    public static string DefaultAppleExportDir() =>
+        Path.Combine(Path.GetDirectoryName(DefaultLibraryDir()) ?? DefaultLibraryDir(), "Tapedeck (Apple)");
+
     /// <param name="libraryDir">The configured library folder, or <c>null</c> for the default.</param>
-    public static AppPaths Default(string? libraryDir = null) =>
-        new(DefaultDataDir(), string.IsNullOrWhiteSpace(libraryDir) ? DefaultLibraryDir() : libraryDir);
+    /// <param name="appleExportDir">The configured Apple folder, or <c>null</c> for the default.</param>
+    public static AppPaths Default(string? libraryDir = null, string? appleExportDir = null) =>
+        new(DefaultDataDir(), string.IsNullOrWhiteSpace(libraryDir) ? DefaultLibraryDir() : libraryDir, appleExportDir);
 
     public void EnsureDirectories()
     {
@@ -68,5 +81,10 @@ public sealed class AppPaths(string dataDir, string libraryDir)
     /// <summary>Points the library to another folder; moving the files is up to the caller (<c>LibraryMover</c>).</summary>
     public void ChangeLibraryDir(string libraryDir) => this.LibraryDir = libraryDir;
 
+    /// <summary>Points the Apple export to another folder; the copies in the old one are up to the caller.</summary>
+    public void ChangeAppleExportDir(string appleExportDir) => this.AppleExportDir = appleExportDir;
+
     public string ToLibraryPath(string relativePath) => Path.Combine(this.LibraryDir, relativePath);
+
+    public string ToAppleExportPath(string relativePath) => Path.Combine(this.AppleExportDir, relativePath);
 }

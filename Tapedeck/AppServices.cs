@@ -27,7 +27,7 @@ public static class AppServices
     public static ServiceProvider Build(IAccentService accent, SettingsStore store, AppSettings settings,
         Action<IServiceCollection>? configurePlatform)
     {
-        var paths = AppPaths.Default(settings.LibraryDir);
+        var paths = AppPaths.Default(settings.LibraryDir, settings.AppleExportDir);
         paths.EnsureDirectories();
 
         var services = new ServiceCollection();
