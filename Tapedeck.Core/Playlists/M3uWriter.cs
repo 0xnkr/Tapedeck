@@ -25,7 +25,14 @@ public static class M3uWriter
     /// The file content. Tracks whose file does not exist (<paramref name="fileExists"/>) are left out,
     /// so the player shows no dead entries.
     /// </summary>
-    public static string Build(string playlistName, IEnumerable<TrackDisplay> tracks, Func<string, bool> fileExists)
+    public static string Build(string playlistName, IEnumerable<TrackDisplay> tracks, Func<string, bool> fileExists) =>
+        Build(playlistName, tracks, track => track.FilePath is { } file && fileExists(file) ? file : (string?)null);
+
+    /// <summary>
+    /// The file content with the entry of each track chosen by <paramref name="fileFor"/>, relative to the playlist;
+    /// tracks it gives no file for are left out.
+    /// </summary>
+    public static string Build(string playlistName, IEnumerable<TrackDisplay> tracks, Func<TrackDisplay, string?> fileFor)
     {
         var text = new StringBuilder();
         text.Append("#EXTM3U\n");
@@ -33,7 +40,7 @@ public static class M3uWriter
         text.Append(MARKER).Append('\n');
         foreach (var track in tracks)
         {
-            if (track.FilePath is not { } file || !fileExists(file))
+            if (fileFor(track) is not { } file)
                 continue;
             var seconds = (track.DurationS ?? -1).ToString(CultureInfo.InvariantCulture);
             var label = string.IsNullOrEmpty(track.Artist) ? track.Title : $"{track.Artist} - {track.Title}";
