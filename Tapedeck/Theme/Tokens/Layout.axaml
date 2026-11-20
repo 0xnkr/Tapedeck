@@ -55,5 +55,7 @@
     <x:Double x:Key="Size.Rail">96</x:Double>
     <!-- Height of the custom title bar. -->
     <x:Double x:Key="Size.TitleBar">44</x:Double>
+    <!-- left of the title on macOS: the system's close, minimize and zoom buttons plus a gap -->
+    <Thickness x:Key="Size.MacTrafficLights">84,0,0,0</Thickness>
 
 </ResourceDictionary>
