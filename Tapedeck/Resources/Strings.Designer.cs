@@ -2902,7 +2902,7 @@ namespace Tapedeck.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to These libraries come along with the ones above and are part of Tapedeck.exe..
+        ///   Looks up a localized string similar to These libraries come along with the ones above and are part of Tapedeck..
         /// </summary>
         public static string Settings_CreditsAlsoHint {
             get {

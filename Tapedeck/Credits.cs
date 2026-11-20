@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -63,15 +64,21 @@ public static class Credits
             "Copyright (c) 2016 The Inter Project Authors", "ofl-1.1-inter"),
     ];
 
-    /// <summary>Libraries that come along with the ones above and are bundled into Tapedeck.exe as well.</summary>
+    /// <summary>Libraries that come along with the ones above and are bundled into Tapedeck as well.</summary>
     public static IReadOnlyList<Credit> ALSO_INCLUDED =>
     [
         new("SkiaSharp", Strings.Credit_SkiaSharp, "MIT", "https://github.com/mono/SkiaSharp", "© Microsoft Corporation", MIT),
         new("Skia", Strings.Credit_Skia, "BSD-3-Clause", "https://skia.org", "Copyright (c) 2011 Google Inc.", "bsd-3-clause-skia"),
         new("HarfBuzzSharp", Strings.Credit_HarfBuzzSharp, "MIT", "https://github.com/mono/SkiaSharp", "© Microsoft Corporation", MIT),
         new("HarfBuzz", Strings.Credit_HarfBuzz, "Old MIT", "https://harfbuzz.github.io", null, "old-mit-harfbuzz"),
-        new("ANGLE", Strings.Credit_Angle, "BSD-3-Clause", "https://chromium.googlesource.com/angle/angle",
-            "Copyright 2018 The ANGLE Project Authors", "bsd-3-clause-angle"),
+        // only the Windows build brings ANGLE (OpenGL via DirectX)
+        .. OperatingSystem.IsWindows()
+            ? new Credit[]
+            {
+                new("ANGLE", Strings.Credit_Angle, "BSD-3-Clause", "https://chromium.googlesource.com/angle/angle",
+                    "Copyright 2018 The ANGLE Project Authors", "bsd-3-clause-angle"),
+            }
+            : [],
         new("SQLitePCLRaw", Strings.Credit_SQLitePCLRaw, "Apache-2.0", "https://github.com/ericsink/SQLitePCL.raw",
             "Copyright 2014-2024 SourceGear, LLC", APACHE),
         new("Newtonsoft.Json", Strings.Credit_NewtonsoftJson, "MIT", "https://www.newtonsoft.com/json",

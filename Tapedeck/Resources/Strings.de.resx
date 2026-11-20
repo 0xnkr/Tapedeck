@@ -730,7 +730,7 @@
     <value>Außerdem enthalten</value>
   </data>
   <data name="Settings_CreditsAlsoHint" xml:space="preserve">
-    <value>Diese Bibliotheken kommen mit den obigen und stecken ebenfalls in Tapedeck.exe.</value>
+    <value>Diese Bibliotheken kommen mit den obigen und stecken ebenfalls in Tapedeck.</value>
   </data>
   <data name="Settings_CreditLicense" xml:space="preserve">
     <value>{0}-Lizenz von {1} anzeigen</value>
