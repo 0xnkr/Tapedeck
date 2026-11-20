@@ -28,8 +28,14 @@ public sealed class AppPaths(string dataDir, string libraryDir, string? appleExp
     public string TempDir => Path.Combine(this.DataDir, "tmp");
 
     /// <summary>The app data folder, which also holds the settings and therefore cannot be configured.</summary>
-    public static string DefaultDataDir() =>
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Tapedeck");
+    public static string DefaultDataDir()
+    {
+        // .NET's ApplicationData is ~/.config on macOS; apps keep their data in Application Support there
+        if (OperatingSystem.IsMacOS())
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                "Library", "Application Support", "Tapedeck");
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Tapedeck");
+    }
 
     public static string DefaultLibraryDir()
     {
